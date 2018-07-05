@@ -4,7 +4,7 @@
   "description": "Smartest fashion visual search in the world",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "build": "webpack -p --progress --config webpack.prodconfig.js",
     "dev-build": "webpack --progress -d --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",

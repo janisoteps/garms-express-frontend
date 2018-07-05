@@ -232,10 +232,10 @@ app.get('/api/colorcatsearch', function (req, res) {
 });
 
 
-app.use(express.static(__dirname + './../')); //serves the index.html
+app.use(express.static(__dirname + './../dist/')); //serves the index.html
 
 app.get('*', function (request, response){
-    response.sendFile(path.resolve(__dirname, './../', 'index.html'))
+    response.sendFile(path.resolve(__dirname, './../dist/', 'index.html'))
 });
 
-app.listen(3000); //listens on port 3000 -> http://localhost:3000/
+app.listen(8081); //listens on port 3000 -> http://localhost:3000/
