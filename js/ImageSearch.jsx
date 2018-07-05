@@ -67,7 +67,11 @@ class ImageSearch extends React.Component  {
 
         fetch(window.location.origin + '/api/login', {
             method: 'post',
-            body: JSON.stringify({email: email, pwd: pwd})
+            body: JSON.stringify({email: email, pwd: pwd}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) { return response.json(); })
             .then(function(data) {
                 console.log(data);

@@ -323,7 +323,11 @@ class ProductResults extends React.Component  {
         // console.log('Add faves email: ', email);
         fetch(window.location.origin + '/api/addfav', {
             method: 'post',
-            body: JSON.stringify({email: email, img_hash: img_hash})
+            body: JSON.stringify({email: email, img_hash: img_hash}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) { return response.json(); })
             .then(data => {
                 console.log(data);
