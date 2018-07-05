@@ -533,7 +533,7 @@ class ProductResults extends React.Component  {
                 position: 'absolute',
                 textAlign: 'left',
                 overflow: 'hidden',
-                paddingRight: '69px'
+                paddingRight: '64px'
             };
 
 

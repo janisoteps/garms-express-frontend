@@ -99,15 +99,13 @@ class Profile extends React.Component  {
                 return (
                     <Paper zDepth={1} className="profile-product-tile" key={id}>
                         <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
+                        <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
                         <div className="product-name">{name}</div>
                         <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
                         <img className="product-image" src={img_url} />
                         <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
                         <a href={prod_url} target="_blank"> Go to product shop page</a>
-                        {/*<div style={faveDrawerStyle} >Added to faves</div>*/}
-                        {/*<div className="add-to-favorites" onClick={() => { this.addToFavs(img_hash); }}></div>*/}
-                        {/*<div className="search-similar" onClick={() => { this.simImSrc(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64); }}></div>*/}
-                        {/*<ColorPicker/>*/}
+
                     </Paper>
                 )
             }

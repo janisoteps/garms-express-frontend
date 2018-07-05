@@ -1,3 +1,4 @@
+
 .content-wrapper{
     font-size: larger;
 }
@@ -48,6 +49,7 @@
 
 .content-wrapper {
     margin-top: 50px;
+    height: calc(100vh - 50px);
 }
 
 .search-choice{
@@ -71,6 +73,7 @@
 .image-dropzone{
     width: 100%;
     height: 100%;
+    max-width: 90vw;
 }
 
 .image-search-icon-alt{
@@ -87,8 +90,6 @@
     display: table;
     text-align: center;
     height: 100%;
-    width: 350px;
-    max-width: 100vw;
     margin-left: calc(50vw - 175px);
 }
 
@@ -108,7 +109,6 @@
     display: table;
     text-align: center;
     height: 100%;
-    width: 350px;
     margin-left: calc(50vw - 175px);
 }
 
@@ -186,6 +186,7 @@
     text-align: center;
     margin: 2vw;
     width: 45vw;
+    min-width: 300px;
     max-width: 620px;
     padding-top: 15px;
     padding-bottom: 5px;
@@ -363,7 +364,7 @@
 }
 
 .favorites-button{
-    background: url('../images/baseline-shopping_basket-24px.svg') no-repeat center;
+    background: url('../images/baseline-favorite-24px.svg') no-repeat center;
     background-size: 40px 40px;
     width: 48px;
     height: 48px;
@@ -422,16 +423,31 @@
 }
 
 .profile-product-delete{
-    width: 30px;
-    height: 30px;
-    background: #ffffff url('../images/baseline-delete_forever-24px.svg') no-repeat center;
-    background-size: 24px 24px;
-    border-radius: 15px;
+    width: 54px;
+    height: 54px;
+    background: #d7aaa3 url('../images/baseline-delete_forever-24px.svg') no-repeat center;
+    background-size: 42px 42px;
+    border-radius: 27px;
     position: absolute;
-    margin-top: -25px;
-    right: -10px;
+    bottom: 74px;
+    right: -20px;
     cursor: pointer;
     box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);
+    opacity: 0.7;
+}
+
+.profile-product-buy{
+    width: 54px;
+    height: 54px;
+    background: #a2dda5 url('../images/baseline-shopping_basket-24px.svg') no-repeat center;
+    background-size: 42px 42px;
+    border-radius: 27px;
+    position: absolute;
+    bottom: 0;
+    right: -20px;
+    cursor: pointer;
+    box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);
+    opacity: 0.7;
 }
 
 .sex-selector{
