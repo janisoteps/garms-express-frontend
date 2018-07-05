@@ -22,7 +22,7 @@ app.post('/api/login', function (req, res) {
         json: true
     };
 
-    console.log('Login');
+    console.log('Login', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
