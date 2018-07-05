@@ -61,12 +61,16 @@ class App extends React.Component {
         event.preventDefault();
         let email = this.state.email;
         let pwd = this.state.pwd;
-        // var auth = this.state.isAuth;
+        console.log('Email: ', email, ' pwd: ', pwd);
         const {cookies} = this.props;
 
         fetch(window.location.origin + '/api/login', {
             method: 'post',
-            body: JSON.stringify({email: email, pwd: pwd})
+            body: JSON.stringify({email: email, pwd: pwd}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(response => response.json())
             .then(data => {
                 cookies.set('isAuth', data['auth'], {path: '/'});

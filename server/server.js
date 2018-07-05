@@ -15,11 +15,16 @@ app.post('/api/login', function (req, res) {
     let email = req.body.email;
     let pwd = req.body.pwd;
 
+    console.log('Email: ', email);
+    console.log('Pwd: ', pwd);
     let options = {
         method: 'POST',
         url: 'http://34.249.244.134/api/login',
         body: JSON.stringify({email: email, pwd: pwd}),
-        json: true
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
     };
 
     console.log('Login', options);
