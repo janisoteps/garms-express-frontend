@@ -47,7 +47,7 @@ class Profile extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
+                console.log('Remove fav response: ' , data);
                 this.setState({
                     favorites: data.res
                 });

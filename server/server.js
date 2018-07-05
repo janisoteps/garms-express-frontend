@@ -109,6 +109,8 @@ app.post('/api/removefav', function (req, res) {
         if (!error && response.statusCode === 200) {
             let response_data = JSON.parse(body);
 
+            console.log('Remove fav response: ', response_data);
+
             res.send(response_data);
         }
     }
