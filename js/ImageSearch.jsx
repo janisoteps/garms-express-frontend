@@ -37,7 +37,6 @@ class ImageSearch extends React.Component  {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.getColors = this.getColors.bind(this);
-        this.colorImageSearch = this.colorImageSearch.bind(this);
         this.similarImageSearch = this.similarImageSearch.bind(this);
         this.getColorsCats = this.getColorsCats.bind(this);
         this.colorCatImageSearch = this.colorCatImageSearch.bind(this);
