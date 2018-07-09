@@ -20,11 +20,13 @@ class App extends React.Component {
         this.state = {
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
-            email: cookies.get('email')
+            email: cookies.get('email'),
+            higherCat: ''
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.changeSex = this.changeSex.bind(this);
+        this.handleHigherCat = this.handleHigherCat.bind(this);
     }
 
     componentWillMount() {
@@ -88,8 +90,15 @@ class App extends React.Component {
             });
     };
 
+    handleHigherCat = (higherCat) => {
+        console.log('App higherCat: ', higherCat);
+        this.setState({
+            higherCat: higherCat
+        });
+    };
+
     render() {
-        // console.log('App.jsx state: ', this.state);
+        console.log('App.jsx higher cat state: ', this.state.higherCat);
         let isUserAuth = this.state.isAuth;
         const body = this.state.isAuth == true || this.state.isAuth == "true" ? (
             <Main
@@ -98,6 +107,8 @@ class App extends React.Component {
                 username={this.state.username}
                 email={this.state.email}
                 changeSex={(sex) => {this.changeSex(sex);}}
+                higherCat={this.state.higherCat}
+                handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
             />
         ) : (
             <div className="register-form">

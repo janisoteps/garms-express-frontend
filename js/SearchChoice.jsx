@@ -1,16 +1,18 @@
 import React from "react";
-import RaisedButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route } from 'react-router-dom';
-import Paper from 'material-ui/Paper';
 
 
 class SearchChoice extends React.Component {
     constructor(props) {
         super(props);
-
+        this.handleHigherCat = this.handleHigherCat.bind(this);
     }
 
+    handleHigherCat(higherCat){
+        this.props.handleHigherCat(higherCat);
+        console.log('SearchChoice higherCat: ', higherCat);
+    }
 
 
     render () {
@@ -21,7 +23,18 @@ class SearchChoice extends React.Component {
                     <div className="search-choice">
                         <Route render={({ history }) => (
                             <div
-                                className="search-choice-button"
+                                className="search-choice-button-type"
+                                onClick={() => { history.push('/textsearch') }}>
+                                <div className="search-choice-title">
+                                    <div className="text-search-icon"></div>
+                                    <div className="search-choice-text">Type your search</div>
+                                </div>
+                            </div>
+                        )} />
+
+                        <Route render={({ history }) => (
+                            <div
+                                className="search-choice-button-image"
                                 onClick={() => { history.push('/imagesearch') }}>
                                 <div className="search-choice-title">
                                     <div className="image-search-icon"></div>
@@ -32,11 +45,11 @@ class SearchChoice extends React.Component {
 
                         <Route render={({ history }) => (
                             <div
-                                className="search-choice-button"
-                                onClick={() => { history.push('/textsearch') }}>
+                                className="search-choice-button-explore"
+                                onClick={() => { history.push('/explorer') }}>
                                 <div className="search-choice-title">
-                                    <div className="text-search-icon"></div>
-                                    <div className="search-choice-text">Type your search</div>
+                                    <div className="search-glass-icon"></div>
+                                    <div className="search-choice-text">Or explore...</div>
                                 </div>
                             </div>
                         )} />

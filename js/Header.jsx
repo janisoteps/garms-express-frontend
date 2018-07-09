@@ -42,7 +42,7 @@ class Header extends React.Component {
 
         return (
             <div className="header-bar">
-                <div className="logo"><h1><Link style={{textDecoration: 'none', color: '#5f5d92'}} to="/">Garms</Link>
+                <div className="logo"><h1><Link style={{textDecoration: 'none', color: '#171732'}} to="/">Garms</Link>
                 </h1></div>
                 {buttons}
             </div>

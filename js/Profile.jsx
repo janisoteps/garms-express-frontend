@@ -94,10 +94,10 @@ class Profile extends React.Component  {
                 let sale = productInfo.sale;
                 let saleprice = productInfo.saleprice.toFixed(2);
                 let shop = productInfo.shop;
-                // let siamese_64 = productInfo.siamese_64;
+                let key = id + Math.floor(Math.random() * Math.floor(1000));
 
                 return (
-                    <Paper zDepth={1} className="profile-product-tile" key={id}>
+                    <Paper zDepth={1} className="profile-product-tile" key={key}>
                         <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
                         <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
                         <div className="product-name">{name}</div>

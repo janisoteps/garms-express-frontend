@@ -11,6 +11,7 @@ const fs = require('fs');  // Filesystem
 
 // --------------------------   MAIN API   ---------------------------------
 
+
 app.post('/api/login', function (req, res) {
     let email = req.body.email;
     let pwd = req.body.pwd;
@@ -40,6 +41,7 @@ app.post('/api/login', function (req, res) {
     request(options, handleResponse);
 });
 
+
 // Add a product favorite to users account
 app.post('/api/addfav', function (req, res) {
     let email = req.body.email;
@@ -64,6 +66,7 @@ app.post('/api/addfav', function (req, res) {
 
     request(options, handleResponse);
 });
+
 
 // Retrieve user favorites
 app.get('/api/favorites', function (req, res) {
@@ -91,6 +94,7 @@ app.get('/api/favorites', function (req, res) {
     request(options, handleResponse);
 });
 
+
 // Remove a product favorite from users account
 app.post('/api/removefav', function (req, res) {
     let email = req.body.email;
@@ -117,6 +121,7 @@ app.post('/api/removefav', function (req, res) {
 
     request(options, handleResponse);
 });
+
 
 // Search similar products to requested search product
 app.get('/api/search', function (req, res) {
@@ -153,6 +158,7 @@ app.get('/api/search', function (req, res) {
     request(options, handleResponse);
 });
 
+
 // Search products based on input text string
 app.get('/api/text', function (req, res) {
     let string = req.query.string;
@@ -179,6 +185,7 @@ app.get('/api/text', function (req, res) {
 
     request(options, handleResponse);
 });
+
 
 // Get product category, color and siamese encoding
 app.post('/api/colorcat', upload.single('image'), function (req, res) {
@@ -207,6 +214,7 @@ app.post('/api/colorcat', upload.single('image'), function (req, res) {
     request(options, handleResponse);
 });
 
+
 // Search products based on confirmation modal input
 app.get('/api/colorcatsearch', function (req, res) {
     let cat_ai_txt = req.query.cat_ai_txt;
@@ -232,6 +240,35 @@ app.get('/api/colorcatsearch', function (req, res) {
             let response_data = JSON.parse(body);
 
             res.send(response_data);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+// Return images for each cat in request array
+app.post('/api/cat-images', function (req, res) {
+    let categories = req.body.categories;
+    let sex = req.body.sex;
+    let mainCat = req.body.main_cat;
+
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/cat-images',
+        body: JSON.stringify({categories: categories, sex: sex, main_cat: mainCat}),
+        json: true
+    };
+
+    console.log('Cat images, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // let response_data = JSON.parse(body);
+
+            console.log('Cat iamges: ', body);
+
+            res.send(body);
         }
     }
 

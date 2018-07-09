@@ -45,6 +45,7 @@ class TextSearch extends React.Component  {
         this.expandSexSelector = this.expandSexSelector.bind(this);
         this.showCatPicker = this.showCatPicker.bind(this);
         this.setMainCats = this.setMainCats.bind(this);
+        this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
     }
 
     //Handle text input change
@@ -154,6 +155,45 @@ class TextSearch extends React.Component  {
             });
     }
 
+    setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
+        // console.log('Similar image search launched, prod id: ', prod_id);
+        this.setState({
+            loading: true
+        });
+
+        let mainColor = color_1.toString().replace(/\s+/g, '');
+        // let mainColor = this.state.mainColor;
+        let siam_64 = siamese_64.toString().replace(/\s+/g, '');
+
+        let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
+            + '&main_cat=' + mainCat1
+            + '&main_cat2=' + mainCat2
+            + '&nr1_cat_sc=' + nr1_cat_sc
+            + '&color_1=[' + mainColor
+            + ']&siamese_64=[' + siam_64
+            + ']&sex=' + this.state.sex
+            + '&id=' + prod_id;
+
+        console.log('search string: ', searchString);
+
+        fetch(searchString, {
+            method: 'get',
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            this.setState({
+                results: data.res,
+                loading: false
+            });
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            window.scrollTo(0, 0);
+        });
+    }
+
     changeSex(sex){
         this.props.changeSex(sex);
         this.setState({
@@ -234,12 +274,14 @@ class TextSearch extends React.Component  {
         let SearchBox = (
                 <div className="text-search-box">
                     <div className="inner-text-search-box">
-                        <TextField className="text-search-input"
-                                   hintText="Purple denim jeans or..."
-                                   floatingLabelText="What's your outfit idea?"
-                                   name="searchString"
-                                   onChange={this.handleChange.bind(this)}
-                                   onKeyDown={this.onEnterPress}
+                        <TextField
+                            autoFocus="autofocus"
+                            className="text-search-input"
+                            hintText="Purple denim jeans or..."
+                            floatingLabelText="What's your outfit idea?"
+                            name="searchString"
+                            onChange={this.handleChange.bind(this)}
+                            onKeyDown={this.onEnterPress}
                         />
                         <div className="text-search-button" onClick={this.textImageSearch}>
                             <div className="search-icon" />
@@ -335,7 +377,7 @@ class TextSearch extends React.Component  {
                 <div className="cat-selector" onClick={this.showCatPicker}></div>
             )
         };
-
+        //                            {/*<ProductResults email={this.state.email} simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }} results={this.state.results}/>*/}
         return(
             <MuiThemeProvider>
                 <div>
@@ -344,7 +386,13 @@ class TextSearch extends React.Component  {
 
                     {
                         this.state.results.length > 0 ? (
-                            <ProductResults email={this.state.email} simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }} results={this.state.results}/>
+                            <ProductResults
+                                mainCat={this.state.mainCat}
+                                setMainCatsAndSearchSimilar={(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => {this.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }}
+                                email={this.state.email}
+                                simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) }}
+                                results={this.state.results}
+                            />
                         ) : (
                             SearchBox
                         )
