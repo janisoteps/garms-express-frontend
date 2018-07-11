@@ -277,8 +277,8 @@ class Explorer extends React.Component  {
     // Loads products based on category in argument
     // If no category is passed loads the top categories
     loadProducts = (textCategory) => {
-        console.log('Prod load cat state: ', this.state.mainCatTop);
-        console.log('Prod load cat arg: ', textCategory);
+        // console.log('Prod load cat state: ', this.state.mainCatTop);
+        // console.log('Prod load cat arg: ', textCategory);
         // let sex = this.props.sex;
 
         if(textCategory !== undefined) {
@@ -294,7 +294,7 @@ class Explorer extends React.Component  {
 
     // Sets top category, allows rendering of subcats
     setHigherCat = (cat) => {
-        console.log('New higher cat: ', cat);
+        // console.log('New higher cat: ', cat);
         let textCategory = '';
         try {
             textCategory = hCatReverseDict[cat];
@@ -305,7 +305,7 @@ class Explorer extends React.Component  {
         if (textCategory === undefined){
             textCategory = cat;
         }
-        console.log('Higher cat set to: ', textCategory);
+        // console.log('Higher cat set to: ', textCategory);
 
         this.setState({
             mainCatTop: textCategory,
@@ -352,13 +352,13 @@ class Explorer extends React.Component  {
                 imgName = cat;
             }
             let imgUrl = '/images/' + imgName.replace(/ +/g, "") +  '.jpg';
-            console.log('Img URL: ', imgUrl);
+            // console.log('Img URL: ', imgUrl);
             let tileStyle = {
                 width: '22vw',
                 minWidth: '200px',
                 height: 'calc(21vw * 1.66)',
                 minHeight: '300px',
-                background: 'url(' + imgUrl + ') no-repeat center center',
+                background: 'url(' + imgUrl + ') no-repeat center center / auto 100%',
                 backgroundSize: 'auto 100%',
                 display: 'inline-block',
                 position: 'relative',
@@ -400,7 +400,7 @@ class Explorer extends React.Component  {
             <MuiThemeProvider>
                 <div className="explorer-container">
                     <div className="explore-title-pane">
-                        <div className="exlore-title-tile">
+                        <div className="explore-title-tile">
                             {(this.state.mainCatTop !== undefined) ? (
                                 <h2>{this.state.mainCatTop}   {this.state.mainCatSub}</h2>
                             ):(
@@ -408,7 +408,7 @@ class Explorer extends React.Component  {
                             )}
                         </div>
                         <div
-                            className="exlore-title-tile"
+                            className="explore-title-tile"
                             onClick={this.resetCats}
                         >
                             {(this.state.mainCatTop !== undefined) ? (

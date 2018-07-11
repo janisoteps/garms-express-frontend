@@ -698,24 +698,106 @@
     width: 100vw;
     height: 100px;
     position: relative;
+    /*margin-bottom: 20px;*/
 }
 
-.exlore-title-tile{
+.explore-title-tile{
     width: 50vw;
     height: 100%;
-    text-align: center;
-    display: inline-block;
-    padding-top: 32px;
+    /*text-align: center;*/
+    /*display: inline-block;*/
+    float: left;
+    /*padding-top: 32px;*/
+    text-align:center;
+    display:table;
 }
 
-.exlore-title-tile:hover{
+.explore-title-tile h2 {
+    display:table-cell;
+    vertical-align:middle;
+}
+
+.explore-title-tile:hover{
     background-color: #e9e9e9;
     cursor: pointer;
 }
 
 .explorer-color-selection-pane{
+    padding-top: 10px;
     position: relative;
-    width: 80vw;
-    margin-left: 13vw;
+    width: 90vw;
+    margin-left: 10vw;
     text-align: center;
+    horiz-align: center;
+}
+
+.explorer-color-selection-pane h3 {
+    width: 100vw;
+    margin-left: -10vw;
+    text-align: center;
+}
+
+.explorer-alphabet-letter{
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    display: inline-block;
+}
+
+.explorer-alphabet-letter:hover{
+    cursor: pointer;
+    background-color: #c4c4c4;
+}
+
+.explorer-brand-selection-pane{
+    padding-top: 10px;
+}
+
+.explorer-alphabet{
+    text-align: center;
+}
+
+.explorer-brand-tile{
+    margin: 5px;
+    display: inline-block;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    padding: 2px;
+}
+
+.explorer-brand-tile:hover{
+    cursor: pointer;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.explorer-brand-add{
+    width: 24px;
+    height: 24px;
+    background: url('../images/baseline-add_circle_outline-24px.svg') no-repeat center;
+    background-size: 24px 24px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: -2px;
+}
+
+.explorer-brand-remove{
+    width: 24px;
+    height: 24px;
+    background: url('../images/baseline-remove_circle_outline-24px.svg') no-repeat center;
+    background-size: 24px 24px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: -2px;
+}
+
+.explorer-brand-tile-title{
+    display: inline-block;
+}
+
+.explorer-brand-selected-list{
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #c4c4c4;
 }
