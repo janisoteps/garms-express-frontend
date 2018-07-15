@@ -42,6 +42,41 @@ app.post('/api/login', function (req, res) {
 });
 
 
+// Register new user
+app.post('api/register', function (req, res) {
+    let email = req.body.email;
+    let pwd = req.body.pwd;
+    let sex = req.body.sex;
+    let username = req.body.username;
+    let fb_id = Math.random() * 1000 + Math.random() * 1000 + Math.random() * 1000;
+
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/register',
+        body: JSON.stringify({
+            email: email,
+            pwd: pwd,
+            sex: sex,
+            username: username,
+            fb_id: fb_id
+        }),
+        json: true
+    };
+
+    console.log('Register, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Add a product favorite to users account
 app.post('/api/addfav', function (req, res) {
     let email = req.body.email;

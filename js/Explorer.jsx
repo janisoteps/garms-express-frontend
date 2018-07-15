@@ -256,6 +256,7 @@ class Explorer extends React.Component  {
         super(props);
         this.state = {
             isAuth: this.props.isAuth,
+            sex: this.props.sex,
             mainCatTop: undefined,
             mainCatSub: undefined,
             catProducts: [],
@@ -429,6 +430,7 @@ class Explorer extends React.Component  {
                         <ExplorerFilters
                             mainCatTop={this.state.mainCatTop}
                             mainCatSub={this.state.mainCatSub}
+                            sex={this.props.sex}
                         />
                     )}
 
