@@ -296,16 +296,21 @@ class CatPicker extends React.Component {
         let catList = higherCats.map((hCat, ind) => {
             // console.log('Hcat: ', hCat, ' index: ', ind);
             // console.log('categories: ', categories);
-            let cats = categories[hCat].map((cat, ind) => {
+            let topKeyVar = Math.floor(10000000 + Math.random() * 90000000);
+
+            let cats = categories[hCat].map((cat, index) => {
                 let catStyle = {
                     borderWidth: this.props.mainCat === cat && '1px',
                     borderColor: this.props.mainCat === cat && '#ab99b8',
                     borderStyle: this.props.mainCat === cat && 'solid'
                 };
+
+                let keyVar = Math.floor(10000000 + Math.random() * 90000000);
+
                 return(
                     <div style={catStyle}>
                         <div
-                        key={'cat-line' + ind}
+                        key={'cat-line' + keyVar}
                         className="cat-line"
                         onClick={() => {this.setMainCats(cat, hCat);}}
                         >{cat}</div>
@@ -314,7 +319,7 @@ class CatPicker extends React.Component {
             });
 
             return(
-                <div className="cat-picker-expand" key={ind} onClick={() => {this.expandCatList(ind);}}>
+                <div className="cat-picker-expand" key={'top-cat' + topKeyVar} onClick={() => {this.expandCatList(ind);}}>
                     <div className="picker-title"><i className="cat-icon" /> {hCat}</div>
                     {(this.state.expandCat === ind) && (
                         cats

@@ -1,6 +1,7 @@
 import React from "react";
 require('../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Slider from 'material-ui/Slider';
 require('../css/ball-atom.css');
 import { CirclePicker } from 'react-color';
 
@@ -21,16 +22,23 @@ class ExplorerFilters extends React.Component  {
             mainCatSub: this.props.mainCatSub,
             background: '#fff',
             colorRGB: {},
+            colorSelected: false,
             letter: '',
             brands: ['All'],
-            shops: ['ASOS', 'TOP SHOP', 'TOP MAN', 'ZALANDO', 'FARFETCH']
+            shops: ['ASOS', 'TOP SHOP', 'TOP MAN', 'ZALANDO', 'FARFETCH'],
+            priceSlider: 5000
         };
     }
+
+    handlePriceSlider = (event, value) => {
+        this.setState({priceSlider: value});
+    };
 
     handleChangeComplete = (color) => {
         this.setState({
             background: color.hex,
-            colorRGB: color.rgb
+            colorRGB: color.rgb,
+            colorSelected: true
         });
     };
 
@@ -95,6 +103,19 @@ class ExplorerFilters extends React.Component  {
                 shops: shopList
             });
         }
+    };
+
+    explorerSearch = () => {
+        let mainCatTop = this.state.mainCatTop;
+        let mainCatSub = this.state.mainCatSub;
+        let sex = this.state.sex;
+        let colorSelected = this.state.colorSelected;
+        let shops = this.state.shops;
+        let brands = this.state.brands;
+        let maxPrice = this.state.priceSlider;
+        let color = this.state.colorRGB;
+
+        this.props.explorerSearch(mainCatTop, mainCatSub, sex, colorSelected, shops, brands, maxPrice, color);
     };
 
     render () {
@@ -212,9 +233,11 @@ class ExplorerFilters extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div style={{backgroundColor: 'rgba(' + this.state.colorRGB['r'] + ', ' + this.state.colorRGB['g'] + ', ' + this.state.colorRGB['b'] +', 0.3)'}}>
+
                     <div className="explorer-sex-selection-pane">
                         <SexTiles />
                     </div>
+
                     <div className="explorer-color-selection-pane">
                         <h3>What color are you looking for?</h3>
                         <CirclePicker
@@ -230,7 +253,6 @@ class ExplorerFilters extends React.Component  {
                                 "#673ab7",
                                 "#3f51b5",
                                 "#2196f3",
-                                "#03a9f4",
                                 "#00bcd4",
                                 "#009688",
                                 "#4caf50",
@@ -248,10 +270,12 @@ class ExplorerFilters extends React.Component  {
                             ]}
                         />
                     </div>
+
                     <div className="explorer-shop-selection-pane">
                         <h3>What are your favorite shops?</h3>
                         {shopTiles}
                     </div>
+
                     <div className="explorer-brand-selection-pane">
                         <h3>What are your favorite brands?</h3>
                             {(this.state.brands.length > 0) && (
@@ -268,6 +292,20 @@ class ExplorerFilters extends React.Component  {
                             )}
                         </div>
                     </div>
+
+                    <div className="explorer-price-selection-pane">
+                        <h3>What is maximum price?</h3>
+                        <h2>£{this.state.priceSlider}</h2>
+                        <Slider
+                            min={0}
+                            max={5000}
+                            step={10}
+                            value={this.state.priceSlider}
+                            onChange={this.handlePriceSlider}
+                        />
+                    </div>
+
+                    <div className="search-button" onClick={this.explorerSearch}><p>search</p></div>
                 </div>
             </MuiThemeProvider>
         )

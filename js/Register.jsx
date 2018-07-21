@@ -47,7 +47,11 @@ export default class Register extends React.Component {
                 pwd: pwd,
                 sex: sex,
                 username: username
-            })
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) { return response.json(); })
             .then(function(data) {
                 console.log(data);

@@ -241,29 +241,35 @@
 
 .preview-container{
     width: 100vw;
+    /*height: calc(100vh - 50px);*/
+    margin-top: 50px;
     text-align: center;
+    position: fixed;
+    top: 50px;
 }
 
 .image-preview{
-    max-width: 95vw;
-    height: auto;
-    /*margin-left: calc((100vw - 300px) / 2);*/
-    margin-top: 90px;
+    height: calc(90vh - 50px);
+    width: auto;
 }
 
 .search-button{
     width: 200px;
+    position: fixed;
     margin-left: calc((100vw - 200px) / 2);
     border-radius: 3px;
     border: 1px solid #c4c4c4;
     cursor: pointer;
-    margin-top: 30px;
     text-align: center;
     font-size: 2rem;
     padding-top: 10px;
-    position: fixed;
-    bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.7);
+    bottom: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.search-button:hover{
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
+    cursor: pointer;
 }
 
 .product-tile{
@@ -307,13 +313,13 @@
 
 .color-modal{
     z-index: 20;
-    width: 500px;
-    /*height: 380px;*/
+    width: 100vw;
+    /*height: calc(100vh - 50px);*/
     text-align: center;
-    position: fixed;
-    top: 100px;
-    margin-left: calc(50vw - 250px);
+    position: absolute;
+    top: 50px;
     padding: 20px;
+    background-color: #FFFFFF;
 }
 
 .error-modal{
@@ -729,6 +735,7 @@
     margin-left: 10vw;
     text-align: center;
     horiz-align: center;
+    margin-top: 30px;
 }
 
 .explorer-color-selection-pane h3 {
@@ -751,6 +758,7 @@
 
 .explorer-brand-selection-pane{
     padding-top: 10px;
+    margin-top: 50px;
 }
 
 .explorer-alphabet{
@@ -803,5 +811,52 @@
 }
 
 .explorer-shop-selection-pane{
-    margin-top: 20px;
+    margin-top: 50px;
+}
+
+.explorer-price-selection-pane{
+    margin-top: 50px;
+    width: 80vw;
+    margin-left: 10vw;
+    padding-bottom: 120px;
+}
+
+.explorer-no-results{
+    height: 300px;
+    margin-top: calc(50vh - 175px);
+    text-align: center;
+}
+
+.explorer-no-results-button{
+    margin-top: 50px;
+    width: 200px;
+    height: 50px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    margin-left: calc(50vw - 100px);
+    border-radius: 10px;
+    border: 1px solid #c4c4c4;
+}
+
+.explorer-no-results-button:hover{
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.explorer-loader-background{
+    top: 0;
+    position: fixed;
+    z-index: 9;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+.color-modal-image-preview{
+    text-align: center;
+    height: 45vh;
+}
+
+.color-image-preview{
+    height: 45vh;
+    width: auto;
 }

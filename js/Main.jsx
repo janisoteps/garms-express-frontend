@@ -85,6 +85,8 @@ class Main extends React.Component {
                                sex={this.props.sex}
                                isAuth={this.props.isAuth}
                                higherCat={this.props.higherCat}
+                               email={this.props.email}
+                               changeSex={(sex) => {this.changeSex(sex);}}
                            />}
                     />
                 </Switch>

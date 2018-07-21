@@ -43,7 +43,7 @@ app.post('/api/login', function (req, res) {
 
 
 // Register new user
-app.post('api/register', function (req, res) {
+app.post('/api/register', function (req, res) {
     let email = req.body.email;
     let pwd = req.body.pwd;
     let sex = req.body.sex;
@@ -302,6 +302,47 @@ app.post('/api/cat-images', function (req, res) {
             // let response_data = JSON.parse(body);
 
             console.log('Cat iamges: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+// Do product search from Explorer component
+app.post('/api/explorer_search', function (req, res) {
+    let mainCatTop = req.body.mainCatTop;
+    let mainCatSub = req.body.mainCatSub;
+    let sex = req.body.sex;
+    let colorSelected = req.body.colorSelected;
+    let shops = req.body.shops;
+    let brands = req.body.brands;
+    let maxPrice = req.body.maxPrice;
+    let color = req.body.color;
+
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/explorer_search',
+        body: JSON.stringify({
+            main_cat_top: mainCatTop,
+            main_cat_sub: mainCatSub,
+            sex: sex,
+            color_selected: colorSelected,
+            shops: shops,
+            brands: brands,
+            max_price: maxPrice,
+            color: color
+        }),
+        json: true
+    };
+
+    console.log('Explorer search, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log('Explorer response length: ', body.res.length);
 
             res.send(body);
         }

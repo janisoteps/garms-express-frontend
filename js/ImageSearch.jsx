@@ -183,38 +183,6 @@ class ImageSearch extends React.Component  {
         });
     }
 
-    // Once user has selected color from their image sends request to server to
-    // analyse the image category and find the best color matches
-    // colorImageSearch(colorNr){
-    //     let imageFile = this.state.files[0];
-    //     let color_data = new FormData();
-    //     color_data.append('image', imageFile);
-    //
-    //     let colorName = 'color_' + colorNr;
-    //     let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
-    //     color_data.append('color', colorValue);
-    //
-    //     this.setState({
-    //         colors: {},
-    //         loading: true,
-    //         mainColor: colorValue
-    //     });
-    //
-    //     fetch(window.location.origin + '/api/colorimage', {
-    //         method: 'post',
-    //         body: color_data
-    //     }).then(response => {
-    //         return response.json();
-    //     }).then(data => {
-    //         console.log(data);
-    //         this.setState({
-    //             results: data.res,
-    //             loading: false
-    //         });
-    //
-    //     });
-    // }
-
     setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
         // console.log('Similar image search launched, prod id: ', prod_id);
         this.setState({
@@ -478,10 +446,6 @@ class ImageSearch extends React.Component  {
         // stateless component
         let ColorChoiceModal = () => {
             if(Object.keys(this.state.colors).length > 0){
-                // let cat1 = this.state.cats[0];
-                // let cat2 = this.state.cats[1];
-                // let cat3 = this.state.cats[2];
-
                 let catClass = (cat) => {
                     if(this.state.mainCat === cat){
                         return 'cat-choice-main'
@@ -504,24 +468,25 @@ class ImageSearch extends React.Component  {
 
                 if(Object.keys(this.state.cats).length > 0){
                     return(
-                        <div className="overlay">
-                            <Paper zDepth={1} className="color-modal">
-                                <h5>I found these colors and outfits in your photo</h5>
-                                <p>choose which color to search for:</p>
-                                <div style={colorStyle1} onClick={() => this.setColorCat({'color': 1, 'cat':''})} />
-                                <div style={colorStyle2} onClick={() => this.setColorCat({'color': 2, 'cat':''})} />
-                                <div style={colorStyle3} onClick={() => this.setColorCat({'color': 3, 'cat':''})} />
-                                <p>choose which outfit type to search for:</p>
-                                <div>
-                                    {mainCats}
-                                </div>
-                                <br></br>
-                                <p>some more predictions:</p>
-                                <div className="alt-cat-selection">
-                                    {moreCats}
-                                </div>
-                                <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >go</div>
-                            </Paper>
+                        <div className="color-modal">
+                            <div className="color-modal-image-preview">
+                                <img className="color-image-preview" src={this.state.files[0].preview} />
+                            </div>
+                            <h5>I found these colors and outfits in your photo</h5>
+                            <p>choose which color to search for:</p>
+                            <div style={colorStyle1} onClick={() => this.setColorCat({'color': 1, 'cat':''})} />
+                            <div style={colorStyle2} onClick={() => this.setColorCat({'color': 2, 'cat':''})} />
+                            <div style={colorStyle3} onClick={() => this.setColorCat({'color': 3, 'cat':''})} />
+                            <p>choose which outfit type to search for:</p>
+                            <div>
+                                {mainCats}
+                            </div>
+                            <br></br>
+                            <p>some more predictions:</p>
+                            <div className="alt-cat-selection">
+                                {moreCats}
+                            </div>
+                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >go</div>
                         </div>
                     )
                 } else {
