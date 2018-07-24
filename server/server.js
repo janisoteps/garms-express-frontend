@@ -256,7 +256,7 @@ app.post('/api/colorcat', upload.single('image'), function (req, res) {
 app.get('/api/colorcatsearch', function (req, res) {
     let cat_ai_txt = req.query.cat_ai_txt;
     let color_rgb = req.query.color_rgb;
-    let siamese_64 = req.query.pca_256;
+    // let siamese_64 = req.query.pca_256;
     let sex = req.query.sex;
 
     let options = {
@@ -265,7 +265,6 @@ app.get('/api/colorcatsearch', function (req, res) {
         qs: {
             cat_ai_txt: cat_ai_txt,
             color_rgb: color_rgb,
-            pca_256: siamese_64,
             sex: sex
         }
     };

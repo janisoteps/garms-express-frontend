@@ -83,12 +83,85 @@ class ImageSearch extends React.Component  {
             });
     }
 
-    // When file is uploaded adds the file to state from drop zone
-    onDrop(acceptedFiles, rejectedFiles) {
-        this.setState({
-            files: acceptedFiles
+    // When file is uploaded resize the image and then add to state
+    onDrop = (acceptedFiles) => {
+        // Define a function to get back to file type after resizing and getting base64 string
+        function base64ToFile(dataURI, origFile) {
+            let byteString, mimestring;
+            if(dataURI.split(',')[0].indexOf('base64') !== -1 ) {
+                byteString = atob(dataURI.split(',')[1]);
+            } else {
+                byteString = decodeURI(dataURI.split(',')[1]);
+            }
+            mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            let content = new Array();
+            for (let i = 0; i < byteString.length; i++) {
+                content[i] = byteString.charCodeAt(i);
+            }
+            let newFile = new File(
+                [new Uint8Array(content)], origFile.name, {type: mimestring}
+            );
+            // Copy props set by the dropzone in the original file
+            let origProps = [
+                "upload", "status", "previewElement", "previewTemplate", "accepted", "preview"
+            ];
+            origProps.forEach(p => {
+                newFile[p] = origFile[p];
+            });
+
+            return newFile;
+        }
+
+        // For each file dropped read it, turn it to base64 and resize using FileReader and canvas
+        acceptedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                console.log('Reader loaded');
+                const fileAsBinaryString = reader.result;
+
+                let img = document.createElement("img");
+                img.onload = () => {
+                    console.log('Img loaded');
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    let MAX_WIDTH = 600;
+                    let MAX_HEIGHT = 600;
+                    let width = img.width;
+                    let height = img.height;
+
+                    console.log('Width: ', width);
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    let ctx_new = canvas.getContext("2d");
+                    ctx_new.drawImage(img, 0, 0, width, height);
+                    // Here we turn canvas to JPEG
+                    let dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                    // And here base64 JPEG to an actual file with Dropzone props added back
+                    let image_file = base64ToFile(dataUrl, file);
+                    this.setState({files: [image_file]});
+                };
+                img.src = fileAsBinaryString;
+            };
+            reader.onabort = () => console.log('file reading was aborted');
+            reader.onerror = () => console.log('file reading has failed');
+
+            reader.readAsDataURL(file);
         });
-    }
+    };
 
     // Sends color extraction request to server, sets state to colors in response
     getColors(){
@@ -124,6 +197,7 @@ class ImageSearch extends React.Component  {
         let imageFile = this.state.files[0];
 
         let data = new FormData();
+        // data.append('image', imageFile);
         data.append('image', imageFile);
 
         fetch(window.location.origin + '/api/colorcat', {
@@ -138,7 +212,6 @@ class ImageSearch extends React.Component  {
                 cats: data.res['img_cats_ai_txt'],
                 altCats: data.res['alt_cats_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
-                pca_256: data.res['pca_256'],
                 loading: false
             });
         });
@@ -147,12 +220,9 @@ class ImageSearch extends React.Component  {
     // Once user has selected color from their image sends request to server to
     // analyse the image category and find the best color matches
     colorCatImageSearch(){
-        // let colorCatData = new FormData();
-        // color_data.append('image', imageFile);
-
         let colorName = 'color_' + this.state.mainColor;
         let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
-        let pcaValue = this.state.pca_256.toString().replace(/\s+/g, '');
+        // let pcaValue = this.state.pca_256.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
 
         let catName = this.state.mainCat;
@@ -167,7 +237,6 @@ class ImageSearch extends React.Component  {
 
         let searchString = window.location.origin + '/api/colorcatsearch?cat_ai_txt=' + catName
             + '&color_rgb=' + colorValue
-            + '&pca_256=' + pcaValue
             + '&sex=' + sex;
 
         fetch(searchString, {
