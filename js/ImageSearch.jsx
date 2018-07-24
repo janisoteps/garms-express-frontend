@@ -29,7 +29,7 @@ class ImageSearch extends React.Component  {
             altCats: [],
             mainCat: '',
             mainCat2: '',
-            siamese_64: [],
+            pca_256: [],
             sexPickerWidth: '56px',
             catsOn: false
         };
@@ -138,7 +138,7 @@ class ImageSearch extends React.Component  {
                 cats: data.res['img_cats_ai_txt'],
                 altCats: data.res['alt_cats_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
-                siamese_64: data.res['siamese_64'],
+                pca_256: data.res['pca_256'],
                 loading: false
             });
         });
@@ -152,7 +152,7 @@ class ImageSearch extends React.Component  {
 
         let colorName = 'color_' + this.state.mainColor;
         let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
-        let siameseValue = this.state.siamese_64.toString().replace(/\s+/g, '');
+        let pcaValue = this.state.pca_256.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
 
         let catName = this.state.mainCat;
@@ -167,7 +167,7 @@ class ImageSearch extends React.Component  {
 
         let searchString = window.location.origin + '/api/colorcatsearch?cat_ai_txt=' + catName
             + '&color_rgb=' + colorValue
-            + '&siamese_64=' + siameseValue
+            + '&pca_256=' + pcaValue
             + '&sex=' + sex;
 
         fetch(searchString, {
@@ -198,7 +198,7 @@ class ImageSearch extends React.Component  {
             + '&main_cat2=' + mainCat2
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + mainColor
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
@@ -240,7 +240,7 @@ class ImageSearch extends React.Component  {
             + '&main_cat2=' + this.state.mainCat2
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + mainColor
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
@@ -472,21 +472,24 @@ class ImageSearch extends React.Component  {
                             <div className="color-modal-image-preview">
                                 <img className="color-image-preview" src={this.state.files[0].preview} />
                             </div>
-                            <h5>I found these colors and outfits in your photo</h5>
+                            <h5>I found these colors and themes in your photo</h5>
+                            <br></br>
                             <p>choose which color to search for:</p>
                             <div style={colorStyle1} onClick={() => this.setColorCat({'color': 1, 'cat':''})} />
                             <div style={colorStyle2} onClick={() => this.setColorCat({'color': 2, 'cat':''})} />
                             <div style={colorStyle3} onClick={() => this.setColorCat({'color': 3, 'cat':''})} />
-                            <p>choose which outfit type to search for:</p>
+                            <br></br>
+                            <br></br>
+                            <p>choose which tags to search for:</p>
                             <div>
                                 {mainCats}
                             </div>
                             <br></br>
-                            <p>some more predictions:</p>
+                            <p>or choose from some more predictions:</p>
                             <div className="alt-cat-selection">
                                 {moreCats}
                             </div>
-                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >go</div>
+                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >SEARCH</div>
                         </div>
                     )
                 } else {

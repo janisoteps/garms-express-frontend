@@ -286,6 +286,10 @@ class Explorer extends React.Component  {
 
     componentDidMount(){
         this.loadProducts();
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 
     // Loads products based on category in argument
@@ -413,7 +417,7 @@ class Explorer extends React.Component  {
             + '&main_cat2=' + mainCat2
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + mainColor
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
@@ -455,7 +459,7 @@ class Explorer extends React.Component  {
             + '&main_cat2=' + this.state.mainCatTop
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + mainColor
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 

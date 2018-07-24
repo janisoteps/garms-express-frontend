@@ -163,7 +163,7 @@ app.get('/api/search', function (req, res) {
     let main_cat = req.query.main_cat;
     let main_cat2 = req.query.main_cat2;
     let color_1 = req.query.color_1;
-    let siamese_64 = req.query.siamese_64;
+    let siamese_64 = req.query.pca_256;
     let sex = req.query.sex;
     let id = req.query.id;
 
@@ -174,7 +174,7 @@ app.get('/api/search', function (req, res) {
             main_cat: main_cat,
             main_cat2: main_cat2,
             color_1: color_1,
-            siamese_64: siamese_64,
+            pca_256: siamese_64,
             sex: sex,
             id: id
         }
@@ -227,6 +227,8 @@ app.post('/api/colorcat', upload.single('image'), function (req, res) {
 
     let image = req.file.path;
 
+    console.log('Image size: ', req.file.size);
+
     let formData = {
             image: fs.createReadStream(image),
         };
@@ -254,7 +256,7 @@ app.post('/api/colorcat', upload.single('image'), function (req, res) {
 app.get('/api/colorcatsearch', function (req, res) {
     let cat_ai_txt = req.query.cat_ai_txt;
     let color_rgb = req.query.color_rgb;
-    let siamese_64 = req.query.siamese_64;
+    let siamese_64 = req.query.pca_256;
     let sex = req.query.sex;
 
     let options = {
@@ -263,7 +265,7 @@ app.get('/api/colorcatsearch', function (req, res) {
         qs: {
             cat_ai_txt: cat_ai_txt,
             color_rgb: color_rgb,
-            siamese_64: siamese_64,
+            pca_256: siamese_64,
             sex: sex
         }
     };

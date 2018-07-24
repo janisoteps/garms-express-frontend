@@ -369,7 +369,7 @@ class ProductResults extends React.Component  {
             let sale = productInfo.sale;
             let saleprice = productInfo.saleprice.toFixed(2);
             let shop = productInfo.shop;
-            let siamese_64 = productInfo.siamese_64;
+            let siamese_64 = productInfo.pca_256;
 
             let catArray = [];
             let catCheckArray = [];
@@ -391,7 +391,7 @@ class ProductResults extends React.Component  {
                 });
             });
 
-            // nr1_cat_ai, nr1_cat_sc, color_1, siamese_64
+            // nr1_cat_ai, nr1_cat_sc, color_1, pca_256
 
             // Dynamic CSS for image color choice modal
             if(color_1_hex.length > 0){

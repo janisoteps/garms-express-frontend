@@ -391,14 +391,22 @@
 }
 
 .colorcat-search-button{
-    background-color: #8c64a2;
-    border-radius: 13px;
-    width: 100px;
+    background-color: #110a16;
+    border-radius: 10px;
+    width: 170px;
+    height: 50px;
     font-size: x-large;
     color: white;
     display: inline-block;
     margin-top: 20px;
+    padding-top: 6px;
     cursor: pointer;
+}
+
+.colorcat-search-button:hover{
+    cursor: pointer;
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
+    background-color: #1c0c22;
 }
 
 .cat-choice{

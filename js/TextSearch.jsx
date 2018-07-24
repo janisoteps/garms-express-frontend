@@ -89,7 +89,7 @@ class TextSearch extends React.Component  {
             + '&main_cat2=' + this.state.mainCat2
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + color_1
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
@@ -170,7 +170,7 @@ class TextSearch extends React.Component  {
             + '&main_cat2=' + mainCat2
             + '&nr1_cat_sc=' + nr1_cat_sc
             + '&color_1=[' + mainColor
-            + ']&siamese_64=[' + siam_64
+            + ']&pca_256=[' + siam_64
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
@@ -377,7 +377,7 @@ class TextSearch extends React.Component  {
                 <div className="cat-selector" onClick={this.showCatPicker}></div>
             )
         };
-        //                            {/*<ProductResults email={this.state.email} simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }} results={this.state.results}/>*/}
+        //                            {/*<ProductResults email={this.state.email} simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, pca_256, prod_id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, pca_256, prod_id) }} results={this.state.results}/>*/}
         return(
             <MuiThemeProvider>
                 <div>
