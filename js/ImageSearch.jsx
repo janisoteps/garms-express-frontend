@@ -98,8 +98,11 @@ class ImageSearch extends React.Component  {
             for (let i = 0; i < byteString.length; i++) {
                 content[i] = byteString.charCodeAt(i);
             }
-            let newFile = new File(
-                [new Uint8Array(content)], origFile.name, {type: mimestring}
+            // let newFile = new File(
+            //     [new Uint8Array(content)], origFile.name, {type: mimestring}
+            // );
+            let newFile = new Blob(
+                [new Uint8Array(content)], {type: mimestring}
             );
             // Copy props set by the dropzone in the original file
             let origProps = [
