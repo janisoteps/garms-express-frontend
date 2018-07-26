@@ -561,7 +561,7 @@ class ImageSearch extends React.Component  {
                             <div className="alt-cat-selection">
                                 {moreCats}
                             </div>
-                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >SEARCH</div>
+                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >search</div>
                         </div>
                     )
                 } else {
