@@ -252,7 +252,7 @@ const categories = {
     ]
 };
 
-//Component to search for products when exploring tags
+//Component to search for products when exploring posTags
 class Explorer extends React.Component  {
 
     constructor(props) {

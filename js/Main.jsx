@@ -9,6 +9,7 @@ import ImageSearch from './ImageSearch'
 import TextSearch from './TextSearch'
 import Profile from './Profile'
 import Explorer from './Explorer'
+import SearchFromImage from './SearchFromImage'
 
 
 // The Main component renders one of the provided
@@ -85,6 +86,16 @@ class Main extends React.Component {
                                sex={this.props.sex}
                                isAuth={this.props.isAuth}
                                higherCat={this.props.higherCat}
+                               email={this.props.email}
+                               changeSex={(sex) => {this.changeSex(sex);}}
+                           />}
+                    />
+                    <Route path='/search-from-image'
+                           render={(props) => <SearchFromImage
+                               {...props}
+                               username={this.props.username}
+                               sex={this.props.sex}
+                               isAuth={this.props.isAuth}
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
                            />}

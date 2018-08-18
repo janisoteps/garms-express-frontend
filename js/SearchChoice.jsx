@@ -35,7 +35,7 @@ class SearchChoice extends React.Component {
                         <Route render={({ history }) => (
                             <div
                                 className="search-choice-button-image"
-                                onClick={() => { history.push('/imagesearch') }}>
+                                onClick={() => { history.push('/search-from-image') }}>
                                 <div className="search-choice-title">
                                     <div className="image-search-icon"></div>
                                     <div className="search-choice-text">Search from photo</div>

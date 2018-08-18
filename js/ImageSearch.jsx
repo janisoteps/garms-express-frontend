@@ -449,7 +449,6 @@ class ImageSearch extends React.Component  {
 
         // Nested logic: if results object is not falsy then show either product result component if state has results
         // Or show a response saying that image wasn't recognized
-        //                 <ProductResults simImgSearch={() => { this.similarImageSearch() }} results={this.state.results}/>
         if(this.state.results){
             // console.log('ImageSearch email: ', this.state.email);
             var searchOrResults = this.state.results.length > 0 ? (
