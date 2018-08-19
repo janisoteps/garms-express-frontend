@@ -252,7 +252,8 @@ class SearchFromImage extends React.Component  {
 
     searchFromImage(){
         let colorName = 'color_' + this.state.mainColor;
-        let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
+        // let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
+        let colorValue = this.state.colors[colorName];
         let tags = this.state.posTags;
         let noShop = this.state.noShop;
         let sex = this.state.sex;
@@ -267,29 +268,51 @@ class SearchFromImage extends React.Component  {
             mainColor: colorValue
         });
 
-        let searchString = window.location.origin + '/api/search_from_image?tags=' + tags
-            + '&color_rgb=' + colorValue
-            + '&sex=' + sex
-            + '&no_shop=' + noShop
-            + '&encoding_nocrop=' + encodingNoCrop;
+        // let searchString = window.location.origin + '/api/search_from_image?tags=' + tags
+        //     + '&color_rgb=' + colorValue
+        //     + '&sex=' + sex
+        //     + '&no_shop=' + noShop
+        //     + '&encoding_nocrop=' + encodingNoCrop;
 
-        console.log('Search String: ', searchString);
-        console.log('Search short: ', window.location.origin + '/api/search_from_image?posTags=' + tags
-            + '&color_rgb=' + colorValue
-            + '&sex=' + sex
-            + '&no_shop=' + noShop);
-
-        fetch(searchString, {
-            method: 'get'
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            this.setState({
-                results: data.res,
-                loading: false
+        fetch(window.location.origin + '/api/search_from_image', {
+            method: 'post',
+            body: JSON.stringify({
+                tags: tags,
+                color_rgb: colorValue,
+                sex: sex,
+                no_shop: noShop,
+                encoding_nocrop: encodingNoCrop
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) { return response.json(); })
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    results: data.res,
+                    loading: false
+                });
             });
-        });
+
+        // console.log('Search String: ', searchString);
+        // console.log('Search short: ', window.location.origin + '/api/search_from_image?posTags=' + tags
+        //     + '&color_rgb=' + colorValue
+        //     + '&sex=' + sex
+        //     + '&no_shop=' + noShop);
+        //
+        // fetch(searchString, {
+        //     method: 'get'
+        // }).then(response => {
+        //     return response.json();
+        // }).then(data => {
+        //     console.log(data);
+        //     this.setState({
+        //         results: data.res,
+        //         loading: false
+        //     });
+        // });
     }
 
 
