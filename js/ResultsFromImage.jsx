@@ -268,64 +268,27 @@ class ResultsFromImage extends React.Component  {
             email: this.props.email,
             faveDrawerWidth: '64px',
             catPickerExpanded: 0,
-            prodShownImage: {}
+            posNegButtonExpanded: 0,
+            posNegButtonTag: ''
         };
         this.expandDrawer = this.expandDrawer.bind(this);
-        this.simImSrc = this.simImSrc.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.addToFavs = this.addToFavs.bind(this);
-        this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
+        this.setTags = this.setTags.bind(this);
     }
 
-    // componentWillMount() {
-    //     // Load search result image state
-    //     let initialShownImgs = Object.assign(
-    //         {}, ...this.props.results.map(product => ({
-    //             [product['prod_serial'][0].prod_hash]: {
-    //                 'img_count': product['prod_serial'][0].img_hashes.length,
-    //                 'img_shown': 0
-    //             }
-    //         }))
-    //     );
-    //     console.log('Initial image state: ', initialShownImgs);
-    //     this.setState({
-    //         prodShownImage: initialShownImgs
-    //     });
-    // }
-
-    // componentDidUpdate() {
-    //     // Load search result image state
-    //     let initialShownImgs = Object.assign(
-    //         {}, ...this.props.results.map(product => ({
-    //             [product['prod_serial'][0].prod_hash]: {
-    //                 'img_count': product['prod_serial'][0].img_hashes.length,
-    //                 'img_shown': 0
-    //             }
-    //         }))
-    //     );
-    //     console.log('Initial image state: ', initialShownImgs);
-    //     this.setState({
-    //         prodShownImage: initialShownImgs
-    //     });
-    // }
-
-    setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        console.log('Setting main cat to: ', mainCat1, ' and secondary cat to: ', mainCat2);
+    setTags(tag, type, flag){
         this.setState({
-            catPickerExpanded: 0
+            posNegButtonExpanded: 0,
+            posNegButtonTag: ''
         });
-        this.props.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id);
-    }
-
-    simImSrc(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        this.setState({
-            pickerExpanded: 0
-        });
-        console.log('Product results passed id: ', prod_id);
-        this.props.simImgSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id);
+        this.props.setTags(tag, type, flag);
     }
 
     searchSimilarImages(imgHash, color){
+        this.setState({
+            pickerExpanded: 0
+        });
         this.props.searchSimilarImages(imgHash, color);
     }
 
@@ -384,11 +347,12 @@ class ResultsFromImage extends React.Component  {
     };
 
     render () {
+        let key = '';
         let tiles = this.props.results.map(product => {
             // console.log('Product data passed to result list: ', product[0]);
             let productInfo = product['prod_serial'][0];
             let imageData = product['image_data'];
-            console.log('Image data: ', imageData);
+            // console.log('Image data: ', imageData);
             let prod_hash = productInfo.prod_hash;
             let brand = productInfo.brand;
             let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
@@ -400,7 +364,7 @@ class ResultsFromImage extends React.Component  {
             let sale = productInfo.sale;
             let saleprice = productInfo.saleprice.toFixed(2);
             let shop = productInfo.shop;
-            let key = prod_hash + Math.floor(Math.random() * 1000);
+            key = prod_hash + Math.floor(Math.random() * 1000);
             let image0 = imageData[0];
             let fst_img_hash = image0['img_hash'];
             let fst_img_color = image0['color_1'];
@@ -461,7 +425,7 @@ class ResultsFromImage extends React.Component  {
                 cursor: 'pointer',
                 verticalAlign: 'middle',
                 textAlign: 'center',
-                paddingTop: '13px',
+                paddingTop: '10px',
                 paddingRight: '5px',
                 paddingLeft: '5px'
             };
@@ -491,7 +455,8 @@ class ResultsFromImage extends React.Component  {
             let ImageCarousel = () => {
                 let image = imageData[0];
                 // let img_url = img_urls[this.state.prodShownImage[prod_hash]['img_shown']];
-                let img_url = img_urls[0];
+                // let img_url = img_urls[0];
+                let img_url = img_urls[this.props.prodImgShown[prod_hash]['img_shown']];
                 let color_1 = image['color_1'];
                 let color_2 = image['color_2'];
                 let color_3 = image['color_3'];
@@ -585,13 +550,13 @@ class ResultsFromImage extends React.Component  {
                             <div style={pickerDrawerStyle}>
                                 <div
                                     style={colorStyle1}
-                                    onClick={() => { this.simImSrc(img_cat_sc_txt, color_1, prod_id); }} />
+                                    onClick={() => { this.searchSimilarImages(img_hash, color_1); }} />
                                 <div
                                     style={colorStyle2}
-                                    onClick={() => { this.simImSrc(img_cat_sc_txt, color_2, prod_id); }} />
+                                    onClick={() => { this.searchSimilarImages(img_hash, color_2); }} />
                                 <div
                                     style={colorStyle3}
-                                    onClick={() => { this.simImSrc(img_cat_sc_txt, color_3, prod_id); }} />
+                                    onClick={() => { this.searchSimilarImages(img_hash, color_3); }} />
                             </div>
                             <div style={pickerStyle} onClick={() => { this.expandDrawer(img_hash, this.state.pickerExpanded); }}></div>
                         </div>
@@ -607,25 +572,25 @@ class ResultsFromImage extends React.Component  {
             };
 
 
-            let CatPicker = () => {
-                let catItems = catArray.map((catObj, index) => {
-                    let mainCat1 = catObj['cat'];
-                    // let mainCat2 = catObj['hCat'];
-                    let mainCat2 = this.props.mainCat;
+            let TagPicker = (img_hash) => {
+                let tagItems = catArray.map((tagObj, index) => {
+                    let addTag = tagObj['cat'];
+                    let key = img_hash + addTag;
+
                     return (
                         <div
-                            key={index}
+                            key={key}
                             style={singleCatStyle}
-                            onClick={() => {
-                                this.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id); }}>
-                            {mainCat1}
+                            onClick={() => { this.setState({posNegButtonTag: addTag, catPickerExpanded: 0}) }}
+                        >
+                            {addTag}
                         </div>
                     )
                 });
                 return (
                     <div>
                         <div style={catPickerDrawerStyle}>
-                            {catItems}
+                            <div style={{"marginRight": "10px"}}>{tagItems}</div>
                         </div>
                         <div className="cat-picker-bubble" onClick={() => { this.expandCatDrawer(prod_id, this.state.catPickerExpanded); }}></div>
                     </div>
@@ -636,22 +601,76 @@ class ResultsFromImage extends React.Component  {
                 <Paper zDepth={1} className="product-tile" key={key}>
                     <div className="product-name">{name}</div>
                     <div className="product-brand"><p>{brand} from {shop}</p></div>
-                    {/*<img className="product-image" src={img_url} />*/}
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
                     <div className="search-similar" onClick={() => { this.searchSimilarImages(fst_img_hash, fst_img_color); }} />
-                    {/*<ColorPicker/>*/}
-                    <CatPicker/>
+                    <TagPicker/>
                     <div style={faveDrawerStyle} >Added to faves</div>
                     <div className="add-to-favorites" onClick={() => { this.addToFavs(fst_img_hash, prod_id); }}></div>
                 </Paper>
             );
         });
 
+        let PosNegButton = () => {
+            if (this.state.posNegButtonTag.length > 0) {
+                let posNegButtonStyle = {
+                    position: 'fixed',
+                    width: '100vw',
+                    height: 'calc(100vh - 50px)',
+                    top: '50px',
+                    left: '0'
+                };
+                let posButtonStyle = {
+                    width: '100vw',
+                    height: 'calc((100vh - 50px) / 2)',
+                    backgroundColor: 'rgba(38, 79, 39, 0.7)',
+                    textAlign: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '2.5rem',
+                    paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
+                    cursor: 'pointer'
+                };
+                let negButtonStyle = {
+                    width: '100vw',
+                    height: 'calc((100vh - 50px) / 2)',
+                    backgroundColor: 'rgba(79, 38, 38, 0.7)',
+                    textAlign: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '2.5rem',
+                    paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
+                    cursor: 'pointer'
+                };
+                return (
+                    <div style={posNegButtonStyle}>
+                        <div
+                            style={posButtonStyle}
+                            onClick={() => {this.setTags(this.state.posNegButtonTag, 'positive', 'add')}}
+                        >
+                            <h1>more {this.state.posNegButtonTag}</h1>
+                        </div>
+                        <div
+                            style={negButtonStyle}
+                            onClick={() => {this.setTags(this.state.posNegButtonTag, 'negative', 'add')}}
+                        >
+                            <h1>less {this.state.posNegButtonTag}</h1>
+                        </div>
+                    </div>
+                )
+            } else {
+                return (
+                    <div style={{height: '0px'}} />
+                )
+            }
+        };
+
+        console.log('Product shown dictionary: ', this.props.prodImgShown);
         return (
             <MuiThemeProvider>
-                <div className="result-pane">
-                    {tiles}
+                <div>
+                    <div className="result-pane">
+                        {tiles}
+                    </div>
+                    <PosNegButton />
                 </div>
             </MuiThemeProvider>
         );

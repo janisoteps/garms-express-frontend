@@ -250,7 +250,7 @@
 
 .image-preview{
     width: 100vw;
-    max-width: 600px;
+    max-width: 400px;
     height: auto;
 }
 
@@ -581,16 +581,17 @@
 
 .sex-selector{
     position: fixed;
-    right: 0;
-    top: 70px;
+    left: 5px;
+    top: 55px;
     width: 56px;
     height: 56px;
     background: #ffffff url('../images/baseline-wc-24px.svg') no-repeat center;
     opacity : 0.7;
     background-size: 42px 42px;
     cursor: pointer;
-    border-radius: 28px 0px 0px 28px;
+    border-radius: 28px;
     box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.4);
+    text-align: right;
 }
 
 .cat-selector{
@@ -787,7 +788,35 @@
     padding: 2px;
 }
 
+.pos-tags-tile{
+    color: rgba(206, 255, 198, 0.8);
+    margin: 5px;
+    display: inline-block;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 2px;
+}
+
+.neg-tags-tile{
+    color: rgba(255, 192, 174, 0.8);
+    margin: 5px;
+    display: inline-block;
+    border-radius: 15px;
+    padding: 2px;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
 .explorer-brand-tile:hover{
+    cursor: pointer;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.pos-tags-tile:hover{
+    cursor: pointer;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.neg-tags-tile:hover{
     cursor: pointer;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.4);
 }
@@ -816,6 +845,8 @@
 
 .explorer-brand-tile-title{
     display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .explorer-brand-selected-list{

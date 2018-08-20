@@ -11,7 +11,7 @@ class ColorChoiceModal extends React.Component{
 
     setColorCat(selection){
         console.log('selection: ', selection);
-        this.props.setColorCat(selection);
+        this.props.setColorPosTags(selection);
     }
 
     colorCatImageSearch(){
@@ -96,9 +96,9 @@ class ColorChoiceModal extends React.Component{
                             <h5>I found these colors and themes in your photo</h5>
                             <br></br>
                             <p>choose which color to search for:</p>
-                            <div style={colorStyle1} onClick={() => this.setColorCat({'color': 1, 'cat':''})} />
-                            <div style={colorStyle2} onClick={() => this.setColorCat({'color': 2, 'cat':''})} />
-                            <div style={colorStyle3} onClick={() => this.setColorCat({'color': 3, 'cat':''})} />
+                            <div style={colorStyle1} onClick={() => this.setColorCat({'color_nr': 1, 'color_rgb': this.props.colors.color_1, 'cat':''})} />
+                            <div style={colorStyle2} onClick={() => this.setColorCat({'color_nr': 2, 'color_rgb': this.props.colors.color_2, 'cat':''})} />
+                            <div style={colorStyle3} onClick={() => this.setColorCat({'color_nr': 3, 'color_rgb': this.props.colors.color_3, 'cat':''})} />
                             <br></br>
                             <br></br>
                             <p>choose which tags to search for:</p>

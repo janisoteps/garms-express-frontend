@@ -21,27 +21,28 @@ class SexSelector extends React.Component{
         let SexSelector = () => {
             let sexPickerStyle = {
                 position: 'fixed',
-                right: '0',
-                top: '70px',
+                left: '5px',
+                top: '55px',
                 overflow: 'hidden',
                 transition: 'width 300ms ease-in-out',
                 width: this.props.sexPickerWidth,
                 height: '56px',
                 backgroundColor: '#FFFFFF',
-                borderRadius: '28px 0px 0px 28px',
-                boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.4)'
+                borderRadius: '28px 28px 28px 28px',
+                boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.4)',
+                textAlign: 'right'
             };
 
             let selectorHiderStyle = {
                 position: 'fixed',
-                right: '0',
-                top: '70px',
+                left: '5px',
+                top: '55px',
                 overflow: 'hidden',
                 transition: 'width 300ms ease-in-out',
                 width: '56px',
                 height: '56px',
                 backgroundColor: '#FFFFFF',
-                borderRadius: '28px 0px 0px 28px'
+                borderRadius: '28px 28px 28px 28px'
             };
 
             let sexOptionStyle1 = {

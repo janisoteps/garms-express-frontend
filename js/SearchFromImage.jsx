@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ColorChoiceModal from './ColorChoiceModal';
 import SexSelector from './SexSelector';
 import ResultsFromImage from './ResultsFromImage';
+import TagCloud from './TagCloud';
 
 
 //Component to search for products using an uploaded image
@@ -22,20 +23,24 @@ class SearchFromImage extends React.Component  {
             files: [],
             results: [],
             colors: {},
+            selectedColors: [],
             sexPickerWidth: '56px',
             // color_512: [],
             encodingNoCrop: [],
             posTags: [],
             negTags: [],
-            noShop: []
+            noShop: [],
+            prodImgShown: {}
         };
 
         this.changeSex = this.changeSex.bind(this);
         this.expandSexSelector = this.expandSexSelector.bind(this);
         this.getImageFeatures = this.getImageFeatures.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
-        this.setColorCat = this.setColorCat.bind(this);
+        // this.setColorPosTags = this.setColorPosTags.bind(this);
         this.searchFromImage = this.searchFromImage.bind(this);
+        // this.addTagSearchSimilar = this.addTagSearchSimilar.bind(this);
+        this.setTags = this.setTags.bind(this);
     }
 
     // Handles login input change
@@ -213,46 +218,88 @@ class SearchFromImage extends React.Component  {
     }
 
     // Set main color and category state based on selection from modal
-    setColorCat(selection){
+    setColorPosTags(selection){
         if(selection['cat'].length > 0) {
-            let mainCat = selection['cat'];
-            console.log('Cat selections: ', mainCat);
+            let selectedCat = selection['cat'];
+            console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
-            if (tags.includes(mainCat)){
-                // let index = posTags.indexOf(mainCat);
-                // if (index !== -1) {
-                //     posTags = posTags.splice(index, 1);
-                //     this.setState({
-                //         posTags: posTags
-                //     });
-                // }
-                let filteredTags = tags.filter(function(e) { return e !== mainCat });
+            if (tags.includes(selectedCat)){
+                let filteredTags = tags.filter(function(e) { return e !== selectedCat });
                 this.setState({
                             posTags: filteredTags
                         });
             } else {
-                // posTags = posTags.push(mainCat);
-                tags = tags.concat(mainCat);
+                tags = tags.concat(selectedCat);
                 console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
             }
             this.setState({
-                mainCat: mainCat
+                mainCat: selectedCat
             });
         } else {
-            let colorNr = selection['color'];
+            let colorNr = selection['color_nr'];
+            let colorRgb = selection['color_rgb'];
+            let selectedColors = this.state.selectedColors;
+            selectedColors.push(colorRgb);
             this.setState({
-                mainColor: colorNr
+                mainColor: colorNr,
+                selectedColors: selectedColors
             });
+        }
+    }
+
+    setTags(tag, type, flag){
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
+        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        if (flag === 'remove') {
+            if (type === 'positive') {
+                posTags = posTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    posTags: posTags
+                });
+            } else if (type === 'negative') {
+                negTags = negTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    negTags: negTags
+                });
+            }
+        } else if (flag === 'add') {
+            if (type === 'positive') {
+                if (negTags.includes(tag)) {
+                    negTags = negTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+                if (!posTags.includes(tag)) {
+                    posTags.push(tag);
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+            } else if (type === 'negative') {
+                if (posTags.includes(tag)) {
+                    posTags = posTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+                if (!negTags.includes(tag)) {
+                    negTags.push(tag);
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+            }
         }
     }
 
 
     searchFromImage(){
         let colorName = 'color_' + this.state.mainColor;
-        // let colorValue = this.state.colors[colorName].toString().replace(/\s+/g, '');
         let colorValue = this.state.colors[colorName];
         let tags = this.state.posTags;
         let noShop = this.state.noShop;
@@ -267,12 +314,6 @@ class SearchFromImage extends React.Component  {
             loading: true,
             mainColor: colorValue
         });
-
-        // let searchString = window.location.origin + '/api/search_from_image?tags=' + tags
-        //     + '&color_rgb=' + colorValue
-        //     + '&sex=' + sex
-        //     + '&no_shop=' + noShop
-        //     + '&encoding_nocrop=' + encodingNoCrop;
 
         fetch(window.location.origin + '/api/search_from_image', {
             method: 'post',
@@ -290,29 +331,21 @@ class SearchFromImage extends React.Component  {
         }).then(function(response) { return response.json(); })
             .then(data => {
                 console.log(data);
+                let results =  data.res;
+
+                let prodImgShown = Object.assign(
+                    {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                        'img_count': product['prod_serial'][0]['img_urls'].length
+                        }}))
+                );
+
                 this.setState({
                     results: data.res,
-                    loading: false
+                    loading: false,
+                    prodImgShown: prodImgShown
                 });
             });
-
-        // console.log('Search String: ', searchString);
-        // console.log('Search short: ', window.location.origin + '/api/search_from_image?posTags=' + tags
-        //     + '&color_rgb=' + colorValue
-        //     + '&sex=' + sex
-        //     + '&no_shop=' + noShop);
-        //
-        // fetch(searchString, {
-        //     method: 'get'
-        // }).then(response => {
-        //     return response.json();
-        // }).then(data => {
-        //     console.log(data);
-        //     this.setState({
-        //         results: data.res,
-        //         loading: false
-        //     });
-        // });
     }
 
 
@@ -343,9 +376,19 @@ class SearchFromImage extends React.Component  {
             return response.json();
         }).then(data => {
             console.log(data);
+            let results =  data.res;
+
+            let prodImgShown = Object.assign(
+                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                        'img_count': product['prod_serial'][0]['img_urls'].length
+                    }}))
+            );
+
             this.setState({
                 results: data.res,
-                loading: false
+                loading: false,
+                prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -355,6 +398,12 @@ class SearchFromImage extends React.Component  {
         });
     }
 
+    // addTagSearchSimilar(tag, imgHash){
+    //     let selection = {
+    //         'cat': tag
+    //     };
+    //     this.setColorPosTags(selection)
+    // }
 
     // // Sends similar product search request to server if user clicks on magnifying glass button
     // // Updates results state with the response
@@ -459,24 +508,12 @@ class SearchFromImage extends React.Component  {
             var searchOrResults = this.state.results.length > 0 ? (
                 <ResultsFromImage
                     mainCat={this.state.mainCat}
-                    setMainCatsAndSearchSimilar={(
-                        mainCat1,
-                        mainCat2,
-                        nr1_cat_ai,
-                        nr1_cat_sc,
-                        img_cat_sc_txt,
-                        color_1,
-                        siamese_64,
-                        prod_id
-                    ) => {this.setMainCatsAndSearchSimilar(
-                        mainCat1,
-                        mainCat2,
-                        nr1_cat_ai,
-                        nr1_cat_sc,
-                        img_cat_sc_txt,
-                        color_1,
-                        siamese_64,
-                        prod_id
+                    addTagSearchSimilar={(
+                        tag,
+                        imgHash
+                    ) => {this.addTagSearchSimilar(
+                        tag,
+                        imgHash
                     ) }}
                     email={this.state.email}
                     searchSimilarImages={(
@@ -487,6 +524,8 @@ class SearchFromImage extends React.Component  {
                         color
                     ) }}
                     results={this.state.results}
+                    prodImgShown={this.state.prodImgShown}
+                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                 />
             ) : (
                 searchForm
@@ -516,7 +555,7 @@ class SearchFromImage extends React.Component  {
                 />
 
                 <ColorChoiceModal
-                    setColorCat={(selection) => {this.setColorCat(selection)}}
+                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                     colorCatImageSearch={() => {this.searchFromImage()}}
                     colors={this.state.colors}
                     mainCat={this.state.mainCat}
@@ -525,6 +564,12 @@ class SearchFromImage extends React.Component  {
                     files={this.state.files}
                     mainColor={this.state.mainColor}
                     tags={this.state.posTags}
+                />
+
+                <TagCloud
+                    posTags={this.state.posTags}
+                    negTags={this.state.negTags}
+                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                 />
 
                 {(this.state.loading === true) && (
