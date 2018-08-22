@@ -9,6 +9,7 @@ import ColorChoiceModal from './ColorChoiceModal';
 import SexSelector from './SexSelector';
 import ResultsFromImage from './ResultsFromImage';
 import TagCloud from './TagCloud';
+import ColorPicker from './ColorPicker';
 
 
 //Component to search for products using an uploaded image
@@ -24,7 +25,7 @@ class SearchFromImage extends React.Component  {
             results: [],
             colors: {},
             selectedColors: [],
-            sexPickerWidth: '56px',
+            sexPickerWidth: '48px',
             // color_512: [],
             encodingNoCrop: [],
             posTags: [],
@@ -41,6 +42,7 @@ class SearchFromImage extends React.Component  {
         this.searchFromImage = this.searchFromImage.bind(this);
         // this.addTagSearchSimilar = this.addTagSearchSimilar.bind(this);
         this.setTags = this.setTags.bind(this);
+        this.setColor = this.setColor.bind(this);
     }
 
     // Handles login input change
@@ -90,13 +92,13 @@ class SearchFromImage extends React.Component  {
         let currentWidth = this.state.sexPickerWidth;
 
         console.log('Expanding sex selector ', currentWidth);
-        if(currentWidth === '56px'){
+        if(currentWidth === '48px'){
             this.setState({
                 sexPickerWidth: '270px'
             });
         } else {
             this.setState({
-                sexPickerWidth: '56px'
+                sexPickerWidth: '48px'
             });
         }
     }
@@ -239,15 +241,30 @@ class SearchFromImage extends React.Component  {
                 mainCat: selectedCat
             });
         } else {
-            let colorNr = selection['color_nr'];
+            // let colorNr = selection['color_nr'];
             let colorRgb = selection['color_rgb'];
             let selectedColors = this.state.selectedColors;
-            selectedColors.push(colorRgb);
+            selectedColors.unshift(colorRgb);
+            if (selectedColors.length > 2) {
+                selectedColors.pop();
+            } else if (selectedColors.length === 1) {
+                selectedColors.unshift(colorRgb);
+            }
             this.setState({
-                mainColor: colorNr,
                 selectedColors: selectedColors
             });
         }
+    }
+
+    setColor(selection){
+        let color_index = selection['index'];
+        let new_rgb = selection['color_rgb'];
+
+        let selectedColors = this.state.selectedColors;
+        selectedColors[color_index] = new_rgb;
+        this.setState({
+            selectedColors: selectedColors
+        });
     }
 
     setTags(tag, type, flag){
@@ -299,8 +316,8 @@ class SearchFromImage extends React.Component  {
 
 
     searchFromImage(){
-        let colorName = 'color_' + this.state.mainColor;
-        let colorValue = this.state.colors[colorName];
+        let colorRgb1 = this.state.selectedColors[0];
+        let colorRgb2 = this.state.selectedColors[1];
         let tags = this.state.posTags;
         let noShop = this.state.noShop;
         let sex = this.state.sex;
@@ -311,15 +328,15 @@ class SearchFromImage extends React.Component  {
             colors: {},
             cats: [],
             files: [],
-            loading: true,
-            mainColor: colorValue
+            loading: true
         });
 
         fetch(window.location.origin + '/api/search_from_image', {
             method: 'post',
             body: JSON.stringify({
                 tags: tags,
-                color_rgb: colorValue,
+                color_rgb_1: colorRgb1,
+                color_rgb_2: colorRgb2,
                 sex: sex,
                 no_shop: noShop,
                 encoding_nocrop: encodingNoCrop
@@ -349,7 +366,7 @@ class SearchFromImage extends React.Component  {
     }
 
 
-    searchSimilarImages(imgHash, colorRgb){
+    searchSimilarImages(imgHash, colorRgb1, colorRgb2){
         this.setState({
             loading: true
         });
@@ -358,17 +375,19 @@ class SearchFromImage extends React.Component  {
         let negTags = this.state.negTags.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
-        let color = colorRgb.toString().replace(/\s+/g, '');
+        let color_1 = colorRgb1.toString().replace(/\s+/g, '');
+        let color_2 = colorRgb2.toString().replace(/\s+/g, '');
 
         let searchString = window.location.origin + '/api/search_similar?'
             + 'img_hash=' + imgHash
             + '&tags_positive=' + posTags
             + '&tags_negative=' + negTags
-            + '&color=' + color
+            + '&color_1=' + color_1
+            + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
 
-        console.log('search string: ', searchString);
+        console.log('Search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
@@ -397,55 +416,6 @@ class SearchFromImage extends React.Component  {
             window.scrollTo(0, 0);
         });
     }
-
-    // addTagSearchSimilar(tag, imgHash){
-    //     let selection = {
-    //         'cat': tag
-    //     };
-    //     this.setColorPosTags(selection)
-    // }
-
-    // // Sends similar product search request to server if user clicks on magnifying glass button
-    // // Updates results state with the response
-    // similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-    //
-    //     // console.log('Similar image search launched, prod id: ', prod_id);
-    //     this.setState({
-    //         loading: true
-    //     });
-    //
-    //     let mainColor = color_1.toString().replace(/\s+/g, '');
-    //     // let mainColor = this.state.mainColor;
-    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
-    //
-    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-    //         + '&main_cat=' + this.state.mainCat
-    //         + '&main_cat2=' + this.state.mainCat2
-    //         + '&nr1_cat_sc=' + nr1_cat_sc
-    //         + '&color_1=[' + mainColor
-    //         + ']&pca_256=[' + siam_64
-    //         + ']&sex=' + this.state.sex
-    //         + '&id=' + prod_id;
-    //
-    //     console.log('search string: ', searchString);
-    //
-    //     fetch(searchString, {
-    //         method: 'get',
-    //     }).then(function(response) {
-    //         return response.json();
-    //     }).then(data => {
-    //         console.log(data);
-    //         this.setState({
-    //             results: data.res,
-    //             loading: false
-    //         });
-    //         window.scrollTo({
-    //             top: 0,
-    //             behavior: "smooth"
-    //         });
-    //         window.scrollTo(0, 0);
-    //     });
-    // }
 
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
@@ -508,24 +478,21 @@ class SearchFromImage extends React.Component  {
             var searchOrResults = this.state.results.length > 0 ? (
                 <ResultsFromImage
                     mainCat={this.state.mainCat}
-                    addTagSearchSimilar={(
-                        tag,
-                        imgHash
-                    ) => {this.addTagSearchSimilar(
-                        tag,
-                        imgHash
-                    ) }}
                     email={this.state.email}
                     searchSimilarImages={(
                         img_hash,
-                        color
+                        color_1,
+                        color_2
                     ) => { this.searchSimilarImages(
                         img_hash,
-                        color
+                        color_1,
+                        color_2
                     ) }}
                     results={this.state.results}
                     prodImgShown={this.state.prodImgShown}
                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
+                    selectedColors={this.state.selectedColors}
                 />
             ) : (
                 searchForm
@@ -562,7 +529,8 @@ class SearchFromImage extends React.Component  {
                     cats={this.state.cats}
                     altCats={this.state.altCats}
                     files={this.state.files}
-                    mainColor={this.state.mainColor}
+                    // mainColor={this.state.mainColor}
+                    selectedColors={this.state.selectedColors}
                     tags={this.state.posTags}
                 />
 
@@ -570,6 +538,15 @@ class SearchFromImage extends React.Component  {
                     posTags={this.state.posTags}
                     negTags={this.state.negTags}
                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                />
+
+                <ColorPicker
+                    setColor={(selection) => {this.setColor(selection)}}
+                    selectedColors={this.state.selectedColors}
+                    searchSimilarImages={(imgHash, color1, color2) => {
+                        this.searchSimilarImages(imgHash, color1, color2)
+                    }}
+                    results={this.state.results}
                 />
 
                 {(this.state.loading === true) && (

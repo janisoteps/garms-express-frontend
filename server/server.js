@@ -222,34 +222,34 @@ app.get('/api/text', function (req, res) {
 });
 
 
-// Get product category, color and siamese encoding
-app.post('/api/colorcat', upload.single('image'), function (req, res) {
-
-    let image = req.file.path;
-
-    console.log('Image size: ', req.file.size);
-
-    let formData = {
-            image: fs.createReadStream(image),
-        };
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
-
-            res.send(response_data);
-        }
-    }
-
-    let options = {
-        method: 'POST',
-        url: 'http://34.249.244.134/api/colorcat',
-        formData:    formData
-    };
-
-    console.log('Colorcat, options: ', options);
-    request(options, handleResponse);
-});
+// // Get product category, color and siamese encoding
+// app.post('/api/colorcat', upload.single('image'), function (req, res) {
+//
+//     let image = req.file.path;
+//
+//     console.log('Image size: ', req.file.size);
+//
+//     let formData = {
+//             image: fs.createReadStream(image),
+//         };
+//
+//     function handleResponse(error, response, body){
+//         if (!error && response.statusCode === 200) {
+//             let response_data = JSON.parse(body);
+//
+//             res.send(response_data);
+//         }
+//     }
+//
+//     let options = {
+//         method: 'POST',
+//         url: 'http://34.249.244.134/api/colorcat',
+//         formData:    formData
+//     };
+//
+//     console.log('Colorcat, options: ', options);
+//     request(options, handleResponse);
+// });
 
 
 // Get product category, color and siamese encoding
@@ -321,7 +321,8 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
 // Search products based on confirmation modal input
 app.post('/api/search_from_image', function (req, res) {
     let tags = req.body.tags;
-    let color_rgb = req.body.color_rgb;
+    let color_rgb_1 = req.body.color_rgb_1;
+    let color_rgb_2 = req.body.color_rgb_2;
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let encoding_nocrop = req.body.encoding_nocrop;
@@ -330,9 +331,11 @@ app.post('/api/search_from_image', function (req, res) {
     let options = {
         method: 'POST',
         url: 'http://34.249.244.134/api/search_from_image',
+        // url: 'http://127.0.0.1:5000/api/search_from_image',
         body: JSON.stringify({
             tags: tags,
-            color: color_rgb,
+            color_1: color_rgb_1,
+            color_2: color_rgb_2,
             sex: sex,
             no_shop: no_shop,
             encoding_nocrop: encoding_nocrop
@@ -354,24 +357,26 @@ app.post('/api/search_from_image', function (req, res) {
 });
 
 
-
 // Search products based on confirmation modal input
 app.get('/api/search_similar', function (req, res) {
     let img_hash = req.query.img_hash;
     let tags_positive = req.query.tags_positive;
     let tags_negative = req.query.tags_negative;
-    let color = req.query.color;
+    let color_1 = req.query.color_1;
+    let color_2 = req.query.color_2;
     let no_shop = req.query.no_shop;
     let sex = req.query.sex;
 
     let options = {
         method: 'GET',
         url: 'http://34.249.244.134/api/search_similar',
+        // url: 'http://127.0.0.1:5000/api/search_similar',
         qs: {
             img_hash: img_hash,
             tags_positive: tags_positive,
             tags_negative: tags_negative,
-            color: color,
+            color_1: color_1,
+            color_2: color_2,
             sex: sex,
             no_shop: no_shop
         }
@@ -391,64 +396,64 @@ app.get('/api/search_similar', function (req, res) {
 });
 
 
-// Search products based on confirmation modal input
-app.get('/api/colorcatsearch', function (req, res) {
-    let cat_ai_txt = req.query.cat_ai_txt;
-    let color_rgb = req.query.color_rgb;
-    // let siamese_64 = req.query.pca_256;
-    let sex = req.query.sex;
+// // Search products based on confirmation modal input
+// app.get('/api/colorcatsearch', function (req, res) {
+//     let cat_ai_txt = req.query.cat_ai_txt;
+//     let color_rgb = req.query.color_rgb;
+//     // let siamese_64 = req.query.pca_256;
+//     let sex = req.query.sex;
+//
+//     let options = {
+//         method: 'GET',
+//         url: 'http://34.249.244.134/api/colorcatsearch',
+//         qs: {
+//             cat_ai_txt: cat_ai_txt,
+//             color_rgb: color_rgb,
+//             sex: sex
+//         }
+//     };
+//
+//     console.log('Colorcatsearch, options: ', options);
+//
+//     function handleResponse(error, response, body){
+//         if (!error && response.statusCode === 200) {
+//             let response_data = JSON.parse(body);
+//
+//             res.send(response_data);
+//         }
+//     }
+//
+//     request(options, handleResponse);
+// });
 
-    let options = {
-        method: 'GET',
-        url: 'http://34.249.244.134/api/colorcatsearch',
-        qs: {
-            cat_ai_txt: cat_ai_txt,
-            color_rgb: color_rgb,
-            sex: sex
-        }
-    };
 
-    console.log('Colorcatsearch, options: ', options);
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
-
-            res.send(response_data);
-        }
-    }
-
-    request(options, handleResponse);
-});
-
-
-// Return images for each cat in request array
-app.post('/api/cat-images', function (req, res) {
-    let categories = req.body.categories;
-    let sex = req.body.sex;
-    let mainCat = req.body.main_cat;
-
-    let options = {
-        method: 'POST',
-        url: 'http://34.249.244.134/api/cat-images',
-        body: JSON.stringify({categories: categories, sex: sex, main_cat: mainCat}),
-        json: true
-    };
-
-    console.log('Cat images, options: ', options);
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            // let response_data = JSON.parse(body);
-
-            console.log('Cat iamges: ', body);
-
-            res.send(body);
-        }
-    }
-
-    request(options, handleResponse);
-});
+// // Return images for each cat in request array
+// app.post('/api/cat-images', function (req, res) {
+//     let categories = req.body.categories;
+//     let sex = req.body.sex;
+//     let mainCat = req.body.main_cat;
+//
+//     let options = {
+//         method: 'POST',
+//         url: 'http://34.249.244.134/api/cat-images',
+//         body: JSON.stringify({categories: categories, sex: sex, main_cat: mainCat}),
+//         json: true
+//     };
+//
+//     console.log('Cat images, options: ', options);
+//
+//     function handleResponse(error, response, body){
+//         if (!error && response.statusCode === 200) {
+//             // let response_data = JSON.parse(body);
+//
+//             console.log('Cat iamges: ', body);
+//
+//             res.send(body);
+//         }
+//     }
+//
+//     request(options, handleResponse);
+// });
 
 
 // Do product search from Explorer component

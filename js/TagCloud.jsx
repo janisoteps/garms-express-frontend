@@ -43,7 +43,7 @@ class TagCloud extends React.Component {
             )
         });
         return (
-            <div style={{position: 'fixed', top: '120', left: '0', maxWidth: '100px', margin: '5px'}}>
+            <div style={{position: 'fixed', top: '258', left: '0', maxWidth: '100px', margin: '5px'}}>
                 {(this.props.posTags.length > 0 || this.props.negTags.length > 0) ? (
                     <div>
                         {posTags}

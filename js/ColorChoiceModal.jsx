@@ -21,6 +21,10 @@ class ColorChoiceModal extends React.Component{
     render () {
         // Dynamic CSS for image color choice modal
         if(Object.keys(this.props.colors).length > 0){
+            console.log('Selected colors: ', this.props.selectedColors);
+            console.log('Color 1: ', this.props.colors.color_1);
+            console.log('Selected color 1: ', this.props.selectedColors[0]);
+            console.log('Colors same: ', this.props.selectedColors[0] === this.props.colors.color_1);
             var colorStyle1 = {
                 width: '70px',
                 height: '70px',
@@ -29,9 +33,15 @@ class ColorChoiceModal extends React.Component{
                 margin: '10px',
                 display: 'inline-block',
                 cursor: 'pointer',
-                borderWidth: this.props.mainColor === 1 && '5px',
-                borderColor: this.props.mainColor === 1 && '#7f649c',
-                borderStyle: this.props.mainColor === 1 && 'solid'
+                borderWidth:
+                    this.props.selectedColors[0] === this.props.colors.color_1
+                        ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_1 && '5px'),
+                borderColor:
+                    this.props.selectedColors[0] === this.props.colors.color_1
+                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_1 && '#7f649c'),
+                borderStyle:
+                    this.props.selectedColors[0] === this.props.colors.color_1
+                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_1 && 'solid')
             };
             var colorStyle2 = {
                 width: '70px',
@@ -41,9 +51,15 @@ class ColorChoiceModal extends React.Component{
                 margin: '10px',
                 display: 'inline-block',
                 cursor: 'pointer',
-                borderWidth: this.props.mainColor === 2 && '5px',
-                borderColor: this.props.mainColor === 2 && '#7f649c',
-                borderStyle: this.props.mainColor === 2 && 'solid'
+                borderWidth:
+                    this.props.selectedColors[0] === this.props.colors.color_2
+                ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_2 && '5px'),
+                borderColor:
+                    this.props.selectedColors[0] === this.props.colors.color_2
+                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_2 && '#7f649c'),
+                borderStyle:
+                    this.props.selectedColors[0] === this.props.colors.color_2
+                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_2 && 'solid')
             };
             var colorStyle3 = {
                 width: '70px',
@@ -53,9 +69,15 @@ class ColorChoiceModal extends React.Component{
                 margin: '10px',
                 display: 'inline-block',
                 cursor: 'pointer',
-                borderWidth: this.props.mainColor === 3 && '5px',
-                borderColor: this.props.mainColor === 3 && '#7f649c',
-                borderStyle: this.props.mainColor === 3 && 'solid'
+                borderWidth:
+                    this.props.selectedColors[0] === this.props.colors.color_3
+                        ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_3 && '5px'),
+                borderColor:
+                    this.props.selectedColors[0] === this.props.colors.color_3
+                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_3 && '#7f649c'),
+                borderStyle:
+                    this.props.selectedColors[0] === this.props.colors.color_3
+                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_3 && 'solid')
             };
         }
 
@@ -93,12 +115,13 @@ class ColorChoiceModal extends React.Component{
                             <div className="color-modal-image-preview">
                                 <img className="color-image-preview" src={this.props.files[0].preview} />
                             </div>
+                            <br></br>
                             <h5>I found these colors and themes in your photo</h5>
                             <br></br>
                             <p>choose which color to search for:</p>
-                            <div style={colorStyle1} onClick={() => this.setColorCat({'color_nr': 1, 'color_rgb': this.props.colors.color_1, 'cat':''})} />
-                            <div style={colorStyle2} onClick={() => this.setColorCat({'color_nr': 2, 'color_rgb': this.props.colors.color_2, 'cat':''})} />
-                            <div style={colorStyle3} onClick={() => this.setColorCat({'color_nr': 3, 'color_rgb': this.props.colors.color_3, 'cat':''})} />
+                            <div style={colorStyle1} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_1, 'cat':''})} />
+                            <div style={colorStyle2} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_2, 'cat':''})} />
+                            <div style={colorStyle3} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_3, 'cat':''})} />
                             <br></br>
                             <br></br>
                             <p>choose which tags to search for:</p>

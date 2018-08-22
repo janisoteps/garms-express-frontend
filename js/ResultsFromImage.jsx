@@ -275,6 +275,7 @@ class ResultsFromImage extends React.Component  {
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.addToFavs = this.addToFavs.bind(this);
         this.setTags = this.setTags.bind(this);
+        this.setColorPosTags = this.setColorPosTags.bind(this);
     }
 
     setTags(tag, type, flag){
@@ -285,11 +286,15 @@ class ResultsFromImage extends React.Component  {
         this.props.setTags(tag, type, flag);
     }
 
-    searchSimilarImages(imgHash, color){
+    setColorPosTags(selection){
+        this.props.setColorPosTags(selection);
+    }
+
+    searchSimilarImages(imgHash, color_1, color_2){
         this.setState({
             pickerExpanded: 0
         });
-        this.props.searchSimilarImages(imgHash, color);
+        this.props.searchSimilarImages(imgHash, color_1, color_2);
     }
 
     // Expands color picker drawer
@@ -368,7 +373,7 @@ class ResultsFromImage extends React.Component  {
             let image0 = imageData[0];
             let fst_img_hash = image0['img_hash'];
             let fst_img_color = image0['color_1'];
-
+            // this.props.results[0]['image_data'][0]['img_hash']
             let catArray = [];
             let catCheckArray = [];
             higherCats.map(hCat => {
@@ -550,13 +555,22 @@ class ResultsFromImage extends React.Component  {
                             <div style={pickerDrawerStyle}>
                                 <div
                                     style={colorStyle1}
-                                    onClick={() => { this.searchSimilarImages(img_hash, color_1); }} />
+                                    onClick={() => {
+                                        this.setColorPosTags({'color_rgb': color_1, 'cat':''});
+                                        this.searchSimilarImages(img_hash, color_1, color_1);
+                                    }} />
                                 <div
                                     style={colorStyle2}
-                                    onClick={() => { this.searchSimilarImages(img_hash, color_2); }} />
+                                    onClick={() => {
+                                        this.setColorPosTags({'color_rgb': color_2, 'cat':''});
+                                        this.searchSimilarImages(img_hash, color_2, color_2);
+                                    }} />
                                 <div
                                     style={colorStyle3}
-                                    onClick={() => { this.searchSimilarImages(img_hash, color_3); }} />
+                                    onClick={() => {
+                                        this.setColorPosTags({'color_rgb': color_3, 'cat':''});
+                                        this.searchSimilarImages(img_hash, color_3, color_3);
+                                    }} />
                             </div>
                             <div style={pickerStyle} onClick={() => { this.expandDrawer(img_hash, this.state.pickerExpanded); }}></div>
                         </div>
@@ -603,7 +617,10 @@ class ResultsFromImage extends React.Component  {
                     <div className="product-brand"><p>{brand} from {shop}</p></div>
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
-                    <div className="search-similar" onClick={() => { this.searchSimilarImages(fst_img_hash, fst_img_color); }} />
+                    <div className="search-similar" onClick={() => {
+                        this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
+                        this.searchSimilarImages(fst_img_hash, fst_img_color, this.props.selectedColors[1]);
+                    }} />
                     <TagPicker/>
                     <div style={faveDrawerStyle} >Added to faves</div>
                     <div className="add-to-favorites" onClick={() => { this.addToFavs(fst_img_hash, prod_id); }}></div>
