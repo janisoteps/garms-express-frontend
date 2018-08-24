@@ -1,5 +1,6 @@
 import React from 'react';
 import { SwatchesPicker } from 'react-color';
+import {isMobile} from 'react-device-detect';
 
 
 class ColorPicker extends React.Component {
@@ -76,6 +77,26 @@ class ColorPicker extends React.Component {
             let NewColorPicker = () => {
                 if (this.state.showColorPicker) {
 
+                    let SWPicker = () => {
+                        if (isMobile) {
+                            return (
+                                <SwatchesPicker
+                                    onChange={ this.handleChangeComplete }
+                                    width={'100%'}
+                                    height={'calc(100vh - 350px)'}
+                                />
+                            )
+                        } else {
+                            return (
+                                <SwatchesPicker
+                                    onChange={ this.handleChangeComplete }
+                                    width={'100%'}
+                                    height={'calc(((1100 / 100vw) * 250)px)'}
+                                />
+                            )
+                        }
+                    };
+
                     return(
                         <div style={{
                             position: 'fixed',
@@ -86,18 +107,14 @@ class ColorPicker extends React.Component {
                             // maxWidth: '666px',
                             // marginLeft: 'calc((100vw - 666px) / 2)',
                             backgroundColor: '#FFFFFF',
-                            opacity: '0.9',
+                            opacity: '0.95',
                             paddingTop: '85px',
                             textAlign: 'center'
                         }}>
-                            <h1 style={{marginLeft: '80px', width: 'calc(100vw - 160px)'}}>pick another color</h1>
+                            <h1 style={{marginLeft: '90px', width: 'calc(100vw - 130px)'}}>pick another color</h1>
                             <br></br>
                             <br></br>
-                            <SwatchesPicker
-                                onChange={ this.handleChangeComplete }
-                                width={'100%'}
-                                height={'calc(((1100 / 100vw) * 250)px)'}
-                            />
+                            <SWPicker/>
                         </div>
                     )
                 } else {

@@ -31,14 +31,15 @@ class SearchFromImage extends React.Component  {
             posTags: [],
             negTags: [],
             noShop: [],
-            prodImgShown: {}
+            prodImgShown: {},
+            menuOpen: true
         };
 
         this.changeSex = this.changeSex.bind(this);
         this.expandSexSelector = this.expandSexSelector.bind(this);
         this.getImageFeatures = this.getImageFeatures.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
-        // this.setColorPosTags = this.setColorPosTags.bind(this);
+        this.squexpandMenu = this.squexpandMenu.bind(this);
         this.searchFromImage = this.searchFromImage.bind(this);
         // this.addTagSearchSimilar = this.addTagSearchSimilar.bind(this);
         this.setTags = this.setTags.bind(this);
@@ -418,6 +419,34 @@ class SearchFromImage extends React.Component  {
     }
 
 
+    squexpandMenu(flag){
+        if (flag === 'squeeze'){
+            for(var i=0; i<100; i++){
+                let height = 'calc(100vh - 50px - ((100vh - 50px) / 100 * ' + (i + 1) + '))';
+
+                this.setState({
+                    sideMenuHeight: height
+                })
+            }
+            this.setState({
+                menuOpen: false
+            });
+        } else {
+            for(var k=0; k<100; k++){
+                let height = 'calc(100vh - 50px - ((100vh - 50px) * 100 / ' + (k + 1) + '))';
+
+                this.setState({
+                    sideMenuHeight: height
+                })
+            }
+            this.setState({
+                sideMenuHeight: null,
+                menuOpen: true
+            })
+        }
+    }
+
+
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
 
@@ -521,19 +550,6 @@ class SearchFromImage extends React.Component  {
                     expandSexSelector={() => {this.expandSexSelector()}}
                 />
 
-                <ColorChoiceModal
-                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
-                    colorCatImageSearch={() => {this.searchFromImage()}}
-                    colors={this.state.colors}
-                    mainCat={this.state.mainCat}
-                    cats={this.state.cats}
-                    altCats={this.state.altCats}
-                    files={this.state.files}
-                    // mainColor={this.state.mainColor}
-                    selectedColors={this.state.selectedColors}
-                    tags={this.state.posTags}
-                />
-
                 <TagCloud
                     posTags={this.state.posTags}
                     negTags={this.state.negTags}
@@ -547,6 +563,19 @@ class SearchFromImage extends React.Component  {
                         this.searchSimilarImages(imgHash, color1, color2)
                     }}
                     results={this.state.results}
+                />
+
+                <ColorChoiceModal
+                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
+                    colorCatImageSearch={() => {this.searchFromImage()}}
+                    colors={this.state.colors}
+                    mainCat={this.state.mainCat}
+                    cats={this.state.cats}
+                    altCats={this.state.altCats}
+                    files={this.state.files}
+                    // mainColor={this.state.mainColor}
+                    selectedColors={this.state.selectedColors}
+                    tags={this.state.posTags}
                 />
 
                 {(this.state.loading === true) && (

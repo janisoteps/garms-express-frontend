@@ -73,41 +73,87 @@ class Profile extends React.Component  {
 
         let favTiles = this.state.favorites.reverse().map(product => {
             if(product !== 'nothing'){
+                console.log('Product info: ' + product);
                 let productInfo = product[0];
                 let img_hash = productInfo.img_hash;
-                let brand = productInfo.brand;
-                // let color_1 = productInfo.color_1;
-                // let color_1_hex = productInfo.color_1_hex;
-                // let color_2 = productInfo.color_2;
-                // let color_2_hex = productInfo.color_2_hex;
-                // let color_3 = productInfo.color_3;
-                // let color_3_hex = productInfo.color_3_hex;
-                let id = productInfo.id;
-                // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
-                // let nr1_cat_ai = productInfo.nr1_cat_ai;
-                // let nr1_cat_sc = productInfo.nr1_cat_sc;
-                let img_url = productInfo.img_url;
-                let name = productInfo.name;
-                let currency = productInfo.currency;
-                let price = productInfo.price.toFixed(2);
-                let prod_url = productInfo.prod_url;
-                let sale = productInfo.sale;
-                let saleprice = productInfo.saleprice.toFixed(2);
-                let shop = productInfo.shop;
-                let key = id + Math.floor(Math.random() * Math.floor(1000));
+                if (img_hash) {
+                    let brand = productInfo.brand;
+                    // let color_1 = productInfo.color_1;
+                    // let color_1_hex = productInfo.color_1_hex;
+                    // let color_2 = productInfo.color_2;
+                    // let color_2_hex = productInfo.color_2_hex;
+                    // let color_3 = productInfo.color_3;
+                    // let color_3_hex = productInfo.color_3_hex;
+                    let id = productInfo.id;
+                    // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
+                    // let nr1_cat_ai = productInfo.nr1_cat_ai;
+                    // let nr1_cat_sc = productInfo.nr1_cat_sc;
+                    let img_url = productInfo.img_url;
+                    let name = productInfo.name;
+                    let currency = productInfo.currency;
+                    let price = productInfo.price.toFixed(2);
+                    let prod_url = productInfo.prod_url;
+                    let sale = productInfo.sale;
+                    let saleprice = productInfo.saleprice.toFixed(2);
+                    let shop = productInfo.shop;
+                    let key = id + Math.floor(Math.random() * Math.floor(1000));
 
-                return (
-                    <Paper zDepth={1} className="profile-product-tile" key={key}>
-                        <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
-                        <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
-                        <div className="product-name">{name}</div>
-                        <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
-                        <img className="product-image" src={img_url} />
-                        <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
-                        <a href={prod_url} target="_blank"> Go to product shop page</a>
+                    return (
+                        <Paper zDepth={1} className="profile-product-tile" key={key}>
+                            <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
+                            <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
+                            <div className="product-name">{name}</div>
+                            <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
+                            <img className="product-image" src={img_url} />
+                            <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
+                            <a href={prod_url} target="_blank"> Go to product shop page</a>
 
-                    </Paper>
-                )
+                        </Paper>
+                    )
+                } else {
+                    let img_hash = productInfo.prod_hash;
+                    if (img_hash) {
+                        let brand = productInfo.brand;
+                        // let color_1 = productInfo.color_1;
+                        // let color_1_hex = productInfo.color_1_hex;
+                        // let color_2 = productInfo.color_2;
+                        // let color_2_hex = productInfo.color_2_hex;
+                        // let color_3 = productInfo.color_3;
+                        // let color_3_hex = productInfo.color_3_hex;
+                        let id = productInfo.id;
+                        // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
+                        // let nr1_cat_ai = productInfo.nr1_cat_ai;
+                        // let nr1_cat_sc = productInfo.nr1_cat_sc;
+                        let img_url = productInfo.img_url;
+                        let name = productInfo.name;
+                        let currency = productInfo.currency;
+                        let price = productInfo.price.toFixed(2);
+                        let prod_url = productInfo.prod_url;
+                        let sale = productInfo.sale;
+                        let saleprice = productInfo.saleprice ? productInfo.saleprice.toFixed(2) : null;
+                        let shop = productInfo.shop;
+                        let key = id + Math.floor(Math.random() * Math.floor(1000));
+
+                        return (
+                            <Paper zDepth={1} className="profile-product-tile" key={key}>
+                                <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
+                                <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
+                                <div className="product-name">{name}</div>
+                                <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
+                                <img className="product-image" src={img_url} />
+                                <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
+                                <a href={prod_url} target="_blank"> Go to product shop page</a>
+
+                            </Paper>
+                        )
+                    } else {
+                        return (
+                            null
+                        )
+                    }
+
+                }
+
             }
         });
 

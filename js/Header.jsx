@@ -16,7 +16,7 @@ class Header extends React.Component {
     render() {
         // console.log('header state: ', this.state);
         const buttons = this.state.isAuth == "true" ? (
-            <div>
+            <div style={{width: '100vw'}}>
                 <Route render={({history}) => (
                     <div className="home-button" onClick={() => {
                         history.push('/')
@@ -42,8 +42,11 @@ class Header extends React.Component {
 
         return (
             <div className="header-bar">
-                <div className="logo"><h1><Link style={{textDecoration: 'none', color: '#171732'}} to="/">Garms</Link>
-                </h1></div>
+                <div className="logo">
+                    <h1>
+                        <Link style={{textDecoration: 'none', color: '#171732'}} to="/">Garms</Link>
+                    </h1>
+                </div>
                 {buttons}
             </div>
         )
