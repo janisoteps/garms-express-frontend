@@ -711,13 +711,16 @@ class Explorer extends React.Component  {
                     )}
 
                     {(this.state.results.length > 0) && (
-                        <ProductResults
-                            mainCat={this.state.mainCatSub}
-                            setMainCatsAndSearchSimilar={(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => {this.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }}
-                            email={this.state.email}
-                            simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) }}
-                            results={this.state.results}
-                        />
+                        <div style={{textAlign: 'center', width: '100%'}}>
+                        {/*<ProductResults*/}
+                            {/*mainCat={this.state.mainCatSub}*/}
+                            {/*setMainCatsAndSearchSimilar={(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => {this.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }}*/}
+                            {/*email={this.state.email}*/}
+                            {/*simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) }}*/}
+                            {/*results={this.state.results}*/}
+                        {/*/>*/}
+                            <h1>Under Construction :)</h1>
+                        </div>
                     )}
 
                     {(this.state.showResults === true) && (

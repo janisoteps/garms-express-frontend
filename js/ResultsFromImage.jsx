@@ -363,6 +363,7 @@ class ResultsFromImage extends React.Component  {
             let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
             let img_urls = productInfo.img_urls;
             let name = productInfo.name;
+            let description = productInfo.description;
             let currency = productInfo.currency;
             let price = productInfo.price.toFixed(2);
             let prod_id = productInfo.id;
@@ -407,8 +408,8 @@ class ResultsFromImage extends React.Component  {
                 width: faveDrawerWidth,
                 borderRadius: '32px',
                 backgroundColor: '#FFFFFF',
-                marginTop: '-310px',
-                right: '-15px',
+                marginTop: '-55px',
+                right: '225px',
                 position: 'absolute',
                 textAlign: 'left',
                 overflow: 'hidden',
@@ -425,7 +426,6 @@ class ResultsFromImage extends React.Component  {
                 borderRadius: '25px',
                 backgroundColor: '#f5e8ff',
                 margin: '7px',
-                marginRight: '0px',
                 display: 'inline-block',
                 cursor: 'pointer',
                 verticalAlign: 'middle',
@@ -435,33 +435,42 @@ class ResultsFromImage extends React.Component  {
                 paddingLeft: '5px'
             };
 
-            var catPickerDrawerWidth;
+            var catPickerDrawerHeight, catPickerDrawerWidth;
 
             if (this.state.catPickerExpanded === prod_id){
-                catPickerDrawerWidth = '600px';
+                catPickerDrawerHeight = '600px';
+                catPickerDrawerWidth = '130px';
             } else {
-                catPickerDrawerWidth = '64px';
+                catPickerDrawerHeight = '63px';
+                catPickerDrawerWidth = '63px';
             }
 
             let catPickerDrawerStyle = {
-                height: '64px',
                 transition: 'width 300ms ease-in-out',
+                maxHeight: catPickerDrawerHeight,
                 maxWidth: catPickerDrawerWidth,
                 borderRadius: '32px',
                 backgroundColor: '#FFFFFF',
-                marginTop: '-230px',
-                right: '-15px',
+                bottom: '8px',
+                right: '155px',
                 position: 'absolute',
                 textAlign: 'left',
                 overflow: 'hidden',
-                paddingRight: '64px'
+                paddingBottom: '64px'
             };
 
             let ImageCarousel = () => {
-                let image = imageData[0];
-                // let img_url = img_urls[this.state.prodShownImage[prod_hash]['img_shown']];
-                // let img_url = img_urls[0];
                 let img_url = img_urls[this.props.prodImgShown[prod_hash]['img_shown']];
+
+                return (
+                    <div>
+                        <img className="product-image" src={img_url} />
+                    </div>
+                )
+            };
+
+            let ColorPicker = () => {
+                let image = imageData[0];
                 let color_1 = image['color_1'];
                 let color_2 = image['color_2'];
                 let color_3 = image['color_3'];
@@ -523,64 +532,55 @@ class ResultsFromImage extends React.Component  {
                     backgroundSize: '48px 48px',
                     borderRadius: '32px',
                     position: 'absolute',
-                    marginTop: '-116px',
-                    right: '-15px',
+                    marginTop: '-55px',
+                    right: '82px',
                     cursor: 'pointer'
                 };
 
-                var pickerDrawerWidth;
+                var pickerDrawerHeight;
 
                 if (this.state.pickerExpanded === img_hash){
-                    pickerDrawerWidth = '250px';
+                    pickerDrawerHeight = '250px';
                 } else {
-                    pickerDrawerWidth = '64px';
+                    pickerDrawerHeight = '64px';
                 }
 
                 let pickerDrawerStyle = {
-                    height: '64px',
+                    width: '64px',
                     transition: 'width 300ms ease-in-out',
-                    width: pickerDrawerWidth,
+                    height: pickerDrawerHeight,
                     borderRadius: '32px',
                     backgroundColor: '#FFFFFF',
-                    marginTop: '-116px',
-                    right: '-15px',
+                    bottom: '10px',
+                    right: '82px',
                     position: 'absolute',
                     textAlign: 'left',
                     overflow: 'hidden'
                 };
 
-                let ColorPicker = () => {
-                    return (
-                        <div>
-                            <div style={pickerDrawerStyle}>
-                                <div
-                                    style={colorStyle1}
-                                    onClick={() => {
-                                        this.setColorPosTags({'color_rgb': color_1, 'cat':''});
-                                        this.searchSimilarImages(img_hash, color_1, color_1);
-                                    }} />
-                                <div
-                                    style={colorStyle2}
-                                    onClick={() => {
-                                        this.setColorPosTags({'color_rgb': color_2, 'cat':''});
-                                        this.searchSimilarImages(img_hash, color_2, color_2);
-                                    }} />
-                                <div
-                                    style={colorStyle3}
-                                    onClick={() => {
-                                        this.setColorPosTags({'color_rgb': color_3, 'cat':''});
-                                        this.searchSimilarImages(img_hash, color_3, color_3);
-                                    }} />
-                            </div>
-                            <div style={pickerStyle} onClick={() => { this.expandDrawer(img_hash, this.state.pickerExpanded); }}></div>
-                        </div>
-                    )
-                };
-
                 return (
                     <div>
-                        <img className="product-image" src={img_url} />
-                        <ColorPicker/>
+                        <div style={pickerDrawerStyle}>
+                            <div
+                                style={colorStyle1}
+                                onClick={() => {
+                                    this.setColorPosTags({'color_rgb': color_1, 'cat':''});
+                                    this.searchSimilarImages(img_hash, color_1, color_1);
+                                }} />
+                            <div
+                                style={colorStyle2}
+                                onClick={() => {
+                                    this.setColorPosTags({'color_rgb': color_2, 'cat':''});
+                                    this.searchSimilarImages(img_hash, color_2, color_2);
+                                }} />
+                            <div
+                                style={colorStyle3}
+                                onClick={() => {
+                                    this.setColorPosTags({'color_rgb': color_3, 'cat':''});
+                                    this.searchSimilarImages(img_hash, color_3, color_3);
+                                }} />
+                        </div>
+                        <div style={pickerStyle} onClick={() => { this.expandDrawer(img_hash, this.state.pickerExpanded); }} />
                     </div>
                 )
             };
@@ -604,9 +604,12 @@ class ResultsFromImage extends React.Component  {
                 return (
                     <div>
                         <div style={catPickerDrawerStyle}>
-                            <div style={{"marginRight": "10px"}}>{tagItems}</div>
+                            {tagItems}
                         </div>
-                        <div className="cat-picker-bubble" onClick={() => { this.expandCatDrawer(prod_id, this.state.catPickerExpanded); }}></div>
+                        <div className="cat-picker-bubble" onClick={() => { this.expandCatDrawer(prod_id, this.state.catPickerExpanded); }}>
+                            <div className="cat-picker-bubble-plus"/>
+                            <div className="cat-picker-bubble-minus"/>
+                        </div>
                     </div>
                 )
             };
@@ -617,13 +620,15 @@ class ResultsFromImage extends React.Component  {
                     <div className="product-brand"><p>{brand} from {shop}</p></div>
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
+                    <div className="prod-description">{description}</div>
                     <div className="search-similar" onClick={() => {
                         this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
                         this.searchSimilarImages(fst_img_hash, fst_img_color, this.props.selectedColors[1]);
                     }} />
+                    <ColorPicker />
                     <TagPicker/>
                     <div style={faveDrawerStyle} >Added to faves</div>
-                    <div className="add-to-favorites" onClick={() => { this.addToFavs(fst_img_hash, prod_id); }}></div>
+                    <div className="add-to-favorites" onClick={() => { this.addToFavs(fst_img_hash, prod_id); }} />
                 </Paper>
             );
         });

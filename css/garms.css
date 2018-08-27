@@ -281,7 +281,7 @@
     text-align: center;
     margin: 15px;
     width: 80vw;
-    max-width: 620px;
+    max-width: 580px;
     padding-top: 15px;
     padding-bottom: 15px;
     display: inline-block;
@@ -350,12 +350,13 @@
 .add-to-favorites{
     width: 64px;
     height: 64px;
-    background: #fc94a5 url('../images/favorite_white.svg') no-repeat center;
+    background: #FFFFFF url('../images/favorite_white.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 48px 48px;
     border-radius: 32px;
     position: absolute;
-    margin-top: -310px;
-    right: -15px;
+    margin-top: -55px;
+    right: 225px;
     cursor: pointer;
 }
 
@@ -374,24 +375,51 @@
 .cat-picker-bubble{
     width: 64px;
     height: 64px;
-    background: #fca7e3 url('../images/baseline-style-24px.svg') no-repeat center;
+    background: #000000;
     background-size: 48px 48px;
     border-radius: 32px;
     position: absolute;
-    margin-top: -230px;
-    right: -15px;
+    margin-top: -55px;
+    right: 154px;
     cursor: pointer;
+    overflow: hidden;
+    text-align: left;
+}
+
+.cat-picker-bubble-plus{
+    position: relative;
+    display: inline-block;
+    top: 8px;
+    left: 5px;
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF url('../images/baseline-add-24px.svg') no-repeat center;
+    background-size: 42px 42px;
+    filter: invert(100%);
+}
+
+.cat-picker-bubble-minus{
+    position: relative;
+    display: inline-block;
+    top: 27px;
+    right: 4px;
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF url('../images/baseline-remove-24px.svg') no-repeat center;
+    background-size: 42px 42px;
+    filter: invert(100%);
 }
 
 .search-similar{
     width: 64px;
     height: 64px;
-    background: #dd9dfc url('../images/baseline-search-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 48px 48px;
     border-radius: 32px;
     position: absolute;
-    margin-top: -70px;
-    right: -15px;
+    margin-top: -55px;
+    right: 10px;
     cursor: pointer;
 }
 
@@ -934,4 +962,8 @@
 .color-image-preview{
     height: 45vh;
     width: auto;
+}
+
+.prod-description{
+    margin-bottom: 60px;
 }
