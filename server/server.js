@@ -396,64 +396,41 @@ app.get('/api/search_similar', function (req, res) {
 });
 
 
-// // Search products based on confirmation modal input
-// app.get('/api/colorcatsearch', function (req, res) {
-//     let cat_ai_txt = req.query.cat_ai_txt;
-//     let color_rgb = req.query.color_rgb;
-//     // let siamese_64 = req.query.pca_256;
-//     let sex = req.query.sex;
-//
-//     let options = {
-//         method: 'GET',
-//         url: 'http://34.249.244.134/api/colorcatsearch',
-//         qs: {
-//             cat_ai_txt: cat_ai_txt,
-//             color_rgb: color_rgb,
-//             sex: sex
-//         }
-//     };
-//
-//     console.log('Colorcatsearch, options: ', options);
-//
-//     function handleResponse(error, response, body){
-//         if (!error && response.statusCode === 200) {
-//             let response_data = JSON.parse(body);
-//
-//             res.send(response_data);
-//         }
-//     }
-//
-//     request(options, handleResponse);
-// });
+// Submit Instagram image mention
+app.post('/api/submit_instagram', function (req, res) {
+    let mention_username= req.body.mention_username;
+    let comment_id = req.body.comment_id;
+    let mention_timestamp = req.body.mention_timestamp;
+    let media_id = req.body.media_id;
+    let media_type = req.body.media_type;
+    let media_url = req.body.media_url;
+    let media_permalink = req.body.media_permalink;
 
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/submit_instagram',
+        body: JSON.stringify({
+            mention_username: mention_username,
+            comment_id: comment_id,
+            mention_timestamp: mention_timestamp,
+            media_id: media_id,
+            media_type: media_type,
+            media_url: media_url,
+            media_permalink: media_permalink
+        }),
+        json: true
+    };
 
-// // Return images for each cat in request array
-// app.post('/api/cat-images', function (req, res) {
-//     let categories = req.body.categories;
-//     let sex = req.body.sex;
-//     let mainCat = req.body.main_cat;
-//
-//     let options = {
-//         method: 'POST',
-//         url: 'http://34.249.244.134/api/cat-images',
-//         body: JSON.stringify({categories: categories, sex: sex, main_cat: mainCat}),
-//         json: true
-//     };
-//
-//     console.log('Cat images, options: ', options);
-//
-//     function handleResponse(error, response, body){
-//         if (!error && response.statusCode === 200) {
-//             // let response_data = JSON.parse(body);
-//
-//             console.log('Cat iamges: ', body);
-//
-//             res.send(body);
-//         }
-//     }
-//
-//     request(options, handleResponse);
-// });
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log('Explorer response length: ', body.res.length);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
 
 
 // Do product search from Explorer component
