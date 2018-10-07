@@ -222,36 +222,6 @@ app.get('/api/text', function (req, res) {
 });
 
 
-// // Get product category, color and siamese encoding
-// app.post('/api/colorcat', upload.single('image'), function (req, res) {
-//
-//     let image = req.file.path;
-//
-//     console.log('Image size: ', req.file.size);
-//
-//     let formData = {
-//             image: fs.createReadStream(image),
-//         };
-//
-//     function handleResponse(error, response, body){
-//         if (!error && response.statusCode === 200) {
-//             let response_data = JSON.parse(body);
-//
-//             res.send(response_data);
-//         }
-//     }
-//
-//     let options = {
-//         method: 'POST',
-//         url: 'http://34.249.244.134/api/colorcat',
-//         formData:    formData
-//     };
-//
-//     console.log('Colorcat, options: ', options);
-//     request(options, handleResponse);
-// });
-
-
 // Get product category, color and siamese encoding
 app.post('/api/img_features', upload.single('image'), function (req, res) {
 
@@ -280,42 +250,6 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
     console.log('Img features, options: ', options);
     request(options, handleResponse);
 });
-
-
-// // Search products based on confirmation modal input
-// app.get('/api/search_from_image', function (req, res) {
-//     let tags = req.query.tags;
-//     let color_rgb = req.query.color_rgb;
-//     let no_shop = req.query.no_shop;
-//     let sex = req.query.sex;
-//     let encoding_nocrop = req.query.encoding_nocrop;
-//     // let color_512 = req.query.color_512;
-//
-//     let options = {
-//         method: 'GET',
-//         url: 'http://34.249.244.134/api/search_from_image',
-//         qs: {
-//             tags: tags,
-//             color: color_rgb,
-//             sex: sex,
-//             no_shop: no_shop,
-//             // color_512: color_512,
-//             encoding_nocrop: encoding_nocrop
-//         }
-//     };
-//
-//     console.log('Search from image , options: ', options);
-//
-//     function handleResponse(error, response, body){
-//         if (!error && response.statusCode === 200) {
-//             let response_data = JSON.parse(body);
-//
-//             res.send(response_data);
-//         }
-//     }
-//
-//     request(options, handleResponse);
-// });
 
 
 // Search products based on confirmation modal input
@@ -409,7 +343,7 @@ app.post('/api/submit_instagram', function (req, res) {
     let options = {
         method: 'POST',
         url: 'http://34.249.244.134/api/submit_instagram',
-        body: JSON.stringify({
+        body: {
             mention_username: mention_username,
             comment_id: comment_id,
             mention_timestamp: mention_timestamp,
@@ -417,7 +351,7 @@ app.post('/api/submit_instagram', function (req, res) {
             media_type: media_type,
             media_url: media_url,
             media_permalink: media_permalink
-        }),
+        },
         json: true
     };
 
