@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 
+
 class Profile extends React.Component  {
     constructor(props) {
         super(props);
@@ -13,49 +14,72 @@ class Profile extends React.Component  {
             isAuth: this.props.isAuth,
             username: this.props.username,
             email: this.props.email,
-            favorites: []
+            insta_pics: null,
+            insta_username: null,
+            insta_username_prompt: 'Your Instagram username',
+            loaded: false
         };
 
-        this.removeFav = this.removeFav.bind(this);
+        this.changeInstaUsername = this.changeInstaUsername.bind(this);
+        this.saveInstaUsername = this.saveInstaUsername.bind(this);
+        this.getInstaPicks = this.getInstaPicks.bind(this);
     }
 
     componentDidMount() {
-        let searchString = window.location.origin + '/api/favorites?email=' + this.state.email;
+        this.getInstaPicks(this.state.email);
+    }
+
+    getInstaPicks(user_email) {
+        let searchString = window.location.origin + '/api/insta_pics?email=' + user_email;
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // let favData = JSON.parse(data.res);
             console.log(data.res);
+            let usernamePrompt = !data.insta_username ? 'Instagram username' : data.insta_username;
             this.setState({
-                favorites: data.res
+                insta_pics: data.res,
+                insta_username: data.insta_username,
+                insta_username_prompt: usernamePrompt,
+                loaded: true
             });
         });
     }
 
-    removeFav = (img_hash) => {
-        let email = this.state.email;
-        // console.log('Add faves email: ', email);
-        fetch(window.location.origin + '/api/removefav', {
+    changeInstaUsername(event) {
+        this.setState({insta_username_prompt: event.target.value});
+    }
+
+    saveInstaUsername(event) {
+        console.log('Username was submitted: ' + this.state.insta_username_prompt);
+        event.preventDefault();
+
+        fetch(window.location.origin + '/api/save_insta_username', {
             method: 'post',
-            body: JSON.stringify({email: email, img_hash: img_hash}),
+            body: JSON.stringify({
+                email: this.state.email,
+                insta_username: this.state.insta_username_prompt
+            }),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log('Remove fav response: ' , data);
-                this.setState({
-                    favorites: data.res
-                });
+                console.log('Save Insta username response: ' , data);
+                if (data.insta_username !== false) {
+                    this.setState({
+                        insta_username: data.insta_username
+                    });
+
+                    this.getInstaPicks(this.state.email);
+                }
             });
-    };
+    }
 
     render () {
-        console.log('Profile favorites state: ', this.state.favorites);
         const logOutButton = this.state.isAuth === "true" ? (
             <Route render={({ history }) => (
                 <RaisedButton className="login-button" label="Log Out" onClick={() => { history.push('/logout') }} />
@@ -71,115 +95,82 @@ class Profile extends React.Component  {
             marginTop: '70px'
         };
 
-        let favTiles = this.state.favorites.reverse().map(product => {
-            if(product !== 'nothing'){
-                console.log('Product info: ' + product);
-                let productInfo = product[0];
-                let img_hash = productInfo.img_hash;
-                if (img_hash) {
-                    let brand = productInfo.brand;
-                    // let color_1 = productInfo.color_1;
-                    // let color_1_hex = productInfo.color_1_hex;
-                    // let color_2 = productInfo.color_2;
-                    // let color_2_hex = productInfo.color_2_hex;
-                    // let color_3 = productInfo.color_3;
-                    // let color_3_hex = productInfo.color_3_hex;
-                    let id = productInfo.id;
-                    // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
-                    // let nr1_cat_ai = productInfo.nr1_cat_ai;
-                    // let nr1_cat_sc = productInfo.nr1_cat_sc;
-                    let img_url = productInfo.img_url;
-                    let name = productInfo.name;
-                    let currency = productInfo.currency;
-                    let price = productInfo.price.toFixed(2);
-                    let prod_url = productInfo.prod_url;
-                    let sale = productInfo.sale;
-                    let saleprice = productInfo.saleprice.toFixed(2);
-                    let shop = productInfo.shop;
-                    let key = id + Math.floor(Math.random() * Math.floor(1000));
+        let insta_tiles = this.state.insta_pics && this.state.insta_pics !== 0 ? this.state.insta_pics.reverse().map(insta => {
+            let insta_pic = insta[0];
+            let mediaType = insta_pic.media_type;
+            let mediaUrl = insta_pic.media_url;
+            let mediaPermalink = insta_pic.media_permalink;
+            let mediaId = insta_pic.media_id;
+            let ownerUsername = insta_pic.owner_username;
 
-                    return (
-                        <Paper zDepth={1} className="profile-product-tile" key={key}>
-                            <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
-                            <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
-                            <div className="product-name">{name}</div>
-                            <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
-                            <img className="product-image" src={img_url} />
-                            <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
-                            <a href={prod_url} target="_blank"> Go to product shop page</a>
-
-                        </Paper>
-                    )
-                } else {
-                    let img_hash = productInfo.prod_hash;
-                    if (img_hash) {
-                        let brand = productInfo.brand;
-                        // let color_1 = productInfo.color_1;
-                        // let color_1_hex = productInfo.color_1_hex;
-                        // let color_2 = productInfo.color_2;
-                        // let color_2_hex = productInfo.color_2_hex;
-                        // let color_3 = productInfo.color_3;
-                        // let color_3_hex = productInfo.color_3_hex;
-                        let id = productInfo.id;
-                        // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
-                        // let nr1_cat_ai = productInfo.nr1_cat_ai;
-                        // let nr1_cat_sc = productInfo.nr1_cat_sc;
-                        let img_url = productInfo.img_url;
-                        let name = productInfo.name;
-                        let currency = productInfo.currency;
-                        let price = productInfo.price.toFixed(2);
-                        let prod_url = productInfo.prod_url;
-                        let sale = productInfo.sale;
-                        let saleprice = productInfo.saleprice ? productInfo.saleprice.toFixed(2) : null;
-                        let shop = productInfo.shop;
-                        let key = id + Math.floor(Math.random() * Math.floor(1000));
-
-                        return (
-                            <Paper zDepth={1} className="profile-product-tile" key={key}>
-                                <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
-                                <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
-                                <div className="product-name">{name}</div>
-                                <div className="product-brand-profile"><p>{brand} from {shop}</p></div>
-                                <img className="product-image" src={img_url} />
-                                <div className={sale ? 'product-price-sale' : 'product-price'}>{sale ? currency+saleprice+', was '+currency+price : currency+price}</div>
-                                <a href={prod_url} target="_blank"> Go to product shop page</a>
-
-                            </Paper>
-                        )
-                    } else {
-                        return (
-                            null
-                        )
-                    }
-
-                }
-
+            if (mediaType === 'IMAGE') {
+                return (
+                    <Paper zDepth={1} className="profile-product-tile" key={mediaId}>
+                        <a href={mediaPermalink} target="_blank">Image by {ownerUsername} on Instagram</a>
+                        <img className="product-image" src={mediaUrl} />
+                        <div style={{marginTop: '15px', cursor: 'pointer'}}>
+                            <h3>Search from this image</h3>
+                        </div>
+                    </Paper>
+                )
             }
-        });
+        }) : null;
 
-        let tilesOrNothing = this.state.favorites[0] === "nothing" ? (
+        let instaPrompt = null;
+        if (!this.state.loaded) {
+            instaPrompt = <p>Loading your Instagram picks</p>
+        } else if (!this.state.insta_username) {
+            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        } else if (!this.state.insta_pics) {
+            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        } else if (this.state.insta_pics.length === 0) {
+            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        } else {
+            instaPrompt = null;
+        }
 
-            <h3>You haven't yet added any favorites</h3>
-        ) : (
-            favTiles
-        );
+        console.log('Insta pics length: ', this.state.insta_pics && this.state.insta_pics.length);
+        let instaList = null;
+        if (this.state.insta_pics && this.state.insta_pics.length > 0) {
+            instaList = insta_tiles;
+        }
 
-        let favoritesList = this.state.favorites.length > 0 ? (
-            tilesOrNothing
-        ) : (
-            <h2> Loading your favorites</h2>
-        );
+        let saveBtnStyle = {
+            color: 'white',
+            backgroundColor: 'black',
+            borderWidth: '0px',
+            borderRadius: '4px',
+            marginLeft: '10px',
+            cursor: 'pointer'
+        };
 
         return (
             <MuiThemeProvider>
                 <div className="profile-product-list">
-                    <h2 style={greetingStyle}>Hi {this.state.username}!</h2>
-                    <h4 className="greeting-text">Below you will find items added to your favorites</h4>
+                    <h4 style={greetingStyle}>Hi {this.state.username}!</h4>
+                    <p>Your account details</p>
+                    <hr />
                     <br></br>
+                    <p>Registered email: <b>{this.state.email}</b></p>
+                    <form onSubmit={this.saveInstaUsername}>
+                        <label>
+                            Your Instagram username:
+                            <input type="text" value={this.state.insta_username_prompt} onChange={this.changeInstaUsername} />
+                        </label>
+                        <input style={saveBtnStyle} type="submit" value="Save" />
+                    </form>
+                    <br />
+                    <hr />
+                    <br />
+                    <p>Here you will find your Instagram picks</p>
+                    <br />
                     <div className="result-pane">
-                        {favoritesList}
+                        {instaPrompt !== null && instaPrompt}
+                        {instaList !== null && instaList}
                     </div>
-                    <br></br>
+                    <br />
+                    <br />
+                    <br />
                     {logOutButton}
                 </div>
             </MuiThemeProvider>

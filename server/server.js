@@ -130,6 +130,58 @@ app.get('/api/favorites', function (req, res) {
 });
 
 
+// Retrieve user Instagram picks
+app.get('/api/insta_pics', function (req, res) {
+    let email = req.query.email;
+
+    let options = {
+        method: 'GET',
+        url: 'http://34.249.244.134/api/insta_pics',
+        qs: {
+            email: email
+        }
+    };
+
+    console.log('Insta pics, options: ', options);
+
+    function handleResponse(error, response, body){
+        console.log('Insta pics, response status: ', response.statusCode);
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+// Update user's Instagram username
+app.post('/api/save_insta_username', function (req, res) {
+    let email = req.body.email;
+    let insta_username = req.body.insta_username;
+
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/save_insta_username',
+        body: JSON.stringify({email: email, insta_username: insta_username}),
+        json: true
+    };
+    console.log('Save Insta username, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log('Save Insta username response: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Remove a product favorite from users account
 app.post('/api/removefav', function (req, res) {
     let email = req.body.email;
@@ -141,13 +193,10 @@ app.post('/api/removefav', function (req, res) {
         body: JSON.stringify({email: email, img_hash: img_hash}),
         json: true
     };
-
     console.log('Remove Fav, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // let response_data = JSON.parse(body);
-
             console.log('Remove fav response: ', body);
 
             res.send(body);

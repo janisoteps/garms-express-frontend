@@ -31,7 +31,7 @@ class Header extends React.Component {
                 )}/>
                 <Route render={({history}) => (
                     <div className="favorites-button" onClick={() => {
-                        history.push('/profile')
+                        history.push('/favorites')
                     }}>
                     </div>
                 )}/>

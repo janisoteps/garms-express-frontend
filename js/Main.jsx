@@ -1,12 +1,12 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-// import TestList from './TestList'
 import Register from './Register'
 import Login from './Login'
 import Logout from './Logout'
 import SearchChoice from './SearchChoice'
 import ImageSearch from './ImageSearch'
 import TextSearch from './TextSearch'
+import Favorites from './Favorites'
 import Profile from './Profile'
 import Explorer from './Explorer'
 import SearchFromImage from './SearchFromImage'
@@ -69,6 +69,15 @@ class Main extends React.Component {
                            email={this.props.email}
                            changeSex={(sex) => {this.changeSex(sex);}}
                         />}
+                    />
+                    <Route path='/favorites'
+                           render={(props) => <Favorites
+                               {...props}
+                               username={this.props.username}
+                               sex={this.props.sex}
+                               isAuth={this.props.isAuth}
+                               email={this.props.email}
+                           />}
                     />
                     <Route path='/profile'
                            render={(props) => <Profile
