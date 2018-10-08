@@ -388,6 +388,7 @@ app.post('/api/submit_instagram', function (req, res) {
     let media_type = req.body.media_type;
     let media_url = req.body.media_url;
     let media_permalink = req.body.media_permalink;
+    let owner_username = req.body.owner_username;
 
     let options = {
         method: 'POST',
@@ -399,7 +400,8 @@ app.post('/api/submit_instagram', function (req, res) {
             media_id: media_id,
             media_type: media_type,
             media_url: media_url,
-            media_permalink: media_permalink
+            media_permalink: media_permalink,
+            owner_username: owner_username
         },
         json: true
     };
