@@ -133,10 +133,11 @@ class Favorites extends React.Component  {
                         let saleprice = productInfo.saleprice ? productInfo.saleprice.toFixed(2) : null;
                         let shop = productInfo.shop;
                         let key = id + Math.floor(Math.random() * Math.floor(1000));
+                        let fav_img_hash = productInfo.img_hashes[0];
 
                         return (
                             <Paper zDepth={1} className="profile-product-tile" key={key}>
-                                <div className="profile-product-delete" onClick={() => { this.removeFav(img_hash); }}></div>
+                                <div className="profile-product-delete" onClick={() => { this.removeFav(fav_img_hash); }}></div>
                                 <a href={prod_url} target="_blank"><div className="profile-product-buy"></div></a>
                                 <div className="product-name">{name}</div>
                                 <div className="product-brand-profile"><p>{brand} from {shop}</p></div>

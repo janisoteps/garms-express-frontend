@@ -113,7 +113,11 @@ class ColorChoiceModal extends React.Component{
                     return(
                         <div className="color-modal">
                             <div className="color-modal-image-preview">
-                                <img className="color-image-preview" src={this.props.files[0].preview} />
+                                {this.props.files.length > 0 ?
+                                    <img className="color-image-preview" src={this.props.files[0].preview} />
+                                    :
+                                    <img className="color-image-preview" src={this.props.fileFromUrl.imgUrl} />
+                                }
                             </div>
                             <br></br>
                             <h5>I found these colors and themes in your photo</h5>

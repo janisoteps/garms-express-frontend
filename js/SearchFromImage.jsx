@@ -22,6 +22,7 @@ class SearchFromImage extends React.Component  {
             email: this.props.email,
             pwd: '',
             files: [],
+            fileFromUrl: null,
             results: [],
             colors: {},
             selectedColors: [],
@@ -41,9 +42,22 @@ class SearchFromImage extends React.Component  {
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.searchFromImage = this.searchFromImage.bind(this);
-        // this.addTagSearchSimilar = this.addTagSearchSimilar.bind(this);
         this.setTags = this.setTags.bind(this);
         this.setColor = this.setColor.bind(this);
+        this.uploadFromUrl = this.uploadFromUrl.bind(this);
+    }
+
+    componentDidMount() {
+        let url = window.location.href;
+
+        let imgUrl = url.split("?")[1];
+        if (imgUrl) {
+            imgUrl = imgUrl.split('=')[1];
+            imgUrl = decodeURIComponent(imgUrl);
+            if (imgUrl) {
+                this.uploadFromUrl(imgUrl);
+            }
+        }
     }
 
     // Handles login input change
@@ -104,6 +118,37 @@ class SearchFromImage extends React.Component  {
         }
     }
 
+    uploadFromUrl = (imgUrl) => {
+        const processStatus = function (response) {// process status
+            if (response.status === 200 || response.status === 0) {
+                return Promise.resolve(response)
+            } else {
+                return Promise.reject(new Error('Error loading: ' + url))
+            }
+        };
+
+        const parseBlob = function (response) {
+            return response.blob();
+        };
+
+        const downloadFile = function (url) {
+            return fetch(url)
+                .then(processStatus)
+                .then(parseBlob);
+        };
+
+        downloadFile(imgUrl)
+            .then((blob) => {
+                console.log(`File from URL: ${imgUrl}`);
+                this.setState({
+                    fileFromUrl: {
+                        imgUrl: imgUrl,
+                        file : blob
+                    }
+                });
+            });
+    };
+
     // When file is uploaded resize the image and then add to state
     onDrop = (acceptedFiles) => {
         // Define a function to get back to file type after resizing and getting base64 string
@@ -119,9 +164,6 @@ class SearchFromImage extends React.Component  {
             for (let i = 0; i < byteString.length; i++) {
                 content[i] = byteString.charCodeAt(i);
             }
-            // let newFile = new File(
-            //     [new Uint8Array(content)], origFile.name, {type: mimestring}
-            // );
             let newFile = new Blob(
                 [new Uint8Array(content)], {type: mimestring}
             );
@@ -193,7 +235,12 @@ class SearchFromImage extends React.Component  {
             loading: true
         });
 
-        let imageFile = this.state.files[0];
+        let imageFile;
+        if (this.state.fileFromUrl) {
+            imageFile = this.state.fileFromUrl.file;
+        } else {
+            imageFile = this.state.files[0];
+        }
 
         let data = new FormData();
         // data.append('image', imageFile);
@@ -450,6 +497,8 @@ class SearchFromImage extends React.Component  {
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
 
+        console.log('File from URL');
+        console.log(this.state.fileFromUrl);
         // Element that shows preview of just uploaded photo
         let preview = this.state.files.length > 0 && this.state.encodingNoCrop.length === 0 ? (
             <div className="preview-container">
@@ -457,13 +506,17 @@ class SearchFromImage extends React.Component  {
                 <div className="search-button" onClick={this.getImageFeatures}><p>search</p></div>
             </div>
         ) : (
-            <p> </p>
+            this.state.fileFromUrl &&
+            <div className="preview-container">
+                <img className="image-preview" src={this.state.fileFromUrl.imgUrl} />
+                <div className="search-button" onClick={() => {this.getImageFeatures()}}><p>search</p></div>
+            </div>
         );
 
         // Shows either image drop zone or login form if not authorized
         let searchForm = this.state.isAuth === true || this.state.isAuth == "true" ? (
             <div>
-                { this.state.files.length > 0 ? (
+                { this.state.files.length > 0 || this.state.fileFromUrl ? (
                     preview
                 ) : (
                     <section>
@@ -573,7 +626,7 @@ class SearchFromImage extends React.Component  {
                     cats={this.state.cats}
                     altCats={this.state.altCats}
                     files={this.state.files}
-                    // mainColor={this.state.mainColor}
+                    fileFromUrl={this.state.fileFromUrl}
                     selectedColors={this.state.selectedColors}
                     tags={this.state.posTags}
                 />

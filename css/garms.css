@@ -250,9 +250,9 @@
 }
 
 .image-preview{
-    width: 100vw;
-    max-width: 400px;
-    height: auto;
+    /*width: 100vw;*/
+    height: calc(100vh - 175px);
+    width: auto;
 }
 
 .search-button{
@@ -420,6 +420,18 @@
     position: absolute;
     margin-top: -55px;
     right: 10px;
+    cursor: pointer;
+}
+
+.search-from-url{
+    width: 44px;
+    height: 44px;
+    background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 38px 38px;
+    border-radius: 22px;
+    position: relative;
+    display: inline-block;
     cursor: pointer;
 }
 

@@ -79,6 +79,8 @@ class Profile extends React.Component  {
             });
     }
 
+
+    // --------------------- MAIN RENDER ---------------------
     render () {
         const logOutButton = this.state.isAuth === "true" ? (
             <Route render={({ history }) => (
@@ -108,9 +110,14 @@ class Profile extends React.Component  {
                     <Paper zDepth={1} className="profile-product-tile" key={mediaId}>
                         <a href={mediaPermalink} target="_blank">Image by {ownerUsername} on Instagram</a>
                         <img className="product-image" src={mediaUrl} />
-                        <div style={{marginTop: '15px', cursor: 'pointer'}}>
-                            <h3>Search from this image</h3>
-                        </div>
+                        <Route render={({ history }) => (
+                            <div
+                                style={{marginTop: '15px', cursor: 'pointer'}}
+                                onClick={() => { history.push('/search-from-image?=' + encodeURIComponent(mediaUrl)) }}
+                            >
+                                <div className="search-from-url" /> <h4>Search from this image</h4>
+                            </div>
+                        )} />
                     </Paper>
                 )
             }
