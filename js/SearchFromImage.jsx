@@ -27,13 +27,15 @@ class SearchFromImage extends React.Component  {
             colors: {},
             selectedColors: [],
             sexPickerWidth: '48px',
-            // color_512: [],
             encodingNoCrop: [],
             posTags: [],
             negTags: [],
             noShop: [],
             prodImgShown: {},
-            menuOpen: true
+            menuOpen: true,
+            viewPortWidth: null,
+            viewPortHeight: null,
+            previewImgDims: {}
         };
 
         this.changeSex = this.changeSex.bind(this);
@@ -45,11 +47,13 @@ class SearchFromImage extends React.Component  {
         this.setTags = this.setTags.bind(this);
         this.setColor = this.setColor.bind(this);
         this.uploadFromUrl = this.uploadFromUrl.bind(this);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.onImgLoad = this.onImgLoad.bind(this);
     }
 
     componentDidMount() {
+        // Check if there is image url passed in query
         let url = window.location.href;
-
         let imgUrl = url.split("?")[1];
         if (imgUrl) {
             imgUrl = imgUrl.split('=')[1];
@@ -58,6 +62,30 @@ class SearchFromImage extends React.Component  {
                 this.uploadFromUrl(imgUrl);
             }
         }
+
+        // Checks windows dimensions and resizing
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        this.setState({
+            viewPortWidth: window.innerWidth,
+            viewPortHeight: window.innerHeight
+        });
+    }
+
+    onImgLoad({target:img}) {
+        this.setState({
+            previewImgDims: {
+                height:img.offsetHeight,
+                width:img.offsetWidth
+            }
+        });
     }
 
     // Handles login input change
@@ -70,12 +98,10 @@ class SearchFromImage extends React.Component  {
     }
 
     //Submits login request to server and sets state/cookies if successful
-    handleSubmit(event) {
-        // alert('A name was submitted: ' + this.state.value);
+    handleLoginSubmit(event) {
         event.preventDefault();
         let email = this.state.email;
         let pwd = this.state.pwd;
-
         fetch(window.location.origin + '/api/login', {
             method: 'post',
             body: JSON.stringify({email: email, pwd: pwd}),
@@ -87,7 +113,6 @@ class SearchFromImage extends React.Component  {
             .then(function(data) {
                 console.log(data);
                 if (data === "OK") {
-                    // this.setLoginState();
                     this.setState({
                         isAuth: true
                     });
@@ -100,13 +125,11 @@ class SearchFromImage extends React.Component  {
         this.setState({
             sex: sex
         });
-        // this.expandSexSelector();
     }
 
     expandSexSelector(){
         let currentWidth = this.state.sexPickerWidth;
-
-        console.log('Expanding sex selector ', currentWidth);
+        // console.log('Expanding sex selector ', currentWidth);
         if(currentWidth === '48px'){
             this.setState({
                 sexPickerWidth: '270px'
@@ -119,24 +142,21 @@ class SearchFromImage extends React.Component  {
     }
 
     uploadFromUrl = (imgUrl) => {
-        const processStatus = function (response) {// process status
+        const responseStatus = function (response) {
             if (response.status === 200 || response.status === 0) {
                 return Promise.resolve(response)
             } else {
                 return Promise.reject(new Error('Error loading: ' + url))
             }
         };
-
         const parseBlob = function (response) {
             return response.blob();
         };
-
         const downloadFile = function (url) {
             return fetch(url)
-                .then(processStatus)
+                .then(responseStatus)
                 .then(parseBlob);
         };
-
         downloadFile(imgUrl)
             .then((blob) => {
                 console.log(`File from URL: ${imgUrl}`);
@@ -174,7 +194,6 @@ class SearchFromImage extends React.Component  {
             origProps.forEach(p => {
                 newFile[p] = origFile[p];
             });
-
             return newFile;
         }
 
@@ -182,23 +201,19 @@ class SearchFromImage extends React.Component  {
         acceptedFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = () => {
-                console.log('Reader loaded');
+                // console.log('Reader loaded');
                 const fileAsBinaryString = reader.result;
-
                 let img = document.createElement("img");
                 img.onload = () => {
-                    console.log('Img loaded');
+                    // console.log('Img loaded');
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0);
-
                     let MAX_WIDTH = 600;
                     let MAX_HEIGHT = 600;
                     let width = img.width;
                     let height = img.height;
-
-                    console.log('Width: ', width);
-
+                    // console.log('Width: ', width);
                     if (width > height) {
                         if (width > MAX_WIDTH) {
                             height *= MAX_WIDTH / width;
@@ -234,18 +249,14 @@ class SearchFromImage extends React.Component  {
         this.setState({
             loading: true
         });
-
         let imageFile;
         if (this.state.fileFromUrl) {
             imageFile = this.state.fileFromUrl.file;
         } else {
             imageFile = this.state.files[0];
         }
-
         let data = new FormData();
-        // data.append('image', imageFile);
         data.append('image', imageFile);
-
         fetch(window.location.origin + '/api/img_features', {
             method: 'post',
             body: data
@@ -362,7 +373,6 @@ class SearchFromImage extends React.Component  {
         }
     }
 
-
     searchFromImage(){
         let colorRgb1 = this.state.selectedColors[0];
         let colorRgb2 = this.state.selectedColors[1];
@@ -371,14 +381,12 @@ class SearchFromImage extends React.Component  {
         let sex = this.state.sex;
         let encodingNoCrop = this.state.encodingNoCrop;
         console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
-
         this.setState({
             colors: {},
             cats: [],
             files: [],
             loading: true
         });
-
         fetch(window.location.origin + '/api/search_from_image', {
             method: 'post',
             body: JSON.stringify({
@@ -397,14 +405,12 @@ class SearchFromImage extends React.Component  {
             .then(data => {
                 console.log(data);
                 let results =  data.res;
-
                 let prodImgShown = Object.assign(
                     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
                         'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
                         'img_count': product['prod_serial'][0]['img_urls'].length
                         }}))
                 );
-
                 this.setState({
                     results: data.res,
                     loading: false,
@@ -413,19 +419,16 @@ class SearchFromImage extends React.Component  {
             });
     }
 
-
     searchSimilarImages(imgHash, colorRgb1, colorRgb2){
         this.setState({
             loading: true
         });
-
         let posTags = this.state.posTags.toString().replace(/\s+/g, '');
         let negTags = this.state.negTags.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
-
         let searchString = window.location.origin + '/api/search_similar?'
             + 'img_hash=' + imgHash
             + '&tags_positive=' + posTags
@@ -434,9 +437,7 @@ class SearchFromImage extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
-
         console.log('Search string: ', searchString);
-
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
@@ -444,14 +445,12 @@ class SearchFromImage extends React.Component  {
         }).then(data => {
             console.log(data);
             let results =  data.res;
-
             let prodImgShown = Object.assign(
                 {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
                         'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
                         'img_count': product['prod_serial'][0]['img_urls'].length
                     }}))
             );
-
             this.setState({
                 results: data.res,
                 loading: false,
@@ -465,12 +464,10 @@ class SearchFromImage extends React.Component  {
         });
     }
 
-
     squexpandMenu(flag){
         if (flag === 'squeeze'){
             for(var i=0; i<100; i++){
                 let height = 'calc(100vh - 50px - ((100vh - 50px) / 100 * ' + (i + 1) + '))';
-
                 this.setState({
                     sideMenuHeight: height
                 })
@@ -496,19 +493,31 @@ class SearchFromImage extends React.Component  {
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
-
+        console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
+            + `viewportWidth: ${this.state.viewPortWidth}\n`
+            + `imageHeight: ${this.state.previewImgDims.height}\n`
+            + `imageWidth: ${this.state.previewImgDims.width}\n`
+        );
+        let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
+        < this.state.viewPortWidth - this.state.previewImgDims.width ? {
+            height: `calc( ${this.state.viewPortHeight}px - 175px )`,
+            width: "auto"
+        } : {
+            width: `calc(${this.state.viewPortWidth}px - 20px)`,
+            height: "auto"
+        };
         console.log('File from URL');
         console.log(this.state.fileFromUrl);
         // Element that shows preview of just uploaded photo
         let preview = this.state.files.length > 0 && this.state.encodingNoCrop.length === 0 ? (
             <div className="preview-container">
-                <img className="image-preview" src={this.state.files[0].preview} />
+                <img onLoad={this.onImgLoad} style={previewStyle} src={this.state.files[0].preview} />
                 <div className="search-button" onClick={this.getImageFeatures}><p>search</p></div>
             </div>
         ) : (
             this.state.fileFromUrl &&
             <div className="preview-container">
-                <img className="image-preview" src={this.state.fileFromUrl.imgUrl} />
+                <img onLoad={this.onImgLoad} style={previewStyle} src={this.state.fileFromUrl.imgUrl} />
                 <div className="search-button" onClick={() => {this.getImageFeatures()}}><p>search</p></div>
             </div>
         );
@@ -548,7 +557,7 @@ class SearchFromImage extends React.Component  {
                 />
                 <RaisedButton label="Log In"
                               primary={true}
-                              onClick={this.handleSubmit}
+                              onClick={this.handleLoginSubmit}
                 />
             </div>
         );
