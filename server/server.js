@@ -459,6 +459,30 @@ app.post('/api/explorer_search', function (req, res) {
 });
 
 
+// Do product search from Explorer component
+app.post('/api/sequences', function (req, res) {
+    let input_text = req.body.input_text;
+    console.log(input_text);
+    let options = {
+        method: 'POST',
+        url: 'http://34.244.146.183/api/sequences',
+        body: {
+            input_text: input_text
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 app.use(express.static(__dirname + './../dist/')); //serves the index.html
 
 app.get('*', function (request, response){

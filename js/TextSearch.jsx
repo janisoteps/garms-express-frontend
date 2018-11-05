@@ -6,8 +6,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ProductResults from './ProductResults';
-import CatPicker from './CatPicker';
+// import ProductResults from './ProductResults';
+// import CatPicker from './CatPicker';
+import SexSelector from './SexSelector';
 
 
 //Component to search for products using text input
@@ -30,15 +31,17 @@ class TextSearch extends React.Component  {
             cats: [],
             mainCat: '',
             mainCat2: '',
-            searchString: '',
+            searchString: null,
             noResult: false,
-            sexPickerWidth: '56px',
-            catsOn: false
+            sexPickerWidth: '48px',
+            catsOn: false,
+            mainSuggestion: null,
+            moreSuggestions: []
         };
 
         this.similarImageSearch = this.similarImageSearch.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
         this.changeSex = this.changeSex.bind(this);
         this.changeSex = this.changeSex.bind(this);
@@ -49,12 +52,32 @@ class TextSearch extends React.Component  {
     }
 
     //Handle text input change
-    handleChange(event) {
+    handleTextInputChange(event) {
         let value =  event.target.value;
         let name = event.target.name;
         this.setState({
             [name]: value
         });
+
+        if (value.substr(-1) === ' ') {
+            let inputText = value.replace(/^\s+|\s+$/g, '');
+
+            fetch(window.location.origin + '/api/sequences', {
+                method: 'post',
+                body: JSON.stringify({input_text: inputText}),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then((response) => { return response.json(); })
+                .then((data) => {
+                    console.log(data);
+                    this.setState({
+                        mainSuggestion: data.main_pred,
+                        moreSuggestions: data.sim_pred
+                    });
+                });
+        }
     }
 
     onEnterPress = (e) => {
@@ -114,12 +137,13 @@ class TextSearch extends React.Component  {
     }
 
     // Send request to server based on input string and set the response in state
-    textImageSearch(){
+    textImageSearch(input){
         this.setState({
-            loading: true
+            loading: true,
+            mainSuggestion: null,
+            moreSuggestions: []
         });
-
-        let inputString = this.state.searchString;
+        let inputString = input ? input : this.state.searchString.replace(/^\s+|\s+$/g, '');
         if(inputString.length === 0){
             this.setState({
                 loading: false,
@@ -128,10 +152,10 @@ class TextSearch extends React.Component  {
             return
         }
         // console.log(inputString);
-        let inputArray = inputString.split();
+        let inputArray = inputString.split(' ');
         // console.log(inputArray);
-        let searchString = '';
-        inputArray.forEach(word => searchString += '+' + word);
+        let searchString = inputArray.join('+');
+        // inputArray.forEach(word => searchString += '+' + word);
 
         console.log('String search with: ', searchString);
         fetch(window.location.origin + '/api/text?string=' + searchString + '&sex=' + this.state.sex, {
@@ -199,20 +223,19 @@ class TextSearch extends React.Component  {
         this.setState({
             sex: sex
         });
-        // this.expandSexSelector();
     }
 
     expandSexSelector(){
         let currentWidth = this.state.sexPickerWidth;
 
         console.log('Expanding sex selector ', currentWidth);
-        if(currentWidth === '56px'){
+        if(currentWidth === '48px'){
             this.setState({
                 sexPickerWidth: '270px'
             });
         } else {
             this.setState({
-                sexPickerWidth: '56px'
+                sexPickerWidth: '48px'
             });
         }
     }
@@ -271,113 +294,77 @@ class TextSearch extends React.Component  {
             )
         };
 
+        let Suggestions = () => {
+            let key = Math.floor(Math.random() * 1000 + Math.random() * 10);
+            let moreSuggestions = this.state.moreSuggestions ? this.state.moreSuggestions.map(suggestion => {
+                let key = Math.floor(Math.random() * 1000 + Math.random() * 10);
+                return <div
+                    key={key}
+                    style={{
+                        fontSize: "1.05rem",
+                        display: "inline-block",
+                        width: "100%",
+                        cursor: "pointer",
+                        textAlign: "left",
+                        marginBottom: "5px"
+                    }}
+                    onClick={() => {
+                        this.setState({searchString: suggestion.replace(/^\s+|\s+$/g, '')});
+                        this.textImageSearch(suggestion.replace(/^\s+|\s+$/g, ''));
+                    }}
+                >{suggestion} ...</div>
+            }) : <div />;
+            return (
+                <div style={{
+                    width: "400px",
+                    maxWidth: "100vw",
+                    textAlign: "center",
+                    marginLeft: "calc(50vw - 158px)",
+                    cursor: "pointer"
+                }}>
+                    <div
+                        key={key}
+                        style={{
+                            fontSize: "1.35rem",
+                            display: "inline-block",
+                            width: "100%",
+                            cursor: "pointer",
+                            textAlign: "left",
+                            marginBottom: "5px"
+                        }}
+                        onClick={() => {
+                            this.setState({searchString: this.state.mainSuggestion.replace(/^\s+|\s+$/g, '')});
+                            this.textImageSearch(this.state.mainSuggestion);
+                        }}
+                    >
+                        {this.state.mainSuggestion} ...
+                    </div>
+                    {moreSuggestions}
+                </div>
+            )
+        };
+
         let SearchBox = (
                 <div className="text-search-box">
                     <div className="inner-text-search-box">
                         <TextField
                             autoFocus="autofocus"
                             className="text-search-input"
-                            hintText="Purple denim jeans or..."
+                            hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
                             floatingLabelText="What's your outfit idea?"
                             name="searchString"
-                            onChange={this.handleChange.bind(this)}
+                            onChange={this.handleTextInputChange.bind(this)}
                             onKeyDown={this.onEnterPress}
                         />
                         <div className="text-search-button" onClick={this.textImageSearch}>
                             <div className="search-icon" />
-                            <div className="search-text"> search</div>
+                            {/*<div className="search-text"> search</div>*/}
                         </div>
                     </div>
+                    {this.state.mainSuggestion && <Suggestions />}
                 </div>
         );
 
-        let SexSelector = () => {
-            let sexPickerStyle = {
-                position: 'fixed',
-                right: '0',
-                top: '70px',
-                overflow: 'hidden',
-                transition: 'width 300ms ease-in-out',
-                width: this.state.sexPickerWidth,
-                height: '56px',
-                backgroundColor: '#FFFFFF',
-                borderRadius: '28px 0px 0px 28px',
-                boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.4)'
-            };
-
-            let selectorHiderStyle = {
-                position: 'fixed',
-                right: '0',
-                top: '70px',
-                overflow: 'hidden',
-                transition: 'width 300ms ease-in-out',
-                width: '56px',
-                height: '56px',
-                backgroundColor: '#FFFFFF',
-                borderRadius: '28px 0px 0px 28px'
-            };
-
-            let sexOptionStyle1 = {
-                display: 'inline-block',
-                lineHeight: '33px',
-                height: '56px',
-                verticalAlign: 'middle',
-                borderRadius: '28px',
-                cursor: 'pointer',
-                padding: this.state.sex !== 'women' ? '10px' : '5px',
-                borderWidth: this.state.sex === 'women' && '5px',
-                borderColor: this.state.sex === 'women' && '#7f649c',
-                borderStyle: this.state.sex === 'women' && 'solid'
-            };
-
-            let sexOptionStyle2 = {
-                display: 'inline-block',
-                lineHeight: '33px',
-                height: '56px',
-                verticalAlign: 'middle',
-                borderRadius: '28px',
-                cursor: 'pointer',
-                padding: this.state.sex !== 'men' ? '10px' : '5px',
-                borderWidth: this.state.sex === 'men' && '5px',
-                borderColor: this.state.sex === 'men' && '#7f649c',
-                borderStyle: this.state.sex === 'men' && 'solid'
-            };
-
-            let sexOptionStyle3 = {
-                display: 'inline-block',
-                lineHeight: '33px',
-                height: '56px',
-                verticalAlign: 'middle',
-                borderRadius: '28px',
-                cursor: 'pointer',
-                padding: this.state.sex !== '' ? '10px' : '5px',
-                borderWidth: this.state.sex === '' && '5px',
-                borderColor: this.state.sex === '' && '#7f649c',
-                borderStyle: this.state.sex === '' && 'solid'
-            };
-
-            console.log('Image search sex: ', this.state.sex);
-
-            return(
-                <div>
-                    <div style={sexPickerStyle}>
-                        <div style={sexOptionStyle1} onClick={() => {this.changeSex('women')}}>women</div>
-                        <div style={sexOptionStyle2} onClick={() => {this.changeSex('men')}}>men</div>
-                        <div style={sexOptionStyle3} onClick={() => {this.changeSex('')}}>both</div>
-                    </div>
-                    <div style={selectorHiderStyle}></div>
-                    <div className="sex-selector" onClick={this.expandSexSelector}></div>
-                </div>
-            )
-        };
-
-        let CatSelector = () => {
-            console.log('Clicked cat selector');
-            return(
-                <div className="cat-selector" onClick={this.showCatPicker}></div>
-            )
-        };
-        //                            {/*<ProductResults email={this.state.email} simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, pca_256, prod_id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, pca_256, prod_id) }} results={this.state.results}/>*/}
         return(
             <MuiThemeProvider>
                 <div>
@@ -401,18 +388,23 @@ class TextSearch extends React.Component  {
                         )
                     }
 
-                    <SexSelector />
+                    <SexSelector
+                        sex={this.state.sex}
+                        sexPickerWidth={this.state.sexPickerWidth}
+                        changeSex={(sex) => {this.changeSex(sex)}}
+                        expandSexSelector={() => {this.expandSexSelector()}}
+                    />
 
-                    <CatSelector />
+                    {/*<CatSelector />*/}
 
-                    {(this.state.catsOn === true) && (
-                        <CatPicker
-                            showCatPicker={this.showCatPicker}
-                            setMainCats={(mainCat, mainCat2) => {this.setMainCats(mainCat, mainCat2);}}
-                            mainCat={this.state.mainCat}
-                            mainCat2={this.state.mainCat2}
-                        />
-                    )}
+                    {/*{(this.state.catsOn === true) && (*/}
+                        {/*<CatPicker*/}
+                            {/*showCatPicker={this.showCatPicker}*/}
+                            {/*setMainCats={(mainCat, mainCat2) => {this.setMainCats(mainCat, mainCat2);}}*/}
+                            {/*mainCat={this.state.mainCat}*/}
+                            {/*mainCat2={this.state.mainCat2}*/}
+                        {/*/>*/}
+                    {/*)}*/}
                 </div>
             </MuiThemeProvider>
         )

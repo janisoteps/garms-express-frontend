@@ -500,7 +500,7 @@
 
 .text-search-button{
     display: inline-block;
-    width: 130px;
+    width: 60px;
     cursor: pointer;
     height: 30px;
 }
@@ -517,7 +517,7 @@
 
 .text-search-box{
     text-align: center;
-    margin-top: 45vh;
+    margin-top: 25vh;
 }
 
 .inner-text-search-box{

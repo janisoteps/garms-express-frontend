@@ -1,4 +1,4 @@
-// ProductResults.jsxx
+// ResultsFromImage.jsx
 import React from "react";
 require('../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
