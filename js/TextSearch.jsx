@@ -6,10 +6,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-// import ProductResults from './ProductResults';
-// import CatPicker from './CatPicker';
+import ResultsFromImage from './ResultsFromImage';
 import SexSelector from './SexSelector';
-
+import TagCloud from './TagCloud';
+import ColorPicker from './ColorPicker';
 
 //Component to search for products using text input
 class TextSearch extends React.Component  {
@@ -30,16 +30,19 @@ class TextSearch extends React.Component  {
             mainColorNr: 1,
             cats: [],
             mainCat: '',
-            mainCat2: '',
+            selectedColors: [],
+            posTags: [],
+            negTags: [],
             searchString: null,
             noResult: false,
             sexPickerWidth: '48px',
             catsOn: false,
             mainSuggestion: null,
-            moreSuggestions: []
+            moreSuggestions: [],
+            noShop: []
         };
 
-        this.similarImageSearch = this.similarImageSearch.bind(this);
+        this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
@@ -49,6 +52,9 @@ class TextSearch extends React.Component  {
         this.showCatPicker = this.showCatPicker.bind(this);
         this.setMainCats = this.setMainCats.bind(this);
         this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+        this.setTags = this.setTags.bind(this);
+        this.squexpandMenu = this.squexpandMenu.bind(this);
     }
 
     //Handle text input change
@@ -80,6 +86,32 @@ class TextSearch extends React.Component  {
         }
     }
 
+    squexpandMenu(flag){
+        if (flag === 'squeeze'){
+            for(var i=0; i<100; i++){
+                let height = 'calc(100vh - 50px - ((100vh - 50px) / 100 * ' + (i + 1) + '))';
+                this.setState({
+                    sideMenuHeight: height
+                })
+            }
+            this.setState({
+                menuOpen: false
+            });
+        } else {
+            for(var k=0; k<100; k++){
+                let height = 'calc(100vh - 50px - ((100vh - 50px) * 100 / ' + (k + 1) + '))';
+
+                this.setState({
+                    sideMenuHeight: height
+                })
+            }
+            this.setState({
+                sideMenuHeight: null,
+                menuOpen: true
+            })
+        }
+    }
+
     onEnterPress = (e) => {
         if(e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
@@ -87,46 +119,42 @@ class TextSearch extends React.Component  {
         }
     };
 
-    // Sends similar product search request to server if user clicks on magnifying glass button
-    // Updates results state with the response
-    similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-
-        console.log('Similar image search launched');
+    searchSimilarImages(imgHash, colorRgb1, colorRgb2){
         this.setState({
             loading: true
         });
-
-        // let mainColor = color_1.toString().replace(/\s+/g, '');
-        // let mainColor = this.state.mainColor;
-        let siam_64 = siamese_64.toString().replace(/\s+/g, '');
-
-        let mainCat = this.state.mainCat;
-        if(mainCat.length === 0 || typeof mainCat === "undefined"){
-            mainCat = img_cat_sc_txt;
-        }
-
-        console.log('Main cat: ', mainCat, ' , Img cat sc txt: ', img_cat_sc_txt);
-
-        let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-            + '&main_cat=' + mainCat
-            + '&main_cat2=' + this.state.mainCat2
-            + '&nr1_cat_sc=' + nr1_cat_sc
-            + '&color_1=[' + color_1
-            + ']&pca_256=[' + siam_64
-            + ']&sex=' + this.state.sex
-            + '&id=' + prod_id;
-
-        // console.log('search string: ', searchString);
-
+        let posTags = this.state.posTags.toString().replace(/\s+/g, '');
+        let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+        let sex = this.state.sex;
+        let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+        let color_1 = colorRgb1.toString().replace(/\s+/g, '');
+        let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let searchString = window.location.origin + '/api/search_similar?'
+            + 'img_hash=' + imgHash
+            + '&tags_positive=' + posTags
+            + '&tags_negative=' + negTags
+            + '&color_1=' + color_1
+            + '&color_2=' + color_2
+            + '&sex=' + sex
+            + '&no_shop=' + noShop;
+        console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
             console.log(data);
+            let results =  data.res;
+            let prodImgShown = Object.assign(
+                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                        'img_count': product['prod_serial'][0]['img_urls'].length
+                    }}))
+            );
             this.setState({
                 results: data.res,
-                loading: false
+                loading: false,
+                prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -136,6 +164,139 @@ class TextSearch extends React.Component  {
         });
     }
 
+    // Set main color and category state based on selection from modal
+    setColorPosTags(selection){
+        if(selection['cat'].length > 0) {
+            let selectedCat = selection['cat'];
+            console.log('Cat selections: ', selectedCat);
+            let tags = this.state.posTags;
+            if (tags.includes(selectedCat)){
+                let filteredTags = tags.filter(function(e) { return e !== selectedCat });
+                this.setState({
+                    posTags: filteredTags
+                });
+            } else {
+                tags = tags.concat(selectedCat);
+                console.log('New posTags: ', tags);
+                this.setState({
+                    posTags: tags
+                });
+            }
+            this.setState({
+                mainCat: selectedCat
+            });
+        } else {
+            // let colorNr = selection['color_nr'];
+            let colorRgb = selection['color_rgb'];
+            let selectedColors = this.state.selectedColors;
+            selectedColors.unshift(colorRgb);
+            if (selectedColors.length > 2) {
+                selectedColors.pop();
+            } else if (selectedColors.length === 1) {
+                selectedColors.unshift(colorRgb);
+            }
+            this.setState({
+                selectedColors: selectedColors
+            });
+        }
+    }
+
+    setTags(tag, type, flag){
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
+        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        if (flag === 'remove') {
+            if (type === 'positive') {
+                posTags = posTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    posTags: posTags
+                });
+            } else if (type === 'negative') {
+                negTags = negTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    negTags: negTags
+                });
+            }
+        } else if (flag === 'add') {
+            if (type === 'positive') {
+                if (negTags.includes(tag)) {
+                    negTags = negTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+                if (!posTags.includes(tag)) {
+                    posTags.push(tag);
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+            } else if (type === 'negative') {
+                if (posTags.includes(tag)) {
+                    posTags = posTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+                if (!negTags.includes(tag)) {
+                    negTags.push(tag);
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+            }
+        }
+    }
+
+    // // Sends similar product search request to server if user clicks on magnifying glass button
+    // // Updates results state with the response
+    // similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
+    //
+    //     console.log('Similar image search launched');
+    //     this.setState({
+    //         loading: true
+    //     });
+    //
+    //     // let mainColor = color_1.toString().replace(/\s+/g, '');
+    //     // let mainColor = this.state.mainColor;
+    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
+    //
+    //     let mainCat = this.state.mainCat;
+    //     if(mainCat.length === 0 || typeof mainCat === "undefined"){
+    //         mainCat = img_cat_sc_txt;
+    //     }
+    //
+    //     console.log('Main cat: ', mainCat, ' , Img cat sc txt: ', img_cat_sc_txt);
+    //
+    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
+    //         + '&main_cat=' + mainCat
+    //         + '&main_cat2=' + this.state.mainCat2
+    //         + '&nr1_cat_sc=' + nr1_cat_sc
+    //         + '&color_1=[' + color_1
+    //         + ']&pca_256=[' + siam_64
+    //         + ']&sex=' + this.state.sex
+    //         + '&id=' + prod_id;
+    //
+    //     // console.log('search string: ', searchString);
+    //
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         console.log(data);
+    //         this.setState({
+    //             results: data.res,
+    //             loading: false
+    //         });
+    //         window.scrollTo({
+    //             top: 0,
+    //             behavior: "smooth"
+    //         });
+    //         window.scrollTo(0, 0);
+    //     });
+    // }
+
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
         this.setState({
@@ -143,7 +304,7 @@ class TextSearch extends React.Component  {
             mainSuggestion: null,
             moreSuggestions: []
         });
-        let inputString = input ? input : this.state.searchString.replace(/^\s+|\s+$/g, '');
+        let inputString = input ? input : this.state.searchString;
         if(inputString.length === 0){
             this.setState({
                 loading: false,
@@ -151,14 +312,11 @@ class TextSearch extends React.Component  {
             });
             return
         }
-        // console.log(inputString);
         let inputArray = inputString.split(' ');
-        // console.log(inputArray);
         let searchString = inputArray.join('+');
-        // inputArray.forEach(word => searchString += '+' + word);
 
         console.log('String search with: ', searchString);
-        fetch(window.location.origin + '/api/text?string=' + searchString + '&sex=' + this.state.sex, {
+        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
             method: 'get'
         }).then(function(response) { return response.json(); })
             .then(data => {
@@ -170,10 +328,46 @@ class TextSearch extends React.Component  {
                         noResult: true
                     });
                 } else {
+                    let results =  data.res;
+                    let prodImgShown = Object.assign(
+                        {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                                'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                                'img_count': product['prod_serial'][0]['img_urls'].length
+                            }}))
+                    );
                     this.setState({
                         results: data.res,
-                        mainCat: data.mainCat,
-                        loading: false
+                        loading: false,
+                        prodImgShown: prodImgShown,
+                        posTags: data.tags
+                    });
+                    if (data.res.length === 0) {
+                        this.setState({
+                            noResult: true
+                        });
+                    }
+                }
+            });
+    }
+
+    //Submits login request to server and sets state/cookies if successful
+    handleLoginSubmit(event) {
+        event.preventDefault();
+        let email = this.state.email;
+        let pwd = this.state.pwd;
+        fetch(window.location.origin + '/api/login', {
+            method: 'post',
+            body: JSON.stringify({email: email, pwd: pwd}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) { return response.json(); })
+            .then(function(data) {
+                console.log(data);
+                if (data === "OK") {
+                    this.setState({
+                        isAuth: true
                     });
                 }
             });
@@ -365,28 +559,36 @@ class TextSearch extends React.Component  {
                 </div>
         );
 
+        // Shows either image drop zone or login form if not authorized
+        let searchForm = this.state.isAuth === true || this.state.isAuth === "true" ? (
+            <div>
+                {SearchBox}
+            </div>
+        ) : (
+            <div className="register-form">
+                <p>Log in your Garms account</p>
+                <TextField hintText="Your e-mail"
+                           floatingLabelText="Input your e-mail address:"
+                           name="email"
+                           onChange={this.handleChange.bind(this)}
+                />
+                <TextField hintText="Password"
+                           floatingLabelText="Your password:"
+                           type="password"
+                           name="pwd"
+                           onChange={this.handleChange.bind(this)}
+                />
+                <RaisedButton label="Log In"
+                              primary={true}
+                              onClick={this.handleLoginSubmit}
+                />
+            </div>
+        );
+
         return(
             <MuiThemeProvider>
                 <div>
-                    <Spinner />
                     <NoResults />
-
-                    {
-                        this.state.results.length > 0 ? (
-                            <div style={{textAlign: 'center', width: '100%'}}>
-                            {/*<ProductResults*/}
-                                {/*mainCat={this.state.mainCat}*/}
-                                {/*setMainCatsAndSearchSimilar={(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) => {this.setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id) }}*/}
-                                {/*email={this.state.email}*/}
-                                {/*simImgSearch={(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) => { this.similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, id) }}*/}
-                                {/*results={this.state.results}*/}
-                            {/*/>*/}
-                                <h1>Under Construction :)</h1>
-                            </div>
-                        ) : (
-                            SearchBox
-                        )
-                    }
 
                     <SexSelector
                         sex={this.state.sex}
@@ -395,16 +597,50 @@ class TextSearch extends React.Component  {
                         expandSexSelector={() => {this.expandSexSelector()}}
                     />
 
-                    {/*<CatSelector />*/}
+                    <TagCloud
+                        posTags={this.state.posTags}
+                        negTags={this.state.negTags}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                    />
 
-                    {/*{(this.state.catsOn === true) && (*/}
-                        {/*<CatPicker*/}
-                            {/*showCatPicker={this.showCatPicker}*/}
-                            {/*setMainCats={(mainCat, mainCat2) => {this.setMainCats(mainCat, mainCat2);}}*/}
-                            {/*mainCat={this.state.mainCat}*/}
-                            {/*mainCat2={this.state.mainCat2}*/}
-                        {/*/>*/}
-                    {/*)}*/}
+                    <ColorPicker
+                        setColor={(selection) => {this.setColor(selection)}}
+                        selectedColors={this.state.selectedColors}
+                        searchSimilarImages={(imgHash, color1, color2) => {
+                            this.searchSimilarImages(imgHash, color1, color2)
+                        }}
+                        results={this.state.results}
+                    />
+
+                    {
+                        this.state.results.length > 0 ? (
+                            <div style={{textAlign: 'center', width: '100%'}}>
+                                <ResultsFromImage
+                                    mainCat={this.state.mainCat}
+                                    email={this.state.email}
+                                    searchSimilarImages={(
+                                        img_hash,
+                                        color_1,
+                                        color_2
+                                    ) => { this.searchSimilarImages(
+                                        img_hash,
+                                        color_1,
+                                        color_2
+                                    ) }}
+                                    results={this.state.results}
+                                    prodImgShown={this.state.prodImgShown}
+                                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
+                                    selectedColors={this.state.selectedColors}
+                                />
+                            </div>
+                        ) : (
+                            searchForm
+                        )
+                    }
+
+                    <Spinner />
+
                 </div>
             </MuiThemeProvider>
         )

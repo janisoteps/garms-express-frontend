@@ -7,6 +7,7 @@ const path = require('path');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');  // Filesystem
+const emailValidator = require("email-validator");
 
 
 // --------------------------   MAIN API   ---------------------------------
@@ -15,30 +16,36 @@ const fs = require('fs');  // Filesystem
 app.post('/api/login', function (req, res) {
     let email = req.body.email;
     let pwd = req.body.pwd;
+    pwd = pwd.replace(/[^A-Za-z0-9]/g, "");
 
-    console.log('Email: ', email);
-    console.log('Pwd: ', pwd);
-    let options = {
-        method: 'POST',
-        url: 'http://34.249.244.134/api/login',
-        body: JSON.stringify({email: email, pwd: pwd}),
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+    if (emailValidator.validate(email) && typeof pwd === 'string' && pwd.length < 30) {
+        console.log('Email: ', email);
+        console.log('Pwd: ', pwd);
+
+        let options = {
+            method: 'POST',
+            url: 'http://34.249.244.134/api/login',
+            body: JSON.stringify({email: email, pwd: pwd}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        };
+
+        console.log('Login', options);
+
+        function handleResponse(error, response, body){
+            if (!error && response.statusCode === 200) {
+                let response_data = JSON.parse(body);
+
+                res.send(response_data);
+            }
         }
-    };
 
-    console.log('Login', options);
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
-
-            res.send(response_data);
-        }
+        request(options, handleResponse);
+    } else {
+        res.send(JSON.parse("Unauthorized"));
     }
-
-    request(options, handleResponse);
 });
 
 
@@ -271,6 +278,36 @@ app.get('/api/text', function (req, res) {
 });
 
 
+// Search products based on input text string
+app.get('/api/text_search', function (req, res) {
+    let string = req.query.search_string;
+    let sex = req.query.sex;
+
+    console.log(string);
+
+    let options = {
+        method: 'GET',
+        url: 'http://34.249.244.134/api/text_search',
+        qs: {
+            search_string: string,
+            sex: sex
+        }
+    };
+
+    console.log('Text, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Get product category, color and siamese encoding
 app.post('/api/img_features', upload.single('image'), function (req, res) {
 
@@ -462,7 +499,7 @@ app.post('/api/explorer_search', function (req, res) {
 // Do product search from Explorer component
 app.post('/api/sequences', function (req, res) {
     let input_text = req.body.input_text;
-    console.log(input_text);
+    console.log('Sequence prediction input: ' + input_text);
     let options = {
         method: 'POST',
         url: 'http://34.244.146.183/api/sequences',
