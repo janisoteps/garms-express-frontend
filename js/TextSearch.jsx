@@ -588,30 +588,6 @@ class TextSearch extends React.Component  {
         return(
             <MuiThemeProvider>
                 <div>
-                    <NoResults />
-
-                    <SexSelector
-                        sex={this.state.sex}
-                        sexPickerWidth={this.state.sexPickerWidth}
-                        changeSex={(sex) => {this.changeSex(sex)}}
-                        expandSexSelector={() => {this.expandSexSelector()}}
-                    />
-
-                    <TagCloud
-                        posTags={this.state.posTags}
-                        negTags={this.state.negTags}
-                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                    />
-
-                    <ColorPicker
-                        setColor={(selection) => {this.setColor(selection)}}
-                        selectedColors={this.state.selectedColors}
-                        searchSimilarImages={(imgHash, color1, color2) => {
-                            this.searchSimilarImages(imgHash, color1, color2)
-                        }}
-                        results={this.state.results}
-                    />
-
                     {
                         this.state.results.length > 0 ? (
                             <div style={{textAlign: 'center', width: '100%'}}>
@@ -638,6 +614,30 @@ class TextSearch extends React.Component  {
                             searchForm
                         )
                     }
+                    
+                    <NoResults />
+
+                    <SexSelector
+                        sex={this.state.sex}
+                        sexPickerWidth={this.state.sexPickerWidth}
+                        changeSex={(sex) => {this.changeSex(sex)}}
+                        expandSexSelector={() => {this.expandSexSelector()}}
+                    />
+
+                    <TagCloud
+                        posTags={this.state.posTags}
+                        negTags={this.state.negTags}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                    />
+
+                    <ColorPicker
+                        setColor={(selection) => {this.setColor(selection)}}
+                        selectedColors={this.state.selectedColors}
+                        searchSimilarImages={(imgHash, color1, color2) => {
+                            this.searchSimilarImages(imgHash, color1, color2)
+                        }}
+                        results={this.state.results}
+                    />
 
                     <Spinner />
 
