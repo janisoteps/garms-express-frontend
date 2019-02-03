@@ -34,9 +34,11 @@ class Main extends React.Component {
     }
     render() {
         // console.log('Main isAuth: ',this.props.isAuth);
-        console.log('Main sex: ',this.props.sex);
+        // console.log('Main sex: ',this.props.sex);
         // console.log('Main email: ', this.props.email);
-        console.log('Main username: ', this.props.username);
+        // console.log('Main username: ', this.props.username);
+        console.log(`Main firstLogin: ${this.props.firstLogin}`);
+
         return (
             <main>
                 <Switch>
@@ -44,6 +46,8 @@ class Main extends React.Component {
                         render={(props) =>
                             <SearchChoice
                                 {...props}
+                                username={this.props.username}
+                                firstLogin={this.props.firstLogin}
                                 sex={this.props.sex}
                                 handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
                             />}
@@ -59,6 +63,7 @@ class Main extends React.Component {
                                     isAuth={this.props.isAuth}
                                     email={this.props.email}
                                     changeSex={(sex) => {this.changeSex(sex);}}
+                                    completeFirstLogin={() => {this.props.completeFirstLogin()}}
                                 />}
                     />
                     <Route path='/textsearch'
@@ -68,6 +73,8 @@ class Main extends React.Component {
                            isAuth={this.props.isAuth}
                            email={this.props.email}
                            changeSex={(sex) => {this.changeSex(sex);}}
+                           firstLogin={this.props.firstLogin}
+                           completeFirstLogin={() => {this.props.completeFirstLogin()}}
                         />}
                     />
                     <Route path='/favorites'
@@ -107,6 +114,8 @@ class Main extends React.Component {
                                isAuth={this.props.isAuth}
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
+                               firstLogin={this.props.firstLogin}
+                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
                            />}
                     />
                 </Switch>

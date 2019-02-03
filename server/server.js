@@ -65,7 +65,8 @@ app.post('/api/register', function (req, res) {
             pwd: pwd,
             sex: sex,
             username: username,
-            fb_id: fb_id
+            fb_id: fb_id,
+            first_login: 1
         }),
         json: true
     };
@@ -83,6 +84,27 @@ app.post('/api/register', function (req, res) {
     request(options, handleResponse);
 });
 
+app.post('/api/complete_first_login', function (req, res) {
+    let email = req.body.email;
+    let options = {
+        method: 'POST',
+        url: 'http://34.249.244.134/api/complete_first_login',
+        body: JSON.stringify({
+            email: email
+        })
+    };
+    console.log('complete first login');
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+            console.log(`response: ${response_data}`);
+            res.send(response_data);
+        }
+    }
+
+    request(options, handleResponse);
+});
 
 // Add a product favorite to users account
 app.post('/api/addfav', function (req, res) {

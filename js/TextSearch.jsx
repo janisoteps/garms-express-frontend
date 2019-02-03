@@ -10,6 +10,8 @@ import ResultsFromImage from './ResultsFromImage';
 import SexSelector from './SexSelector';
 import TagCloud from './TagCloud';
 import ColorPicker from './ColorPicker';
+import SearchFromImageIntro from './components/intro/SearchFromImageIntro';
+
 
 //Component to search for products using text input
 class TextSearch extends React.Component  {
@@ -39,7 +41,8 @@ class TextSearch extends React.Component  {
             catsOn: false,
             mainSuggestion: null,
             moreSuggestions: [],
-            noShop: []
+            noShop: [],
+            firstLogin: this.props.firstLogin
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -55,6 +58,14 @@ class TextSearch extends React.Component  {
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.firstLogin !== this.props.firstLogin){
+            this.setState({
+                firstLogin: this.props.firstLogin
+            });
+        }
     }
 
     //Handle text input change
@@ -614,7 +625,7 @@ class TextSearch extends React.Component  {
                             searchForm
                         )
                     }
-                    
+
                     <NoResults />
 
                     <SexSelector
@@ -638,6 +649,14 @@ class TextSearch extends React.Component  {
                         }}
                         results={this.state.results}
                     />
+
+                    {
+                        (this.state.results.length > 0)
+                        && (this.state.firstLogin === '1')
+                        && (<SearchFromImageIntro
+                            completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                        />)
+                    }
 
                     <Spinner />
 

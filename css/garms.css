@@ -1,4 +1,3 @@
-
 .content-wrapper{
     font-size: larger;
 }
@@ -101,7 +100,7 @@
 
 .search-choice-button-type{
     width: 100%;
-    height: calc(33.33vh - 16px);
+    height: calc(33.33vh - 17px);
     background: url('../images/image-type.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -110,7 +109,7 @@
 
 .search-choice-button-image{
     width: 100%;
-    height: calc(33.33vh - 16px);
+    height: calc(33.33vh - 17px);
     background: url('../images/image-photo.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -119,7 +118,7 @@
 
 .search-choice-button-explore{
     width: 100%;
-    height: calc(33.33vh - 16px);
+    height: calc(33.33vh - 17px);
     background: url('../images/image-explore.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -752,8 +751,7 @@
     text-align: center;
 }
 
-.alt-cat-selection{
-    font-size: 0.7rem;
+.main-cat-selection{
     margin-bottom: 80px;
 }
 
@@ -981,4 +979,77 @@
 
 .prod-description{
     margin-bottom: 60px;
+}
+
+.arrow {
+    opacity: 0;
+    position: absolute;
+    left: calc(50% - 15px);
+    top: calc(80% - 100px);
+    -webkit-transform-origin: 60% 60%;
+    transform-origin: 60% 60%;
+    -webkit-transform: translate3d(-80%, -80%, 0);
+    transform: translate3d(-80%, -80%, 0);
+}
+
+.arrow-first {
+    -webkit-animation: arrow-movement 2s ease-in-out infinite;
+    animation: arrow-movement 2s ease-in-out infinite;
+}
+
+.arrow-second {
+    -webkit-animation: arrow-movement 2s 1s ease-in-out infinite;
+    animation: arrow-movement 2s 1s ease-in-out infinite;
+}
+
+.arrow:before,
+.arrow:after {
+    background: #fff;
+    content: '';
+    display: block;
+    height: 3px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+}
+
+.arrow:before {
+    -webkit-transform: rotate(45deg) translateX(-23%);
+    transform: rotate(45deg) translateX(-23%);
+    -webkit-transform-origin: top left;
+    transform-origin: top left;
+}
+
+.arrow:after {
+    -webkit-transform: rotate(-45deg) translateX(23%);
+    transform: rotate(-45deg) translateX(23%);
+    -webkit-transform-origin: top right;
+    transform-origin: top right;
+}
+
+@-webkit-keyframes arrow-movement {
+    0% {
+        opacity: 0;
+        top: 55%;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes arrow-movement {
+    0% {
+        opacity: 0;
+        top: 55%;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }

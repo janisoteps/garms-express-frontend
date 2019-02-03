@@ -21,16 +21,18 @@ class App extends React.Component {
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
             email: cookies.get('email'),
-            higherCat: ''
+            higherCat: '',
+            firstLogin: null
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.changeSex = this.changeSex.bind(this);
         this.handleHigherCat = this.handleHigherCat.bind(this);
+        this.completeFirstLogin = this.completeFirstLogin.bind(this);
     }
 
-    componentWillMount() {
-    }
+    // componentWillMount() {
+    // }
 
     componentDidMount() {
         const {cookies} = this.props;
@@ -38,7 +40,8 @@ class App extends React.Component {
         this.setState({
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
-            username: cookies.get('username')
+            username: cookies.get('username'),
+            firstLogin: cookies.get('first_login')
         });
     }
 
@@ -50,6 +53,27 @@ class App extends React.Component {
             [name]: value
         });
     }
+
+    completeFirstLogin = () => {
+        const {cookies} = this.props;
+
+        fetch(window.location.origin + '/api/complete_first_login', {
+            method: 'post',
+            body: JSON.stringify({email: this.state.email}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => response.json())
+            .then(data => {
+                if (data === true) {
+                    cookies.set('first_login', 0, {path: '/'});
+                    this.setState({
+                        firstLogin: 0
+                    })
+                }
+            });
+    };
 
     changeSex(sex){
         console.log('Changins App.jsx sex to: ', sex);
@@ -79,12 +103,14 @@ class App extends React.Component {
                 cookies.set('sex', data['res']['sex'], {path: '/'});
                 cookies.set('username', data['res']['username'], {path: '/'});
                 cookies.set('email', data['res']['email'], {path: '/'});
+                cookies.set('first_login', data['res']['first_login'], {path: '/'});
                 this.setState({
                     isAuth: data['auth'],
                     sex: data['res']['sex'],
                     username: data['res']['username'],
                     email: data['res']['email'],
-                    pwd: ''
+                    pwd: '',
+                    firstLogin: data['res']['first_login']
                 });
                 window.location.reload();
             });
@@ -98,7 +124,7 @@ class App extends React.Component {
     };
 
     render() {
-        console.log('App.jsx higher cat state: ', this.state.higherCat);
+        // console.log('App.jsx higher cat state: ', this.state.higherCat);
         let isUserAuth = this.state.isAuth;
         const body = this.state.isAuth == true || this.state.isAuth == "true" ? (
             <Main
@@ -108,7 +134,9 @@ class App extends React.Component {
                 email={this.state.email}
                 changeSex={(sex) => {this.changeSex(sex);}}
                 higherCat={this.state.higherCat}
+                firstLogin={this.state.firstLogin}
                 handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                completeFirstLogin={() => {this.completeFirstLogin();}}
             />
         ) : (
             <div className="register-form">

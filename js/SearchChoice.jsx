@@ -1,21 +1,33 @@
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route } from 'react-router-dom';
-
+import SearchChoiceIntro from './components/intro/SearchChoiceIntro';
 
 class SearchChoice extends React.Component {
     constructor(props) {
         super(props);
-        this.handleHigherCat = this.handleHigherCat.bind(this);
+
+        this.state = {
+            firstLogin: this.props.firstLogin
+        };
+        // this.handleHigherCat = this.handleHigherCat.bind(this);
     }
 
-    handleHigherCat(higherCat){
-        this.props.handleHigherCat(higherCat);
-        console.log('SearchChoice higherCat: ', higherCat);
-    }
+    // handleHigherCat(higherCat){
+    //     this.props.handleHigherCat(higherCat);
+    //     console.log('SearchChoice higherCat: ', higherCat);
+    // }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.firstLogin !== this.props.firstLogin){
+            this.setState({
+                firstLogin: this.props.firstLogin
+            });
+        }
+    }
 
     render () {
+        console.log(`SearchChoice firstLogin: ${this.state.firstLogin}`);
 
         return (
             <MuiThemeProvider>
@@ -54,6 +66,10 @@ class SearchChoice extends React.Component {
                             </div>
                         )} />
                     </div>
+
+                    {(this.state.firstLogin === '1') && (<SearchChoiceIntro
+                        username={this.props.username}
+                    />)}
                 </div>
             </MuiThemeProvider>
         )
@@ -61,4 +77,3 @@ class SearchChoice extends React.Component {
 }
 
 export default SearchChoice;
-

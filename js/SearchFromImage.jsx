@@ -10,6 +10,7 @@ import SexSelector from './SexSelector';
 import ResultsFromImage from './ResultsFromImage';
 import TagCloud from './TagCloud';
 import ColorPicker from './ColorPicker';
+import SearchFromImageIntro from './components/intro/SearchFromImageIntro';
 
 
 //Component to search for products using an uploaded image
@@ -35,7 +36,8 @@ class SearchFromImage extends React.Component  {
             menuOpen: true,
             viewPortWidth: null,
             viewPortHeight: null,
-            previewImgDims: {}
+            previewImgDims: {},
+            firstLogin: this.props.firstLogin
         };
 
         this.changeSex = this.changeSex.bind(this);
@@ -70,6 +72,14 @@ class SearchFromImage extends React.Component  {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.firstLogin !== this.props.firstLogin){
+            this.setState({
+                firstLogin: this.props.firstLogin
+            });
+        }
     }
 
     updateWindowDimensions() {
@@ -380,7 +390,7 @@ class SearchFromImage extends React.Component  {
         let noShop = this.state.noShop;
         let sex = this.state.sex;
         let encodingNoCrop = this.state.encodingNoCrop;
-        console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
+        // console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
         this.setState({
             colors: {},
             cats: [],
@@ -498,6 +508,7 @@ class SearchFromImage extends React.Component  {
             + `imageHeight: ${this.state.previewImgDims.height}\n`
             + `imageWidth: ${this.state.previewImgDims.width}\n`
         );
+        console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
         let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
         < this.state.viewPortWidth - this.state.previewImgDims.width ? {
             height: `calc( ${this.state.viewPortHeight}px - 175px )`,
@@ -567,7 +578,8 @@ class SearchFromImage extends React.Component  {
         if(this.state.results){
             // console.log('ImageSearch email: ', this.state.email);
             var searchOrResults = this.state.results.length > 0 ? (
-                <ResultsFromImage
+                <div>
+                    <ResultsFromImage
                     mainCat={this.state.mainCat}
                     email={this.state.email}
                     searchSimilarImages={(
@@ -584,7 +596,9 @@ class SearchFromImage extends React.Component  {
                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                     selectedColors={this.state.selectedColors}
-                />
+                    firstLogin={this.props.firstLogin}
+                    />
+                </div>
             ) : (
                 searchForm
             );
@@ -598,7 +612,6 @@ class SearchFromImage extends React.Component  {
                 </div>
             )
         }
-
 
         // Main render
         return (
@@ -639,6 +652,14 @@ class SearchFromImage extends React.Component  {
                     selectedColors={this.state.selectedColors}
                     tags={this.state.posTags}
                 />
+
+                {
+                    (this.state.results.length > 0)
+                    && (this.state.firstLogin === '1')
+                    && (<SearchFromImageIntro
+                        completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                    />)
+                }
 
                 {(this.state.loading === true) && (
                     <div className="overlay">

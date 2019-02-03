@@ -103,12 +103,6 @@ class ColorChoiceModal extends React.Component{
                     )
                 });
 
-                let moreCats = this.props.altCats.map((altCat, index) => {
-                    return(
-                        <div key={index} className={catClass(altCat)} onClick={() => this.setColorCat({'cat': altCat})} >{altCat}</div>
-                    )
-                });
-
                 if(Object.keys(this.props.cats).length > 0){
                     return(
                         <div className="color-modal">
@@ -119,23 +113,20 @@ class ColorChoiceModal extends React.Component{
                                     <img className="color-image-preview" src={this.props.fileFromUrl.imgUrl} />
                                 }
                             </div>
-                            <br></br>
+                            <br/>
                             <h5>I found these colors and themes in your photo</h5>
-                            <br></br>
+                            <br/>
                             <p>choose which color to search for:</p>
                             <div style={colorStyle1} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_1, 'cat':''})} />
                             <div style={colorStyle2} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_2, 'cat':''})} />
                             <div style={colorStyle3} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_3, 'cat':''})} />
-                            <br></br>
-                            <br></br>
+                            <br/>
+                            <br/>
                             <p>choose which tags to search for:</p>
-                            <div>
+                            <div className="main-cat-selection">
                                 {mainCats}
                             </div>
-                            <br></br>
-                            <div className="alt-cat-selection">
-                                {moreCats}
-                            </div>
+                            <br/>
                             <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >search</div>
                         </div>
                     )
