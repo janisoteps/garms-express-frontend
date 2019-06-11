@@ -9,6 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
 
+const api_base_url = 'https://vfas5l519k.execute-api.eu-west-1.amazonaws.com/production/api/';
 
 // --------------------------   MAIN API   ---------------------------------
 
@@ -24,7 +25,8 @@ app.post('/api/login', function (req, res) {
 
         let options = {
             method: 'POST',
-            url: 'http://34.249.244.134/api/login',
+            // url: 'http://34.249.244.134/api/login',
+            url: api_base_url + 'login',
             body: JSON.stringify({email: email, pwd: pwd}),
             headers: {
                 Accept: 'application/json',
@@ -59,7 +61,8 @@ app.post('/api/register', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/register',
+        // url: 'http://34.249.244.134/api/register',
+        url: api_base_url + 'register',
         body: JSON.stringify({
             email: email,
             pwd: pwd,
@@ -88,7 +91,8 @@ app.post('/api/complete_first_login', function (req, res) {
     let email = req.body.email;
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/complete_first_login',
+        // url: 'http://34.249.244.134/api/complete_first_login',
+        url: api_base_url + 'complete_first_login',
         body: JSON.stringify({
             email: email
         })
@@ -113,7 +117,8 @@ app.post('/api/addfav', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/addfav',
+        // url: 'http://34.249.244.134/api/addfav',
+        url: api_base_url + 'addfav',
         body: JSON.stringify({email: email, img_hash: img_hash}),
         json: true
     };
@@ -139,7 +144,8 @@ app.get('/api/favorites', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/favorites',
+        // url: 'http://34.249.244.134/api/favorites',
+        url: api_base_url + 'favorites',
         qs: {
             email: email
         }
@@ -165,7 +171,8 @@ app.get('/api/insta_pics', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/insta_pics',
+        // url: 'http://34.249.244.134/api/insta_pics',
+        url: api_base_url + 'insta_pics',
         qs: {
             email: email
         }
@@ -193,7 +200,7 @@ app.post('/api/save_insta_username', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/save_insta_username',
+        url: api_base_url + 'save_insta_username',
         body: JSON.stringify({email: email, insta_username: insta_username}),
         json: true
     };
@@ -218,7 +225,7 @@ app.post('/api/removefav', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/removefav',
+        url: api_base_url + 'removefav',
         body: JSON.stringify({email: email, img_hash: img_hash}),
         json: true
     };
@@ -247,7 +254,7 @@ app.get('/api/search', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/search',
+        url: api_base_url + 'search',
         qs: {
             main_cat: main_cat,
             main_cat2: main_cat2,
@@ -279,7 +286,7 @@ app.get('/api/text', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/text',
+        url: api_base_url + 'text',
         qs: {
             string: string,
             sex: sex
@@ -309,7 +316,7 @@ app.get('/api/text_search', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/text_search',
+        url: api_base_url + 'text_search',
         qs: {
             search_string: string,
             sex: sex
@@ -351,7 +358,7 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/img_features',
+        url: api_base_url + 'img_features',
         formData:    formData
     };
 
@@ -372,7 +379,7 @@ app.post('/api/search_from_image', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/search_from_image',
+        url: api_base_url + 'search_from_image',
         // url: 'http://127.0.0.1:5000/api/search_from_image',
         body: JSON.stringify({
             tags: tags,
@@ -411,8 +418,9 @@ app.get('/api/search_similar', function (req, res) {
 
     let options = {
         method: 'GET',
-        url: 'http://34.249.244.134/api/search_similar',
+        // url: 'http://34.249.244.134/api/search_similar',
         // url: 'http://127.0.0.1:5000/api/search_similar',
+        url: api_base_url + 'search_similar',
         qs: {
             img_hash: img_hash,
             tags_positive: tags_positive,
@@ -451,7 +459,7 @@ app.post('/api/submit_instagram', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/submit_instagram',
+        url: api_base_url + 'submit_instagram',
         body: {
             mention_username: mention_username,
             comment_id: comment_id,
@@ -490,7 +498,7 @@ app.post('/api/explorer_search', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: 'http://34.249.244.134/api/explorer_search',
+        url: api_base_url + 'explorer_search',
         body: JSON.stringify({
             main_cat_top: mainCatTop,
             main_cat_sub: mainCatSub,
@@ -524,7 +532,7 @@ app.post('/api/sequences', function (req, res) {
     console.log('Sequence prediction input: ' + input_text);
     let options = {
         method: 'POST',
-        url: 'http://34.244.146.183/api/sequences',
+        url: api_base_url + 'sequences',
         body: {
             input_text: input_text
         },
