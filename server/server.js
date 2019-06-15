@@ -9,7 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
 
-const api_base_url = 'https://vfas5l519k.execute-api.eu-west-1.amazonaws.com/production/api/';
+const api_base_url = 'http://34.248.240.200/api/';
 
 // --------------------------   MAIN API   ---------------------------------
 
