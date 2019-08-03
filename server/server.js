@@ -61,7 +61,6 @@ app.post('/api/register', function (req, res) {
 
     let options = {
         method: 'POST',
-        // url: 'http://34.249.244.134/api/register',
         url: api_base_url + 'register',
         body: JSON.stringify({
             email: email,

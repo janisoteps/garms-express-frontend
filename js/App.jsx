@@ -8,6 +8,9 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
+import {withRouter} from 'react-router-dom';
+import {Route} from 'react-router-dom';
+
 
 class App extends React.Component {
     static propTypes = {
@@ -126,7 +129,7 @@ class App extends React.Component {
     render() {
         // console.log('App.jsx higher cat state: ', this.state.higherCat);
         let isUserAuth = this.state.isAuth;
-        const body = this.state.isAuth == true || this.state.isAuth == "true" ? (
+        const body = this.state.isAuth === true || this.state.isAuth === "true" || this.props.location.pathname === '/register' ? (
             <Main
                 isAuth={this.state.isAuth}
                 sex={this.state.sex}
@@ -152,10 +155,22 @@ class App extends React.Component {
                            name="pwd"
                            onChange={this.handleLoginChange}
                 />
-                <RaisedButton label="Log In"
-                              primary={true}
-                              onClick={this.handleLoginSubmit}
-                />
+                <div style={{marginTop: '20px'}}>
+                    <RaisedButton label="Log In"
+                                  primary={false}
+                                  onClick={this.handleLoginSubmit}
+                    />
+                </div>
+                <div style={{marginTop: '50px'}}>
+                    <Route render={({history}) => (
+                        <RaisedButton label="Register"
+                                      primary={false}
+                                      onClick={() => {
+                                          history.push('/register')
+                                      }}
+                        />
+                    )}/>
+                </div>
             </div>
         );
 
@@ -173,4 +188,4 @@ class App extends React.Component {
 }
 
 // export default App;
-export default withCookies(App);
+export default withRouter(withCookies(App));

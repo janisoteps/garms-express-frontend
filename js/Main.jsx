@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import Register from './Register'
+import Register from './components/register/Register'
 import Login from './Login'
 import Logout from './Logout'
 import SearchChoice from './SearchChoice'
@@ -77,7 +77,7 @@ class Main extends React.Component {
                            completeFirstLogin={() => {this.props.completeFirstLogin()}}
                         />}
                     />
-                    <Route path='/favorites'
+                    <Route path='/wardrobe'
                            render={(props) => <Favorites
                                {...props}
                                username={this.props.username}
