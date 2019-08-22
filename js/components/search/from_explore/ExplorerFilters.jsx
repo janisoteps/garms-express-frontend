@@ -1,8 +1,8 @@
 import React from "react";
-require('../css/garms.css');
+require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Slider from 'material-ui/Slider';
-require('../css/ball-atom.css');
+require('../../../../css/ball-atom.css');
 import { CirclePicker } from 'react-color';
 
 let brandAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'v', 'w', 'z', 'x', 'q', 'y', 'u', '1', '3', '8', '2', '7'];

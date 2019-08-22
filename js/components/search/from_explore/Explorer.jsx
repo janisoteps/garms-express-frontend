@@ -1,11 +1,11 @@
 // Explorer.jsx
 import React from "react";
-require('../css/garms.css');
+require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-require('../css/ball-atom.css');
+require('../../../../css/ball-atom.css');
 import ExplorerFilters from './ExplorerFilters';
-import ProductResults from './ProductResults';
-import CatPicker from './CatPicker';
+import ProductResults from '../../depracated/ProductResults';
+import CatPicker from '../from_image/CatPicker';
 
 const higherCats = [
     'accessories',

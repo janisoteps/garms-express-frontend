@@ -100,7 +100,7 @@
 
 .search-choice-button-type{
     width: 100%;
-    height: calc(33.33vh - 17px);
+    height: calc(50vh - 25px);
     background: url('../images/image-type.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -109,7 +109,7 @@
 
 .search-choice-button-image{
     width: 100%;
-    height: calc(33.33vh - 17px);
+    height: calc(50vh - 25px);
     background: url('../images/image-photo.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -192,7 +192,7 @@
     height: 60px;
     width: 350px;
     margin-left: calc(50vw - 175px);
-    margin-top: calc(((33vh - 17px) / 2) - 30px);
+    margin-top: calc(((50vh - 25px) / 2) - 30px);
     background-color: white;
     border-radius: 4px;
 }
@@ -349,9 +349,9 @@
 .add-to-favorites{
     width: 64px;
     height: 64px;
-    background: #FFFFFF url('../images/favorite_white.svg') no-repeat center;
-    filter: invert(100%);
-    background-size: 48px 48px;
+    background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
+    /*filter: invert(100%);*/
+    background-size: 64px 64px;
     border-radius: 32px;
     position: absolute;
     margin-top: -55px;
@@ -371,18 +371,41 @@
     cursor: pointer;
 }
 
+.color-picker-white{
+    width: 64px;
+    height: 64px;
+    background: #fca3e1 url('../images/baseline_palette_white_48dp.png') no-repeat center;
+    background-size: 48px 48px;
+    border-radius: 32px;
+    position: absolute;
+    margin-top: -150px;
+    right: -15px;
+    cursor: pointer;
+}
+
+.color-picker-black{
+    width: 64px;
+    height: 64px;
+    background: #fca3e1 url('../images/baseline_palette_black_48dp.png') no-repeat center;
+    background-size: 48px 48px;
+    border-radius: 32px;
+    position: absolute;
+    margin-top: -150px;
+    right: -15px;
+    cursor: pointer;
+}
+
 .cat-picker-bubble{
     width: 64px;
     height: 64px;
-    background: #000000;
+    background: #FFFFFF url('../images/baseline-tune-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 48px 48px;
     border-radius: 32px;
     position: absolute;
     margin-top: -55px;
     right: 154px;
     cursor: pointer;
-    overflow: hidden;
-    text-align: left;
 }
 
 .cat-picker-bubble-plus{
@@ -543,9 +566,61 @@
     margin-right: 10px;
 }
 
+.add-look-button{
+    background: url('../images/baseline_control_point_black_36dp.png') no-repeat center;
+    background-size: 18px 18px;
+    background-position: right 0px top 3.3px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-top: 2px;
+    opacity : 1;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.remove-look-button{
+    background: url('../images/baseline_remove_circle_outline_black_36dp.png') no-repeat center;
+    background-size: 18px 18px;
+    background-position: right 0px top 3px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    opacity : 1;
+    cursor: pointer;
+    margin-right: -20px;
+    filter: invert(100%);
+    float: left;
+    margin-top: 2px;
+}
+
+.expand-looks-button{
+    background: url('../images/baseline_expand_more_black_36dp.png') no-repeat center;
+    background-size: 28px 28px;
+    background-position: right -5px top -2px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    opacity : 1;
+    cursor: pointer;
+    margin-right: -3px;
+}
+
+.contract-looks-button{
+    background: url('../images/baseline_expand_less_black_36dp.png') no-repeat center;
+    background-size: 28px 28px;
+    background-position: right -5px top -2px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    opacity : 1;
+    cursor: pointer;
+    margin-right: -3px;
+}
+
 .home-button{
     background: url('../images/baseline-home-24px.svg') no-repeat center;
-    background-size: 40px 40px;
+    background-size: 52px 52px;
     width: 48px;
     height: 48px;
     display: inline-block;
@@ -556,7 +631,7 @@
 
 .profile-button{
     background: url('../images/baseline-account_circle-24px.svg') no-repeat center;
-    background-size: 40px 40px;
+    background-size: 47px 47px;
     width: 48px;
     height: 48px;
     display: inline-block;
@@ -1026,6 +1101,10 @@
     transform: rotate(-45deg) translateX(23%);
     -webkit-transform-origin: top right;
     transform-origin: top right;
+}
+
+.add-to-look-tile:hover {
+    background-color: #e3e3e3;
 }
 
 @-webkit-keyframes arrow-movement {

@@ -1,15 +1,15 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Register from './components/register/Register'
-import Login from './Login'
-import Logout from './Logout'
+import Login from './components/user/Login'
+import Logout from './components/user/Logout'
 import SearchChoice from './SearchChoice'
-import ImageSearch from './ImageSearch'
-import TextSearch from './TextSearch'
-import Favorites from './Favorites'
-import Profile from './Profile'
-import Explorer from './Explorer'
-import SearchFromImage from './SearchFromImage'
+// import ImageSearch from './components/depracated/ImageSearch'
+import TextSearch from './components/search/from_text/TextSearch'
+import Wardrobe from './components/wardrobe/Wardrobe'
+import Profile from './components/user/Profile'
+import Explorer from './components/search/from_explore/Explorer'
+import SearchFromImage from './components/search/from_image/SearchFromImage'
 
 
 // The Main component renders one of the provided
@@ -55,17 +55,17 @@ class Main extends React.Component {
                     <Route path='/register' component={Register} />
                     <Route path='/login' component={Login} />
                     <Route path='/logout' component={Logout} />
-                    <Route path='/imagesearch'
-                           render={(props) =>
-                                <ImageSearch
-                                    {...props}
-                                    sex={this.props.sex}
-                                    isAuth={this.props.isAuth}
-                                    email={this.props.email}
-                                    changeSex={(sex) => {this.changeSex(sex);}}
-                                    completeFirstLogin={() => {this.props.completeFirstLogin()}}
-                                />}
-                    />
+                    {/*<Route path='/imagesearch'*/}
+                           {/*render={(props) =>*/}
+                                {/*<ImageSearch*/}
+                                    {/*{...props}*/}
+                                    {/*sex={this.props.sex}*/}
+                                    {/*isAuth={this.props.isAuth}*/}
+                                    {/*email={this.props.email}*/}
+                                    {/*changeSex={(sex) => {this.changeSex(sex);}}*/}
+                                    {/*completeFirstLogin={() => {this.props.completeFirstLogin()}}*/}
+                                {/*/>}*/}
+                    {/*/>*/}
                     <Route path='/textsearch'
                            render={(props) => <TextSearch
                            {...props}
@@ -78,7 +78,7 @@ class Main extends React.Component {
                         />}
                     />
                     <Route path='/wardrobe'
-                           render={(props) => <Favorites
+                           render={(props) => <Wardrobe
                                {...props}
                                username={this.props.username}
                                sex={this.props.sex}

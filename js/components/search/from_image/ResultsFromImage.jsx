@@ -1,10 +1,10 @@
 // ResultsFromImage.jsx
 import React from "react";
-require('../css/garms.css');
+require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import AddOutfit from '../../wardrobe/AddOutfit';
 
 const categories = {
     'accessories': [
@@ -280,13 +280,16 @@ class ResultsFromImage extends React.Component  {
             catPickerExpanded: 0,
             posNegButtonExpanded: 0,
             posNegButtonTag: '',
-            firstLogin: this.props.firstLogin
+            firstLogin: this.props.firstLogin,
+            addOutfitInput: null
         };
         this.expandDrawer = this.expandDrawer.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.addToFavs = this.addToFavs.bind(this);
         this.setTags = this.setTags.bind(this);
         this.setColorPosTags = this.setColorPosTags.bind(this);
+        this.showLookList = this.showLookList.bind(this);
+        this.addOutfitComplete = this.addOutfitComplete.bind(this);
     }
 
     setTags(tag, type, flag){
@@ -335,6 +338,12 @@ class ResultsFromImage extends React.Component  {
         }
     };
 
+    showLookList = (img_hash) => {
+        this.setState({
+            addOutfitInput: img_hash
+        })
+    };
+
     addToFavs = (img_hash, id) => {
         let email = this.state.email;
         console.log('Add faves email: ', email);
@@ -362,6 +371,13 @@ class ResultsFromImage extends React.Component  {
             });
     };
 
+    addOutfitComplete = () => {
+        this.setState({
+            addOutfitInput: null
+        })
+    };
+
+    //################################## MAIN RENDER FUNCTION ##################################
     render () {
         let key = '';
         let tiles = this.props.results.map(product => {
@@ -546,6 +562,7 @@ class ResultsFromImage extends React.Component  {
                     + 'DItMi43YzAuOC0xLjMsMS41LTIuOCwxLjgtNC4zYzAuNi0yLjksMS45LTUuMywzLjktNy4zYzEyLjEtMTIuMSwyNC4yLTI0L'
                     + 'jIsMzYuMS0zNi4xICBjMi45LDIuOCw1LjcsNS43LDguNyw4LjdDNjIuMiw0Ni41LDYxLjksNDYuOSw2MS42LDQ3LjJ6Ij48L'
                     + '3BhdGg+PC9zdmc+")';
+                    // pickerBgUrl = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAADeklEQVR4Ae3bA8wlSRQF4LO2bbN/1blrK1rbRrC2bdu2vRtutN4d27ZtvJ44k54enO5+r2qS+k6c+m/3bf33CVEURVEURVFlVnP72fl2Pz/mH9aDIznHZtso68E/+DEf4AVuP6yGMBn5FP/gHEuXk1n2pz3JY7A6QtG8CW+ybpaKmcIvebr385Fszac5w9Ki4Uh7JNkaftgafDr/khEzjbd5uKBcq/WwtKqwnzsODbQqH7D5llYbfmyboxFsG/vT0rpkQgPOgzuSk7Ib5hy+2rwrADTvylez94WyjjU+iFVQP3aWzVvySeL2xWLcvhyZXSOt+xaroj7cdTmbW9h2KDLaDuFCZV02/AD1wEtzN/Y+cvA9cV02z6Jq7oz8o8WDkMMOlNdlcyeqxJal3Zq7b4gcu2+or8uGl6IqyfocYml+kvXz/0Jdl3t3taEa9k22ePWXUF7Ys5IRw52cKbwCTwy+r6/Lzf0oa/e1bNgyG6i5g5HhDmZNX5eb2a3boRz30AqMxHtjMbY3R5ZZl8mHZW/f6fmF6zNK5GZvFMe7LfUdvoKikjVtvKXeM3X3tVAML7A0iFyCYvhbGA3wOxThtmVNuAnlCHVnYjXoeJM2z+sR6h4NHX/R5nk9Qt0bIFuFM6R5Xo9Ql29D5fYThzE9Ql3+DZW7XJzn9Qh12R8qPi3O83qEuhwHFX8O6hJaCJV1U+d5PULdeVBxiDjP6xHqchJUNlGd5/UIdbtBlT0GXkeJlN9CZfMsDSh3QsVJITXQdghUNiygBkZhVaisRzgNuMdLzKL+w7m2OXT2bDANvIYieFUgDUxr3gQZwjjtP+4KFLQqpwfQwOcozn71fvX/Y2ugOHez591vn2yKMlq2Z83j7n+889rQBfLG1jA7AVVwF3k48nPskcyxLy5Zk2Mbuvt97SW3E6pkdzbmkuHH7oqW7VG9vTawaZXt5ix7rvxOyvhgRbs/qHlX+JD/IZ8+UbY0wRd3cgUNPA+f7OvSLewNn/bagIPLvfeDVeCXa7V5Ze4A+McTy3yY4XaCf7y0RAN3IAR2feEWxjfyX5jwpT8h3VvWgzeZr116uYz8f/GVXaAL6avHnIuQuFbrIzYwA2FJ1hS/fv8/wqP8AMJdgTAlm/Im9lzuBfQvVkXI3H7L+hEQe7Zut7L+DCu1gbxm97VQuSiKoiiKomgRajYh74++j1MAAAAASUVORK5CYII=)'
                 } else {
                     pickerBgUrl = 'url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9JzIwMCcgd2lkdGg9JzIwMCcgIGZpbGw9IiNmZ'
                     + 'mZmZmYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnL'
@@ -566,6 +583,7 @@ class ResultsFromImage extends React.Component  {
                     + 'DItMi43YzAuOC0xLjMsMS41LTIuOCwxLjgtNC4zYzAuNi0yLjksMS45LTUuMywzLjktNy4zYzEyLjEtMTIuMSwyNC4yLTI0L'
                     + 'jIsMzYuMS0zNi4xICBjMi45LDIuOCw1LjcsNS43LDguNyw4LjdDNjIuMiw0Ni41LDYxLjksNDYuOSw2MS42LDQ3LjJ6Ij48L'
                     + '3BhdGg+PC9zdmc+")';
+                    // pickerBgUrl = 'url("../images/baseline_palette_white_48dp.png")';
                 }
 
                 let pickerStyle = {
@@ -656,8 +674,8 @@ class ResultsFromImage extends React.Component  {
                         <div className="cat-picker-bubble" onClick={() => {
                             this.expandCatDrawer(prod_id, this.state.catPickerExpanded);
                         }}>
-                            <div className="cat-picker-bubble-plus"/>
-                            <div className="cat-picker-bubble-minus"/>
+                            {/*<div className="cat-picker-bubble-plus"/>*/}
+                            {/*<div className="cat-picker-bubble-minus"/>*/}
                         </div>
                     </div>
                 )
@@ -679,7 +697,8 @@ class ResultsFromImage extends React.Component  {
                     <ColorPicker />
                     <TagPicker/>
                     <div style={faveDrawerStyle} >Added to faves</div>
-                    <div className="add-to-favorites" onClick={() => { this.addToFavs(fst_img_hash, prod_id); }} />
+                    <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
+                    {/*this.addToFavs(fst_img_hash, prod_id);*/}
                 </Paper>
             );
         });
@@ -747,7 +766,14 @@ class ResultsFromImage extends React.Component  {
                     </div>
 
                     <PosNegButton />
-
+                    {(this.state.addOutfitInput !== null)
+                    && (
+                        <AddOutfit
+                            imgHash={this.state.addOutfitInput}
+                            email={this.props.email}
+                            addOutfitComplete={this.addOutfitComplete}
+                        />
+                    )}
                 </div>
             </MuiThemeProvider>
         );

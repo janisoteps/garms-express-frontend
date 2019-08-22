@@ -1,16 +1,16 @@
 // TextSearch.jsx
 import React from "react";
-require('../css/garms.css');
-require('../css/ball-atom.css');
+require('../../../../css/garms.css');
+require('../../../../css/ball-atom.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ResultsFromImage from './ResultsFromImage';
-import SexSelector from './SexSelector';
-import TagCloud from './TagCloud';
-import ColorPicker from './ColorPicker';
-import SearchFromImageIntro from './components/intro/SearchFromImageIntro';
+import ResultsFromImage from '../from_image/ResultsFromImage';
+import SexSelector from '../SexSelector';
+import TagCloud from '../TagCloud';
+import ColorPicker from '../from_image/ColorPicker';
+import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 
 
 //Component to search for products using text input

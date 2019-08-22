@@ -1,13 +1,13 @@
 // ImageSearch.jsx
 import React from "react";
-require('../css/garms.css');
-require('../css/ball-atom.css');
+require('../../../css/garms.css');
+require('../../../css/ball-atom.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Dropzone from 'react-dropzone';
 import ProductResults from './ProductResults';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import CatPicker from './CatPicker';
+import CatPicker from '../search/from_image/CatPicker';
 
 
 //Component to search for products using an uploaded image

@@ -55,16 +55,16 @@ class SearchChoice extends React.Component {
                             </div>
                         )} />
 
-                        <Route render={({ history }) => (
-                            <div
-                                className="search-choice-button-explore"
-                                onClick={() => { history.push('/explorer') }}>
-                                <div className="search-choice-title">
-                                    <div className="search-glass-icon"></div>
-                                    <div className="search-choice-text">Or explore...</div>
-                                </div>
-                            </div>
-                        )} />
+                        {/*<Route render={({ history }) => (*/}
+                            {/*<div*/}
+                                {/*className="search-choice-button-explore"*/}
+                                {/*onClick={() => { history.push('/explorer') }}>*/}
+                                {/*<div className="search-choice-title">*/}
+                                    {/*<div className="search-glass-icon"></div>*/}
+                                    {/*<div className="search-choice-text">Or explore...</div>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                        {/*)} />*/}
                     </div>
 
                     {(this.state.firstLogin === '1') && (<SearchChoiceIntro

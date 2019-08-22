@@ -1,16 +1,16 @@
 // SearchFromImage.jsx
 import React from "react";
-require('../css/garms.css');
-require('../css/ball-atom.css');
+require('../../../../css/garms.css');
+require('../../../../css/ball-atom.css');
 import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ColorChoiceModal from './ColorChoiceModal';
-import SexSelector from './SexSelector';
+import ColorChoiceModal from '../ColorChoiceModal';
+import SexSelector from '../SexSelector';
 import ResultsFromImage from './ResultsFromImage';
-import TagCloud from './TagCloud';
+import TagCloud from '../TagCloud';
 import ColorPicker from './ColorPicker';
-import SearchFromImageIntro from './components/intro/SearchFromImageIntro';
+import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 
 
 //Component to search for products using an uploaded image
@@ -279,10 +279,7 @@ class SearchFromImage extends React.Component  {
                 cats: data.res['img_cats_ai_txt'],
                 altCats: data.res['alt_cats_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
-                // color_512: data.res['color_512'],
                 encodingNoCrop: data.res['encoding_nocrop'],
-                // encoding_crop: data.res['encoding_crop'],
-                // encoding_squarecrop: data.res['encoding_squarecrop'],
                 loading: false
             });
         });

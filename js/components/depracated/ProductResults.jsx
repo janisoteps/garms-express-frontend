@@ -1,6 +1,6 @@
 // ProductResults.jsxx
 import React from "react";
-require('../css/garms.css');
+require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 
