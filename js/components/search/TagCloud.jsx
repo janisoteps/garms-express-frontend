@@ -1,6 +1,6 @@
 // TagCloud.jsx
 import React from 'react';
-require('../css/garms.css');
+require('../../../css/garms.css');
 
 
 class TagCloud extends React.Component {

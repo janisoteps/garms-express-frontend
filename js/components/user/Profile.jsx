@@ -1,6 +1,6 @@
 // Profile.jsx
 import React from "react";
-require('../css/garms.css');
+require('../../../css/garms.css');
 import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -159,23 +159,23 @@ class Profile extends React.Component  {
                     <hr />
                     <br></br>
                     <p>Registered email: <b>{this.state.email}</b></p>
-                    <form onSubmit={this.saveInstaUsername}>
-                        <label>
-                            Your Instagram username:
-                            <input type="text" value={this.state.insta_username_prompt} onChange={this.changeInstaUsername} />
-                        </label>
-                        <input style={saveBtnStyle} type="submit" value="Save" />
-                    </form>
-                    <br />
-                    <hr />
-                    <br />
-                    <p>Here you will find your Instagram picks</p>
-                    <br />
-                    <div className="result-pane">
-                        {instaPrompt !== null && instaPrompt}
-                        {instaList !== null && instaList}
-                    </div>
-                    <br />
+                    {/*<form onSubmit={this.saveInstaUsername}>*/}
+                        {/*<label>*/}
+                            {/*Your Instagram username:*/}
+                            {/*<input type="text" value={this.state.insta_username_prompt} onChange={this.changeInstaUsername} />*/}
+                        {/*</label>*/}
+                        {/*<input style={saveBtnStyle} type="submit" value="Save" />*/}
+                    {/*</form>*/}
+                    {/*<br />*/}
+                    {/*<hr />*/}
+                    {/*<br />*/}
+                    {/*<p>Here you will find your Instagram picks</p>*/}
+                    {/*<br />*/}
+                    {/*<div className="result-pane">*/}
+                        {/*{instaPrompt !== null && instaPrompt}*/}
+                        {/*{instaList !== null && instaList}*/}
+                    {/*</div>*/}
+                    {/*<br />*/}
                     <br />
                     <br />
                     {logOutButton}

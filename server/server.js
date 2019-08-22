@@ -10,6 +10,7 @@ const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
 
 const api_base_url = 'http://34.248.240.200/api/';
+// const api_base_url = 'http://127.0.0.1:5000/api/';
 
 // --------------------------   MAIN API   ---------------------------------
 
@@ -25,7 +26,6 @@ app.post('/api/login', function (req, res) {
 
         let options = {
             method: 'POST',
-            // url: 'http://34.249.244.134/api/login',
             url: api_base_url + 'login',
             body: JSON.stringify({email: email, pwd: pwd}),
             headers: {
@@ -541,6 +541,171 @@ app.post('/api/sequences', function (req, res) {
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
 
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/add_look', function (req, res) {
+    let email = req.body.email;
+    let look_name = req.body.look_name;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'add_look',
+        body: JSON.stringify({email: email, look_name: look_name}),
+        json: true
+    };
+    console.log('Add Look, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log('Add Look response: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/remove_look', function (req, res) {
+    let email = req.body.email;
+    let look_name = req.body.look_name;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'remove_look',
+        body: JSON.stringify({email: email, look_name: look_name}),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/get_looks', function (req, res) {
+    let email = req.body.email;
+    console.log(email);
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'get_looks',
+        body: JSON.stringify({email: email}),
+        json: true
+    };
+    console.log('Get Looks, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log('GetLook response: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/add_outfit', function (req, res) {
+    let email = req.body.email;
+    let look_name = req.body.look_name;
+    let prod_id = req.body.prod_id;
+
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'add_outfit',
+        body: JSON.stringify({email: email, look_name: look_name, prod_id: prod_id}),
+        json: true
+    };
+    // console.log('Add Look, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log('Add Look response: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/remove_outfit', function (req, res) {
+    let email = req.body.email;
+    let look_name = req.body.look_name;
+    let prod_id = req.body.prod_id;
+    let outfit_date = req.body.outfit_date;
+
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'remove_outfit',
+        body: JSON.stringify({email: email, look_name: look_name, prod_id: prod_id, outfit_date: outfit_date}),
+        json: true
+    };
+    // console.log('Add Look, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log('Add Look response: ', body);
+
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/get_products', function (req, res) {
+    let prod_hashes = req.body.prod_hashes;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'get_products',
+        body: JSON.stringify({prod_hashes: prod_hashes}),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log('Get products response: ', body);
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/get_prod_hash', function (req, res) {
+    let img_hash = req.body.img_hash;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'get_prod_hash',
+        body: JSON.stringify({img_hash: img_hash}),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log('Get products response: ', body);
             res.send(body);
         }
     }
