@@ -1,7 +1,7 @@
 // Register.jsx
 import React from "react";
 
-require('./../../../css/garms.css');
+require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
@@ -69,12 +69,21 @@ export default class Register extends React.Component {
     render() {
         const regForm = (
             <div className="register-form">
-                <p>Welcome to Garms app !</p>
+                <p>Welcome to Garms app!</p>
                 <TextField
                     hintText="Your name"
                     name="username"
                     floatingLabelText="Input your first name:"
                     onChange={this.handleChange.bind(this)}
+                    underlineFocusStyle={{
+                        borderBottom: '2px solid rgb(0, 0, 0)'
+                    }}
+                    underlineDisabledStyle={{
+                        borderBottom: '0px solid rgb(0, 0, 0)'
+                    }}
+                    floatingLabelStyle={{
+                        color: 'black'
+                    }}
                 />
                 <br></br>
                 <br></br>
@@ -110,6 +119,15 @@ export default class Register extends React.Component {
                     hintText="Your e-mail"
                     floatingLabelText="Input your e-mail address:"
                     onChange={this.handleChange.bind(this)}
+                    underlineFocusStyle={{
+                        borderBottom: '2px solid rgb(0, 0, 0)'
+                    }}
+                    underlineDisabledStyle={{
+                        borderBottom: '0px solid rgb(0, 0, 0)'
+                    }}
+                    floatingLabelStyle={{
+                        color: 'black'
+                    }}
                 />
                 <br></br>
                 <TextField
@@ -118,6 +136,15 @@ export default class Register extends React.Component {
                     floatingLabelText="Choose a password:"
                     type="password"
                     onChange={this.handleChange.bind(this)}
+                    underlineFocusStyle={{
+                        borderBottom: '2px solid rgb(0, 0, 0)'
+                    }}
+                    underlineDisabledStyle={{
+                        borderBottom: '0px solid rgb(0, 0, 0)'
+                    }}
+                    floatingLabelStyle={{
+                        color: 'black'
+                    }}
                 />
                 <br></br>
                 <FlatButton label="register" onClick={this.handleSubmit} />
@@ -129,9 +156,15 @@ export default class Register extends React.Component {
                 <p>Registration successful!</p>
 
                 <Route render={({history}) => (
-                    <FlatButton label="Log In" onClick={() => {
-                        history.push('/')
-                    }} />
+                    <FlatButton
+                        label="Log In"
+                        onClick={() => {
+                            history.push('/login')
+                        }}
+                        buttonStyle={{
+                            backgroundColor: 'black'
+                        }}
+                    />
                 )}/>
             </div>
         );

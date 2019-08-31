@@ -25,13 +25,15 @@ class App extends React.Component {
             sex: cookies.get('sex'),
             email: cookies.get('email'),
             higherCat: '',
-            firstLogin: null
+            firstLogin: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.changeSex = this.changeSex.bind(this);
         this.handleHigherCat = this.handleHigherCat.bind(this);
         this.completeFirstLogin = this.completeFirstLogin.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+        this.handleResultLogin = this.handleResultLogin.bind(this);
     }
 
     // componentWillMount() {
@@ -119,6 +121,69 @@ class App extends React.Component {
             });
     };
 
+    // Asks the API if submitted pwd is correct and logs the user in if yes
+    handleLogin = (email, password) => {
+
+        console.log('Email: ', email, ' pwd: ', password);
+        const {cookies} = this.props;
+
+        fetch(window.location.origin + '/api/login', {
+            method: 'post',
+            body: JSON.stringify({email: email, pwd: password}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => response.json())
+            .then(data => {
+                cookies.set('isAuth', data['auth'], {path: '/'});
+                cookies.set('sex', data['res']['sex'], {path: '/'});
+                cookies.set('username', data['res']['username'], {path: '/'});
+                cookies.set('email', data['res']['email'], {path: '/'});
+                cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                this.setState({
+                    isAuth: data['auth'],
+                    sex: data['res']['sex'],
+                    username: data['res']['username'],
+                    email: data['res']['email'],
+                    pwd: '',
+                    firstLogin: data['res']['first_login']
+                });
+                window.location.pathname = '/';
+            });
+    };
+
+    handleResultLogin = (email, password, imgHash) => {
+
+        console.log('Email: ', email, ' pwd: ', password);
+        const {cookies} = this.props;
+
+        fetch(window.location.origin + '/api/login', {
+            method: 'post',
+            body: JSON.stringify({email: email, pwd: password}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(response => response.json())
+            .then(data => {
+                cookies.set('isAuth', data['auth'], {path: '/'});
+                cookies.set('sex', data['res']['sex'], {path: '/'});
+                cookies.set('username', data['res']['username'], {path: '/'});
+                cookies.set('email', data['res']['email'], {path: '/'});
+                cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                this.setState({
+                    isAuth: data['auth'],
+                    sex: data['res']['sex'],
+                    username: data['res']['username'],
+                    email: data['res']['email'],
+                    pwd: '',
+                    firstLogin: data['res']['first_login']
+                });
+                window.location.pathname = `/wardrobe`;
+            });
+    };
+
     handleHigherCat = (higherCat) => {
         console.log('App higherCat: ', higherCat);
         this.setState({
@@ -127,59 +192,26 @@ class App extends React.Component {
     };
 
     render() {
-        // console.log('App.jsx higher cat state: ', this.state.higherCat);
         let isUserAuth = this.state.isAuth;
-        const body = this.state.isAuth === true || this.state.isAuth === "true" || this.props.location.pathname === '/register' ? (
-            <Main
-                isAuth={this.state.isAuth}
-                sex={this.state.sex}
-                username={this.state.username}
-                email={this.state.email}
-                changeSex={(sex) => {this.changeSex(sex);}}
-                higherCat={this.state.higherCat}
-                firstLogin={this.state.firstLogin}
-                handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                completeFirstLogin={() => {this.completeFirstLogin();}}
-            />
-        ) : (
-            <div className="register-form">
-                <p>Log in your Garms account</p>
-                <TextField hintText="Your e-mail"
-                           floatingLabelText="Input your e-mail address:"
-                           name="email"
-                           onChange={this.handleLoginChange}
-                />
-                <TextField hintText="Password"
-                           floatingLabelText="Your password:"
-                           type="password"
-                           name="pwd"
-                           onChange={this.handleLoginChange}
-                />
-                <div style={{marginTop: '20px'}}>
-                    <RaisedButton label="Log In"
-                                  primary={false}
-                                  onClick={this.handleLoginSubmit}
-                    />
-                </div>
-                <div style={{marginTop: '50px'}}>
-                    <Route render={({history}) => (
-                        <RaisedButton label="Register"
-                                      primary={false}
-                                      onClick={() => {
-                                          history.push('/register')
-                                      }}
-                        />
-                    )}/>
-                </div>
-            </div>
-        );
 
         return (
             <MuiThemeProvider>
                 <div>
                     <Header isAuth={isUserAuth}/>
                     <div className="content-wrapper">
-                        {body}
+                        <Main
+                            isAuth={this.state.isAuth}
+                            sex={this.state.sex}
+                            username={this.state.username}
+                            email={this.state.email}
+                            changeSex={(sex) => {this.changeSex(sex);}}
+                            higherCat={this.state.higherCat}
+                            firstLogin={this.state.firstLogin}
+                            handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                            completeFirstLogin={() => {this.completeFirstLogin();}}
+                            handleLogin={(email, password) => {this.handleLogin(email, password)}}
+                            handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
+                        />
                     </div>
                 </div>
             </MuiThemeProvider>

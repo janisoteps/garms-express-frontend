@@ -1,7 +1,7 @@
 import React from "react";
 // import { Button, Grid, Row, Col } from "react-bootstrap";
 require('../css/garms.css');
-// import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router-dom';
 import {Route} from 'react-router-dom';
 
@@ -15,7 +15,7 @@ class Header extends React.Component {
 
     render() {
         // console.log('header state: ', this.state);
-        const buttons = this.state.isAuth == "true" ? (
+        const buttons = this.state.isAuth === "true" ? (
             <div style={{width: '100vw'}}>
                 <Route render={({history}) => (
                     <div className="home-button" onClick={() => {
@@ -37,7 +37,18 @@ class Header extends React.Component {
                 )}/>
             </div>
         ) : (
-            <p className="header-prompt">Lets go shopping!</p>
+            <Route render={({history}) => (
+                <div style={{
+                    paddingTop: '7px',
+                    paddingRight: '7px'
+                }}>
+                    <RaisedButton label="Log In"
+                        primary={false}
+                        onClick={() => {
+                        history.push('/login')
+                    }}/>
+                </div>
+            )}/>
         );
 
         return (

@@ -48,15 +48,17 @@ class AddOutfit extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            const looksArr = data.looks.sort(function(a, b){
-                if(a.look_name < b.look_name) { return -1; }
-                if(a.look_name > b.look_name) { return 1; }
-                return 0;
-            });
+            if (data.looks !== null) {
+                const looksArr = data.looks.sort(function(a, b){
+                    if(a.look_name < b.look_name) { return -1; }
+                    if(a.look_name > b.look_name) { return 1; }
+                    return 0;
+                });
 
-            this.setState({
-                looks: looksArr
-            });
+                this.setState({
+                    looks: looksArr
+                });
+            }
         })
     }
 
@@ -203,8 +205,9 @@ class AddOutfit extends React.Component  {
                             >
                                 <h3>Add To Look</h3>
                                 <br />
-                                {lookList}
-
+                                {(this.state.looks.length > 0) ? (lookList) : (
+                                    <p>No looks found, add look to continue</p>
+                                )}
                                 <div
                                     style={{
                                         width: '400px',
@@ -224,33 +227,45 @@ class AddOutfit extends React.Component  {
 
                     <div>
                         {(this.state.addingLook) && (
-                            <div style={{
-                                position: 'fixed',
-                                top: '70px',
-                                width: '300px',
-                                left: 'calc(50vw - 150px)',
-                                textAlign: 'center'
-                            }}>
+                            <div
+                                style={{
+                                    position: 'fixed',
+                                    top: '70px',
+                                    width: '300px',
+                                    left: 'calc(50vw - 150px)',
+                                    textAlign: 'center'
+                                }}
+                            >
                                 <Paper zDepth={1} style={{paddingTop: '10px'}}>
                                     <h3>Add Look</h3>
                                     <form onSubmit={this.addLook}>
                                         <label>
                                             Input look name:
-                                            <input autoFocus type="text" name="newLookInput" value={this.state.newLookInput} onChange={this.handleInputChange} />
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                name="newLookInput"
+                                                value={this.state.newLookInput}
+                                                onChange={this.handleInputChange}
+                                            />
                                         </label>
-                                        <input style={{
-                                            color: 'black',
-                                            backgroundColor: 'white',
-                                            borderRadius: '4px',
-                                            borderWidth: '2px',
-                                            borderColor: 'black',
-                                            borderStyle: 'solid',
-                                            marginTop: '5px',
-                                            paddingLeft: '5px',
-                                            paddingRight: '5px',
-                                            cursor: 'pointer',
-                                            marginBottom: '10px'
-                                        }} type="submit" value="Add Look" />
+                                        <input
+                                            style={{
+                                                color: 'black',
+                                                backgroundColor: 'white',
+                                                borderRadius: '4px',
+                                                borderWidth: '2px',
+                                                borderColor: 'black',
+                                                borderStyle: 'solid',
+                                                marginTop: '5px',
+                                                paddingLeft: '5px',
+                                                paddingRight: '5px',
+                                                cursor: 'pointer',
+                                                marginBottom: '10px'
+                                            }}
+                                            type="submit"
+                                            value="Add Look"
+                                        />
                                     </form>
                                 </Paper>
                             </div>

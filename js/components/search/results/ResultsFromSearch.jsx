@@ -5,6 +5,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import AddOutfit from '../../wardrobe/AddOutfit';
+import {Route} from 'react-router-dom';
+
 
 const categories = {
     'accessories': [
@@ -269,10 +271,11 @@ const styles = (theme) => ({
     }
 });
 
-class ResultsFromImage extends React.Component  {
+class ResultsFromSearch extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
+            isAuth: this.props.isAuth,
             pickerExpanded: 0,
             faveDrawerExpanded: 0,
             email: this.props.email,
@@ -290,6 +293,7 @@ class ResultsFromImage extends React.Component  {
         this.setColorPosTags = this.setColorPosTags.bind(this);
         this.showLookList = this.showLookList.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
+        this.buyNow = this.buyNow.bind(this);
     }
 
     setTags(tag, type, flag){
@@ -377,6 +381,11 @@ class ResultsFromImage extends React.Component  {
         })
     };
 
+    buyNow = (prodUrl) => {
+        const win = window.open(prodUrl, '_blank');
+        win.focus();
+    };
+
     //################################## MAIN RENDER FUNCTION ##################################
     render () {
         let key = '';
@@ -394,6 +403,7 @@ class ResultsFromImage extends React.Component  {
             let currency = productInfo.currency;
             let price = productInfo.price.toFixed(2);
             let prod_id = productInfo.id;
+            let prod_url = productInfo.prod_url;
             let sale = productInfo.sale;
             let saleprice = productInfo.saleprice.toFixed(2);
             let shop = productInfo.shop;
@@ -697,8 +707,19 @@ class ResultsFromImage extends React.Component  {
                     <ColorPicker />
                     <TagPicker/>
                     <div style={faveDrawerStyle} >Added to faves</div>
-                    <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
-                    {/*this.addToFavs(fst_img_hash, prod_id);*/}
+                    {(this.state.isAuth === "true") ? (
+                        <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
+                    ) : (
+                        <Route render={({history}) => (
+                            <div
+                                className="add-to-favorites"
+                                onClick={() => {
+                                    history.push(`/register-from-result?id=${fst_img_hash}`)
+                                }}
+                            />
+                        )}/>
+                    )}
+                    <div className="buy-now" onClick={() => {this.buyNow(prod_url)}}/>
                 </Paper>
             );
         });
@@ -780,4 +801,4 @@ class ResultsFromImage extends React.Component  {
     }
 }
 
-export default withStyles(styles)(ResultsFromImage);
+export default withStyles(styles)(ResultsFromSearch);

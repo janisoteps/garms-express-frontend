@@ -4,6 +4,8 @@ require('../../../css/garms.css');
 // import {Route} from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
+import AddOutfit from './AddOutfit';
+
 
 class Wardrobe extends React.Component  {
     constructor(props) {
@@ -20,7 +22,8 @@ class Wardrobe extends React.Component  {
             removeShow: null,
             lookFilter: null,
             showingLooks: true,
-            noLooks: false
+            noLooks: false,
+            imgHash: null
         };
 
         this.removeLook = this.removeLook.bind(this);
@@ -34,9 +37,20 @@ class Wardrobe extends React.Component  {
         this.showRemove = this.showRemove.bind(this);
         this.showRemoveLookModal = this.showRemoveLookModal.bind(this);
         this.expandLooks = this.expandLooks.bind(this);
+        this.addOutfitComplete = this.addOutfitComplete.bind(this);
     }
 
     componentDidMount() {
+        // Handle registration redirect from RegisterFromResult
+        const queryString = window.location.search;
+        if(queryString.length > 0) {
+            const imgHash = window.location.search.split('id=')[1];
+            this.setState({
+                imgHash: imgHash
+            });
+        }
+
+        // Load looks
         fetch(`${window.location.origin}/api/get_looks`, {
             method: 'post',
             body: JSON.stringify({'email': this.state.email}),
@@ -237,6 +251,71 @@ class Wardrobe extends React.Component  {
                 showingLooks: true
             })
         }
+    };
+
+    addOutfitComplete = () => {
+        this.setState({
+            imgHash: null
+        });
+        window.history.replaceState(null, null, window.location.pathname);
+
+        // Load looks
+        fetch(`${window.location.origin}/api/get_looks`, {
+            method: 'post',
+            body: JSON.stringify({'email': this.state.email}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            if (data.looks === null) {
+                this.setState({
+                    noLooks: true
+                })
+            } else {
+                const looksArr = data.looks.sort(function(a, b){
+                    if(a.look_name < b.look_name) { return -1; }
+                    if(a.look_name > b.look_name) { return 1; }
+                    return 0;
+                });
+                const outfitArr = data.wardrobe.reverse();
+                const prodHashes = outfitArr.map(outfitDict => {
+                    return outfitDict.prod_id
+                });
+
+                this.getProducts(prodHashes, prodData => {
+
+                    const prodHashInfoDict = {};
+                    prodData.forEach(prodDict => {
+                        prodHashInfoDict[prodDict[0]['prod_hash']] = {
+                            imgUrl: prodDict[0]['img_url'],
+                            brand: prodDict[0]['brand'],
+                            price: prodDict[0]['price'],
+                            currency: prodDict[0]['currency'],
+                            name: prodDict[0]['name'],
+                            url: prodDict[0]['prod_url'],
+                            sale: prodDict[0]['sale'],
+                            salePrice: prodDict[0]['saleprice'],
+                            shop: prodDict[0]['shop']
+                        };
+                    });
+
+                    const outfitImgArr = outfitArr.map(outfitDict => {
+                        let resultOutfitDict = outfitDict;
+                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                        return resultOutfitDict
+                    });
+
+                    this.setState({
+                        outfits: outfitImgArr,
+                        looks: looksArr
+                    });
+                });
+            }
+        });
     };
 
     // ######################################## MAIN RENDER FUNCTION ###########################################
@@ -506,6 +585,24 @@ class Wardrobe extends React.Component  {
                             <RemoveLookModal />
                         )}
                     </div>
+
+                    {(this.state.imgHash !== null) && (
+                        <div
+                            style={{
+                                width: '100vw',
+                                backgroundColor: 'white',
+                                height: 'calc(100vh - 50px)',
+                                top: '50px',
+                                position: 'fixed'
+                            }}
+                        >
+                            <AddOutfit
+                                imgHash={this.state.imgHash}
+                                email={this.props.email}
+                                addOutfitComplete={this.addOutfitComplete}
+                            />
+                        </div>
+                    )}
                 </div>
             </MuiThemeProvider>
         )

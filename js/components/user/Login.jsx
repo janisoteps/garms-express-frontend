@@ -1,109 +1,142 @@
 // Register.jsx
 import React from "react";
+
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import { withCookies, Cookies } from 'react-cookie';
-import { instanceOf } from 'prop-types';
-import { Route } from 'react-router-dom'
+import {withCookies, Cookies} from 'react-cookie';
+import {instanceOf} from 'prop-types';
+import {Route} from 'react-router-dom'
 
-class Login extends React.Component  {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
-
-  constructor(props) {
-    super(props);
-    const { cookies } = this.props;
-    this.state = {
-      isAuth: cookies.get('isAuth'),
-      email: '',
-      pwd: ''
+class Login extends React.Component {
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    // this.setLoginState = this.props.setLoginState;
-  }
 
-  handleChange(event) {
-    let value =  event.target.value;
-    let name = event.target.name;
-    this.setState({
-      [name]: value
-    });
-  }
+    constructor(props) {
+        super(props);
+        const {cookies} = this.props;
+        this.state = {
+            isAuth: cookies.get('isAuth'),
+            email: '',
+            pwd: ''
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
-  handleSubmit(event) {
-    // alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-    let email = this.state.email;
-    let pwd = this.state.pwd;
+    handleChange(event) {
+        let value = event.target.value;
+        let name = event.target.name;
+        this.setState({
+            [name]: value
+        });
+    }
 
-    fetch(window.location.origin + '/api/login', {
-      method: 'post',
-      body: JSON.stringify({email: email, pwd: pwd}),
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        }
-    }).then(function(response) { return response.json(); })
-      .then(function(data) {
-        console.log(data);
-        if (data === "OK") {
-          // this.setLoginState();
-          this.setState({
-            isAuth: true
-          });
-        }
-      });
-  }
+    handleSubmit(event) {
+        event.preventDefault();
+        let email = this.state.email;
+        let pwd = this.state.pwd;
+
+        this.props.handleLogin(email, pwd);
+    }
 
 
-  render () {
-    // var setLoginState = this.props.setLoginState;
-    console.log('Login file isAuth', this.state.isAuth);
-    const loginForm = this.state.isAuth === true || this.state.isAuth == "true" ? (
-      <Route render={({ history }) => (
-        <div className="login-welcome" onClick={() => { history.push('/') }}>
-          <h2>
-            Welcome to Garms app
-          </h2>
-          <br></br>
-          <h3>
-            Start Exploring
-          </h3>
-        </div>
-      )} />
-    ) : (
-      <div className="register-form">
-        <p>Log in your Garms account</p>
-        <TextField hintText="Your e-mail"
-          floatingLabelText="Input your e-mail address:"
-          name="email"
-          onChange={this.handleChange.bind(this)}
-        />
-        <TextField hintText="Password"
-          floatingLabelText="Your password:"
-          type="password"
-          name="pwd"
-          onChange={this.handleChange.bind(this)}
-        />
-        <RaisedButton label="Log In"
-          primary={true}
-          onClick={this.handleSubmit}
-        />
-      </div>
-    );
+    render() {
+        console.log('Login file isAuth', this.state.isAuth);
+        const loginForm = this.state.isAuth === true || this.state.isAuth === "true" ? (
+            <Route render={({history}) => (
+                <div className="login-welcome" onClick={() => {
+                    history.push('/')
+                }}>
+                    <h2>
+                        Welcome to Garms app
+                    </h2>
+                    <br></br>
+                    <h3>
+                        Start Exploring
+                    </h3>
+                </div>
+            )}/>
+        ) : (
+            <div className="register-form">
+                <h4>Log in your Garms account</h4>
+                <TextField
+                    hintText="Your e-mail"
+                    floatingLabelText="Input your e-mail address:"
+                    name="email"
+                    onChange={this.handleChange.bind(this)}
+                    underlineFocusStyle={{
+                        borderBottom: '2px solid rgb(0, 0, 0)'
+                    }}
+                    underlineDisabledStyle={{
+                        borderBottom: '0px solid rgb(0, 0, 0)'
+                    }}
+                    floatingLabelStyle={{
+                       color: 'black'
+                    }}
+                />
+                <TextField
+                    hintText="Password"
+                    floatingLabelText="Your password:"
+                    type="password"
+                    name="pwd"
+                    onChange={this.handleChange.bind(this)}
+                    underlineFocusStyle={{
+                        borderBottom: '2px solid rgb(0, 0, 0)'
+                    }}
+                    underlineDisabledStyle={{
+                        borderBottom: '0px solid rgb(0, 0, 0)'
+                    }}
+                    floatingLabelStyle={{
+                       color: 'black'
+                    }}
+                />
+                <RaisedButton
+                    label="Log In"
+                    primary={true}
+                    onClick={this.handleSubmit}
+                    buttonStyle={{
+                        backgroundColor: 'black'
+                    }}
+                    style={{
+                        marginTop: '20px'
+                    }}
+                />
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <h5>Don't have an account?</h5>
 
-    return (
-      <MuiThemeProvider>
-        <div>
-          {loginForm}
-        </div>
-      </MuiThemeProvider>
-    );
-  }
+                <Route render={({history}) => (
+                    <RaisedButton
+                        label="Register"
+                        primary={true}
+                        onClick={() => {
+                            history.push('/register')
+                        }}
+                        buttonStyle={{
+                            backgroundColor: 'black'
+                        }}
+                        style={{
+                            marginTop: '20px'
+                        }}
+                    />
+                )}/>
+
+            </div>
+        );
+
+        return (
+            <MuiThemeProvider>
+                <div>
+                    {loginForm}
+                </div>
+            </MuiThemeProvider>
+        );
+    }
 }
 
 export default withCookies(Login);
