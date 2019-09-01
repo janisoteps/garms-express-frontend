@@ -10,7 +10,7 @@ class ColorChoiceModal extends React.Component{
     }
 
     setColorCat(selection){
-        console.log('selection: ', selection);
+        // console.log('selection: ', selection);
         this.props.setColorPosTags(selection);
     }
 
@@ -21,10 +21,10 @@ class ColorChoiceModal extends React.Component{
     render () {
         // Dynamic CSS for image color choice modal
         if(Object.keys(this.props.colors).length > 0){
-            console.log('Selected colors: ', this.props.selectedColors);
-            console.log('Color 1: ', this.props.colors.color_1);
-            console.log('Selected color 1: ', this.props.selectedColors[0]);
-            console.log('Colors same: ', this.props.selectedColors[0] === this.props.colors.color_1);
+            // console.log('Selected colors: ', this.props.selectedColors);
+            // console.log('Color 1: ', this.props.colors.color_1);
+            // console.log('Selected color 1: ', this.props.selectedColors[0]);
+            // console.log('Colors same: ', this.props.selectedColors[0] === this.props.colors.color_1);
             var colorStyle1 = {
                 width: '70px',
                 height: '70px',
@@ -85,8 +85,8 @@ class ColorChoiceModal extends React.Component{
         // stateless component
         let ColorChoiceModal = () => {
             if(Object.keys(this.props.colors).length > 0){
-                console.log('Props posTags: ', this.props.tags);
-                console.log('Type of posTags: ', typeof this.props.tags);
+                // console.log('Props posTags: ', this.props.tags);
+                // console.log('Type of posTags: ', typeof this.props.tags);
                 let catClass = (cat) => {
                     if(this.props.tags.includes(cat)){
                         return 'cat-choice-main'

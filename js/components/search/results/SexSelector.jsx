@@ -84,7 +84,7 @@ class SexSelector extends React.Component{
                 borderStyle: this.props.sex === '' && 'solid'
             };
 
-            console.log('Image search sex: ', this.props.sex);
+            // console.log('Image search sex: ', this.props.sex);
 
             return(
                 <div>

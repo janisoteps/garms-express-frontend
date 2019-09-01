@@ -1,6 +1,5 @@
 // Register.jsx
 import React from "react";
-
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
@@ -8,6 +7,8 @@ import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import FlatButton from 'material-ui/FlatButton';
 import {Route} from 'react-router-dom';
+import RaisedButton from 'material-ui/RaisedButton';
+
 
 export default class Register extends React.Component {
     constructor(props) {
@@ -146,8 +147,18 @@ export default class Register extends React.Component {
                         color: 'black'
                     }}
                 />
-                <br></br>
-                <FlatButton label="register" onClick={this.handleSubmit} />
+                <br />
+                <RaisedButton
+                    label="Register"
+                    primary={true}
+                    onClick={this.handleSubmit}
+                    buttonStyle={{
+                        backgroundColor: 'black'
+                    }}
+                    style={{
+                        marginTop: '20px'
+                    }}
+                />
             </div>
         );
 

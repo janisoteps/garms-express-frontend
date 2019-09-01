@@ -18,7 +18,7 @@ export default class RegisterFromResult extends React.Component {
             email: '',
             pwd: '',
             username: '',
-            sex: 'women',
+            sex: this.props.sex,
             regComplete: false,
             imgHash: null,
             prodHash: null,
@@ -148,7 +148,7 @@ export default class RegisterFromResult extends React.Component {
                 <br></br>
                 <RadioButtonGroup
                     name="sex"
-                    defaultSelected="women"
+                    defaultSelected={this.state.sex}
                     onChange={this.handleChange.bind(this)}
                 >
                     <RadioButton

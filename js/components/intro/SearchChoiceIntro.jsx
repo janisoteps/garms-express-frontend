@@ -81,17 +81,17 @@ class SearchChoiceIntro extends React.Component  {
                             top: 0,
                             left: 0,
                             width: "100vw",
-                            height: "calc(31vh + 50px)",
+                            height: "calc(50vh + 25px)",
                             backgroundColor: "rgba(0,0,0, 0.4)",
                             color: "#cacaca"
                         }}>
                         </div>
                         <div style={{
                             position: "absolute",
-                            top: "calc(31vh + 50px)",
+                            top: "calc(50vh + 25px)",
                             left: 0,
                             width: "100vw",
-                            height: "calc(69vh - 50px)",
+                            height: "calc(50vh - 25px)",
                             backgroundColor: "rgba(0,0,0, 0.95)",
                             color: "#cacaca"
                         }}>
@@ -118,35 +118,15 @@ class SearchChoiceIntro extends React.Component  {
                     <div>
                         <div style={{
                             position: "absolute",
-                            top: 0,
+                            top: "0",
                             left: 0,
                             width: "100vw",
-                            height: "calc(32vh + 50px)",
-                            backgroundColor: "rgba(0,0,0, 0.95)",
-                            color: "#cacaca"
-                        }}>
-                        </div>
-                        <div style={{
-                            position: "absolute",
-                            top: "calc(32vh + 50px)",
-                            left: 0,
-                            width: "100vw",
-                            height: "calc(29vh)",
-                            backgroundColor: "rgba(0,0,0, 0.4)",
-                            color: "#cacaca"
-                        }}>
-                        </div>
-                        <div style={{
-                            position: "absolute",
-                            top: "calc(61vh + 50px)",
-                            left: 0,
-                            width: "100vw",
-                            height: "calc(39vh - 50px)",
+                            height: "calc(50vh + 25px)",
                             backgroundColor: "rgba(0,0,0, 0.95)",
                             color: "#cacaca"
                         }}>
                             <div style={{
-                                marginTop: "20px",
+                                marginTop: "20vh",
                                 width: "100%",
                                 textAlign: "center"
                             }}>
@@ -157,11 +137,21 @@ class SearchChoiceIntro extends React.Component  {
                                     variant="outlined"
                                     className={classes.button}
                                     size="large"
-                                    onClick={() => {this.goToStep(3)}}
+                                    onClick={() => {this.goToStep(4)}}
                                 >
-                                    Continue
+                                    Choose one of the options
                                 </Button>
                             </div>
+                        </div>
+                        <div style={{
+                            position: "absolute",
+                            top: "calc(50vh + 25px)",
+                            left: 0,
+                            width: "100vw",
+                            height: "calc(50vh - 25px)",
+                            backgroundColor: "rgba(0,0,0, 0.4)",
+                            color: "#cacaca"
+                        }}>
                         </div>
                     </div>
                 ),

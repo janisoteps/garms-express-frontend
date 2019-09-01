@@ -4,12 +4,12 @@ import Main from './Main'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 require('../css/garms.css');
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+// import TextField from 'material-ui/TextField';
+// import RaisedButton from 'material-ui/RaisedButton';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {withRouter} from 'react-router-dom';
-import {Route} from 'react-router-dom';
+// import {Route} from 'react-router-dom';
 
 
 class App extends React.Component {
@@ -24,6 +24,7 @@ class App extends React.Component {
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
             email: cookies.get('email'),
+            username: cookies.get('username'),
             higherCat: '',
             firstLogin: false
         };

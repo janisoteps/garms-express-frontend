@@ -90,7 +90,7 @@ class TextSearch extends React.Component  {
                 }
             }).then((response) => { return response.json(); })
                 .then((data) => {
-                    console.log(data);
+                    // console.log(data);
                     this.setState({
                         mainSuggestion: data.main_pred,
                         moreSuggestions: data.sim_pred
@@ -150,13 +150,13 @@ class TextSearch extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
-        console.log('Search string: ', searchString);
+        // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             let results =  data.res;
             let prodImgShown = Object.assign(
                 {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -179,9 +179,10 @@ class TextSearch extends React.Component  {
 
     // Set main color and category state based on selection from modal
     setColorPosTags(selection){
-        if(selection['cat'].length > 0) {
+        // console.log(selection)
+        if(selection['cat']) {
             let selectedCat = selection['cat'];
-            console.log('Cat selections: ', selectedCat);
+            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
@@ -190,7 +191,7 @@ class TextSearch extends React.Component  {
                 });
             } else {
                 tags = tags.concat(selectedCat);
-                console.log('New posTags: ', tags);
+                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -217,7 +218,7 @@ class TextSearch extends React.Component  {
     setTags(tag, type, flag){
         let posTags = this.state.posTags;
         let negTags = this.state.negTags;
-        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        // console.log(flag + ' ' + type + ' tag with value ' + tag);
         if (flag === 'remove') {
             if (type === 'positive') {
                 posTags = posTags.filter(function(e) { return e !== tag });
@@ -279,12 +280,12 @@ class TextSearch extends React.Component  {
         let inputArray = inputString.split(' ');
         let searchString = inputArray.join('+');
 
-        console.log('String search with: ', searchString);
+        // console.log('String search with: ', searchString);
         fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
             method: 'get'
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log('Response: ', data);
+                // console.log('Response: ', data);
                 if (typeof data.res === "undefined") {
                     this.setState({
                         results: [],
@@ -328,7 +329,7 @@ class TextSearch extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(function(data) {
-                console.log(data);
+                // console.log(data);
                 if (data === "OK") {
                     this.setState({
                         isAuth: true
@@ -356,14 +357,14 @@ class TextSearch extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        console.log('search string: ', searchString);
+        // console.log('search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -386,7 +387,7 @@ class TextSearch extends React.Component  {
     expandSexSelector(){
         let currentWidth = this.state.sexPickerWidth;
 
-        console.log('Expanding sex selector ', currentWidth);
+        // console.log('Expanding sex selector ', currentWidth);
         if(currentWidth === '48px'){
             this.setState({
                 sexPickerWidth: '270px'
@@ -628,7 +629,7 @@ class TextSearch extends React.Component  {
                     />
 
                     <ColorPicker
-                        setColor={(selection) => {this.setColor(selection)}}
+                        setColor={(selection) => {this.setColorPosTags(selection)}}
                         selectedColors={this.state.selectedColors}
                         searchSimilarImages={(imgHash, color1, color2) => {
                             this.searchSimilarImages(imgHash, color1, color2)

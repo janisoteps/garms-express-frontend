@@ -50,6 +50,7 @@ class Main extends React.Component {
                         <RegisterFromResult
                             {...props}
                             handleResultLogin={(email, password, imgHash) => {this.props.handleResultLogin(email, password, imgHash)}}
+                            sex={this.props.sex}
                         />
                     } />
                     <Route path='/login' render={(props) =>

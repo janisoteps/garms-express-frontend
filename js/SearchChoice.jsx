@@ -10,13 +10,7 @@ class SearchChoice extends React.Component {
         this.state = {
             firstLogin: this.props.firstLogin
         };
-        // this.handleHigherCat = this.handleHigherCat.bind(this);
     }
-
-    // handleHigherCat(higherCat){
-    //     this.props.handleHigherCat(higherCat);
-    //     console.log('SearchChoice higherCat: ', higherCat);
-    // }
 
     componentDidUpdate(prevProps){
         if(prevProps.firstLogin !== this.props.firstLogin){
@@ -27,8 +21,6 @@ class SearchChoice extends React.Component {
     }
 
     render () {
-        console.log(`SearchChoice firstLogin: ${this.state.firstLogin}`);
-
         return (
             <MuiThemeProvider>
                 <div>

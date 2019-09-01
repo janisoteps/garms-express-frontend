@@ -1,7 +1,6 @@
 // Wardrobe.jsx
 import React from "react";
 require('../../../css/garms.css');
-// import {Route} from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import AddOutfit from './AddOutfit';
@@ -61,7 +60,7 @@ class Wardrobe extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             if (data.looks === null) {
                 this.setState({
                     noLooks: true
@@ -182,7 +181,8 @@ class Wardrobe extends React.Component  {
                 this.setState({
                     looks: looksArr,
                     addingLook: false,
-                    newLookInput: ''
+                    newLookInput: '',
+                    noLooks: false
                 });
             });
     };
@@ -270,7 +270,7 @@ class Wardrobe extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             if (data.looks === null) {
                 this.setState({
                     noLooks: true
@@ -311,7 +311,8 @@ class Wardrobe extends React.Component  {
 
                     this.setState({
                         outfits: outfitImgArr,
-                        looks: looksArr
+                        looks: looksArr,
+                        noLooks: false
                     });
                 });
             }

@@ -77,7 +77,7 @@ class AddOutfit extends React.Component  {
     };
 
     addOutfitToLook = (lookName, prodId) => {
-        console.log(`lookName: ${lookName}, prodId: ${prodId}`);
+        // console.log(`lookName: ${lookName}, prodId: ${prodId}`);
         fetch(`${window.location.origin}/api/add_outfit`, {
             method: 'post',
             body: JSON.stringify({

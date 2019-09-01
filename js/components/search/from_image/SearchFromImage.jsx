@@ -5,7 +5,7 @@ require('../../../../css/ball-atom.css');
 import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ColorChoiceModal from '../results/ColorChoiceModal';
+import ColorChoiceModal from './ColorChoiceModal';
 import SexSelector from '../results/SexSelector';
 import ResultsFromSearch from '../results/ResultsFromSearch';
 import TagCloud from '../results/TagCloud';
@@ -171,7 +171,7 @@ class SearchFromImage extends React.Component  {
         };
         downloadFile(imgUrl)
             .then((blob) => {
-                console.log(`File from URL: ${imgUrl}`);
+                // console.log(`File from URL: ${imgUrl}`);
                 this.setState({
                     fileFromUrl: {
                         imgUrl: imgUrl,
@@ -275,7 +275,7 @@ class SearchFromImage extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 colors: data.res.colors,
                 cats: data.res['img_cats_ai_txt'],
@@ -291,7 +291,7 @@ class SearchFromImage extends React.Component  {
     setColorPosTags(selection){
         if(selection['cat'].length > 0) {
             let selectedCat = selection['cat'];
-            console.log('Cat selections: ', selectedCat);
+            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
@@ -300,7 +300,7 @@ class SearchFromImage extends React.Component  {
                         });
             } else {
                 tags = tags.concat(selectedCat);
-                console.log('New posTags: ', tags);
+                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -338,7 +338,7 @@ class SearchFromImage extends React.Component  {
     setTags(tag, type, flag){
         let posTags = this.state.posTags;
         let negTags = this.state.negTags;
-        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        // console.log(flag + ' ' + type + ' tag with value ' + tag);
         if (flag === 'remove') {
             if (type === 'positive') {
                 posTags = posTags.filter(function(e) { return e !== tag });
@@ -412,7 +412,7 @@ class SearchFromImage extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 let results =  data.res;
                 let prodImgShown = Object.assign(
                     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -446,13 +446,13 @@ class SearchFromImage extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
-        console.log('Search string: ', searchString);
+        // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             let results =  data.res;
             let prodImgShown = Object.assign(
                 {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -502,12 +502,12 @@ class SearchFromImage extends React.Component  {
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
-        console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
-            + `viewportWidth: ${this.state.viewPortWidth}\n`
-            + `imageHeight: ${this.state.previewImgDims.height}\n`
-            + `imageWidth: ${this.state.previewImgDims.width}\n`
-        );
-        console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
+        // console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
+        //     + `viewportWidth: ${this.state.viewPortWidth}\n`
+        //     + `imageHeight: ${this.state.previewImgDims.height}\n`
+        //     + `imageWidth: ${this.state.previewImgDims.width}\n`
+        // );
+        // console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
         let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
         < this.state.viewPortWidth - this.state.previewImgDims.width ? {
             height: `calc( ${this.state.viewPortHeight}px - 175px )`,
@@ -516,8 +516,8 @@ class SearchFromImage extends React.Component  {
             width: `calc(${this.state.viewPortWidth}px - 20px)`,
             height: "auto"
         };
-        console.log('File from URL');
-        console.log(this.state.fileFromUrl);
+        // console.log('File from URL');
+        // console.log(this.state.fileFromUrl);
         // Element that shows preview of just uploaded photo
         let preview = this.state.files.length > 0 && this.state.encodingNoCrop.length === 0 ? (
             <div className="preview-container">

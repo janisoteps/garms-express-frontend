@@ -317,7 +317,7 @@ class ResultsFromSearch extends React.Component  {
 
     // Expands color picker drawer
     expandDrawer = (id, pickerId) => {
-        console.log(id, ' vs ', pickerId);
+        // console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 pickerExpanded: 0
@@ -330,7 +330,7 @@ class ResultsFromSearch extends React.Component  {
     };
 
     expandCatDrawer = (id, pickerId) => {
-        console.log(id, ' vs ', pickerId);
+        // console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 catPickerExpanded: 0
@@ -350,8 +350,8 @@ class ResultsFromSearch extends React.Component  {
 
     addToFavs = (img_hash, id) => {
         let email = this.state.email;
-        console.log('Add faves email: ', email);
-        console.log('Add faves hash: ', img_hash);
+        // console.log('Add faves email: ', email);
+        // console.log('Add faves hash: ', img_hash);
         fetch(window.location.origin + '/api/addfav', {
             method: 'post',
             body: JSON.stringify({email: email, img_hash: img_hash}),
@@ -361,7 +361,7 @@ class ResultsFromSearch extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
+                // console.log(data);
 
                 this.setState({
                     faveDrawerExpanded: id
@@ -778,7 +778,7 @@ class ResultsFromSearch extends React.Component  {
 
 
 
-        console.log('Product shown dictionary: ', this.props.prodImgShown);
+        // console.log('Product shown dictionary: ', this.props.prodImgShown);
         return (
             <MuiThemeProvider>
                 <div>
