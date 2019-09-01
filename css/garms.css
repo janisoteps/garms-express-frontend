@@ -359,6 +359,19 @@
     cursor: pointer;
 }
 
+.buy-now{
+    width: 64px;
+    height: 64px;
+    background: #FFFFFF url('../images/shopping-cart.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 48px 48px;
+    border-radius: 32px;
+    position: absolute;
+    margin-top: -55px;
+    right: 296px;
+    cursor: pointer;
+}
+
 .color-picker{
     width: 64px;
     height: 64px;

@@ -37,7 +37,7 @@ class Profile extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data.res);
+            // console.log(data.res);
             let usernamePrompt = !data.insta_username ? 'Instagram username' : data.insta_username;
             this.setState({
                 insta_pics: data.res,
@@ -53,7 +53,7 @@ class Profile extends React.Component  {
     }
 
     saveInstaUsername(event) {
-        console.log('Username was submitted: ' + this.state.insta_username_prompt);
+        // console.log('Username was submitted: ' + this.state.insta_username_prompt);
         event.preventDefault();
 
         fetch(window.location.origin + '/api/save_insta_username', {
@@ -68,7 +68,7 @@ class Profile extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log('Save Insta username response: ' , data);
+                // console.log('Save Insta username response: ' , data);
                 if (data.insta_username !== false) {
                     this.setState({
                         insta_username: data.insta_username
@@ -136,7 +136,7 @@ class Profile extends React.Component  {
             instaPrompt = null;
         }
 
-        console.log('Insta pics length: ', this.state.insta_pics && this.state.insta_pics.length);
+        // console.log('Insta pics length: ', this.state.insta_pics && this.state.insta_pics.length);
         let instaList = null;
         if (this.state.insta_pics && this.state.insta_pics.length > 0) {
             instaList = insta_tiles;

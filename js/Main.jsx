@@ -1,10 +1,10 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import Register from './components/register/Register'
+import Register from './components/user/register/Register'
+import RegisterFromResult from './components/user/register/RegisterFromResult'
 import Login from './components/user/Login'
 import Logout from './components/user/Logout'
 import SearchChoice from './SearchChoice'
-// import ImageSearch from './components/depracated/ImageSearch'
 import TextSearch from './components/search/from_text/TextSearch'
 import Wardrobe from './components/wardrobe/Wardrobe'
 import Profile from './components/user/Profile'
@@ -30,15 +30,8 @@ class Main extends React.Component {
 
     handleHigherCat(higherCat){
         this.props.handleHigherCat(higherCat);
-        console.log('Main higherCat: ', higherCat);
     }
     render() {
-        // console.log('Main isAuth: ',this.props.isAuth);
-        // console.log('Main sex: ',this.props.sex);
-        // console.log('Main email: ', this.props.email);
-        // console.log('Main username: ', this.props.username);
-        console.log(`Main firstLogin: ${this.props.firstLogin}`);
-
         return (
             <main>
                 <Switch>
@@ -53,19 +46,21 @@ class Main extends React.Component {
                             />}
                     />
                     <Route path='/register' component={Register} />
+                    <Route path='/register-from-result' render={(props) =>
+                        <RegisterFromResult
+                            {...props}
+                            handleResultLogin={(email, password, imgHash) => {this.props.handleResultLogin(email, password, imgHash)}}
+                            sex={this.props.sex}
+                        />
+                    } />
+                    <Route path='/login' render={(props) =>
+                        <Login
+                            {...props}
+                            handleLogin={(email, password) => {this.props.handleLogin(email, password)}}
+                        />
+                    }/>
                     <Route path='/login' component={Login} />
                     <Route path='/logout' component={Logout} />
-                    {/*<Route path='/imagesearch'*/}
-                           {/*render={(props) =>*/}
-                                {/*<ImageSearch*/}
-                                    {/*{...props}*/}
-                                    {/*sex={this.props.sex}*/}
-                                    {/*isAuth={this.props.isAuth}*/}
-                                    {/*email={this.props.email}*/}
-                                    {/*changeSex={(sex) => {this.changeSex(sex);}}*/}
-                                    {/*completeFirstLogin={() => {this.props.completeFirstLogin()}}*/}
-                                {/*/>}*/}
-                    {/*/>*/}
                     <Route path='/textsearch'
                            render={(props) => <TextSearch
                            {...props}

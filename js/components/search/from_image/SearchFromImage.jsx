@@ -5,12 +5,14 @@ require('../../../../css/ball-atom.css');
 import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ColorChoiceModal from '../ColorChoiceModal';
-import SexSelector from '../SexSelector';
-import ResultsFromImage from './ResultsFromImage';
-import TagCloud from '../TagCloud';
+import ColorChoiceModal from './ColorChoiceModal';
+import SexSelector from '../results/SexSelector';
+import ResultsFromSearch from '../results/ResultsFromSearch';
+import TagCloud from '../results/TagCloud';
 import ColorPicker from './ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
+import FlatButton from 'material-ui/FlatButton';
+import Loyalty from 'material-ui/svg-icons/action/loyalty';
 
 
 //Component to search for products using an uploaded image
@@ -107,28 +109,28 @@ class SearchFromImage extends React.Component  {
         });
     }
 
-    //Submits login request to server and sets state/cookies if successful
-    handleLoginSubmit(event) {
-        event.preventDefault();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
-        fetch(window.location.origin + '/api/login', {
-            method: 'post',
-            body: JSON.stringify({email: email, pwd: pwd}),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(function(data) {
-                console.log(data);
-                if (data === "OK") {
-                    this.setState({
-                        isAuth: true
-                    });
-                }
-            });
-    }
+    // //Submits login request to server and sets state/cookies if successful
+    // handleLoginSubmit(event) {
+    //     event.preventDefault();
+    //     let email = this.state.email;
+    //     let pwd = this.state.pwd;
+    //     fetch(window.location.origin + '/api/login', {
+    //         method: 'post',
+    //         body: JSON.stringify({email: email, pwd: pwd}),
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) { return response.json(); })
+    //         .then(function(data) {
+    //             console.log(data);
+    //             if (data === "OK") {
+    //                 this.setState({
+    //                     isAuth: true
+    //                 });
+    //             }
+    //         });
+    // }
 
     changeSex(sex){
         this.props.changeSex(sex);
@@ -169,7 +171,7 @@ class SearchFromImage extends React.Component  {
         };
         downloadFile(imgUrl)
             .then((blob) => {
-                console.log(`File from URL: ${imgUrl}`);
+                // console.log(`File from URL: ${imgUrl}`);
                 this.setState({
                     fileFromUrl: {
                         imgUrl: imgUrl,
@@ -273,7 +275,7 @@ class SearchFromImage extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 colors: data.res.colors,
                 cats: data.res['img_cats_ai_txt'],
@@ -289,7 +291,7 @@ class SearchFromImage extends React.Component  {
     setColorPosTags(selection){
         if(selection['cat'].length > 0) {
             let selectedCat = selection['cat'];
-            console.log('Cat selections: ', selectedCat);
+            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
@@ -298,7 +300,7 @@ class SearchFromImage extends React.Component  {
                         });
             } else {
                 tags = tags.concat(selectedCat);
-                console.log('New posTags: ', tags);
+                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -336,7 +338,7 @@ class SearchFromImage extends React.Component  {
     setTags(tag, type, flag){
         let posTags = this.state.posTags;
         let negTags = this.state.negTags;
-        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        // console.log(flag + ' ' + type + ' tag with value ' + tag);
         if (flag === 'remove') {
             if (type === 'positive') {
                 posTags = posTags.filter(function(e) { return e !== tag });
@@ -410,7 +412,7 @@ class SearchFromImage extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 let results =  data.res;
                 let prodImgShown = Object.assign(
                     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -444,13 +446,13 @@ class SearchFromImage extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
-        console.log('Search string: ', searchString);
+        // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             let results =  data.res;
             let prodImgShown = Object.assign(
                 {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -500,12 +502,12 @@ class SearchFromImage extends React.Component  {
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
-        console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
-            + `viewportWidth: ${this.state.viewPortWidth}\n`
-            + `imageHeight: ${this.state.previewImgDims.height}\n`
-            + `imageWidth: ${this.state.previewImgDims.width}\n`
-        );
-        console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
+        // console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
+        //     + `viewportWidth: ${this.state.viewPortWidth}\n`
+        //     + `imageHeight: ${this.state.previewImgDims.height}\n`
+        //     + `imageWidth: ${this.state.previewImgDims.width}\n`
+        // );
+        // console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
         let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
         < this.state.viewPortWidth - this.state.previewImgDims.width ? {
             height: `calc( ${this.state.viewPortHeight}px - 175px )`,
@@ -514,8 +516,8 @@ class SearchFromImage extends React.Component  {
             width: `calc(${this.state.viewPortWidth}px - 20px)`,
             height: "auto"
         };
-        console.log('File from URL');
-        console.log(this.state.fileFromUrl);
+        // console.log('File from URL');
+        // console.log(this.state.fileFromUrl);
         // Element that shows preview of just uploaded photo
         let preview = this.state.files.length > 0 && this.state.encodingNoCrop.length === 0 ? (
             <div className="preview-container">
@@ -531,7 +533,7 @@ class SearchFromImage extends React.Component  {
         );
 
         // Shows either image drop zone or login form if not authorized
-        let searchForm = this.state.isAuth === true || this.state.isAuth == "true" ? (
+        let searchForm = this.state.sex ? (
             <div>
                 { this.state.files.length > 0 || this.state.fileFromUrl ? (
                     preview
@@ -550,22 +552,46 @@ class SearchFromImage extends React.Component  {
                 }
             </div>
         ) : (
-            <div className="register-form">
-                <p>Log in your Garms account</p>
-                <TextField hintText="Your e-mail"
-                           floatingLabelText="Input your e-mail address:"
-                           name="email"
-                           onChange={this.handleChange.bind(this)}
+            <div style={{
+                width: '300px',
+                marginLeft: 'calc(50vw - 150px)',
+                textAlign: 'center',
+                marginTop: '100px'
+            }}>
+                <FlatButton
+                    label="HER"
+                    onClick={() => {this.changeSex('women')}}
+                    icon={<Loyalty/>}
+                    style={{
+                        width: '100%'
+                    }}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
                 />
-                <TextField hintText="Password"
-                           floatingLabelText="Your password:"
-                           type="password"
-                           name="pwd"
-                           onChange={this.handleChange.bind(this)}
+                <FlatButton
+                    label="HIM"
+                    onClick={() => {this.changeSex('men')}}
+                    icon={<Loyalty/>}
+                    style={{
+                        width: '100%',
+                        marginTop: '30px'
+                    }}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
                 />
-                <RaisedButton label="Log In"
-                              primary={true}
-                              onClick={this.handleLoginSubmit}
+                <FlatButton
+                    label="THEM"
+                    onClick={() => {this.changeSex('both')}}
+                    icon={<Loyalty/>}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
+                    style={{
+                        width: '100%',
+                        marginTop: '30px'
+                    }}
                 />
             </div>
         );
@@ -576,24 +602,32 @@ class SearchFromImage extends React.Component  {
             // console.log('ImageSearch email: ', this.state.email);
             var searchOrResults = this.state.results.length > 0 ? (
                 <div>
-                    <ResultsFromImage
-                    mainCat={this.state.mainCat}
-                    email={this.state.email}
-                    searchSimilarImages={(
-                        img_hash,
-                        color_1,
-                        color_2
-                    ) => { this.searchSimilarImages(
-                        img_hash,
-                        color_1,
-                        color_2
-                    ) }}
-                    results={this.state.results}
-                    prodImgShown={this.state.prodImgShown}
-                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
-                    selectedColors={this.state.selectedColors}
-                    firstLogin={this.props.firstLogin}
+                    <ResultsFromSearch
+                        isAuth={this.state.isAuth}
+                        mainCat={this.state.mainCat}
+                        email={this.state.email}
+                        searchSimilarImages={(
+                            img_hash,
+                            color_1,
+                            color_2
+                        ) => { this.searchSimilarImages(
+                            img_hash,
+                            color_1,
+                            color_2
+                        ) }}
+                        results={this.state.results}
+                        prodImgShown={this.state.prodImgShown}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                        setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
+                        selectedColors={this.state.selectedColors}
+                        firstLogin={this.props.firstLogin}
+                    />
+
+                    <SexSelector
+                        sex={this.state.sex}
+                        sexPickerWidth={this.state.sexPickerWidth}
+                        changeSex={(sex) => {this.changeSex(sex)}}
+                        expandSexSelector={() => {this.expandSexSelector()}}
                     />
                 </div>
             ) : (
@@ -614,13 +648,6 @@ class SearchFromImage extends React.Component  {
         return (
             <div>
                 {searchOrResults}
-
-                <SexSelector
-                    sex={this.state.sex}
-                    sexPickerWidth={this.state.sexPickerWidth}
-                    changeSex={(sex) => {this.changeSex(sex)}}
-                    expandSexSelector={() => {this.expandSexSelector()}}
-                />
 
                 <TagCloud
                     posTags={this.state.posTags}

@@ -38,6 +38,7 @@ class Logout extends React.Component {
         cookies.set('email', '', {path: '/'});
         cookies.set('sex', '', {path: '/'});
         cookies.set('username', '', {path: '/'});
+        cookies.set('first_login', '0', {path: '/'});
         document.location.href="/";
     }
 
@@ -45,9 +46,13 @@ class Logout extends React.Component {
         const logOutTile = this.state.isAuth == true || this.state.isAuth == "true" ? (
             <div className="register-form">
                 <p>Log out from Garms</p>
-                <RaisedButton label="Log Out"
-                              primary={true}
-                              onClick={this.handleLogout}
+                <RaisedButton
+                    label="Log Out"
+                    primary={true}
+                    onClick={this.handleLogout}
+                    buttonStyle={{
+                        backgroundColor: 'black'
+                    }}
                 />
             </div>
         ) : (

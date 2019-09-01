@@ -6,11 +6,13 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ResultsFromImage from '../from_image/ResultsFromImage';
-import SexSelector from '../SexSelector';
-import TagCloud from '../TagCloud';
+import ResultsFromSearch from '../results/ResultsFromSearch';
+import SexSelector from '../results/SexSelector';
+import TagCloud from '../results/TagCloud';
 import ColorPicker from '../from_image/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
+import FlatButton from 'material-ui/FlatButton';
+import Loyalty from 'material-ui/svg-icons/action/loyalty';
 
 
 //Component to search for products using text input
@@ -88,7 +90,7 @@ class TextSearch extends React.Component  {
                 }
             }).then((response) => { return response.json(); })
                 .then((data) => {
-                    console.log(data);
+                    // console.log(data);
                     this.setState({
                         mainSuggestion: data.main_pred,
                         moreSuggestions: data.sim_pred
@@ -148,13 +150,13 @@ class TextSearch extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop;
-        console.log('Search string: ', searchString);
+        // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             let results =  data.res;
             let prodImgShown = Object.assign(
                 {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
@@ -177,9 +179,10 @@ class TextSearch extends React.Component  {
 
     // Set main color and category state based on selection from modal
     setColorPosTags(selection){
-        if(selection['cat'].length > 0) {
+        // console.log(selection)
+        if(selection['cat']) {
             let selectedCat = selection['cat'];
-            console.log('Cat selections: ', selectedCat);
+            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
@@ -188,7 +191,7 @@ class TextSearch extends React.Component  {
                 });
             } else {
                 tags = tags.concat(selectedCat);
-                console.log('New posTags: ', tags);
+                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -215,7 +218,7 @@ class TextSearch extends React.Component  {
     setTags(tag, type, flag){
         let posTags = this.state.posTags;
         let negTags = this.state.negTags;
-        console.log(flag + ' ' + type + ' tag with value ' + tag);
+        // console.log(flag + ' ' + type + ' tag with value ' + tag);
         if (flag === 'remove') {
             if (type === 'positive') {
                 posTags = posTags.filter(function(e) { return e !== tag });
@@ -259,55 +262,6 @@ class TextSearch extends React.Component  {
         }
     }
 
-    // // Sends similar product search request to server if user clicks on magnifying glass button
-    // // Updates results state with the response
-    // similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-    //
-    //     console.log('Similar image search launched');
-    //     this.setState({
-    //         loading: true
-    //     });
-    //
-    //     // let mainColor = color_1.toString().replace(/\s+/g, '');
-    //     // let mainColor = this.state.mainColor;
-    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
-    //
-    //     let mainCat = this.state.mainCat;
-    //     if(mainCat.length === 0 || typeof mainCat === "undefined"){
-    //         mainCat = img_cat_sc_txt;
-    //     }
-    //
-    //     console.log('Main cat: ', mainCat, ' , Img cat sc txt: ', img_cat_sc_txt);
-    //
-    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-    //         + '&main_cat=' + mainCat
-    //         + '&main_cat2=' + this.state.mainCat2
-    //         + '&nr1_cat_sc=' + nr1_cat_sc
-    //         + '&color_1=[' + color_1
-    //         + ']&pca_256=[' + siam_64
-    //         + ']&sex=' + this.state.sex
-    //         + '&id=' + prod_id;
-    //
-    //     // console.log('search string: ', searchString);
-    //
-    //     fetch(searchString, {
-    //         method: 'get',
-    //     }).then(function(response) {
-    //         return response.json();
-    //     }).then(data => {
-    //         console.log(data);
-    //         this.setState({
-    //             results: data.res,
-    //             loading: false
-    //         });
-    //         window.scrollTo({
-    //             top: 0,
-    //             behavior: "smooth"
-    //         });
-    //         window.scrollTo(0, 0);
-    //     });
-    // }
-
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
         this.setState({
@@ -326,12 +280,12 @@ class TextSearch extends React.Component  {
         let inputArray = inputString.split(' ');
         let searchString = inputArray.join('+');
 
-        console.log('String search with: ', searchString);
+        // console.log('String search with: ', searchString);
         fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
             method: 'get'
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log('Response: ', data);
+                // console.log('Response: ', data);
                 if (typeof data.res === "undefined") {
                     this.setState({
                         results: [],
@@ -375,7 +329,7 @@ class TextSearch extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(function(data) {
-                console.log(data);
+                // console.log(data);
                 if (data === "OK") {
                     this.setState({
                         isAuth: true
@@ -403,14 +357,14 @@ class TextSearch extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        console.log('search string: ', searchString);
+        // console.log('search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -433,7 +387,7 @@ class TextSearch extends React.Component  {
     expandSexSelector(){
         let currentWidth = this.state.sexPickerWidth;
 
-        console.log('Expanding sex selector ', currentWidth);
+        // console.log('Expanding sex selector ', currentWidth);
         if(currentWidth === '48px'){
             this.setState({
                 sexPickerWidth: '270px'
@@ -557,9 +511,18 @@ class TextSearch extends React.Component  {
                             className="text-search-input"
                             hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
                             floatingLabelText="What's your outfit idea?"
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
                             name="searchString"
                             onChange={this.handleTextInputChange.bind(this)}
                             onKeyDown={this.onEnterPress}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
                         />
                         <div className="text-search-button" onClick={this.textImageSearch}>
                             <div className="search-icon" />
@@ -570,28 +533,51 @@ class TextSearch extends React.Component  {
                 </div>
         );
 
-        // Shows either image drop zone or login form if not authorized
-        let searchForm = this.state.isAuth === true || this.state.isAuth === "true" ? (
+        let searchForm = this.state.sex ? (
             <div>
                 {SearchBox}
             </div>
         ) : (
-            <div className="register-form">
-                <p>Log in your Garms account</p>
-                <TextField hintText="Your e-mail"
-                           floatingLabelText="Input your e-mail address:"
-                           name="email"
-                           onChange={this.handleChange.bind(this)}
+            <div style={{
+                width: '300px',
+                marginLeft: 'calc(50vw - 150px)',
+                textAlign: 'center',
+                marginTop: '100px'
+            }}>
+                <FlatButton
+                    label="HER"
+                    onClick={() => {this.changeSex('women')}}
+                    icon={<Loyalty/>}
+                    style={{
+                        width: '100%'
+                    }}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
                 />
-                <TextField hintText="Password"
-                           floatingLabelText="Your password:"
-                           type="password"
-                           name="pwd"
-                           onChange={this.handleChange.bind(this)}
+                <FlatButton
+                    label="HIM"
+                    onClick={() => {this.changeSex('men')}}
+                    icon={<Loyalty/>}
+                    style={{
+                        width: '100%',
+                        marginTop: '30px'
+                    }}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
                 />
-                <RaisedButton label="Log In"
-                              primary={true}
-                              onClick={this.handleLoginSubmit}
+                <FlatButton
+                    label="THEM"
+                    onClick={() => {this.changeSex('both')}}
+                    icon={<Loyalty/>}
+                    labelStyle={{
+                        fontSize: '1.3rem'
+                    }}
+                    style={{
+                        width: '100%',
+                        marginTop: '30px'
+                    }}
                 />
             </div>
         );
@@ -602,7 +588,8 @@ class TextSearch extends React.Component  {
                     {
                         this.state.results.length > 0 ? (
                             <div style={{textAlign: 'center', width: '100%'}}>
-                                <ResultsFromImage
+                                <ResultsFromSearch
+                                    isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
                                     email={this.state.email}
                                     searchSimilarImages={(
@@ -620,6 +607,13 @@ class TextSearch extends React.Component  {
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColors={this.state.selectedColors}
                                 />
+
+                                <SexSelector
+                                    sex={this.state.sex}
+                                    sexPickerWidth={this.state.sexPickerWidth}
+                                    changeSex={(sex) => {this.changeSex(sex)}}
+                                    expandSexSelector={() => {this.expandSexSelector()}}
+                                />
                             </div>
                         ) : (
                             searchForm
@@ -628,13 +622,6 @@ class TextSearch extends React.Component  {
 
                     <NoResults />
 
-                    <SexSelector
-                        sex={this.state.sex}
-                        sexPickerWidth={this.state.sexPickerWidth}
-                        changeSex={(sex) => {this.changeSex(sex)}}
-                        expandSexSelector={() => {this.expandSexSelector()}}
-                    />
-
                     <TagCloud
                         posTags={this.state.posTags}
                         negTags={this.state.negTags}
@@ -642,7 +629,7 @@ class TextSearch extends React.Component  {
                     />
 
                     <ColorPicker
-                        setColor={(selection) => {this.setColor(selection)}}
+                        setColor={(selection) => {this.setColorPosTags(selection)}}
                         selectedColors={this.state.selectedColors}
                         searchSimilarImages={(imgHash, color1, color2) => {
                             this.searchSimilarImages(imgHash, color1, color2)
