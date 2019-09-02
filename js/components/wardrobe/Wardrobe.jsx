@@ -4,6 +4,7 @@ require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import AddOutfit from './AddOutfit';
+import RecommendFromTags from './../recommend/RecommendFromTags';
 
 
 class Wardrobe extends React.Component  {
@@ -13,6 +14,7 @@ class Wardrobe extends React.Component  {
             isAuth: this.props.isAuth,
             username: this.props.username,
             email: this.props.email,
+            sex: this.props.sex,
             looks: [],
             outfits: [],
             addingLook: false,
@@ -37,6 +39,7 @@ class Wardrobe extends React.Component  {
         this.showRemoveLookModal = this.showRemoveLookModal.bind(this);
         this.expandLooks = this.expandLooks.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
+        this.showAddOutfit = this.showAddOutfit.bind(this);
     }
 
     componentDidMount() {
@@ -319,6 +322,13 @@ class Wardrobe extends React.Component  {
         });
     };
 
+    showAddOutfit = (imgHash) => {
+        this.setState({
+            imgHash: imgHash
+        })
+    };
+
+
     // ######################################## MAIN RENDER FUNCTION ###########################################
     render () {
         let greetingStyle = {
@@ -400,7 +410,7 @@ class Wardrobe extends React.Component  {
                         <div
                             className='remove-look-button'
                             onClick={() => {this.showRemoveLookModal(lookDict.look_name)}}
-                        ></div>
+                        />
                     )}{lookDict.look_name.toUpperCase()}
                 </div>
             )
@@ -419,7 +429,10 @@ class Wardrobe extends React.Component  {
         let tilesOrLoading = this.state.outfits.length > 0 ? (
             tilesOrNothing
         ) : (
-            <p>Loading</p>
+            <div>
+                <br />
+                <h2>Loading...</h2>
+            </div>
         );
 
         let lookTilesOrLoading = this.state.looks.length > 0 ? (
@@ -528,8 +541,8 @@ class Wardrobe extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div className="profile-product-list">
-                    <h2 style={greetingStyle}>{this.state.username}'s wardrobe</h2>
-                    <br></br>
+                    <h1 style={greetingStyle}>{this.state.username}'s wardrobe</h1>
+                    <br />
                     {(this.state.noLooks === true) && (
                         <div style={{width: '100%', textAlign: 'center'}}>
                             <h3>There are no outfits in your wardrobe</h3>
@@ -537,9 +550,7 @@ class Wardrobe extends React.Component  {
                         </div>
                     )}
                     <div className="result-pane">
-                        {(this.state.outfits.length > 0) && (
-                            tilesOrLoading
-                        )}
+                        {tilesOrLoading}
                     </div>
                     <div className="look-pane" style={{
                         top: '70px',
@@ -550,6 +561,14 @@ class Wardrobe extends React.Component  {
                             lookTilesOrLoading
                         )}
                     </div>
+
+                    <RecommendFromTags
+                        email={this.state.email}
+                        sex={this.state.sex}
+                        lookFilter={this.state.lookFilter}
+                        showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                    />
+
                     <div>
                         {(this.state.addingLook) && (
                             <div style={{
@@ -592,8 +611,8 @@ class Wardrobe extends React.Component  {
                             style={{
                                 width: '100vw',
                                 backgroundColor: 'white',
-                                height: 'calc(100vh - 50px)',
-                                top: '50px',
+                                height: 'calc(100vh)',
+                                top: '0px',
                                 position: 'fixed'
                             }}
                         >

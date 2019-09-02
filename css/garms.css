@@ -359,6 +359,19 @@
     cursor: pointer;
 }
 
+.add-to-favorites-wardrobe{
+    width: 64px;
+    height: 64px;
+    background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
+    /*filter: invert(100%);*/
+    background-size: 64px 64px;
+    border-radius: 32px;
+    position: absolute;
+    margin-top: -45px;
+    right: 20px;
+    cursor: pointer;
+}
+
 .buy-now{
     width: 64px;
     height: 64px;
