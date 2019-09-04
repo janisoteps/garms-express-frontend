@@ -100,7 +100,7 @@
 
 .search-choice-button-type{
     width: 100%;
-    height: calc(50vh - 25px);
+    height: calc(20vh - 25px);
     background: url('../images/image-type.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -109,7 +109,7 @@
 
 .search-choice-button-image{
     width: 100%;
-    height: calc(50vh - 25px);
+    height: calc(20vh - 25px);
     background: url('../images/image-photo.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
@@ -192,7 +192,7 @@
     height: 60px;
     width: 350px;
     margin-left: calc(50vw - 175px);
-    margin-top: calc(((50vh - 25px) / 2) - 30px);
+    margin-top: calc(((20vh - 25px) / 2) - 30px);
     background-color: white;
     border-radius: 4px;
 }
@@ -232,6 +232,37 @@
     vertical-align: middle;
     horiz-align: center;
     font-size: 2rem;
+}
+
+@media (min-width: 700px) {
+    .search-choice-button-type{
+        width: 50%;
+        height: calc(30vh - 25px);
+        background: url('../images/image-type.jpg') no-repeat center;
+        background-size: cover;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .search-choice-button-image{
+        width: 50%;
+        height: calc(30vh - 25px);
+        background: url('../images/image-photo.jpg') no-repeat center;
+        background-size: cover;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .search-choice-title{
+        display: table;
+        text-align: center;
+        height: 60px;
+        width: 350px;
+        margin-left: calc(25vw - 175px);
+        margin-top: calc(((30vh - 25px) / 2) - 30px);
+        background-color: white;
+        border-radius: 4px;
+    }
 }
 
 .drop-text{
@@ -285,19 +316,33 @@
     padding-bottom: 15px;
     display: inline-block;
     position: relative;
+    vertical-align: top;
+}
+
+.recommend-product-tile{
+    text-align: center;
+    margin: 15px;
+    width: 80vw;
+    max-width: 400px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
 }
 
 .profile-product-tile{
     text-align: center;
     margin: 2vw;
-    width: 45vw;
+    width: 85vw;
     min-width: 300px;
-    max-width: 620px;
+    max-width: 420px;
     padding-top: 15px;
     padding-bottom: 5px;
     display: inline-block;
     position: relative;
     font-size: 1rem;
+    vertical-align: top;
 }
 
 .profile-product-tile a{
@@ -360,12 +405,12 @@
 }
 
 .add-to-favorites-wardrobe{
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
     /*filter: invert(100%);*/
-    background-size: 64px 64px;
-    border-radius: 32px;
+    background-size: 54px 54px;
+    border-radius: 27px;
     position: absolute;
     margin-top: -48px;
     right: 20px;

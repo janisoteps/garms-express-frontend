@@ -1,17 +1,16 @@
-// RecommendFromTags.jsx
+// RecommendRandom.jsx
 import React from "react";
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
+import {Route} from 'react-router-dom';
 
 
-class RecommendFromTags extends React.Component  {
+class RecommendRandom extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
-            email: this.props.email,
             sex: this.props.sex,
-            lookFilter: this.props.lookFilter,
             outfits: []
         };
 
@@ -19,9 +18,10 @@ class RecommendFromTags extends React.Component  {
     }
 
     componentDidMount() {
-        fetch(`${window.location.origin}/api/recommend_tags`, {
+        console.log(`sex: ${this.state.sex}`);
+        fetch(`${window.location.origin}/api/recommend_random`, {
             method: 'post',
-            body: JSON.stringify({'email': this.state.email, 'sex': this.state.sex}),
+            body: JSON.stringify({'sex': this.state.sex}),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ class RecommendFromTags extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
+            console.log(data);
             this.setState({
                 outfits: data
             })
@@ -42,7 +42,6 @@ class RecommendFromTags extends React.Component  {
 
     render() {
         const outfitTiles = this.state.outfits.map(lookDict => {
-            const lookName = lookDict.look_name;
             const suggestionArr = lookDict.prod_suggestions;
 
             return suggestionArr.map(prodSuggestionArr => {
@@ -55,40 +54,49 @@ class RecommendFromTags extends React.Component  {
                 };
                 const imgHash = prodSuggestion.img_hashes[0];
 
-                if (this.props.lookFilter === null || this.props.lookFilter === lookName) {
-                    return (
-                        <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                            <h6>Recommended in {lookName.toUpperCase()}</h6>
-                            <div
-                                className="product-name"
-                                style={{
-                                    marginRight: '5px',
-                                    marginLeft: '5px'
-                                }}
-                            >
-                                <h5>{prodSuggestion.name}</h5>
+                return (
+                    <Paper zDepth={1} className="recommend-product-tile" key={key}>
+                        <div
+                            className="product-name"
+                            style={{
+                                marginRight: '5px',
+                                marginLeft: '5px'
+                            }}
+                        >
+                            <h5>{prodSuggestion.name}</h5>
+                        </div>
+                        <div style={priceStyle}>
+                            <h6>{prodSuggestion.currency}{prodSuggestion.price}</h6>
+                        </div>
+                        {(prodSuggestion.sale) && (
+                            <div style={{color: '#d6181e'}}>
+                                <h6>{prodSuggestion.currency}{prodSuggestion.saleprice}</h6>
                             </div>
-                            <div style={priceStyle}>
-                                <h6>{prodSuggestion.currency}{prodSuggestion.price}</h6>
-                            </div>
-                            {(prodSuggestion.sale) && (
-                                <div style={{color: '#d6181e'}}>
-                                    <h6>{prodSuggestion.currency}{prodSuggestion.saleprice}</h6>
-                                </div>
-                            )}
-                            <img
-                                className="product-image" src={prodSuggestion.img_url}
-                                style={{
-                                    marginBottom: '20px'
-                                }}
-                            />
+                        )}
+                        <img
+                            className="product-image" src={prodSuggestion.img_url}
+                            style={{
+                                marginBottom: '20px'
+                            }}
+                        />
+                        
+                        {(this.state.isAuth === "true") ? (
                             <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
-                            <br />
-                            <h4>{prodSuggestion.brand}</h4>
-                            <p>From {prodSuggestion.shop}</p>
-                        </Paper>
-                    )
-                }
+                        ) : (
+                            <Route render={({history}) => (
+                                <div
+                                    className="add-to-favorites-wardrobe"
+                                    onClick={() => {
+                                        history.push(`/register-from-result?id=${imgHash}`)
+                                    }}
+                                />
+                            )}/>
+                        )}
+                        <br />
+                        <h4>{prodSuggestion.brand}</h4>
+                        <p>From {prodSuggestion.shop}</p>
+                    </Paper>
+                )
             })
         });
         const tilesOrLoading = (
@@ -97,9 +105,6 @@ class RecommendFromTags extends React.Component  {
                     <div>
                         <br />
                         <br />
-                        <hr />
-                        <br />
-                        <h1>Recommended</h1>
                         <br />
                         {outfitTiles}
                     </div>
@@ -123,4 +128,4 @@ class RecommendFromTags extends React.Component  {
     }
 }
 
-export default RecommendFromTags;
+export default RecommendRandom;

@@ -43,6 +43,8 @@ class Main extends React.Component {
                                 firstLogin={this.props.firstLogin}
                                 sex={this.props.sex}
                                 handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                email={this.props.email}
+                                isAuth={this.props.isAuth}
                             />}
                     />
                     <Route path='/register' component={Register} />

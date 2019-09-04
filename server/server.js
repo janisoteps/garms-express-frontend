@@ -736,6 +736,28 @@ app.post('/api/recommend_tags', function (req, res) {
 });
 
 
+app.post('/api/recommend_random', function (req, res) {
+    const sex = req.body.sex;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'recommend_random',
+        body: {sex: sex},
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log(' response: ', body);
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+
 app.use(express.static(__dirname + './../dist/')); //serves the index.html
 
 app.get('*', function (request, response){

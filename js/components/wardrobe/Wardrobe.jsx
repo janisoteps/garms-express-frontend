@@ -569,7 +569,8 @@ class Wardrobe extends React.Component  {
                     <div className="look-pane" style={{
                         top: '70px',
                         left: '10px',
-                        position: 'fixed'
+                        position: 'fixed',
+                        zIndex: '10'
                     }}>
                         {(this.state.looks.length > 0) && (
                             lookTilesOrLoading
