@@ -378,11 +378,25 @@ class Wardrobe extends React.Component  {
                         {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
                             <h5>{outfitDict.info.currency}{outfitDict.info.salePrice}</h5>
                         </div>)}
-                        <img className="product-image" src={outfitDict.info.imgUrl} />
-                        <a href={outfitDict.info.url} target="_blank">
+                        <img
+                            className="product-image" src={outfitDict.info.imgUrl}
+                            style={{
+                                marginBottom: '30px'
+                            }}
+                        />
+                        <a
+                            href={outfitDict.info.url}
+                            target="_blank"
+                        >
                             <h5>{outfitDict.info.brand} from {outfitDict.info.shop}</h5>
                             <h5>Open in shop</h5>
                         </a>
+                        <div
+                            className="profile-product-delete"
+                            onClick={() => {
+                                this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
+                            }}
+                        />
                     </Paper>
                 )
             }

@@ -431,32 +431,6 @@ class ResultsFromSearch extends React.Component  {
                 });
             });
 
-            var faveDrawerWidth;
-
-            if (this.state.faveDrawerExpanded === prod_id){
-                faveDrawerWidth = '244px';
-            } else {
-                faveDrawerWidth = '64px';
-            }
-
-            let faveDrawerStyle = {
-                height: '64px',
-                transition: 'width 300ms ease-in-out',
-                width: faveDrawerWidth,
-                borderRadius: '32px',
-                backgroundColor: '#FFFFFF',
-                marginTop: '-55px',
-                right: '225px',
-                position: 'absolute',
-                textAlign: 'left',
-                overflow: 'hidden',
-                lineHeight: '64px',
-                verticalAlign: 'middle',
-                fontSize: '1.5rem',
-                paddingLeft: '10px',
-                paddingTop: '2px'
-            };
-
             let singleCatStyle = {
                 // width: '50px',
                 height: '50px',
@@ -476,24 +450,24 @@ class ResultsFromSearch extends React.Component  {
 
             if (this.state.catPickerExpanded === prod_id){
                 catPickerDrawerHeight = '600px';
-                catPickerDrawerWidth = '130px';
+                catPickerDrawerWidth = '';
             } else {
-                catPickerDrawerHeight = '63px';
-                catPickerDrawerWidth = '63px';
+                catPickerDrawerHeight = '52px';
+                catPickerDrawerWidth = '52px';
             }
 
             let catPickerDrawerStyle = {
                 transition: 'width 300ms ease-in-out',
                 maxHeight: catPickerDrawerHeight,
                 maxWidth: catPickerDrawerWidth,
-                borderRadius: '32px',
+                borderRadius: '26px',
                 backgroundColor: '#FFFFFF',
-                bottom: '8px',
-                right: '155px',
+                bottom: '11px',
+                right: '135px',
                 position: 'absolute',
                 textAlign: 'left',
                 overflow: 'hidden',
-                paddingBottom: '64px'
+                paddingBottom: '54px'
             };
 
             let ImageCarousel = () => {
@@ -523,7 +497,7 @@ class ResultsFromSearch extends React.Component  {
                         height: '50px',
                         borderRadius: '25px',
                         backgroundColor: color_1_hex,
-                        margin: '7px',
+                        margin: '2px',
                         marginRight: '0px',
                         display: 'inline-block',
                         cursor: 'pointer'
@@ -533,7 +507,7 @@ class ResultsFromSearch extends React.Component  {
                         height: '50px',
                         borderRadius: '25px',
                         backgroundColor: color_2_hex,
-                        margin: '7px',
+                        margin: '2px',
                         marginRight: '0px',
                         display: 'inline-block',
                         cursor: 'pointer'
@@ -543,7 +517,7 @@ class ResultsFromSearch extends React.Component  {
                         height: '50px',
                         borderRadius: '25px',
                         backgroundColor: color_3_hex,
-                        margin: '7px',
+                        margin: '2px',
                         marginRight: '0px',
                         display: 'inline-block',
                         cursor: 'pointer'
@@ -597,17 +571,17 @@ class ResultsFromSearch extends React.Component  {
                 }
 
                 let pickerStyle = {
-                    width: '64px',
-                    height: '64px',
+                    width: '54px',
+                    height: '54px',
                     backgroundColor: color_1_hex,
                     backgroundImage: pickerBgUrl,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundSize: '48px 48px',
-                    borderRadius: '32px',
+                    backgroundSize: '42px 42px',
+                    borderRadius: '27px',
                     position: 'absolute',
-                    marginTop: '-55px',
-                    right: '82px',
+                    marginTop: '-48px',
+                    right: '72px',
                     cursor: 'pointer'
                 };
 
@@ -616,17 +590,17 @@ class ResultsFromSearch extends React.Component  {
                 if (this.state.pickerExpanded === img_hash){
                     pickerDrawerHeight = '250px';
                 } else {
-                    pickerDrawerHeight = '64px';
+                    pickerDrawerHeight = '54px';
                 }
 
                 let pickerDrawerStyle = {
-                    width: '64px',
+                    width: '54px',
                     transition: 'width 300ms ease-in-out',
                     height: pickerDrawerHeight,
-                    borderRadius: '32px',
+                    borderRadius: '27px',
                     backgroundColor: '#FFFFFF',
-                    bottom: '10px',
-                    right: '82px',
+                    bottom: '11px',
+                    right: '72px',
                     position: 'absolute',
                     textAlign: 'left',
                     overflow: 'hidden'
@@ -706,7 +680,6 @@ class ResultsFromSearch extends React.Component  {
                     }} />
                     <ColorPicker />
                     <TagPicker/>
-                    <div style={faveDrawerStyle} >Added to faves</div>
                     {(this.state.isAuth === "true") ? (
                         <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
                     ) : (

@@ -347,15 +347,15 @@
 }
 
 .add-to-favorites{
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
     /*filter: invert(100%);*/
-    background-size: 64px 64px;
-    border-radius: 32px;
+    background-size: 54px 54px;
+    border-radius: 27px;
     position: absolute;
-    margin-top: -55px;
-    right: 225px;
+    margin-top: -48px;
+    right: 195px;
     cursor: pointer;
 }
 
@@ -367,21 +367,21 @@
     background-size: 64px 64px;
     border-radius: 32px;
     position: absolute;
-    margin-top: -45px;
+    margin-top: -48px;
     right: 20px;
     cursor: pointer;
 }
 
 .buy-now{
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     background: #FFFFFF url('../images/shopping-cart.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 48px 48px;
-    border-radius: 32px;
+    background-size: 42px 42px;
+    border-radius: 27px;
     position: absolute;
-    margin-top: -55px;
-    right: 296px;
+    margin-top: -48px;
+    right: 256px;
     cursor: pointer;
 }
 
@@ -422,15 +422,15 @@
 }
 
 .cat-picker-bubble{
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     background: #FFFFFF url('../images/baseline-tune-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 48px 48px;
-    border-radius: 32px;
+    background-size: 42px 42px;
+    border-radius: 27px;
     position: absolute;
-    margin-top: -55px;
-    right: 154px;
+    margin-top: -48px;
+    right: 134px;
     cursor: pointer;
 }
 
@@ -459,14 +459,14 @@
 }
 
 .search-similar{
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 48px 48px;
-    border-radius: 32px;
+    background-size: 42px 42px;
+    border-radius: 27px;
     position: absolute;
-    margin-top: -55px;
+    margin-top: -48px;
     right: 10px;
     cursor: pointer;
 }
@@ -698,15 +698,16 @@
 .profile-product-delete{
     width: 54px;
     height: 54px;
-    background: #d7aaa3 url('../images/baseline-delete_forever-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-delete_forever-24px.svg') no-repeat center;
     background-size: 42px 42px;
     border-radius: 27px;
     position: absolute;
-    bottom: 74px;
-    right: -20px;
+    bottom: 65px;
+    right: 15px;
     cursor: pointer;
-    box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);
-    opacity: 0.7;
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
+    filter: invert(1);
+    /*opacity: 0.7;*/
 }
 
 .profile-product-buy{
