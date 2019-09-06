@@ -4,6 +4,8 @@ require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import AddOutfit from './AddOutfit';
+import RecommendFromTags from './../recommend/RecommendFromTags';
+import {Route} from 'react-router-dom';
 
 
 class Wardrobe extends React.Component  {
@@ -13,6 +15,7 @@ class Wardrobe extends React.Component  {
             isAuth: this.props.isAuth,
             username: this.props.username,
             email: this.props.email,
+            sex: this.props.sex,
             looks: [],
             outfits: [],
             addingLook: false,
@@ -37,6 +40,7 @@ class Wardrobe extends React.Component  {
         this.showRemoveLookModal = this.showRemoveLookModal.bind(this);
         this.expandLooks = this.expandLooks.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
+        this.showAddOutfit = this.showAddOutfit.bind(this);
     }
 
     componentDidMount() {
@@ -60,7 +64,6 @@ class Wardrobe extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
             if (data.looks === null) {
                 this.setState({
                     noLooks: true
@@ -89,7 +92,8 @@ class Wardrobe extends React.Component  {
                             url: prodDict[0]['prod_url'],
                             sale: prodDict[0]['sale'],
                             salePrice: prodDict[0]['saleprice'],
-                            shop: prodDict[0]['shop']
+                            shop: prodDict[0]['shop'],
+                            imgHash: prodDict[0]['img_hashes'][0]
                         };
                     });
 
@@ -215,8 +219,43 @@ class Wardrobe extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                this.setState({
-                    looks: data
+                const looksArr = data.looks.sort(function(a, b){
+                    if(a.look_name < b.look_name) { return -1; }
+                    if(a.look_name > b.look_name) { return 1; }
+                    return 0;
+                });
+                const outfitArr = data.wardrobe.reverse();
+                const prodHashes = outfitArr.map(outfitDict => {
+                    return outfitDict.prod_id
+                });
+
+                this.getProducts(prodHashes, prodData => {
+
+                    const prodHashInfoDict = {};
+                    prodData.forEach(prodDict => {
+                        prodHashInfoDict[prodDict[0]['prod_hash']] = {
+                            imgUrl: prodDict[0]['img_url'],
+                            brand: prodDict[0]['brand'],
+                            price: prodDict[0]['price'],
+                            currency: prodDict[0]['currency'],
+                            name: prodDict[0]['name'],
+                            url: prodDict[0]['prod_url'],
+                            sale: prodDict[0]['sale'],
+                            salePrice: prodDict[0]['saleprice'],
+                            shop: prodDict[0]['shop']
+                        };
+                    });
+
+                    const outfitImgArr = outfitArr.map(outfitDict => {
+                        let resultOutfitDict = outfitDict;
+                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                        return resultOutfitDict
+                    });
+
+                    this.setState({
+                        outfits: outfitImgArr,
+                        looks: looksArr
+                    });
                 });
             });
     };
@@ -270,7 +309,6 @@ class Wardrobe extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
             if (data.looks === null) {
                 this.setState({
                     noLooks: true
@@ -319,11 +357,18 @@ class Wardrobe extends React.Component  {
         });
     };
 
+    showAddOutfit = (imgHash) => {
+        this.setState({
+            imgHash: imgHash
+        })
+    };
+
+
     // ######################################## MAIN RENDER FUNCTION ###########################################
     render () {
         let greetingStyle = {
             textAlign: 'center',
-            marginTop: '70px'
+            marginTop: '95px'
         };
 
         const LookExpander = () => {
@@ -360,7 +405,15 @@ class Wardrobe extends React.Component  {
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
                 return (
                     <Paper zDepth={1} className="profile-product-tile" key={key}>
-                        <div className="product-name"><h3>{outfitDict.look_name.toUpperCase()}</h3></div>
+                        <div
+                            className="product-name"
+                            style={{
+                                marginLeft: '5px',
+                                marginRight: '5px'
+                            }}
+                        >
+                            <h3>{outfitDict.look_name.toUpperCase()}</h3>
+                        </div>
                         <a href={outfitDict.info.url} target="_blank">
                             <div className="product-name"><h4>{outfitDict.info.name}</h4></div>
                         </a>
@@ -368,11 +421,35 @@ class Wardrobe extends React.Component  {
                         {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
                             <h5>{outfitDict.info.currency}{outfitDict.info.salePrice}</h5>
                         </div>)}
-                        <img className="product-image" src={outfitDict.info.imgUrl} />
-                        <a href={outfitDict.info.url} target="_blank">
+                        <img
+                            className="product-image" src={outfitDict.info.imgUrl}
+                            style={{
+                                marginBottom: '30px'
+                            }}
+                        />
+
+                        <Route render={({history}) => (
+                            <div
+                                className="search-similar-recommend"
+                                onClick={() => {
+                                    history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                }}
+                            />
+                        )}/>
+
+                        <a
+                            href={outfitDict.info.url}
+                            target="_blank"
+                        >
                             <h5>{outfitDict.info.brand} from {outfitDict.info.shop}</h5>
                             <h5>Open in shop</h5>
                         </a>
+                        <div
+                            className="profile-product-delete"
+                            onClick={() => {
+                                this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
+                            }}
+                        />
                     </Paper>
                 )
             }
@@ -400,7 +477,7 @@ class Wardrobe extends React.Component  {
                         <div
                             className='remove-look-button'
                             onClick={() => {this.showRemoveLookModal(lookDict.look_name)}}
-                        ></div>
+                        />
                     )}{lookDict.look_name.toUpperCase()}
                 </div>
             )
@@ -419,7 +496,9 @@ class Wardrobe extends React.Component  {
         let tilesOrLoading = this.state.outfits.length > 0 ? (
             tilesOrNothing
         ) : (
-            <p>Loading</p>
+            <div>
+                {/*<h2>Loading...</h2>*/}
+            </div>
         );
 
         let lookTilesOrLoading = this.state.looks.length > 0 ? (
@@ -528,8 +607,8 @@ class Wardrobe extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div className="profile-product-list">
-                    <h2 style={greetingStyle}>{this.state.username}'s wardrobe</h2>
-                    <br></br>
+                    <h1 style={greetingStyle}>{this.state.username}'s wardrobe</h1>
+                    <br />
                     {(this.state.noLooks === true) && (
                         <div style={{width: '100%', textAlign: 'center'}}>
                             <h3>There are no outfits in your wardrobe</h3>
@@ -537,19 +616,26 @@ class Wardrobe extends React.Component  {
                         </div>
                     )}
                     <div className="result-pane">
-                        {(this.state.outfits.length > 0) && (
-                            tilesOrLoading
-                        )}
+                        {tilesOrLoading}
                     </div>
                     <div className="look-pane" style={{
                         top: '70px',
                         left: '10px',
-                        position: 'fixed'
+                        position: 'fixed',
+                        zIndex: '10'
                     }}>
                         {(this.state.looks.length > 0) && (
                             lookTilesOrLoading
                         )}
                     </div>
+
+                    <RecommendFromTags
+                        email={this.state.email}
+                        sex={this.state.sex}
+                        lookFilter={this.state.lookFilter}
+                        showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                    />
+
                     <div>
                         {(this.state.addingLook) && (
                             <div style={{
@@ -592,8 +678,8 @@ class Wardrobe extends React.Component  {
                             style={{
                                 width: '100vw',
                                 backgroundColor: 'white',
-                                height: 'calc(100vh - 50px)',
-                                top: '50px',
+                                height: 'calc(100vh)',
+                                top: '0px',
                                 position: 'fixed'
                             }}
                         >

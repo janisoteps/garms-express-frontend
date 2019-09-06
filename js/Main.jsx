@@ -10,6 +10,7 @@ import Wardrobe from './components/wardrobe/Wardrobe'
 import Profile from './components/user/Profile'
 import Explorer from './components/search/from_explore/Explorer'
 import SearchFromImage from './components/search/from_image/SearchFromImage'
+import SearchFromId from './components/search/from_id/SearchFromId'
 
 
 // The Main component renders one of the provided
@@ -43,6 +44,8 @@ class Main extends React.Component {
                                 firstLogin={this.props.firstLogin}
                                 sex={this.props.sex}
                                 handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                email={this.props.email}
+                                isAuth={this.props.isAuth}
                             />}
                     />
                     <Route path='/register' component={Register} />
@@ -103,6 +106,18 @@ class Main extends React.Component {
                     />
                     <Route path='/search-from-image'
                            render={(props) => <SearchFromImage
+                               {...props}
+                               username={this.props.username}
+                               sex={this.props.sex}
+                               isAuth={this.props.isAuth}
+                               email={this.props.email}
+                               changeSex={(sex) => {this.changeSex(sex);}}
+                               firstLogin={this.props.firstLogin}
+                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                           />}
+                    />
+                    <Route path='/search-from-id'
+                           render={(props) => <SearchFromId
                                {...props}
                                username={this.props.username}
                                sex={this.props.sex}
