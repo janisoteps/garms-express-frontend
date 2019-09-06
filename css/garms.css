@@ -413,7 +413,7 @@
     border-radius: 27px;
     position: absolute;
     margin-top: -48px;
-    right: 20px;
+    right: 15px;
     cursor: pointer;
 }
 
@@ -513,6 +513,19 @@
     position: absolute;
     margin-top: -48px;
     right: 10px;
+    cursor: pointer;
+}
+
+.search-similar-recommend{
+    width: 54px;
+    height: 54px;
+    background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 42px 42px;
+    border-radius: 27px;
+    position: absolute;
+    margin-top: -48px;
+    right: 82px;
     cursor: pointer;
 }
 

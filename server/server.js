@@ -693,6 +693,27 @@ app.post('/api/get_products', function (req, res) {
 });
 
 
+app.post('/api/get_image', function (req, res) {
+    let img_hash = req.body.img_hash;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'get_image',
+        body: {img_hash: img_hash},
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            // console.log('Get products response: ', body);
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 app.post('/api/get_prod_hash', function (req, res) {
     let img_hash = req.body.img_hash;
 
@@ -737,8 +758,11 @@ app.post('/api/recommend_tags', function (req, res) {
 
 
 app.post('/api/recommend_random', function (req, res) {
-    const sex = req.body.sex;
-
+    let sex = req.body.sex;
+    console.log(sex);
+    if (!sex) {
+        sex = ''
+    }
     const options = {
         method: 'POST',
         url: api_base_url + 'recommend_random',

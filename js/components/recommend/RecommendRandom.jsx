@@ -79,7 +79,7 @@ class RecommendRandom extends React.Component  {
                                 marginBottom: '20px'
                             }}
                         />
-                        
+
                         {(this.state.isAuth === "true") ? (
                             <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
                         ) : (
@@ -92,6 +92,16 @@ class RecommendRandom extends React.Component  {
                                 />
                             )}/>
                         )}
+
+                        <Route render={({history}) => (
+                            <div
+                                className="search-similar-recommend"
+                                onClick={() => {
+                                    history.push(`/search-from-id?id=${imgHash}`)
+                                }}
+                            />
+                        )}/>
+
                         <br />
                         <h4>{prodSuggestion.brand}</h4>
                         <p>From {prodSuggestion.shop}</p>
@@ -109,8 +119,16 @@ class RecommendRandom extends React.Component  {
                         {outfitTiles}
                     </div>
                 ) : (
-                    <h4>Loading...</h4>
-                )}
+                    <div>
+                        <br />
+                        <div className="la-ball-atom la-3x">
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                        </div>
+                    </div>
+                    )}
             </div>
         );
 
@@ -118,9 +136,7 @@ class RecommendRandom extends React.Component  {
             <div>
                 <MuiThemeProvider>
                     <div>
-                        {(this.state.outfits.length > 0) && (
-                            tilesOrLoading
-                        )}
+                        {tilesOrLoading}
                     </div>
                 </MuiThemeProvider>
             </div>
@@ -129,3 +145,5 @@ class RecommendRandom extends React.Component  {
 }
 
 export default RecommendRandom;
+
+

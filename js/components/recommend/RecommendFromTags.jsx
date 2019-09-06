@@ -3,6 +3,7 @@ import React from "react";
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
+import {Route} from 'react-router-dom';
 
 
 class RecommendFromTags extends React.Component  {
@@ -29,7 +30,6 @@ class RecommendFromTags extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
             this.setState({
                 outfits: data
             })
@@ -83,6 +83,16 @@ class RecommendFromTags extends React.Component  {
                                 }}
                             />
                             <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
+
+                            <Route render={({history}) => (
+                                <div
+                                    className="search-similar-recommend"
+                                    onClick={() => {
+                                        history.push(`/search-from-id?id=${imgHash}`)
+                                    }}
+                                />
+                            )}/>
+
                             <br />
                             <h4>{prodSuggestion.brand}</h4>
                             <p>From {prodSuggestion.shop}</p>
@@ -104,7 +114,14 @@ class RecommendFromTags extends React.Component  {
                         {outfitTiles}
                     </div>
                 ) : (
-                    <h4>Loading...</h4>
+                    <div>
+                        <div className="la-ball-atom la-3x">
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                        </div>
+                    </div>
                 )}
             </div>
         );
@@ -113,9 +130,7 @@ class RecommendFromTags extends React.Component  {
             <div>
                 <MuiThemeProvider>
                     <div>
-                        {(this.state.outfits.length > 0) && (
-                            tilesOrLoading
-                        )}
+                        {tilesOrLoading}
                     </div>
                 </MuiThemeProvider>
             </div>
