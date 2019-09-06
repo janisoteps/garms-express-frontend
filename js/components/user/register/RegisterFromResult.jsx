@@ -18,7 +18,7 @@ export default class RegisterFromResult extends React.Component {
             email: '',
             pwd: '',
             username: '',
-            sex: this.props.sex,
+            sex: 'women',
             regComplete: false,
             imgHash: null,
             prodHash: null,
@@ -62,12 +62,16 @@ export default class RegisterFromResult extends React.Component {
                 }).then(function(response) {
                     return response.json();
                 }).then(prodData => {
-                    console.log(prodData[0][0]);
                     this.setState({
-                        prodInfo: prodData[0][0]
+                        prodInfo: prodData[0][0],
+                        sex: prodData[0][0]['sex']
                     });
                 })
             });
+        } else {
+            this.setState({
+                sex: this.props.sex
+            })
         }
     }
 
@@ -101,7 +105,6 @@ export default class RegisterFromResult extends React.Component {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
                 if (data === true) {
                     if (this.state.prodId !== null) {
                         this.props.handleResultLogin(email, pwd, this.state.imgHash);
