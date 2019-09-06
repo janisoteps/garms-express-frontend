@@ -628,13 +628,14 @@ class Wardrobe extends React.Component  {
                             lookTilesOrLoading
                         )}
                     </div>
-
-                    <RecommendFromTags
-                        email={this.state.email}
-                        sex={this.state.sex}
-                        lookFilter={this.state.lookFilter}
-                        showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
-                    />
+                    {(this.state.looks.length > 0) && (
+                        <RecommendFromTags
+                            email={this.state.email}
+                            sex={this.state.sex}
+                            lookFilter={this.state.lookFilter}
+                            showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                        />
+                    )}
 
                     <div>
                         {(this.state.addingLook) && (

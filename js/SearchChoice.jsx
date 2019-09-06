@@ -128,9 +128,11 @@ class SearchChoice extends React.Component {
                         )}
                     </div>
 
-                    {(this.state.firstLogin === '1') && (<SearchChoiceIntro
-                        username={this.props.username}
-                    />)}
+                    {/*{(this.state.firstLogin === '1') && (*/}
+                        {/*<SearchChoiceIntro*/}
+                            {/*username={this.props.username}*/}
+                        {/*/>*/}
+                    {/*)}*/}
                 </div>
             </MuiThemeProvider>
         )
