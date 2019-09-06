@@ -18,7 +18,6 @@ class RecommendRandom extends React.Component  {
     }
 
     componentDidMount() {
-        console.log(`sex: ${this.state.sex}`);
         fetch(`${window.location.origin}/api/recommend_random`, {
             method: 'post',
             body: JSON.stringify({'sex': this.state.sex}),
@@ -29,7 +28,6 @@ class RecommendRandom extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 outfits: data
             })
