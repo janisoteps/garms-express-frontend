@@ -9,8 +9,8 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
 
-const api_base_url = 'http://34.249.146.245/api/';
-// const api_base_url = 'http://127.0.0.1:5000/api/';
+// const api_base_url = 'http://34.249.146.245/api/';
+const api_base_url = 'http://127.0.0.1:5000/api/';
 
 // --------------------------   MAIN API   ---------------------------------
 
@@ -90,7 +90,6 @@ app.post('/api/complete_first_login', function (req, res) {
     let email = req.body.email;
     let options = {
         method: 'POST',
-        // url: 'http://34.249.244.134/api/complete_first_login',
         url: api_base_url + 'complete_first_login',
         body: JSON.stringify({
             email: email
@@ -116,7 +115,6 @@ app.post('/api/addfav', function (req, res) {
 
     let options = {
         method: 'POST',
-        // url: 'http://34.249.244.134/api/addfav',
         url: api_base_url + 'addfav',
         body: JSON.stringify({email: email, img_hash: img_hash}),
         json: true
@@ -143,7 +141,6 @@ app.get('/api/favorites', function (req, res) {
 
     let options = {
         method: 'GET',
-        // url: 'http://34.249.244.134/api/favorites',
         url: api_base_url + 'favorites',
         qs: {
             email: email
@@ -170,7 +167,6 @@ app.get('/api/insta_pics', function (req, res) {
 
     let options = {
         method: 'GET',
-        // url: 'http://34.249.244.134/api/insta_pics',
         url: api_base_url + 'insta_pics',
         qs: {
             email: email
@@ -366,6 +362,36 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
 });
 
 
+// Get product category, color and siamese encoding
+app.post('/api/img_features_v2', upload.single('image'), function (req, res) {
+
+    let image = req.file.path;
+
+    console.log('Image size: ', req.file.size);
+
+    let formData = {
+        image: fs.createReadStream(image),
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
+        }
+    }
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'img_features_v2',
+        formData:    formData
+    };
+
+    console.log('Img features, options: ', options);
+    request(options, handleResponse);
+});
+
+
 // Search products based on confirmation modal input
 app.post('/api/search_from_image', function (req, res) {
     let tags = req.body.tags;
@@ -379,7 +405,6 @@ app.post('/api/search_from_image', function (req, res) {
     let options = {
         method: 'POST',
         url: api_base_url + 'search_from_image',
-        // url: 'http://127.0.0.1:5000/api/search_from_image',
         body: JSON.stringify({
             tags: tags,
             color_1: color_rgb_1,
@@ -395,8 +420,40 @@ app.post('/api/search_from_image', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // let response_data = JSON.parse(body);
+            res.send(body);
+        }
+    }
 
+    request(options, handleResponse);
+});
+
+
+// Search products based on confirmation modal input
+app.post('/api/search_from_image_v2', function (req, res) {
+    let tags = req.body.tags;
+    let color_rgb_1 = req.body.color_rgb_1;
+    let color_rgb_2 = req.body.color_rgb_2;
+    let no_shop = req.body.no_shop;
+    let sex = req.body.sex;
+    let encoding_rcnn = req.body.encoding_rcnn;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'search_from_image_v2',
+        body: JSON.stringify({
+            tags: tags,
+            color_1: color_rgb_1,
+            color_2: color_rgb_2,
+            sex: sex,
+            no_shop: no_shop,
+            encoding_rcnn: encoding_rcnn
+        }),
+        json: true
+    };
+    console.log('Search from image, options: ', options);
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
             res.send(body);
         }
     }
@@ -417,8 +474,6 @@ app.get('/api/search_similar', function (req, res) {
 
     let options = {
         method: 'GET',
-        // url: 'http://34.249.244.134/api/search_similar',
-        // url: 'http://127.0.0.1:5000/api/search_similar',
         url: api_base_url + 'search_similar',
         qs: {
             img_hash: img_hash,
@@ -564,7 +619,6 @@ app.post('/api/add_look', function (req, res) {
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
             console.log('Add Look response: ', body);
-
             res.send(body);
         }
     }
@@ -586,7 +640,6 @@ app.post('/api/remove_look', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-
             res.send(body);
         }
     }
@@ -610,7 +663,6 @@ app.post('/api/get_looks', function (req, res) {
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
             console.log('GetLook response: ', body);
-
             res.send(body);
         }
     }
@@ -631,12 +683,9 @@ app.post('/api/add_outfit', function (req, res) {
         body: JSON.stringify({email: email, look_name: look_name, prod_id: prod_id}),
         json: true
     };
-    // console.log('Add Look, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Add Look response: ', body);
-
             res.send(body);
         }
     }
@@ -658,12 +707,9 @@ app.post('/api/remove_outfit', function (req, res) {
         body: JSON.stringify({email: email, look_name: look_name, prod_id: prod_id, outfit_date: outfit_date}),
         json: true
     };
-    // console.log('Add Look, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Add Look response: ', body);
-
             res.send(body);
         }
     }
@@ -684,7 +730,6 @@ app.post('/api/get_products', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Get products response: ', body);
             res.send(body);
         }
     }
@@ -705,7 +750,6 @@ app.post('/api/get_image', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Get products response: ', body);
             res.send(body);
         }
     }
@@ -726,7 +770,6 @@ app.post('/api/get_prod_hash', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Get products response: ', body);
             res.send(body);
         }
     }
@@ -748,7 +791,6 @@ app.post('/api/recommend_tags', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log('Get products response: ', body);
             res.send(body);
         }
     }
@@ -772,14 +814,12 @@ app.post('/api/recommend_random', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            // console.log(' response: ', body);
             res.send(body);
         }
     }
 
     request(options, handleResponse);
 });
-
 
 
 app.use(express.static(__dirname + './../dist/')); //serves the index.html

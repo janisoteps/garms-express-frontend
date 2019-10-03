@@ -30,7 +30,7 @@ class SearchFromImage extends React.Component  {
             colors: {},
             selectedColors: [],
             sexPickerWidth: '48px',
-            encodingNoCrop: [],
+            rcnnEncoding: [],
             posTags: [],
             negTags: [],
             noShop: [],
@@ -108,29 +108,6 @@ class SearchFromImage extends React.Component  {
             [name]: value
         });
     }
-
-    // //Submits login request to server and sets state/cookies if successful
-    // handleLoginSubmit(event) {
-    //     event.preventDefault();
-    //     let email = this.state.email;
-    //     let pwd = this.state.pwd;
-    //     fetch(window.location.origin + '/api/login', {
-    //         method: 'post',
-    //         body: JSON.stringify({email: email, pwd: pwd}),
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         }
-    //     }).then(function(response) { return response.json(); })
-    //         .then(function(data) {
-    //             console.log(data);
-    //             if (data === "OK") {
-    //                 this.setState({
-    //                     isAuth: true
-    //                 });
-    //             }
-    //         });
-    // }
 
     changeSex(sex){
         this.props.changeSex(sex);
@@ -269,19 +246,19 @@ class SearchFromImage extends React.Component  {
         }
         let data = new FormData();
         data.append('image', imageFile);
-        fetch(window.location.origin + '/api/img_features', {
+        fetch(window.location.origin + '/api/img_features_v2', {
             method: 'post',
             body: data
         }).then(response => {
             return response.json();
         }).then(data => {
-            // console.log(data);
+            console.log(data);
             this.setState({
                 colors: data.res.colors,
                 cats: data.res['img_cats_ai_txt'],
-                altCats: data.res['alt_cats_txt'],
+                // altCats: data.res['alt_cats_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
-                encodingNoCrop: data.res['encoding_nocrop'],
+                rcnnEncoding: data.res['rcnn_encoding'],
                 loading: false
             });
         });
@@ -388,7 +365,7 @@ class SearchFromImage extends React.Component  {
         let tags = this.state.posTags;
         let noShop = this.state.noShop;
         let sex = this.state.sex;
-        let encodingNoCrop = this.state.encodingNoCrop;
+        let rcnnEncoding = this.state.rcnnEncoding;
         // console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
         this.setState({
             colors: {},
@@ -396,7 +373,7 @@ class SearchFromImage extends React.Component  {
             files: [],
             loading: true
         });
-        fetch(window.location.origin + '/api/search_from_image', {
+        fetch(window.location.origin + '/api/search_from_image_v2', {
             method: 'post',
             body: JSON.stringify({
                 tags: tags,
@@ -404,7 +381,7 @@ class SearchFromImage extends React.Component  {
                 color_rgb_2: colorRgb2,
                 sex: sex,
                 no_shop: noShop,
-                encoding_nocrop: encodingNoCrop
+                encoding_rcnn: rcnnEncoding
             }),
             headers: {
                 Accept: 'application/json',
@@ -413,17 +390,17 @@ class SearchFromImage extends React.Component  {
         }).then(function(response) { return response.json(); })
             .then(data => {
                 // console.log(data);
-                let results =  data.res;
-                let prodImgShown = Object.assign(
-                    {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                        'img_count': product['prod_serial'][0]['img_urls'].length
-                        }}))
-                );
+                // let results =  data.res;
+                // let prodImgShown = Object.assign(
+                //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                //         'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                //         'img_count': product['prod_serial'][0]['img_urls'].length
+                //         }}))
+                // );
                 this.setState({
                     results: data.res,
                     loading: false,
-                    prodImgShown: prodImgShown
+                    // prodImgShown: prodImgShown
                 });
             });
     }
@@ -519,16 +496,16 @@ class SearchFromImage extends React.Component  {
         // console.log('File from URL');
         // console.log(this.state.fileFromUrl);
         // Element that shows preview of just uploaded photo
-        let preview = this.state.files.length > 0 && this.state.encodingNoCrop.length === 0 ? (
+        let preview = this.state.files.length > 0 && this.state.rcnnEncoding.length === 0 ? (
             <div className="preview-container">
                 <img onLoad={this.onImgLoad} style={previewStyle} src={this.state.files[0].preview} />
-                <div className="search-button" onClick={this.getImageFeatures}><p>search</p></div>
+                <div className="search-button" onClick={this.getImageFeatures}><p>SEARCH</p></div>
             </div>
         ) : (
             this.state.fileFromUrl &&
             <div className="preview-container">
                 <img onLoad={this.onImgLoad} style={previewStyle} src={this.state.fileFromUrl.imgUrl} />
-                <div className="search-button" onClick={() => {this.getImageFeatures()}}><p>search</p></div>
+                <div className="search-button" onClick={() => {this.getImageFeatures()}}><p>SEARCH</p></div>
             </div>
         );
 
@@ -540,9 +517,13 @@ class SearchFromImage extends React.Component  {
                 ) : (
                     <section>
                         <div className="image-search-area">
-                            <Dropzone className="image-dropzone" onDrop={(files) => this.onDrop(files)} accept="image/jpeg">
+                            <Dropzone
+                                className="image-dropzone"
+                                onDrop={(files) => this.onDrop(files)}
+                                // accept="image"
+                            >
                                 <div className="image-search-title">
-                                    <div className="image-search-icon-alt"></div>
+                                    <div className="image-search-icon-alt" />
                                     <div className="search-choice-text">Drop image here or tap to select image</div>
                                 </div>
                             </Dropzone>
@@ -616,7 +597,7 @@ class SearchFromImage extends React.Component  {
                             color_2
                         ) }}
                         results={this.state.results}
-                        prodImgShown={this.state.prodImgShown}
+                        // prodImgShown={this.state.prodImgShown}
                         setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                         setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                         selectedColors={this.state.selectedColors}
