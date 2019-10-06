@@ -421,12 +421,19 @@ class Wardrobe extends React.Component  {
                         {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
                             <h5>{outfitDict.info.currency}{outfitDict.info.salePrice}</h5>
                         </div>)}
-                        <img
-                            className="product-image" src={outfitDict.info.imgUrl}
-                            style={{
-                                marginBottom: '30px'
-                            }}
-                        />
+
+                        <Route render={({history}) => (
+                            <img
+                                className="product-image" src={outfitDict.info.imgUrl}
+                                style={{
+                                    marginBottom: '30px',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                                }}
+                            />
+                        )}/>
 
                         <Route render={({history}) => (
                             <div
