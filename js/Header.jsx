@@ -55,7 +55,17 @@ class Header extends React.Component {
             <div className="header-bar">
                 <div className="logo">
                     <h1>
-                        <Link style={{textDecoration: 'none', color: '#171732'}} to="/">Garms</Link>
+                        <Link style={{textDecoration: 'none', color: '#171732'}} to="/">
+                            <img
+                                src={require('./../images/garms_logo.png')}
+                                style={{
+                                    height: '40px',
+                                    width: 'auto',
+                                    marginTop: '5px',
+                                    marginLeft: '5px'
+                                }}
+                            />
+                        </Link>
                     </h1>
                 </div>
                 {buttons}

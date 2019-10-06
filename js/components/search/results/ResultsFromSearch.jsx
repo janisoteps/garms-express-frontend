@@ -475,7 +475,18 @@ class ResultsFromSearch extends React.Component  {
 
                 return (
                     <div>
-                        <img className="product-image" src={img_url} />
+                        <Route render={({history}) => (
+                            <img
+                                className="product-image"
+                                src={img_url}
+                                style={{
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    history.push(`/outfit-page?id=${prod_hash}`)
+                                }}
+                            />
+                        )}/>
                     </div>
                 )
             };

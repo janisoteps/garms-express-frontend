@@ -76,12 +76,20 @@ class RecommendFromTags extends React.Component  {
                                     <h6>{prodSuggestion.currency}{prodSuggestion.saleprice}</h6>
                                 </div>
                             )}
-                            <img
-                                className="product-image" src={prodSuggestion.img_url}
-                                style={{
-                                    marginBottom: '20px'
-                                }}
-                            />
+
+                            <Route render={({history}) => (
+                                <img
+                                    className="product-image" src={prodSuggestion.img_url}
+                                    style={{
+                                        marginBottom: '20px',
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => {
+                                        history.push(`/outfit-page?id=${prodSuggestion.prod_hash}`)
+                                    }}
+                                />
+                            )}/>
+
                             <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
 
                             <Route render={({history}) => (
