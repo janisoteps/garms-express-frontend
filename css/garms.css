@@ -577,6 +577,18 @@
     bottom: 0;
 }
 
+.add-outfit-cancel{
+    width: 25px;
+    height: 25px;
+    background: #FFFFFF url('../images/baseline-clear-24px.svg') no-repeat center;
+    background-size: 25px 25px;
+    border-radius: 10px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: -350px;
+}
+
 .colorcat-search-button:hover{
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
