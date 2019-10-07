@@ -59,10 +59,10 @@ class Header extends React.Component {
                             <img
                                 src={require('./../images/garms_logo.png')}
                                 style={{
-                                    height: '40px',
+                                    height: '34px',
                                     width: 'auto',
-                                    marginTop: '5px',
-                                    marginLeft: '5px'
+                                    marginTop: '8px',
+                                    marginLeft: '8px'
                                 }}
                             />
                         </Link>
