@@ -6,14 +6,62 @@ app.use(bodyParser.json());
 const path = require('path');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
+// const multerS3 = require('multer-s3');
 const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
+const sha1 = require('sha1');
+const aws = require('aws-sdk');
 
 const api_base_url = 'http://34.249.146.245/api/';
 // const api_base_url = 'http://127.0.0.1:5000/api/';
+const BUCKET_NAME = 'garms-userimages';
+const IAM_USER_KEY = process.env.IAM_USER_KEY;
+const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
 
 
 // --------------------------   MAIN API   ---------------------------------
+
+
+// Get product category, color and siamese encoding
+app.post('/api/upload_image', upload.single('image'), function (req, res) {
+    const timestamp = Date.now();
+    const imgId = sha1(`${timestamp}`);
+    const image = req.file.path;
+    const fileType = req.file.mimetype;
+    console.log(`filetype: ${fileType}`);
+    let extension = null;
+    if (fileType === 'image/jpeg') {
+        extension = 'jpg'
+    }
+    if (fileType === 'image/png') {
+        extension = 'png'
+    }
+
+    console.log('Image size: ', req.file.size);
+
+    let s3bucket = new aws.S3({
+        accessKeyId: IAM_USER_KEY,
+        secretAccessKey: IAM_USER_SECRET,
+        Bucket: BUCKET_NAME,
+    });
+
+    let params = {
+        Bucket: BUCKET_NAME,
+        Key: `${imgId}.${extension}`,
+        Body: fs.createReadStream(image),
+        ContentType: fileType,
+        ACL: 'public-read'
+    };
+
+    s3bucket.upload(params, function (err, responseData) {
+        if (err) {
+            console.log('error in callback');
+            console.log(err);
+        }
+
+        res.send(responseData['Location']);
+    });
+});
 
 
 app.post('/api/login', function (req, res) {
