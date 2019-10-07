@@ -12,6 +12,7 @@ const emailValidator = require("email-validator");
 const api_base_url = 'http://34.249.146.245/api/';
 // const api_base_url = 'http://127.0.0.1:5000/api/';
 
+
 // --------------------------   MAIN API   ---------------------------------
 
 
@@ -108,6 +109,7 @@ app.post('/api/complete_first_login', function (req, res) {
 
     request(options, handleResponse);
 });
+
 
 // Add a product favorite to users account
 app.post('/api/addfav', function (req, res) {
