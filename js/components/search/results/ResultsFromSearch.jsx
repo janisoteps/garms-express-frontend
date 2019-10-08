@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import AddOutfit from '../../wardrobe/AddOutfit';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 const categories = {
@@ -592,7 +593,7 @@ class ResultsFromSearch extends React.Component  {
                     borderRadius: '27px',
                     position: 'absolute',
                     marginTop: '-48px',
-                    right: '72px',
+                    right: '195px',
                     cursor: 'pointer'
                 };
 
@@ -611,7 +612,7 @@ class ResultsFromSearch extends React.Component  {
                     borderRadius: '27px',
                     backgroundColor: '#FFFFFF',
                     bottom: '11px',
-                    right: '72px',
+                    right: '195px',
                     position: 'absolute',
                     textAlign: 'left',
                     overflow: 'hidden'
@@ -639,9 +640,12 @@ class ResultsFromSearch extends React.Component  {
                                     this.searchSimilarImages(img_hash, color_3, color_3);
                                 }} />
                         </div>
-                        <div style={pickerStyle} onClick={() => {
-                            this.expandDrawer(img_hash, this.state.pickerExpanded);
-                        }} />
+                        <Tooltip title="Search By Color">
+                            <div
+                                style={pickerStyle}
+                                onClick={() => {this.expandDrawer(img_hash, this.state.pickerExpanded);}}
+                            />
+                        </Tooltip>
                     </div>
                 )
             };
@@ -666,12 +670,12 @@ class ResultsFromSearch extends React.Component  {
                         <div style={catPickerDrawerStyle}>
                             {tagItems}
                         </div>
-                        <div className="cat-picker-bubble" onClick={() => {
-                            this.expandCatDrawer(prod_id, this.state.catPickerExpanded);
-                        }}>
-                            {/*<div className="cat-picker-bubble-plus"/>*/}
-                            {/*<div className="cat-picker-bubble-minus"/>*/}
-                        </div>
+                        <Tooltip title="Add Or Remove Tags">
+                            <div
+                                className="cat-picker-bubble"
+                                onClick={() => {this.expandCatDrawer(prod_id, this.state.catPickerExpanded);}}
+                            />
+                        </Tooltip>
                     </div>
                 )
             };
@@ -685,25 +689,38 @@ class ResultsFromSearch extends React.Component  {
                         {sale ? currency+saleprice+', was '+currency+price : currency+price}
                         </div>
                     <div className="prod-description">{description}</div>
-                    <div className="search-similar" onClick={() => {
-                        this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
-                        this.searchSimilarImages(fst_img_hash, fst_img_color, this.props.selectedColors[1]);
-                    }} />
-                    <ColorPicker />
+                    <Tooltip title="Search Similar Items" >
+                        <div
+                            className="search-similar"
+                            onClick={() => {
+                                this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
+                                this.searchSimilarImages(fst_img_hash, fst_img_color, this.props.selectedColors[1]);
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Search By Color" >
+                        <ColorPicker />
+                    </Tooltip>
                     <TagPicker/>
                     {(this.state.isAuth === "true") ? (
-                        <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
+                        <Tooltip title="Add To Favorites" >
+                            <div className="add-to-favorites" onClick={() => { this.showLookList(fst_img_hash) }} />
+                        </Tooltip>
                     ) : (
                         <Route render={({history}) => (
-                            <div
-                                className="add-to-favorites"
-                                onClick={() => {
-                                    history.push(`/register-from-result?id=${fst_img_hash}`)
-                                }}
-                            />
+                            <Tooltip title="Add To Favorites" >
+                                <div
+                                    className="add-to-favorites"
+                                    onClick={() => {
+                                        history.push(`/register-from-result?id=${fst_img_hash}`)
+                                    }}
+                                />
+                            </Tooltip>
                         )}/>
                     )}
-                    <div className="buy-now" onClick={() => {this.buyNow(prod_url)}}/>
+                    <Tooltip title="Buy Now" >
+                        <div className="buy-now" onClick={() => {this.buyNow(prod_url)}}/>
+                    </Tooltip>
                 </Paper>
             );
         });

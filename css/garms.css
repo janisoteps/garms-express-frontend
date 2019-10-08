@@ -311,7 +311,7 @@
     text-align: center;
     margin: 15px;
     width: 80vw;
-    max-width: 580px;
+    max-width: 400px;
     padding-top: 15px;
     padding-bottom: 15px;
     display: inline-block;
@@ -394,25 +394,25 @@
 .add-to-favorites{
     width: 54px;
     height: 54px;
-    background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
-    /*filter: invert(100%);*/
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 54px 54px;
     border-radius: 27px;
     position: absolute;
     margin-top: -48px;
-    right: 195px;
+    right: 72px;
     cursor: pointer;
 }
 
 .add-to-favorites-wardrobe{
     width: 54px;
     height: 54px;
-    background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
-    /*filter: invert(100%);*/
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 54px 54px;
     border-radius: 27px;
     position: absolute;
-    margin-top: -48px;
+    margin-top: -60px;
     right: 15px;
     cursor: pointer;
 }
@@ -437,8 +437,8 @@
     border-radius: 27px;
     position: absolute;
     margin-top: -48px;
-    right: 256px;
     cursor: pointer;
+    right: 10px;
 }
 
 .color-picker{
@@ -523,7 +523,7 @@
     border-radius: 27px;
     position: absolute;
     margin-top: -48px;
-    right: 10px;
+    right: 256px;
     cursor: pointer;
 }
 
@@ -535,7 +535,7 @@
     background-size: 42px 42px;
     border-radius: 27px;
     position: absolute;
-    margin-top: -48px;
+    margin-top: -60px;
     right: 82px;
     cursor: pointer;
 }
@@ -675,14 +675,19 @@
 }
 
 .favorites-button{
-    background: url('../images/hanger_small.png') no-repeat center;
+    /*background: url('../images/hanger_small.png') no-repeat center;*/
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 40px 40px;
-    width: 48px;
-    height: 48px;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
     display: inline-block;
     opacity : 0.8;
     cursor: pointer;
     margin-right: 10px;
+    position: relative;
+    top: -4px;
 }
 
 .add-look-button{
@@ -795,7 +800,7 @@
     background-size: 42px 42px;
     border-radius: 27px;
     position: absolute;
-    bottom: 65px;
+    bottom: 75px;
     right: 15px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);

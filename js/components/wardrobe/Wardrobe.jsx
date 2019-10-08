@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import AddOutfit from './AddOutfit';
 import RecommendFromTags from './../recommend/RecommendFromTags';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class Wardrobe extends React.Component  {
@@ -436,12 +437,14 @@ class Wardrobe extends React.Component  {
                         )}/>
 
                         <Route render={({history}) => (
-                            <div
-                                className="search-similar-recommend"
-                                onClick={() => {
-                                    history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
-                                }}
-                            />
+                            <Tooltip title="Search Similar Items" >
+                                <div
+                                    className="search-similar-recommend"
+                                    onClick={() => {
+                                        history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                    }}
+                                />
+                            </Tooltip>
                         )}/>
 
                         <a
@@ -451,12 +454,14 @@ class Wardrobe extends React.Component  {
                             <h5>{outfitDict.info.brand} from {outfitDict.info.shop}</h5>
                             <h5>Open in shop</h5>
                         </a>
-                        <div
-                            className="profile-product-delete"
-                            onClick={() => {
-                                this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
-                            }}
-                        />
+                        <Tooltip title="Delete From Favorites" >
+                            <div
+                                className="profile-product-delete"
+                                onClick={() => {
+                                    this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
+                                }}
+                            />
+                        </Tooltip>
                     </Paper>
                 )
             }

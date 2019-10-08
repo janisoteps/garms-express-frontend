@@ -540,7 +540,7 @@ class SearchFromImage extends React.Component  {
                 ) : (
                     <section>
                         <div className="image-search-area">
-                            <Dropzone className="image-dropzone" onDrop={(files) => this.onDrop(files)} accept="image/jpeg">
+                            <Dropzone className="image-dropzone" onDrop={(files) => this.onDrop(files)} accept="">
                                 <div className="image-search-title">
                                     <div className="image-search-icon-alt"></div>
                                     <div className="search-choice-text">Drop image here or tap to select image</div>
