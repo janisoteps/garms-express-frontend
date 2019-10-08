@@ -50,16 +50,6 @@ class SearchChoice extends React.Component {
             <MuiThemeProvider>
                 <div>
                     <div className="search-choice">
-                        <Route render={({ history }) => (
-                            <div
-                                className="search-choice-button-type"
-                                onClick={() => { history.push('/textsearch') }}>
-                                <div className="search-choice-title">
-                                    <div className="text-search-icon"></div>
-                                    <div className="search-choice-text">Type your search</div>
-                                </div>
-                            </div>
-                        )} />
 
                         <Route render={({ history }) => (
                             <div
@@ -68,6 +58,17 @@ class SearchChoice extends React.Component {
                                 <div className="search-choice-title">
                                     <div className="image-search-icon"></div>
                                     <div className="search-choice-text">Search from photo</div>
+                                </div>
+                            </div>
+                        )} />
+
+                        <Route render={({ history }) => (
+                            <div
+                                className="search-choice-button-type"
+                                onClick={() => { history.push('/textsearch') }}>
+                                <div className="search-choice-title">
+                                    <div className="text-search-icon"></div>
+                                    <div className="search-choice-text">Type your search</div>
                                 </div>
                             </div>
                         )} />
