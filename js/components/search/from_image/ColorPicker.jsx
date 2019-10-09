@@ -1,6 +1,7 @@
 import React from 'react';
 import { SwatchesPicker } from 'react-color';
 import {isMobile} from 'react-device-detect';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class ColorPicker extends React.Component {
@@ -61,16 +62,19 @@ class ColorPicker extends React.Component {
                     cursor: 'pointer'
                 };
                 return(
-                    <div
-                        key={key}
-                        style={colorWidgetStyle}
-                        onClick={() => {
-                            this.setState({
-                                showColorPicker: true,
-                                pickerIndex: index
-                            })
-                        }}
-                    />
+                    <div key={key}>
+                        <Tooltip title="Change Searched Color">
+                            <div
+                                style={colorWidgetStyle}
+                                onClick={() => {
+                                    this.setState({
+                                        showColorPicker: true,
+                                        pickerIndex: index
+                                    })
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
                 )
             });
 
