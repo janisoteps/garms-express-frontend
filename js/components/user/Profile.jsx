@@ -5,7 +5,6 @@ import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import Paper from 'material-ui/Paper';
-import PriceFilter from './../search/results/PriceFilter';
 
 
 class Profile extends React.Component  {
@@ -192,7 +191,6 @@ class Profile extends React.Component  {
 
                     <br />
                     <br />
-                    <PriceFilter range={rangeVal} updateRange={this.updateRange} />
                 </div>
             </MuiThemeProvider>
         )
