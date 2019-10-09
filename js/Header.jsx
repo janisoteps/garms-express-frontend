@@ -4,6 +4,8 @@ require('../css/garms.css');
 import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router-dom';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 class Header extends React.Component {
     constructor(props) {
@@ -24,16 +26,20 @@ class Header extends React.Component {
                     {/*</div>*/}
                 {/*)}/>*/}
                 <Route render={({history}) => (
-                    <div className="profile-button" onClick={() => {
-                        history.push('/profile')
-                    }}>
-                    </div>
+                    <Tooltip title="Your Profile">
+                        <div className="profile-button" onClick={() => {
+                            history.push('/profile')
+                        }}>
+                        </div>
+                    </Tooltip>
                 )}/>
                 <Route render={({history}) => (
-                    <div className="favorites-button" onClick={() => {
-                        history.push('/wardrobe')
-                    }}>
-                    </div>
+                    <Tooltip title="Your Favorites">
+                        <div className="favorites-button" onClick={() => {
+                            history.push('/wardrobe')
+                        }}>
+                        </div>
+                    </Tooltip>
                 )}/>
             </div>
         ) : (

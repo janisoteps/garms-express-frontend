@@ -12,6 +12,7 @@ import ColorPicker from '../from_image/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
+import PriceFilter from './../results/PriceFilter';
 
 
 //Component to search for products using text input
@@ -42,7 +43,8 @@ class SearchFromId extends React.Component  {
             moreSuggestions: [],
             noShop: [],
             firstLogin: this.props.firstLogin,
-            imgHash: null
+            imgHash: null,
+            rangeVal: 500
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -58,6 +60,7 @@ class SearchFromId extends React.Component  {
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
+        this.updateRange = this.updateRange.bind(this);
     }
 
     componentDidMount() {
@@ -171,6 +174,7 @@ class SearchFromId extends React.Component  {
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
         let searchString = window.location.origin + '/api/search_similar?'
             + 'img_hash=' + imgHash
             + '&tags_positive=' + posTags
@@ -178,7 +182,8 @@ class SearchFromId extends React.Component  {
             + '&color_1=' + color_1
             + '&color_2=' + color_2
             + '&sex=' + sex
-            + '&no_shop=' + noShop;
+            + '&no_shop=' + noShop
+            + '&max_price=' + maxPrice;
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
@@ -431,8 +436,15 @@ class SearchFromId extends React.Component  {
         });
     }
 
+    updateRange(val) {
+        this.setState({
+            rangeVal: val
+        })
+    }
+
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
     render () {
+        const rangeVal = this.state.rangeVal;
         // Render a spinner if loading state is true
         let Spinner = () => {
             return(
@@ -625,6 +637,12 @@ class SearchFromId extends React.Component  {
                     }
 
                     <NoResults />
+
+                    <PriceFilter
+                        range={rangeVal}
+                        updateRange={this.updateRange}
+                        loading={this.state.loading}
+                    />
 
                     <TagCloud
                         posTags={this.state.posTags}

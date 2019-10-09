@@ -7,12 +7,13 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-import SexSelector from '../results/SexSelector';
+// import SexSelector from '../results/SexSelector';
 import TagCloud from '../results/TagCloud';
 import ColorPicker from '../from_image/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
+import PriceFilter from './../results/PriceFilter';
 
 
 //Component to search for products using text input
@@ -44,7 +45,8 @@ class TextSearch extends React.Component  {
             mainSuggestion: null,
             moreSuggestions: [],
             noShop: [],
-            firstLogin: this.props.firstLogin
+            firstLogin: this.props.firstLogin,
+            rangeVal: 500
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -60,6 +62,7 @@ class TextSearch extends React.Component  {
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
+        this.updateRange = this.updateRange.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -142,6 +145,7 @@ class TextSearch extends React.Component  {
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
         let searchString = window.location.origin + '/api/search_similar?'
             + 'img_hash=' + imgHash
             + '&tags_positive=' + posTags
@@ -149,7 +153,8 @@ class TextSearch extends React.Component  {
             + '&color_1=' + color_1
             + '&color_2=' + color_2
             + '&sex=' + sex
-            + '&no_shop=' + noShop;
+            + '&no_shop=' + noShop
+            + '&max_price=' + maxPrice;
         // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
@@ -418,6 +423,12 @@ class TextSearch extends React.Component  {
         });
     }
 
+    updateRange(val) {
+        this.setState({
+            rangeVal: val
+        })
+    }
+
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
     render () {
         // Render a spinner if loading state is true
@@ -582,6 +593,8 @@ class TextSearch extends React.Component  {
             </div>
         );
 
+        const rangeVal = this.state.rangeVal;
+
         return(
             <MuiThemeProvider>
                 <div>
@@ -608,11 +621,16 @@ class TextSearch extends React.Component  {
                                     selectedColors={this.state.selectedColors}
                                 />
 
-                                <SexSelector
-                                    sex={this.state.sex}
-                                    sexPickerWidth={this.state.sexPickerWidth}
-                                    changeSex={(sex) => {this.changeSex(sex)}}
-                                    expandSexSelector={() => {this.expandSexSelector()}}
+                                {/*<SexSelector*/}
+                                    {/*sex={this.state.sex}*/}
+                                    {/*sexPickerWidth={this.state.sexPickerWidth}*/}
+                                    {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
+                                    {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
+                                {/*/>*/}
+                                <PriceFilter
+                                    range={rangeVal}
+                                    updateRange={this.updateRange}
+                                    loading={this.state.loading}
                                 />
                             </div>
                         ) : (

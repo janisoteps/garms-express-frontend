@@ -464,6 +464,7 @@ app.get('/api/search_similar', function (req, res) {
     let color_2 = req.query.color_2;
     let no_shop = req.query.no_shop;
     let sex = req.query.sex;
+    let max_price = req.query.max_price;
 
     let options = {
         method: 'GET',
@@ -477,7 +478,8 @@ app.get('/api/search_similar', function (req, res) {
             color_1: color_1,
             color_2: color_2,
             sex: sex,
-            no_shop: no_shop
+            no_shop: no_shop,
+            max_price: max_price
         }
     };
 

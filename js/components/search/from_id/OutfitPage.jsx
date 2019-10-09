@@ -47,7 +47,7 @@ class OutfitPage extends React.Component  {
                 return response.json();
             }).then(data => {
                 const prod_data = data[0];
-                console.log(prod_data);
+                // console.log(prod_data);
                 this.setState({
                     prodData: prod_data[0],
                     shownImg: prod_data[0].img_urls[0],
