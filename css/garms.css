@@ -101,7 +101,7 @@
 .search-choice-button-type{
     width: 100%;
     height: calc(20vh - 25px);
-    background: url('../images/image-type.jpg') no-repeat center;
+    background: url('../images/search_choice_type.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
     text-align: center;
@@ -110,7 +110,7 @@
 .search-choice-button-image{
     width: 100%;
     height: calc(20vh - 25px);
-    background: url('../images/image-photo.jpg') no-repeat center;
+    background: url('../images/search_choice_photo.jpg') no-repeat center;
     background-size: cover;
     display: inline-block;
     text-align: center;
@@ -225,6 +225,7 @@
     background-size: 48px 48px;
     width: 64px;
     height: 64px;
+    border-radius: 4px;
 }
 
 .search-choice-text{
@@ -238,7 +239,7 @@
     .search-choice-button-type{
         width: 50%;
         height: calc(30vh - 25px);
-        background: url('../images/image-type.jpg') no-repeat center;
+        background: url('../images/search_choice_type.jpg') no-repeat center;
         background-size: cover;
         display: inline-block;
         text-align: center;
@@ -247,7 +248,7 @@
     .search-choice-button-image{
         width: 50%;
         height: calc(30vh - 25px);
-        background: url('../images/image-photo.jpg') no-repeat center;
+        background: url('../images/search_choice_photo.jpg') no-repeat center;
         background-size: cover;
         display: inline-block;
         text-align: center;
@@ -1297,6 +1298,7 @@ div #output {
     background: #11161A;
     height: 6px;
     width: 350px;
+    max-width: calc(90vw - 65px);
     border-radius: 5px;
 }
 #range::-webkit-slider-thumb {
