@@ -11,6 +11,7 @@ import Profile from './components/user/Profile'
 import Explorer from './components/search/from_explore/Explorer'
 import SearchFromImage from './components/search/from_image/SearchFromImage'
 import SearchFromId from './components/search/from_id/SearchFromId'
+import OutfitPage from './components/search/from_id/OutfitPage'
 
 
 // The Main component renders one of the provided
@@ -124,6 +125,17 @@ class Main extends React.Component {
                                isAuth={this.props.isAuth}
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
+                               firstLogin={this.props.firstLogin}
+                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                           />}
+                    />
+                    <Route path='/outfit-page'
+                           render={(props) => <OutfitPage
+                               {...props}
+                               username={this.props.username}
+                               sex={this.props.sex}
+                               isAuth={this.props.isAuth}
+                               email={this.props.email}
                                firstLogin={this.props.firstLogin}
                                completeFirstLogin={() => {this.props.completeFirstLogin()}}
                            />}

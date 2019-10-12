@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import AddOutfit from './AddOutfit';
 import RecommendFromTags from './../recommend/RecommendFromTags';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class Wardrobe extends React.Component  {
@@ -421,20 +422,29 @@ class Wardrobe extends React.Component  {
                         {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
                             <h5>{outfitDict.info.currency}{outfitDict.info.salePrice}</h5>
                         </div>)}
-                        <img
-                            className="product-image" src={outfitDict.info.imgUrl}
-                            style={{
-                                marginBottom: '30px'
-                            }}
-                        />
 
                         <Route render={({history}) => (
-                            <div
-                                className="search-similar-recommend"
+                            <img
+                                className="product-image" src={outfitDict.info.imgUrl}
+                                style={{
+                                    marginBottom: '30px',
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
-                                    history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
                                 }}
                             />
+                        )}/>
+
+                        <Route render={({history}) => (
+                            <Tooltip title="Search Similar Items" >
+                                <div
+                                    className="search-similar-recommend"
+                                    onClick={() => {
+                                        history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                    }}
+                                />
+                            </Tooltip>
                         )}/>
 
                         <a
@@ -444,12 +454,14 @@ class Wardrobe extends React.Component  {
                             <h5>{outfitDict.info.brand} from {outfitDict.info.shop}</h5>
                             <h5>Open in shop</h5>
                         </a>
-                        <div
-                            className="profile-product-delete"
-                            onClick={() => {
-                                this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
-                            }}
-                        />
+                        <Tooltip title="Delete From Favorites" >
+                            <div
+                                className="profile-product-delete"
+                                onClick={() => {
+                                    this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
+                                }}
+                            />
+                        </Tooltip>
                     </Paper>
                 )
             }

@@ -6,13 +6,14 @@ import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ColorChoiceModal from './ColorChoiceModal';
-import SexSelector from '../results/SexSelector';
+// import SexSelector from '../results/SexSelector';
 import ResultsFromSearch from '../results/ResultsFromSearch';
 import TagCloud from '../results/TagCloud';
 import ColorPicker from './ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
+import PriceFilter from './../results/PriceFilter';
 
 
 //Component to search for products using an uploaded image
@@ -39,7 +40,8 @@ class SearchFromImage extends React.Component  {
             viewPortWidth: null,
             viewPortHeight: null,
             previewImgDims: {},
-            firstLogin: this.props.firstLogin
+            firstLogin: this.props.firstLogin,
+            rangeVal: 500
         };
 
         this.changeSex = this.changeSex.bind(this);
@@ -53,6 +55,7 @@ class SearchFromImage extends React.Component  {
         this.uploadFromUrl = this.uploadFromUrl.bind(this);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.onImgLoad = this.onImgLoad.bind(this);
+        this.updateRange = this.updateRange.bind(this);
     }
 
     componentDidMount() {
@@ -415,6 +418,7 @@ class SearchFromImage extends React.Component  {
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
         let searchString = window.location.origin + '/api/search_similar?'
             + 'img_hash=' + imgHash
             + '&tags_positive=' + posTags
@@ -422,7 +426,8 @@ class SearchFromImage extends React.Component  {
             + '&color_1=' + color_1
             + '&color_2=' + color_2
             + '&sex=' + sex
-            + '&no_shop=' + noShop;
+            + '&no_shop=' + noShop
+            + '&max_price=' + maxPrice;
         // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
@@ -476,14 +481,16 @@ class SearchFromImage extends React.Component  {
         }
     }
 
+    updateRange(val) {
+        this.setState({
+            rangeVal: val
+        })
+    }
+
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
-        // console.log(`viewportHeight: ${this.state.viewPortHeight}\n`
-        //     + `viewportWidth: ${this.state.viewPortWidth}\n`
-        //     + `imageHeight: ${this.state.previewImgDims.height}\n`
-        //     + `imageWidth: ${this.state.previewImgDims.width}\n`
-        // );
+        const rangeVal = this.state.rangeVal;
         // console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
         let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
         < this.state.viewPortWidth - this.state.previewImgDims.width ? {
@@ -520,7 +527,7 @@ class SearchFromImage extends React.Component  {
                             <Dropzone
                                 className="image-dropzone"
                                 onDrop={(files) => this.onDrop(files)}
-                                // accept="image"
+                                accept=""
                             >
                                 <div className="image-search-title">
                                     <div className="image-search-icon-alt" />
@@ -604,11 +611,16 @@ class SearchFromImage extends React.Component  {
                         firstLogin={this.props.firstLogin}
                     />
 
-                    <SexSelector
-                        sex={this.state.sex}
-                        sexPickerWidth={this.state.sexPickerWidth}
-                        changeSex={(sex) => {this.changeSex(sex)}}
-                        expandSexSelector={() => {this.expandSexSelector()}}
+                    {/*<SexSelector*/}
+                        {/*sex={this.state.sex}*/}
+                        {/*sexPickerWidth={this.state.sexPickerWidth}*/}
+                        {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
+                        {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
+                    {/*/>*/}
+                    <PriceFilter
+                        range={rangeVal}
+                        updateRange={this.updateRange}
+                        loading={this.state.loading}
                     />
                 </div>
             ) : (

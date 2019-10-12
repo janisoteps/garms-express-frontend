@@ -4,6 +4,7 @@ require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class RecommendFromTags extends React.Component  {
@@ -76,21 +77,32 @@ class RecommendFromTags extends React.Component  {
                                     <h6>{prodSuggestion.currency}{prodSuggestion.saleprice}</h6>
                                 </div>
                             )}
-                            <img
-                                className="product-image" src={prodSuggestion.img_url}
-                                style={{
-                                    marginBottom: '20px'
-                                }}
-                            />
-                            <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
 
                             <Route render={({history}) => (
-                                <div
-                                    className="search-similar-recommend"
+                                <img
+                                    className="product-image" src={prodSuggestion.img_url}
+                                    style={{
+                                        marginBottom: '20px',
+                                        cursor: 'pointer'
+                                    }}
                                     onClick={() => {
-                                        history.push(`/search-from-id?id=${imgHash}`)
+                                        history.push(`/outfit-page?id=${prodSuggestion.prod_hash}`)
                                     }}
                                 />
+                            )}/>
+
+                            <Tooltip title="Add To Favorites" >
+                                <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
+                            </Tooltip>
+                            <Route render={({history}) => (
+                                <Tooltip title="Search Similar Items" >
+                                    <div
+                                        className="search-similar-recommend"
+                                        onClick={() => {
+                                            history.push(`/search-from-id?id=${imgHash}`)
+                                        }}
+                                    />
+                                </Tooltip>
                             )}/>
 
                             <br />

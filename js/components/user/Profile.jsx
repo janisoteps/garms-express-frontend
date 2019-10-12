@@ -4,7 +4,7 @@ require('../../../css/garms.css');
 import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Paper from 'material-ui/Paper';
+// import Paper from 'material-ui/Paper';
 
 
 class Profile extends React.Component  {
@@ -17,12 +17,14 @@ class Profile extends React.Component  {
             insta_pics: null,
             insta_username: null,
             insta_username_prompt: 'Your Instagram username',
-            loaded: false
+            loaded: false,
+            rangeVal: 0
         };
 
         this.changeInstaUsername = this.changeInstaUsername.bind(this);
         this.saveInstaUsername = this.saveInstaUsername.bind(this);
         this.getInstaPicks = this.getInstaPicks.bind(this);
+        this.updateRange = this.updateRange.bind(this);
     }
 
     componentDidMount() {
@@ -79,9 +81,16 @@ class Profile extends React.Component  {
             });
     }
 
+    updateRange(val) {
+        this.setState({
+            rangeVal: val
+        })
+    }
+
 
     // --------------------- MAIN RENDER ---------------------
     render () {
+        const rangeVal = this.state.rangeVal;
         const logOutButton = this.state.isAuth === "true" ? (
             <Route render={({ history }) => (
                 <RaisedButton className="login-button" label="Log Out" onClick={() => { history.push('/logout') }} />
@@ -97,59 +106,59 @@ class Profile extends React.Component  {
             marginTop: '70px'
         };
 
-        let insta_tiles = this.state.insta_pics && this.state.insta_pics !== 0 ? this.state.insta_pics.reverse().map(insta => {
-            let insta_pic = insta[0];
-            let mediaType = insta_pic.media_type;
-            let mediaUrl = insta_pic.media_url;
-            let mediaPermalink = insta_pic.media_permalink;
-            let mediaId = insta_pic.media_id;
-            let ownerUsername = insta_pic.owner_username;
+        // let insta_tiles = this.state.insta_pics && this.state.insta_pics !== 0 ? this.state.insta_pics.reverse().map(insta => {
+        //     let insta_pic = insta[0];
+        //     let mediaType = insta_pic.media_type;
+        //     let mediaUrl = insta_pic.media_url;
+        //     let mediaPermalink = insta_pic.media_permalink;
+        //     let mediaId = insta_pic.media_id;
+        //     let ownerUsername = insta_pic.owner_username;
+        //
+        //     if (mediaType === 'IMAGE') {
+        //         return (
+        //             <Paper zDepth={1} className="profile-product-tile" key={mediaId}>
+        //                 <a href={mediaPermalink} target="_blank">Image by {ownerUsername} on Instagram</a>
+        //                 <img className="product-image" src={mediaUrl} />
+        //                 <Route render={({ history }) => (
+        //                     <div
+        //                         style={{marginTop: '15px', cursor: 'pointer'}}
+        //                         onClick={() => { history.push('/search-from-image?=' + encodeURIComponent(mediaUrl)) }}
+        //                     >
+        //                         <div className="search-from-url" /> <h4>Search from this image</h4>
+        //                     </div>
+        //                 )} />
+        //             </Paper>
+        //         )
+        //     }
+        // }) : null;
+        //
+        // let instaPrompt = null;
+        // if (!this.state.loaded) {
+        //     instaPrompt = <p>Loading your Instagram picks</p>
+        // } else if (!this.state.insta_username) {
+        //     instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        // } else if (!this.state.insta_pics) {
+        //     instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        // } else if (this.state.insta_pics.length === 0) {
+        //     instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
+        // } else {
+        //     instaPrompt = null;
+        // }
 
-            if (mediaType === 'IMAGE') {
-                return (
-                    <Paper zDepth={1} className="profile-product-tile" key={mediaId}>
-                        <a href={mediaPermalink} target="_blank">Image by {ownerUsername} on Instagram</a>
-                        <img className="product-image" src={mediaUrl} />
-                        <Route render={({ history }) => (
-                            <div
-                                style={{marginTop: '15px', cursor: 'pointer'}}
-                                onClick={() => { history.push('/search-from-image?=' + encodeURIComponent(mediaUrl)) }}
-                            >
-                                <div className="search-from-url" /> <h4>Search from this image</h4>
-                            </div>
-                        )} />
-                    </Paper>
-                )
-            }
-        }) : null;
-
-        let instaPrompt = null;
-        if (!this.state.loaded) {
-            instaPrompt = <p>Loading your Instagram picks</p>
-        } else if (!this.state.insta_username) {
-            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
-        } else if (!this.state.insta_pics) {
-            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
-        } else if (this.state.insta_pics.length === 0) {
-            instaPrompt = <p>Find any image you like on Instagram and comment @garms.io to shop from it</p>
-        } else {
-            instaPrompt = null;
-        }
-
-        // console.log('Insta pics length: ', this.state.insta_pics && this.state.insta_pics.length);
-        let instaList = null;
-        if (this.state.insta_pics && this.state.insta_pics.length > 0) {
-            instaList = insta_tiles;
-        }
-
-        let saveBtnStyle = {
-            color: 'white',
-            backgroundColor: 'black',
-            borderWidth: '0px',
-            borderRadius: '4px',
-            marginLeft: '10px',
-            cursor: 'pointer'
-        };
+        // // console.log('Insta pics length: ', this.state.insta_pics && this.state.insta_pics.length);
+        // let instaList = null;
+        // if (this.state.insta_pics && this.state.insta_pics.length > 0) {
+        //     instaList = insta_tiles;
+        // }
+        //
+        // let saveBtnStyle = {
+        //     color: 'white',
+        //     backgroundColor: 'black',
+        //     borderWidth: '0px',
+        //     borderRadius: '4px',
+        //     marginLeft: '10px',
+        //     cursor: 'pointer'
+        // };
 
         return (
             <MuiThemeProvider>
@@ -179,6 +188,9 @@ class Profile extends React.Component  {
                     <br />
                     <br />
                     {logOutButton}
+
+                    <br />
+                    <br />
                 </div>
             </MuiThemeProvider>
         )

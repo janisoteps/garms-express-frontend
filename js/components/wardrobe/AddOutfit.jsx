@@ -21,6 +21,7 @@ class AddOutfit extends React.Component  {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addOutfitToLook = this.addOutfitToLook.bind(this);
         this.addLook = this.addLook.bind(this);
+        this.cancelAddOutfit = this.cancelAddOutfit.bind(this);
     }
 
     componentDidMount() {
@@ -125,6 +126,10 @@ class AddOutfit extends React.Component  {
             });
     };
 
+    cancelAddOutfit = () => {
+        this.props.addOutfitComplete();
+    };
+
     //############################# MAIN RENDER FUNCTION ################################
     render () {
         const lookList = this.state.looks.map(lookDict => {
@@ -203,6 +208,10 @@ class AddOutfit extends React.Component  {
                                     paddingTop: '-100px'
                                 }}
                             >
+                                <div
+                                    className="add-outfit-cancel"
+                                    onClick={() => {this.cancelAddOutfit()}}
+                                />
                                 <h3>Add To Look</h3>
                                 <br />
                                 {(this.state.looks.length > 0) ? (lookList) : (

@@ -1,6 +1,7 @@
 // TagCloud.jsx
 import React from 'react';
 require('../../../../css/garms.css');
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class TagCloud extends React.Component {
@@ -16,29 +17,35 @@ class TagCloud extends React.Component {
     render() {
         let posTags = this.props.posTags.map(tag => {
             return (
-                <div
-                    className="pos-tags-tile"
-                    key={tag}
-                    onClick={() => {this.removeTag(tag, 'positive')}}
-                >
-                    {/*<div className="explorer-brand-remove"/>*/}
-                    <div className="explorer-brand-tile-title">
-                        {tag}
-                    </div>
+                <div key={tag}>
+                    <Tooltip title="Remove Positive Tag">
+                        <div
+                            className="pos-tags-tile"
+                            onClick={() => {this.removeTag(tag, 'positive')}}
+                        >
+                            {/*<div className="explorer-brand-remove"/>*/}
+                            <div className="explorer-brand-tile-title">
+                                {tag}
+                            </div>
+                        </div>
+                    </Tooltip>
                 </div>
             )
         });
         let negTags = this.props.negTags.map(tag => {
             return (
-                <div
-                    className="neg-tags-tile"
-                    key={tag}
-                    onClick={() => {this.removeTag(tag, 'negative');}}
-                >
-                    {/*<div className="explorer-brand-remove"/>*/}
-                    <div className="explorer-brand-tile-title">
-                        {tag}
-                    </div>
+                <div key={tag}>
+                    <Tooltip title="Remove Negative Tag">
+                        <div
+                            className="neg-tags-tile"
+                            onClick={() => {this.removeTag(tag, 'negative');}}
+                        >
+                            {/*<div className="explorer-brand-remove"/>*/}
+                            <div className="explorer-brand-tile-title">
+                                {tag}
+                            </div>
+                        </div>
+                    </Tooltip>
                 </div>
             )
         });

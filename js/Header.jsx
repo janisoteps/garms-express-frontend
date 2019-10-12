@@ -4,6 +4,8 @@ require('../css/garms.css');
 import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router-dom';
 import {Route} from 'react-router-dom';
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 class Header extends React.Component {
     constructor(props) {
@@ -17,23 +19,27 @@ class Header extends React.Component {
         // console.log('header state: ', this.state);
         const buttons = this.state.isAuth === "true" ? (
             <div style={{width: '100vw'}}>
+                {/*<Route render={({history}) => (*/}
+                    {/*<div className="home-button" onClick={() => {*/}
+                        {/*history.push('/')*/}
+                    {/*}}>*/}
+                    {/*</div>*/}
+                {/*)}/>*/}
                 <Route render={({history}) => (
-                    <div className="home-button" onClick={() => {
-                        history.push('/')
-                    }}>
-                    </div>
+                    <Tooltip title="Your Profile">
+                        <div className="profile-button" onClick={() => {
+                            history.push('/profile')
+                        }}>
+                        </div>
+                    </Tooltip>
                 )}/>
                 <Route render={({history}) => (
-                    <div className="profile-button" onClick={() => {
-                        history.push('/profile')
-                    }}>
-                    </div>
-                )}/>
-                <Route render={({history}) => (
-                    <div className="favorites-button" onClick={() => {
-                        history.push('/wardrobe')
-                    }}>
-                    </div>
+                    <Tooltip title="Your Favorites">
+                        <div className="favorites-button" onClick={() => {
+                            history.push('/wardrobe')
+                        }}>
+                        </div>
+                    </Tooltip>
                 )}/>
             </div>
         ) : (
@@ -55,7 +61,17 @@ class Header extends React.Component {
             <div className="header-bar">
                 <div className="logo">
                     <h1>
-                        <Link style={{textDecoration: 'none', color: '#171732'}} to="/">Garms</Link>
+                        <Link style={{textDecoration: 'none', color: '#171732'}} to="/">
+                            <img
+                                src={require('./../images/garms_logo.png')}
+                                style={{
+                                    height: '34px',
+                                    width: 'auto',
+                                    marginTop: '8px',
+                                    marginLeft: '8px'
+                                }}
+                            />
+                        </Link>
                     </h1>
                 </div>
                 {buttons}
