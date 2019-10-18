@@ -435,17 +435,17 @@ class SearchFromImage extends React.Component  {
             return response.json();
         }).then(data => {
             // console.log(data);
-            let results =  data.res;
-            let prodImgShown = Object.assign(
-                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                        'img_count': product['prod_serial'][0]['img_urls'].length
-                    }}))
-            );
+            // let results =  data.res;
+            // let prodImgShown = Object.assign(
+            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_id']]: {
+            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['image_urls'].length)),
+            //             'img_count': product['prod_serial'][0]['image_urls'].length
+            //         }}))
+            // );
+            console.log(data.res);
             this.setState({
                 results: data.res,
-                loading: false,
-                prodImgShown: prodImgShown
+                loading: false
             });
             window.scrollTo({
                 top: 0,

@@ -120,13 +120,13 @@ class ColorChoiceModal extends React.Component{
                                 }
                             </div>
                             <br/>
-                            <h3>Click all colors to search for:</h3>
+                            <p>choose which color to search for:</p>
                             <div style={colorStyle1} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_1, 'cat':''})} />
                             <div style={colorStyle2} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_2, 'cat':''})} />
                             <div style={colorStyle3} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_3, 'cat':''})} />
                             <br/>
                             <br/>
-                            <h3>Click all tags to search for:</h3>
+                            <p>choose which tags to search for:</p>
                             <div className="main-cat-selection">
                                 {mainCats}
                             </div>

@@ -21,12 +21,25 @@ class ColorPicker extends React.Component {
 
     handleChangeComplete = (color) => {
         console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
-        this.props.setColor({'index': this.state.pickerIndex, 'color_rgb': [color.rgb['r'], color.rgb['g'], color.rgb['b']]});
+        if ((color.rgb['r'] + color.rgb['g'] + color.rgb['b']) < 10) {
+            this.props.setColor({
+                'index': this.state.pickerIndex,
+                'color_rgb': [color.rgb['r'] + 10, color.rgb['g'] + 10, color.rgb['b'] +10]});
+        } else {
+            this.props.setColor({
+                'index': this.state.pickerIndex,
+                'color_rgb': [color.rgb['r'], color.rgb['g'], color.rgb['b']]});
+        }
+
         this.setState({
             showColorPicker: false,
             pickerIndex: null
         });
-        this.searchSimilarImages(this.props.results[0]['image_data'][0]['img_hash'], this.props.selectedColors[0], this.props.selectedColors[1]);
+        this.searchSimilarImages(
+            this.props.results[0]['image_data']['img_hash'],
+            this.props.selectedColors[0],
+            this.props.selectedColors[1]
+        );
     };
 
 

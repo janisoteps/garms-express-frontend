@@ -689,7 +689,7 @@ class ResultsFromSearch extends React.Component  {
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? currency + ' ' + saleprice + ', was ' + currency + ' ' + price : currency + ' ' + price}
                         </div>
-                    <div className="prod-description">{description}</div>
+                    <div className="prod-description"> </div>
                     <Tooltip title="Search Similar Items" >
                         <div
                             className="search-similar"
