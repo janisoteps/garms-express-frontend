@@ -14,7 +14,7 @@ class AddOutfit extends React.Component  {
             newLookInput: '',
             addingLook: false,
             imgHash: this.props.imgHash,
-            prodHash: null
+            prodId: null
         };
 
         this.showAddLookModal = this.showAddLookModal.bind(this);
@@ -35,8 +35,9 @@ class AddOutfit extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
+            console.log(data);
             this.setState({
-                prodHash: data.prod_hash
+                prodId: data.prod_id
             })
         });
         fetch(`${window.location.origin}/api/get_looks`, {
@@ -136,7 +137,7 @@ class AddOutfit extends React.Component  {
             return (
                 <div
                     className='add-to-look-tile'
-                    onClick={() => {this.addOutfitToLook(lookDict.look_name, this.state.prodHash)}}
+                    onClick={() => {this.addOutfitToLook(lookDict.look_name, this.state.prodId)}}
                     key={lookDict.look_name}
                     style={{
                         width: '400px',

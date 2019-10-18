@@ -29,7 +29,7 @@ class RecommendRandom extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 outfits: data
             })
@@ -52,7 +52,7 @@ class RecommendRandom extends React.Component  {
                 } : {
                     textDecoration: 'none'
                 };
-                console.log(prodSuggestion);
+                // console.log(prodSuggestion);
                 const imgHash = prodSuggestion.image_hash[0];
 
                 return (
