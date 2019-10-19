@@ -255,11 +255,10 @@ class SearchFromImage extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 colors: data.res.colors,
                 cats: data.res['img_cats_ai_txt'],
-                // altCats: data.res['alt_cats_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
                 rcnnEncoding: data.res['rcnn_encoding'],
                 loading: false
@@ -442,7 +441,7 @@ class SearchFromImage extends React.Component  {
             //             'img_count': product['prod_serial'][0]['image_urls'].length
             //         }}))
             // );
-            console.log(data.res);
+            // console.log(data.res);
             this.setState({
                 results: data.res,
                 loading: false

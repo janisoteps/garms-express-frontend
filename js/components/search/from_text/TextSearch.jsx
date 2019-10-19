@@ -81,25 +81,25 @@ class TextSearch extends React.Component  {
             [name]: value
         });
 
-        if (value.substr(-1) === ' ') {
-            let inputText = value.replace(/^\s+|\s+$/g, '');
-
-            fetch(window.location.origin + '/api/sequences', {
-                method: 'post',
-                body: JSON.stringify({input_text: inputText}),
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            }).then((response) => { return response.json(); })
-                .then((data) => {
-                    // console.log(data);
-                    this.setState({
-                        mainSuggestion: data.main_pred,
-                        moreSuggestions: data.sim_pred
-                    });
-                });
-        }
+        // if (value.substr(-1) === ' ') {
+        //     let inputText = value.replace(/^\s+|\s+$/g, '');
+        //
+        //     fetch(window.location.origin + '/api/sequences', {
+        //         method: 'post',
+        //         body: JSON.stringify({input_text: inputText}),
+        //         headers: {
+        //             Accept: 'application/json',
+        //             'Content-Type': 'application/json',
+        //         }
+        //     }).then((response) => { return response.json(); })
+        //         .then((data) => {
+        //             // console.log(data);
+        //             this.setState({
+        //                 mainSuggestion: data.main_pred,
+        //                 moreSuggestions: data.sim_pred
+        //             });
+        //         });
+        // }
     }
 
     squexpandMenu(flag){
@@ -163,16 +163,16 @@ class TextSearch extends React.Component  {
         }).then(data => {
             // console.log(data);
             let results =  data.res;
-            let prodImgShown = Object.assign(
-                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                        'img_count': product['prod_serial'][0]['img_urls'].length
-                    }}))
-            );
+            // let prodImgShown = Object.assign(
+            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+            //             'img_count': product['prod_serial'][0]['img_urls'].length
+            //         }}))
+            // );
             this.setState({
                 results: data.res,
                 loading: false,
-                prodImgShown: prodImgShown
+                // prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -298,17 +298,17 @@ class TextSearch extends React.Component  {
                         noResult: true
                     });
                 } else {
-                    let results =  data.res;
-                    let prodImgShown = Object.assign(
-                        {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                                'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                                'img_count': product['prod_serial'][0]['img_urls'].length
-                            }}))
-                    );
+                    // let results =  data.res;
+                    // let prodImgShown = Object.assign(
+                    //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                    //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                    //             'img_count': product['prod_serial'][0]['img_urls'].length
+                    //         }}))
+                    // );
                     this.setState({
                         results: data.res,
                         loading: false,
-                        prodImgShown: prodImgShown,
+                        // prodImgShown: prodImgShown,
                         posTags: data.tags
                     });
                     if (data.res.length === 0) {
@@ -601,6 +601,25 @@ class TextSearch extends React.Component  {
                     {
                         this.state.results.length > 0 ? (
                             <div style={{textAlign: 'center', width: '100%'}}>
+                                {/*<ResultsFromSearch*/}
+                                    {/*isAuth={this.state.isAuth}*/}
+                                    {/*mainCat={this.state.mainCat}*/}
+                                    {/*email={this.state.email}*/}
+                                    {/*searchSimilarImages={(*/}
+                                        {/*img_hash,*/}
+                                        {/*color_1,*/}
+                                        {/*color_2*/}
+                                    {/*) => { this.searchSimilarImages(*/}
+                                        {/*img_hash,*/}
+                                        {/*color_1,*/}
+                                        {/*color_2*/}
+                                    {/*) }}*/}
+                                    {/*results={this.state.results}*/}
+                                    {/*prodImgShown={this.state.prodImgShown}*/}
+                                    {/*setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
+                                    {/*setColorPosTags={(selection) => {this.setColorPosTags(selection)}}*/}
+                                    {/*selectedColors={this.state.selectedColors}*/}
+                                {/*/>*/}
                                 <ResultsFromSearch
                                     isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
@@ -615,11 +634,13 @@ class TextSearch extends React.Component  {
                                         color_2
                                     ) }}
                                     results={this.state.results}
-                                    prodImgShown={this.state.prodImgShown}
+                                    // prodImgShown={this.state.prodImgShown}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColors={this.state.selectedColors}
+                                    firstLogin={this.props.firstLogin}
                                 />
+
 
                                 {/*<SexSelector*/}
                                     {/*sex={this.state.sex}*/}

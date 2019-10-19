@@ -404,7 +404,8 @@ class ResultsFromSearch extends React.Component  {
             let img_url = imageData.img_url;
             let name = productInfo.name;
             let description = productInfo.description;
-            let currency = productInfo.currency;
+            // let currency = productInfo.currency;
+            const currency = '£';
             let price = productInfo.price.toFixed(2);
             let prod_id = productInfo.id;
             let prod_url = productInfo.prod_url;
@@ -687,7 +688,7 @@ class ResultsFromSearch extends React.Component  {
                     <div className="product-brand"><p>{brand} from {shop}</p></div>
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
-                        {sale ? currency + ' ' + saleprice + ', was ' + currency + ' ' + price : currency + ' ' + price}
+                        {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                         </div>
                     <div className="prod-description"> </div>
                     <Tooltip title="Search Similar Items" >

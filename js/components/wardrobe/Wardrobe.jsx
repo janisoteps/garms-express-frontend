@@ -404,7 +404,7 @@ class Wardrobe extends React.Component  {
                 textDecoration: 'none'
             };
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
-                console.log(outfitDict.info);
+                // console.log(outfitDict.info);
                 return (
                     <Paper zDepth={1} className="profile-product-tile" key={key}>
                         <div

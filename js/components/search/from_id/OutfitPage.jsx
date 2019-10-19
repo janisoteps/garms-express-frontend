@@ -46,7 +46,7 @@ class OutfitPage extends React.Component  {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
-                console.log(data);
+                // console.log(data);
                 const prod_data = data[0];
                 // console.log(prod_data);
                 this.setState({
@@ -183,7 +183,7 @@ class OutfitPage extends React.Component  {
                                             }}
                                         >Price </h3>
                                         <div style={priceStyle}>
-                                            <h3>{this.state.prodData.currency}{this.state.prodData.price}</h3>
+                                            <h3>£{this.state.prodData.price}</h3>
                                         </div>
                                         {this.state.prodData.sale && (
                                             <div style={{
@@ -191,7 +191,7 @@ class OutfitPage extends React.Component  {
                                                 display: 'inline-block',
                                                 marginLeft: '10px'
                                             }}>
-                                                <h3>{this.state.prodData.currency}{this.state.prodData.saleprice}</h3>
+                                                <h3>£{this.state.prodData.saleprice}</h3>
                                             </div>
                                         )}
                                     </div>
@@ -364,7 +364,7 @@ class OutfitPage extends React.Component  {
                                         }}
                                     >Price </h3>
                                     <div style={priceStyle}>
-                                        <h3>{this.state.prodData.currency}{this.state.prodData.price}</h3>
+                                        <h3>£{this.state.prodData.price}</h3>
                                     </div>
                                     {this.state.prodData.sale && (
                                         <div style={{
@@ -372,7 +372,7 @@ class OutfitPage extends React.Component  {
                                             display: 'inline-block',
                                             marginLeft: '10px'
                                         }}>
-                                            <h3>{this.state.prodData.currency}{this.state.prodData.saleprice}</h3>
+                                            <h3>£{this.state.prodData.saleprice}</h3>
                                         </div>
                                     )}
                                 </div>

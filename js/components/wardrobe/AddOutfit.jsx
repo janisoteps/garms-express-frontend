@@ -35,7 +35,7 @@ class AddOutfit extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 prodId: data.prod_id
             })
