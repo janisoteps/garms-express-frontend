@@ -438,7 +438,7 @@ app.post('/api/img_features_v2', upload.single('image'), function (req, res) {
         formData:    formData
     };
 
-    console.log('Img features, options: ', options);
+    // console.log('Img features, options: ', options);
     request(options, handleResponse);
 });
 
@@ -451,7 +451,7 @@ app.post('/api/search_from_image', function (req, res) {
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let encoding_nocrop = req.body.encoding_nocrop;
-
+    const vgg16_encoding = req.body.vgg16_encoding;
 
     let options = {
         method: 'POST',
@@ -462,7 +462,8 @@ app.post('/api/search_from_image', function (req, res) {
             color_2: color_rgb_2,
             sex: sex,
             no_shop: no_shop,
-            encoding_nocrop: encoding_nocrop
+            encoding_nocrop: encoding_nocrop,
+            vgg16_encoding: vgg16_encoding
         }),
         json: true
     };
@@ -487,6 +488,7 @@ app.post('/api/search_from_image_v2', function (req, res) {
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let encoding_rcnn = req.body.encoding_rcnn;
+    const vgg16_encoding = req.body.vgg16_encoding;
 
     let options = {
         method: 'POST',
@@ -497,11 +499,12 @@ app.post('/api/search_from_image_v2', function (req, res) {
             color_2: color_rgb_2,
             sex: sex,
             no_shop: no_shop,
-            encoding_rcnn: encoding_rcnn
+            encoding_rcnn: encoding_rcnn,
+            vgg16_encoding: vgg16_encoding
         }),
         json: true
     };
-    console.log('Search from image, options: ', options);
+    // console.log('Search from image, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {

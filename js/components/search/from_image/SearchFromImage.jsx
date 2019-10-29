@@ -261,6 +261,7 @@ class SearchFromImage extends React.Component  {
                 cats: data.res['img_cats_ai_txt'],
                 mainCat: data.res['img_cats_ai_txt'][0],
                 rcnnEncoding: data.res['rcnn_encoding'],
+                vgg16Encoding: data.res['vgg16_encoding'],
                 loading: false
             });
         });
@@ -368,6 +369,7 @@ class SearchFromImage extends React.Component  {
         let noShop = this.state.noShop;
         let sex = this.state.sex;
         let rcnnEncoding = this.state.rcnnEncoding;
+        let vgg16Encoding = this.state.vgg16Encoding;
         // console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
         this.setState({
             colors: {},
@@ -383,7 +385,8 @@ class SearchFromImage extends React.Component  {
                 color_rgb_2: colorRgb2,
                 sex: sex,
                 no_shop: noShop,
-                encoding_rcnn: rcnnEncoding
+                encoding_rcnn: rcnnEncoding,
+                vgg16_encoding: vgg16Encoding
             }),
             headers: {
                 Accept: 'application/json',
