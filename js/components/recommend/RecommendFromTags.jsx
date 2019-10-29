@@ -18,6 +18,7 @@ class RecommendFromTags extends React.Component  {
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
+        this.shuffle = this.shuffle.bind(this);
     }
 
     componentDidMount() {
@@ -41,20 +42,29 @@ class RecommendFromTags extends React.Component  {
         this.props.showAddOutfit(imgHash);
     }
 
+    shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
     render() {
-        const outfitTiles = this.state.outfits.map(lookDict => {
+        const outfitTiles = this.shuffle(this.state.outfits).map(lookDict => {
             const lookName = lookDict.look_name;
             const suggestionArr = lookDict.prod_suggestions;
 
             return suggestionArr.map(prodSuggestionArr => {
                 const prodSuggestion = prodSuggestionArr[0];
-                const key = prodSuggestion.prod_hash;
+                const key = prodSuggestion.prod_id;
                 const priceStyle = prodSuggestion.sale ? {
                     textDecoration: 'line-through'
                 } : {
                     textDecoration: 'none'
                 };
-                const imgHash = prodSuggestion.img_hashes[0];
+                // console.log(prodSuggestion);
+                const imgHash = prodSuggestion.image_hash[0];
 
                 if (this.props.lookFilter === null || this.props.lookFilter === lookName) {
                     return (
@@ -80,13 +90,13 @@ class RecommendFromTags extends React.Component  {
 
                             <Route render={({history}) => (
                                 <img
-                                    className="product-image" src={prodSuggestion.img_url}
+                                    className="product-image" src={prodSuggestion.image_urls[0]}
                                     style={{
                                         marginBottom: '20px',
                                         cursor: 'pointer'
                                     }}
                                     onClick={() => {
-                                        history.push(`/outfit-page?id=${prodSuggestion.prod_hash}`)
+                                        history.push(`/outfit-page?id=${prodSuggestion.prod_id}`)
                                     }}
                                 />
                             )}/>

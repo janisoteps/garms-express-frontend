@@ -29,6 +29,7 @@ class RecommendRandom extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
+            // console.log(data);
             this.setState({
                 outfits: data
             })
@@ -45,13 +46,14 @@ class RecommendRandom extends React.Component  {
 
             return suggestionArr.map(prodSuggestionArr => {
                 const prodSuggestion = prodSuggestionArr[0];
-                const key = prodSuggestion.prod_hash;
+                const key = prodSuggestion.prod_id;
                 const priceStyle = prodSuggestion.sale ? {
                     textDecoration: 'line-through'
                 } : {
                     textDecoration: 'none'
                 };
-                const imgHash = prodSuggestion.img_hashes[0];
+                // console.log(prodSuggestion);
+                const imgHash = prodSuggestion.image_hash[0];
 
                 return (
                     <Paper zDepth={1} className="recommend-product-tile" key={key}>
@@ -76,13 +78,13 @@ class RecommendRandom extends React.Component  {
                         <Route render={({history}) => (
                             <Tooltip title="Open Product Details Page">
                                 <img
-                                    className="product-image" src={prodSuggestion.img_url}
+                                    className="product-image" src={prodSuggestion.image_urls[0]}
                                     style={{
                                         marginBottom: '20px',
                                         cursor: 'pointer'
                                     }}
                                     onClick={() => {
-                                        history.push(`/outfit-page?id=${prodSuggestion.prod_hash}`)
+                                        history.push(`/outfit-page?id=${prodSuggestion.prod_id}`)
                                     }}
                                 />
                             </Tooltip>

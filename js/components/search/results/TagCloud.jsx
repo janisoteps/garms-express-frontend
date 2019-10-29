@@ -8,14 +8,19 @@ class TagCloud extends React.Component {
     constructor(props) {
         super(props);
         this.removeTag = this.removeTag.bind(this);
+        this.getUniqueArr = this.getUniqueArr.bind(this);
     }
 
     removeTag(tag, type) {
         this.props.setTags(tag, type, 'remove');
     }
 
+    getUniqueArr(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+
     render() {
-        let posTags = this.props.posTags.map(tag => {
+        let posTags = this.props.posTags.filter(this.getUniqueArr).map(tag => {
             return (
                 <div key={tag}>
                     <Tooltip title="Remove Positive Tag">

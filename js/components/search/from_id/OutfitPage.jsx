@@ -46,12 +46,13 @@ class OutfitPage extends React.Component  {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
+                // console.log(data);
                 const prod_data = data[0];
                 // console.log(prod_data);
                 this.setState({
                     prodData: prod_data[0],
-                    shownImg: prod_data[0].img_urls[0],
-                    shownImgHash: prod_data[0].img_hashes[0]
+                    shownImg: prod_data[0].image_urls[0],
+                    shownImgHash: prod_data[0].image_hash[0]
                 })
             });
         }
@@ -64,7 +65,7 @@ class OutfitPage extends React.Component  {
     };
 
     changeShownImg = (imgUrl) => {
-        const imgHash = this.state.prodData.img_hashes[this.state.prodData.img_urls.indexOf(imgUrl)];
+        const imgHash = this.state.prodData.image_hash[this.state.prodData.image_urls.indexOf(imgUrl)];
         this.setState({
             shownImg: imgUrl,
             shownImgHash: imgHash
@@ -86,7 +87,7 @@ class OutfitPage extends React.Component  {
 
     render () {
 
-        const sideImages = this.state.prodData !== null ? this.state.prodData.img_urls.map(sideImgUrl => {
+        const sideImages = this.state.prodData !== null ? this.state.prodData.image_urls.map(sideImgUrl => {
             return (
                 <div
                     style={{
@@ -182,7 +183,7 @@ class OutfitPage extends React.Component  {
                                             }}
                                         >Price </h3>
                                         <div style={priceStyle}>
-                                            <h3>{this.state.prodData.currency}{this.state.prodData.price}</h3>
+                                            <h3>£{this.state.prodData.price}</h3>
                                         </div>
                                         {this.state.prodData.sale && (
                                             <div style={{
@@ -190,7 +191,7 @@ class OutfitPage extends React.Component  {
                                                 display: 'inline-block',
                                                 marginLeft: '10px'
                                             }}>
-                                                <h3>{this.state.prodData.currency}{this.state.prodData.saleprice}</h3>
+                                                <h3>£{this.state.prodData.saleprice}</h3>
                                             </div>
                                         )}
                                     </div>
@@ -363,7 +364,7 @@ class OutfitPage extends React.Component  {
                                         }}
                                     >Price </h3>
                                     <div style={priceStyle}>
-                                        <h3>{this.state.prodData.currency}{this.state.prodData.price}</h3>
+                                        <h3>£{this.state.prodData.price}</h3>
                                     </div>
                                     {this.state.prodData.sale && (
                                         <div style={{
@@ -371,7 +372,7 @@ class OutfitPage extends React.Component  {
                                             display: 'inline-block',
                                             marginLeft: '10px'
                                         }}>
-                                            <h3>{this.state.prodData.currency}{this.state.prodData.saleprice}</h3>
+                                            <h3>£{this.state.prodData.saleprice}</h3>
                                         </div>
                                     )}
                                 </div>

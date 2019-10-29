@@ -390,28 +390,32 @@ class ResultsFromSearch extends React.Component  {
     //################################## MAIN RENDER FUNCTION ##################################
     render () {
         let key = '';
+        // console.log(this.props.results);
         let tiles = this.props.results.map(product => {
+            // console.log(product);
             // console.log('Product data passed to result list: ', product[0]);
-            let productInfo = product['prod_serial'][0];
+            let productInfo = product['prod_serial'];
             let imageData = product['image_data'];
             // console.log('Image data: ', imageData);
-            let prod_hash = productInfo.prod_hash;
+            let prod_hash = productInfo.prod_id;
             let brand = productInfo.brand;
-            let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
-            let img_urls = productInfo.img_urls;
+            // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
+            let img_urls = productInfo.image_urls;
+            let img_url = imageData.img_url;
             let name = productInfo.name;
             let description = productInfo.description;
-            let currency = productInfo.currency;
+            // let currency = productInfo.currency;
+            const currency = '£';
             let price = productInfo.price.toFixed(2);
             let prod_id = productInfo.id;
             let prod_url = productInfo.prod_url;
             let sale = productInfo.sale;
-            let saleprice = productInfo.saleprice.toFixed(2);
+            let saleprice = productInfo.saleprice;
             let shop = productInfo.shop;
             key = prod_hash + Math.floor(Math.random() * 1000);
-            let image0 = imageData[0];
-            let fst_img_hash = image0['img_hash'];
-            let fst_img_color = image0['color_1'];
+            // let image0 = imageData[0];
+            let fst_img_hash = imageData.img_hash;
+            let fst_img_color = imageData.color_1;
             // this.props.results[0]['image_data'][0]['img_hash']
             let catArray = [];
             let catCheckArray = [];
@@ -472,8 +476,6 @@ class ResultsFromSearch extends React.Component  {
             };
 
             let ImageCarousel = () => {
-                let img_url = img_urls[this.props.prodImgShown[prod_hash]['img_shown']];
-
                 return (
                     <div>
                         <Route render={({history}) => (
@@ -493,7 +495,7 @@ class ResultsFromSearch extends React.Component  {
             };
 
             let ColorPicker = () => {
-                let image = imageData[0];
+                let image = imageData;
                 let color_1 = image['color_1'];
                 let color_2 = image['color_2'];
                 let color_3 = image['color_3'];
@@ -686,9 +688,9 @@ class ResultsFromSearch extends React.Component  {
                     <div className="product-brand"><p>{brand} from {shop}</p></div>
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
-                        {sale ? currency+saleprice+', was '+currency+price : currency+price}
+                        {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                         </div>
-                    <div className="prod-description">{description}</div>
+                    <div className="prod-description"> </div>
                     <Tooltip title="Search Similar Items" >
                         <div
                             className="search-similar"

@@ -82,8 +82,9 @@ class SearchFromId extends React.Component  {
                 return response.json();
             }).then(data => {
                 const img_data = data[0];
+                // console.log(img_data);
                 this.setState({
-                    posTags: img_data.img_cats_sc_txt,
+                    posTags: img_data.all_cats,
                     sex: img_data.sex,
                     selectedColors: [
                         img_data.color_1,
@@ -189,17 +190,18 @@ class SearchFromId extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            let results =  data.res;
-            let prodImgShown = Object.assign(
-                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                        'img_count': product['prod_serial'][0]['img_urls'].length
-                    }}))
-            );
+            // let results =  data.res;
+            // let prodImgShown = Object.assign(
+            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+            //             'img_count': product['prod_serial'][0]['img_urls'].length
+            //         }}))
+            // );
+            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false,
-                prodImgShown: prodImgShown
+                // prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -613,6 +615,25 @@ class SearchFromId extends React.Component  {
                     {
                         this.state.results.length > 0 && (
                             <div style={{textAlign: 'center', width: '100%'}}>
+                                {/*<ResultsFromSearch*/}
+                                    {/*isAuth={this.state.isAuth}*/}
+                                    {/*mainCat={this.state.mainCat}*/}
+                                    {/*email={this.state.email}*/}
+                                    {/*searchSimilarImages={(*/}
+                                        {/*img_hash,*/}
+                                        {/*color_1,*/}
+                                        {/*color_2*/}
+                                    {/*) => { this.searchSimilarImages(*/}
+                                        {/*img_hash,*/}
+                                        {/*color_1,*/}
+                                        {/*color_2*/}
+                                    {/*) }}*/}
+                                    {/*results={this.state.results}*/}
+                                    {/*prodImgShown={this.state.prodImgShown}*/}
+                                    {/*setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
+                                    {/*setColorPosTags={(selection) => {this.setColorPosTags(selection)}}*/}
+                                    {/*selectedColors={this.state.selectedColors}*/}
+                                {/*/>*/}
                                 <ResultsFromSearch
                                     isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
@@ -627,10 +648,11 @@ class SearchFromId extends React.Component  {
                                         color_2
                                     ) }}
                                     results={this.state.results}
-                                    prodImgShown={this.state.prodImgShown}
+                                    // prodImgShown={this.state.prodImgShown}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColors={this.state.selectedColors}
+                                    firstLogin={this.props.firstLogin}
                                 />
                             </div>
                         )

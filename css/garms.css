@@ -39,6 +39,10 @@
 .ok-button {
     display: inline-block;
     margin-top: 20px;
+    width: 90px;
+    border: 3px #110a16 solid;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 .single-test-run-button {
@@ -387,7 +391,7 @@
     z-index: 10;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(20, 20, 47, 0.4);
+    background-color: rgb(209, 193, 165);
     position: fixed;
     top: 0;
 }
@@ -573,7 +577,7 @@
     color: white;
     padding-top: 6px;
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     left: 0;
     bottom: 0;
 }
@@ -613,7 +617,7 @@
     margin: 5px;
     display: inline-block;
     padding: 10px;
-    border: solid thick #7f649c;
+    border: solid thick #000000;
 }
 
 .search-icon{
@@ -1180,6 +1184,15 @@
 
 .prod-description{
     margin-bottom: 60px;
+}
+
+.palette-button{
+    background: url('../images/palette-24px.svg') no-repeat center;
+    background-size: 90px 90px;
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .arrow {

@@ -84,8 +84,8 @@ class Wardrobe extends React.Component  {
 
                     const prodHashInfoDict = {};
                     prodData.forEach(prodDict => {
-                        prodHashInfoDict[prodDict[0]['prod_hash']] = {
-                            imgUrl: prodDict[0]['img_url'],
+                        prodHashInfoDict[prodDict[0]['prod_id']] = {
+                            imgUrl: prodDict[0]['image_urls'][0],
                             brand: prodDict[0]['brand'],
                             price: prodDict[0]['price'],
                             currency: prodDict[0]['currency'],
@@ -94,7 +94,7 @@ class Wardrobe extends React.Component  {
                             sale: prodDict[0]['sale'],
                             salePrice: prodDict[0]['saleprice'],
                             shop: prodDict[0]['shop'],
-                            imgHash: prodDict[0]['img_hashes'][0]
+                            imgHash: prodDict[0]['image_hash'][0]
                         };
                     });
 
@@ -234,8 +234,8 @@ class Wardrobe extends React.Component  {
 
                     const prodHashInfoDict = {};
                     prodData.forEach(prodDict => {
-                        prodHashInfoDict[prodDict[0]['prod_hash']] = {
-                            imgUrl: prodDict[0]['img_url'],
+                        prodHashInfoDict[prodDict[0]['prod_id']] = {
+                            imgUrl: prodDict[0]['image_urls'][0],
                             brand: prodDict[0]['brand'],
                             price: prodDict[0]['price'],
                             currency: prodDict[0]['currency'],
@@ -329,8 +329,8 @@ class Wardrobe extends React.Component  {
 
                     const prodHashInfoDict = {};
                     prodData.forEach(prodDict => {
-                        prodHashInfoDict[prodDict[0]['prod_hash']] = {
-                            imgUrl: prodDict[0]['img_url'],
+                        prodHashInfoDict[prodDict[0]['prod_id']] = {
+                            imgUrl: prodDict[0]['image_urls'][0],
                             brand: prodDict[0]['brand'],
                             price: prodDict[0]['price'],
                             currency: prodDict[0]['currency'],
@@ -404,6 +404,7 @@ class Wardrobe extends React.Component  {
                 textDecoration: 'none'
             };
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
+                // console.log(outfitDict.info);
                 return (
                     <Paper zDepth={1} className="profile-product-tile" key={key}>
                         <div

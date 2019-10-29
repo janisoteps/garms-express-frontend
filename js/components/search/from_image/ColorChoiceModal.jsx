@@ -1,12 +1,22 @@
 // ColorChoiceModal.jsx
 import React from 'react';
-
+import {isMobile} from "react-device-detect";
+import { SwatchesPicker } from 'react-color';
+import TagPicker from './TagPicker';
 
 
 class ColorChoiceModal extends React.Component{
     constructor(props) {
         super(props);
+        this.state = {
+            showColorPicker: false,
+            showTagPicker: false,
+            cats: null,
+            showNoTagWarning: false
+        };
         this.setColorCat = this.setColorCat.bind(this);
+        this.handleChangeComplete = this.handleChangeComplete.bind(this);
+        this.addOwnCat = this.addOwnCat.bind(this);
     }
 
     setColorCat(selection){
@@ -15,16 +25,102 @@ class ColorChoiceModal extends React.Component{
     }
 
     colorCatImageSearch(){
-        this.props.colorCatImageSearch();
+        if (this.props.tags.length > 0 && this.props.selectedColors.length > 0) {
+            this.props.colorCatImageSearch();
+        } else {
+            this.setState({
+                showNoTagWarning: true
+            })
+        }
+    }
+
+    handleChangeComplete = (color) => {
+        if ((color.rgb['r'] + color.rgb['g'] + color.rgb['b']) < 10) {
+            this.setColorCat({
+                'color_rgb': [color.rgb['r'] + 10, color.rgb['g'] + 10, color.rgb['b'] +10],
+                'cat':''
+            });
+            this.props.addOwnColor({
+                'rgb': [color.rgb['r'] + 10, color.rgb['g'] + 10, color.rgb['b'] +10],
+                'hex': color.hex
+            })
+        } else {
+            this.setColorCat({
+                'color_rgb': [color.rgb['r'], color.rgb['g'], color.rgb['b']],
+                'cat':''
+            });
+            this.props.addOwnColor({
+                'rgb': [color.rgb['r'], color.rgb['g'], color.rgb['b']],
+                'hex': color.hex
+            })
+        }
+
+        this.setState({
+            showColorPicker: false
+        });
+    };
+
+    addOwnCat(cat) {
+        this.props.addOwnCat(cat);
+        this.setColorCat({'cat': cat});
+        this.setState({
+            showTagPicker: false
+        });
     }
 
     render () {
+
+        let NewColorPicker = () => {
+            if (this.state.showColorPicker) {
+
+                let SWPicker = () => {
+                    if (isMobile) {
+                        return (
+                            <SwatchesPicker
+                                onChange={ this.handleChangeComplete }
+                                width={'100%'}
+                                height={'calc(100vh - 350px)'}
+                            />
+                        )
+                    } else {
+                        return (
+                            <SwatchesPicker
+                                onChange={ this.handleChangeComplete }
+                                width={'100%'}
+                                height={'calc(((1100 / 100vw) * 250)px)'}
+                            />
+                        )
+                    }
+                };
+
+                return(
+                    <div style={{
+                        position: 'fixed',
+                        top: '50px',
+                        left: '0',
+                        width: '100vw',
+                        height: 'calc(100vh - 50px)',
+                        backgroundColor: '#FFFFFF',
+                        opacity: '0.95',
+                        paddingTop: '85px',
+                        textAlign: 'center',
+                        zIndex: '20'
+                    }}>
+                        <h1 style={{marginLeft: '90px', width: 'calc(100vw - 130px)'}}>pick another color</h1>
+                        <br></br>
+                        <br></br>
+                        <SWPicker/>
+                    </div>
+                )
+            } else {
+                return (
+                    <div style={{height: '0px'}} />
+                )
+            }
+        };
+
         // Dynamic CSS for image color choice modal
         if(Object.keys(this.props.colors).length > 0){
-            // console.log('Selected colors: ', this.props.selectedColors);
-            // console.log('Color 1: ', this.props.colors.color_1);
-            // console.log('Selected color 1: ', this.props.selectedColors[0]);
-            // console.log('Colors same: ', this.props.selectedColors[0] === this.props.colors.color_1);
             var colorStyle1 = {
                 width: '70px',
                 height: '70px',
@@ -38,7 +134,7 @@ class ColorChoiceModal extends React.Component{
                         ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_1 && '5px'),
                 borderColor:
                     this.props.selectedColors[0] === this.props.colors.color_1
-                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_1 && '#7f649c'),
+                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_1 && '#000000'),
                 borderStyle:
                     this.props.selectedColors[0] === this.props.colors.color_1
                         ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_1 && 'solid')
@@ -56,7 +152,7 @@ class ColorChoiceModal extends React.Component{
                 ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_2 && '5px'),
                 borderColor:
                     this.props.selectedColors[0] === this.props.colors.color_2
-                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_2 && '#7f649c'),
+                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_2 && '#000000'),
                 borderStyle:
                     this.props.selectedColors[0] === this.props.colors.color_2
                         ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_2 && 'solid')
@@ -74,10 +170,24 @@ class ColorChoiceModal extends React.Component{
                         ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_3 && '5px'),
                 borderColor:
                     this.props.selectedColors[0] === this.props.colors.color_3
-                        ? ('#7f649c') : (this.props.selectedColors[1] === this.props.colors.color_3 && '#7f649c'),
+                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_3 && '#000000'),
                 borderStyle:
                     this.props.selectedColors[0] === this.props.colors.color_3
                         ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_3 && 'solid')
+            };
+            var colorStyle4 = {
+                width: '70px',
+                height: '70px',
+                borderRadius: '30px',
+                backgroundColor: this.props.colors.color_4_hex,
+                margin: '10px',
+                display: 'inline-block',
+                cursor: 'pointer',
+                border: this.props.colors.color_4 && ((this.props.colors.color_4.length === this.props.selectedColors[0].length
+                    && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[0][index])
+                || this.props.colors.color_4.length === this.props.selectedColors[1].length
+                    && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[1][index]))
+                ?('5px #000000 solid') : (''))
             };
         }
 
@@ -85,21 +195,23 @@ class ColorChoiceModal extends React.Component{
         // stateless component
         let ColorChoiceModal = () => {
             if(Object.keys(this.props.colors).length > 0){
-                // console.log('Props posTags: ', this.props.tags);
-                // console.log('Type of posTags: ', typeof this.props.tags);
                 let catClass = (cat) => {
                     if(this.props.tags.includes(cat)){
                         return 'cat-choice-main'
                     } else {
                         return 'cat-choice'
                     }
-                    // console.log('posTags: ', this.props.posTags);
-                    // return this.props.posTags.includes(cat) ? 'cat-choice-main': 'cat-choice'
                 };
 
                 let mainCats = this.props.cats.map((cat, index) => {
                     return(
-                        <div key={index} className={catClass(cat)} onClick={() => this.setColorCat({'cat': cat})} >{cat}</div>
+                        <div
+                            key={index}
+                            className={catClass(cat)}
+                            onClick={() => this.setColorCat({'cat': cat})}
+                        >
+                            {cat}
+                        </div>
                     )
                 });
 
@@ -114,29 +226,54 @@ class ColorChoiceModal extends React.Component{
                                 }
                             </div>
                             <br/>
-                            <h5>I found these colors and themes in your photo</h5>
-                            <br/>
                             <p>choose which color to search for:</p>
                             <div style={colorStyle1} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_1, 'cat':''})} />
                             <div style={colorStyle2} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_2, 'cat':''})} />
                             <div style={colorStyle3} onClick={() => this.setColorCat({'color_rgb': this.props.colors.color_3, 'cat':''})} />
+                            {this.props.colors.color_4 && (
+                                <div
+                                    style={colorStyle4}
+                                    onClick={() => this.setColorCat({
+                                        'color_rgb': this.props.colors.color_4,
+                                        'cat':''
+                                    })}
+                                />
+                            )}
+                            <div
+                                className="palette-button"
+                                onClick={() => {
+                                    this.setState({
+                                        showColorPicker: true
+                                    })
+                                }}
+                            />
                             <br/>
                             <br/>
                             <p>choose which tags to search for:</p>
                             <div className="main-cat-selection">
                                 {mainCats}
+                                <div
+                                    className='cat-choice'
+                                    onClick={() => {
+                                        this.setState({
+                                            showTagPicker: true
+                                        })
+                                    }}
+                                >
+                                    other...
+                                </div>
                             </div>
                             <br/>
-                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >search</div>
+                            <div className="colorcat-search-button" onClick={() => this.colorCatImageSearch() } >SEARCH</div>
                         </div>
                     )
                 } else {
                     return(
                         <div className="overlay">
-                            <Paper zDepth={1} className="color-modal">
+                            <div className="color-modal">
                                 <h3>Can't recognize the outfit, try a better quality photo</h3>
-                                <RaisedButton className="ok-button" label="OK" onClick={() => { window.location.reload(); }} />
-                            </Paper>
+                                <button className="ok-button" onClick={() => { window.location.reload(); }} >OK</button>
+                            </div>
                         </div>
                     )
                 }
@@ -147,8 +284,49 @@ class ColorChoiceModal extends React.Component{
                 )
             }
         };
+
+        const NoTagModalWarning = () => {
+           return (
+               <div
+                   style={{
+                       position: 'fixed',
+                       top: '50px',
+                       left: '0',
+                       height: 'calc(100vh - 50px)',
+                       width: '100vw',
+                       paddingTop: '10vh',
+                       textAlign: 'center',
+                       zIndex: '40',
+                       backgroundColor: '#FFFFFF'
+                   }}
+               >
+                   <h1>Choose at least one tag and one color</h1>
+                   <button
+                       className="ok-button"
+                       onClick={() => {
+                           this.setState({
+                               showNoTagWarning: false
+                           })
+                       }}
+                   >OK</button>
+               </div>
+           )
+        };
+
+        // #################################### MAIN RENDER #####################################
         return (
-            <ColorChoiceModal/>
+            <div>
+                <ColorChoiceModal/>
+                <NewColorPicker />
+                {this.state.showTagPicker === true && (
+                    <TagPicker
+                        addOwnCat={(cat) => {this.addOwnCat(cat)}}
+                    />
+                )}
+                {this.state.showNoTagWarning === true && (
+                    <NoTagModalWarning/>
+                )}
+            </div>
         )
     }
 }

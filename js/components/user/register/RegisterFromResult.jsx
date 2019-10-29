@@ -49,7 +49,7 @@ export default class RegisterFromResult extends React.Component {
                 return response.json();
             }).then(data => {
                 this.setState({
-                    prodHash: data.prod_hash
+                    prodId: data.prod_hash
                 });
 
                 fetch(`${window.location.origin}/api/get_products`, {
