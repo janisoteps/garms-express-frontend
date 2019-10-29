@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-// const api_base_url = 'http://34.249.146.245/api/';
-const api_base_url = 'http://127.0.0.1:5000/api/';
+const api_base_url = 'http://34.249.146.245/api/';
+// const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -542,7 +542,7 @@ app.get('/api/search_similar', function (req, res) {
         }
     };
 
-    console.log('Search similar images , options: ', options);
+    // console.log('Search similar images , options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
@@ -585,7 +585,7 @@ app.post('/api/submit_instagram', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('Explorer response length: ', body.res.length);
+            // console.log('Explorer response length: ', body.res.length);
 
             res.send(body);
         }
@@ -622,11 +622,11 @@ app.post('/api/explorer_search', function (req, res) {
         json: true
     };
 
-    console.log('Explorer search, options: ', options);
+    // console.log('Explorer search, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('Explorer response length: ', body.res.length);
+            // console.log('Explorer response length: ', body.res.length);
 
             res.send(body);
         }
@@ -639,7 +639,7 @@ app.post('/api/explorer_search', function (req, res) {
 // Do product search from Explorer component
 app.post('/api/sequences', function (req, res) {
     let input_text = req.body.input_text;
-    console.log('Sequence prediction input: ' + input_text);
+    // console.log('Sequence prediction input: ' + input_text);
     let options = {
         method: 'POST',
         url: api_base_url + 'sequences',
@@ -670,11 +670,11 @@ app.post('/api/add_look', function (req, res) {
         body: JSON.stringify({email: email, look_name: look_name}),
         json: true
     };
-    console.log('Add Look, options: ', options);
+    // console.log('Add Look, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('Add Look response: ', body);
+            // console.log('Add Look response: ', body);
             res.send(body);
         }
     }
@@ -706,7 +706,7 @@ app.post('/api/remove_look', function (req, res) {
 
 app.post('/api/get_looks', function (req, res) {
     let email = req.body.email;
-    console.log(email);
+    // console.log(email);
 
     let options = {
         method: 'POST',
@@ -714,11 +714,11 @@ app.post('/api/get_looks', function (req, res) {
         body: JSON.stringify({email: email}),
         json: true
     };
-    console.log('Get Looks, options: ', options);
+    // console.log('Get Looks, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('GetLook response: ', body);
+            // console.log('GetLook response: ', body);
             res.send(body);
         }
     }
@@ -857,7 +857,7 @@ app.post('/api/recommend_tags', function (req, res) {
 
 app.post('/api/recommend_random', function (req, res) {
     let sex = req.body.sex;
-    console.log(sex);
+    // console.log(sex);
     if (!sex) {
         sex = ''
     }

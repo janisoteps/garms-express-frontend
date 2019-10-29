@@ -56,6 +56,8 @@ class SearchFromImage extends React.Component  {
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.onImgLoad = this.onImgLoad.bind(this);
         this.updateRange = this.updateRange.bind(this);
+        this.addOwnColor = this.addOwnColor.bind(this);
+        this.addOwnCat = this.addOwnCat.bind(this);
     }
 
     componentDidMount() {
@@ -394,14 +396,6 @@ class SearchFromImage extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                // console.log(data);
-                // let results =  data.res;
-                // let prodImgShown = Object.assign(
-                //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                //         'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                //         'img_count': product['prod_serial'][0]['img_urls'].length
-                //         }}))
-                // );
                 this.setState({
                     results: data.res,
                     loading: false,
@@ -436,15 +430,7 @@ class SearchFromImage extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
-            // let results =  data.res;
-            // let prodImgShown = Object.assign(
-            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_id']]: {
-            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['image_urls'].length)),
-            //             'img_count': product['prod_serial'][0]['image_urls'].length
-            //         }}))
-            // );
-            // console.log(data.res);
+
             this.setState({
                 results: data.res,
                 loading: false
@@ -486,6 +472,26 @@ class SearchFromImage extends React.Component  {
     updateRange(val) {
         this.setState({
             rangeVal: val
+        })
+    }
+
+    addOwnCat(cat) {
+        let cats = this.state.cats;
+        cats.push(cat);
+
+        this.setState({
+            cats: cats
+        })
+    }
+
+    addOwnColor(color) {
+        let colors = this.state.colors;
+        colors['color_4'] = color['rgb'];
+        colors['color_4_hex'] = color['hex'];
+
+        this.setState({
+            colors: colors,
+            ownColorBorder: '5px #000000 solid'
         })
     }
 
@@ -662,6 +668,8 @@ class SearchFromImage extends React.Component  {
                 <ColorChoiceModal
                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                     colorCatImageSearch={() => {this.searchFromImage()}}
+                    addOwnColor={(color) => {this.addOwnColor(color)}}
+                    addOwnCat={(cat) => {this.addOwnCat(cat)}}
                     colors={this.state.colors}
                     mainCat={this.state.mainCat}
                     cats={this.state.cats}
