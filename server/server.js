@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-const api_base_url = 'http://18.203.186.0/api/';
-// const api_base_url = 'http://127.0.0.1:5000/api/';
+// const api_base_url = 'http://18.203.186.0/api/';
+const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -837,6 +837,7 @@ app.post('/api/get_prod_hash', function (req, res) {
 app.post('/api/recommend_tags', function (req, res) {
     const email = req.body.email;
     const sex = req.body.sex;
+    console.log('called');
 
     const options = {
         method: 'POST',
