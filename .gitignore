@@ -13,7 +13,6 @@
 .env.test.local
 .env.production.local
 .idea
-.babelrc
 
 npm-debug.log*
 yarn-debug.log*
