@@ -7,12 +7,13 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-import TagCloud from '../results/TagCloud';
-import ColorPicker from '../from_image/ColorPicker';
+// import TagCloud from '../results/TagCloud';
+// import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import PriceFilter from './../results/PriceFilter';
+// import PriceFilter from './../results/PriceFilter';
+import ResultFilters from './../results/ResultFilters';
 
 
 //Component to search for products using text input
@@ -44,23 +45,27 @@ class SearchFromId extends React.Component  {
             noShop: [],
             firstLogin: this.props.firstLogin,
             imgHash: null,
-            rangeVal: 500
+            rangeVal: 500,
+            filterBrands: [],
+            brandPickerShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
-        this.changeSex = this.changeSex.bind(this);
-        this.changeSex = this.changeSex.bind(this);
-        this.expandSexSelector = this.expandSexSelector.bind(this);
+        // this.changeSex = this.changeSex.bind(this);
+        // this.changeSex = this.changeSex.bind(this);
+        // this.expandSexSelector = this.expandSexSelector.bind(this);
         this.showCatPicker = this.showCatPicker.bind(this);
         this.setMainCats = this.setMainCats.bind(this);
-        this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
-        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
+        // this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
+        // this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.updateRange = this.updateRange.bind(this);
+        this.showBrandPicker = this.showBrandPicker.bind(this);
+        this.addBrandFilter = this.addBrandFilter.bind(this);
     }
 
     componentDidMount() {
@@ -169,35 +174,70 @@ class SearchFromId extends React.Component  {
         this.setState({
             loading: true
         });
-        let posTags = this.state.posTags.toString().replace(/\s+/g, '');
-        let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+        // let posTags = this.state.posTags.toString().replace(/\s+/g, '');
+        // let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+        // let sex = this.state.sex;
+        // let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+        // let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
+        // let color_1 = colorRgb1.toString().replace(/\s+/g, '');
+        // let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        // let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+        // let searchString = window.location.origin + '/api/search_similar?'
+        //     + 'img_hash=' + imgHash
+        //     + '&tags_positive=' + posTags
+        //     + '&tags_negative=' + negTags
+        //     + '&color_1=' + color_1
+        //     + '&color_2=' + color_2
+        //     + '&sex=' + sex
+        //     + '&no_shop=' + noShop
+        //     + '&max_price=' + maxPrice
+        //     + '&brands=' + filterBrands;
+        // fetch(searchString, {
+        //     method: 'get',
+        // }).then(function(response) {
+        //     return response.json();
+        // }).then(data => {
+        //     this.setState({
+        //         results: data.res,
+        //         loading: false,
+        //         // prodImgShown: prodImgShown
+        //     });
+        //     window.scrollTo({
+        //         top: 0,
+        //         behavior: "smooth"
+        //     });
+        //     window.scrollTo(0, 0);
+        // });
+
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
         let sex = this.state.sex;
-        let noShop = this.state.noShop.toString().replace(/\s+/g, '');
-        let color_1 = colorRgb1.toString().replace(/\s+/g, '');
-        let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let noShop = this.state.noShop;
+        let filterBrands = this.state.filterBrands;
+        let color_1 = colorRgb1;
+        let color_2 = colorRgb2;
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-        let searchString = window.location.origin + '/api/search_similar?'
-            + 'img_hash=' + imgHash
-            + '&tags_positive=' + posTags
-            + '&tags_negative=' + negTags
-            + '&color_1=' + color_1
-            + '&color_2=' + color_2
-            + '&sex=' + sex
-            + '&no_shop=' + noShop
-            + '&max_price=' + maxPrice;
-        fetch(searchString, {
-            method: 'get',
+
+        fetch(window.location.origin + '/api/search_similar', {
+            method: 'post',
+            body: JSON.stringify({
+                img_hash: imgHash,
+                tags_positive: posTags,
+                tags_negative: negTags,
+                color_1: color_1,
+                color_2: color_2,
+                sex: sex,
+                no_shop: noShop,
+                max_price: maxPrice,
+                brands: filterBrands
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // let results =  data.res;
-            // let prodImgShown = Object.assign(
-            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-            //             'img_count': product['prod_serial'][0]['img_urls'].length
-            //         }}))
-            // );
-            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false,
@@ -342,82 +382,82 @@ class SearchFromId extends React.Component  {
             });
     }
 
-    //Submits login request to server and sets state/cookies if successful
-    handleLoginSubmit(event) {
-        event.preventDefault();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
-        fetch(window.location.origin + '/api/login', {
-            method: 'post',
-            body: JSON.stringify({email: email, pwd: pwd}),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(function(data) {
-                if (data === "OK") {
-                    this.setState({
-                        isAuth: true
-                    });
-                }
-            });
-    }
+    // //Submits login request to server and sets state/cookies if successful
+    // handleLoginSubmit(event) {
+    //     event.preventDefault();
+    //     let email = this.state.email;
+    //     let pwd = this.state.pwd;
+    //     fetch(window.location.origin + '/api/login', {
+    //         method: 'post',
+    //         body: JSON.stringify({email: email, pwd: pwd}),
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) { return response.json(); })
+    //         .then(function(data) {
+    //             if (data === "OK") {
+    //                 this.setState({
+    //                     isAuth: true
+    //                 });
+    //             }
+    //         });
+    // }
 
-    setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        this.setState({
-            loading: true
-        });
+    // setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
+    //     this.setState({
+    //         loading: true
+    //     });
+    //
+    //     let mainColor = color_1.toString().replace(/\s+/g, '');
+    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
+    //
+    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
+    //         + '&main_cat=' + mainCat1
+    //         + '&main_cat2=' + mainCat2
+    //         + '&nr1_cat_sc=' + nr1_cat_sc
+    //         + '&color_1=[' + mainColor
+    //         + ']&pca_256=[' + siam_64
+    //         + ']&sex=' + this.state.sex
+    //         + '&id=' + prod_id;
+    //
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         this.setState({
+    //             results: data.res,
+    //             loading: false
+    //         });
+    //         window.scrollTo({
+    //             top: 0,
+    //             behavior: "smooth"
+    //         });
+    //         window.scrollTo(0, 0);
+    //     });
+    // }
 
-        let mainColor = color_1.toString().replace(/\s+/g, '');
-        let siam_64 = siamese_64.toString().replace(/\s+/g, '');
+    // changeSex(sex){
+    //     this.props.changeSex(sex);
+    //     this.setState({
+    //         sex: sex
+    //     });
+    // }
 
-        let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-            + '&main_cat=' + mainCat1
-            + '&main_cat2=' + mainCat2
-            + '&nr1_cat_sc=' + nr1_cat_sc
-            + '&color_1=[' + mainColor
-            + ']&pca_256=[' + siam_64
-            + ']&sex=' + this.state.sex
-            + '&id=' + prod_id;
-
-        fetch(searchString, {
-            method: 'get',
-        }).then(function(response) {
-            return response.json();
-        }).then(data => {
-            this.setState({
-                results: data.res,
-                loading: false
-            });
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-            window.scrollTo(0, 0);
-        });
-    }
-
-    changeSex(sex){
-        this.props.changeSex(sex);
-        this.setState({
-            sex: sex
-        });
-    }
-
-    expandSexSelector(){
-        let currentWidth = this.state.sexPickerWidth;
-
-        if(currentWidth === '48px'){
-            this.setState({
-                sexPickerWidth: '270px'
-            });
-        } else {
-            this.setState({
-                sexPickerWidth: '48px'
-            });
-        }
-    }
+    // expandSexSelector(){
+    //     let currentWidth = this.state.sexPickerWidth;
+    //
+    //     if(currentWidth === '48px'){
+    //         this.setState({
+    //             sexPickerWidth: '270px'
+    //         });
+    //     } else {
+    //         this.setState({
+    //             sexPickerWidth: '48px'
+    //         });
+    //     }
+    // }
 
     showCatPicker(){
         if(this.state.catsOn === false){
@@ -442,6 +482,41 @@ class SearchFromId extends React.Component  {
         this.setState({
             rangeVal: val
         })
+    }
+
+    showBrandPicker(show) {
+        this.setState({
+            brandPickerShown: show
+        })
+    }
+
+    addBrandFilter(brand, showPicker) {
+        // console.log(brand);
+        let currentFilterBrands = this.state.filterBrands;
+        // console.log(currentFilterBrands);
+        if (currentFilterBrands.indexOf(brand) !== -1) {
+            const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
+                return checkedBrand !== brand
+            });
+            if (newFilterBrands.length === 0) {
+                this.setState({
+                    filterBrands: newFilterBrands,
+                    brandPickerShown: false
+                });
+            } else {
+                this.setState({
+                    filterBrands: newFilterBrands,
+                    brandPickerShown: true
+                });
+            }
+        } else {
+            currentFilterBrands.push(brand);
+            // console.log(currentFilterBrands);
+            this.setState({
+                filterBrands: currentFilterBrands,
+                brandPickerShown: showPicker
+            });
+        }
     }
 
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
@@ -659,26 +734,23 @@ class SearchFromId extends React.Component  {
                     }
 
                     <NoResults />
-
-                    <PriceFilter
+                    <ResultFilters
                         range={rangeVal}
                         updateRange={this.updateRange}
                         loading={this.state.loading}
-                    />
-
-                    <TagCloud
                         posTags={this.state.posTags}
                         negTags={this.state.negTags}
                         setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                    />
-
-                    <ColorPicker
                         setColor={(selection) => {this.setColorPosTags(selection)}}
                         selectedColors={this.state.selectedColors}
                         searchSimilarImages={(imgHash, color1, color2) => {
                             this.searchSimilarImages(imgHash, color1, color2)
                         }}
                         results={this.state.results}
+                        filterBrands={this.state.filterBrands}
+                        brandPickerShown={this.state.brandPickerShown}
+                        showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                        addBrandFilter={(brand) => {this.addBrandFilter(brand)}}
                     />
 
                     {

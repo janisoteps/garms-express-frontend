@@ -7,13 +7,13 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-// import SexSelector from '../results/SexSelector';
 import TagCloud from '../results/TagCloud';
-import ColorPicker from '../from_image/ColorPicker';
+import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import PriceFilter from './../results/PriceFilter';
+import ResultFilters from "../results/ResultFilters";
 
 
 //Component to search for products using text input
@@ -46,7 +46,8 @@ class TextSearch extends React.Component  {
             moreSuggestions: [],
             noShop: [],
             firstLogin: this.props.firstLogin,
-            rangeVal: 500
+            rangeVal: 500,
+            filterBrands: []
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -80,26 +81,6 @@ class TextSearch extends React.Component  {
         this.setState({
             [name]: value
         });
-
-        // if (value.substr(-1) === ' ') {
-        //     let inputText = value.replace(/^\s+|\s+$/g, '');
-        //
-        //     fetch(window.location.origin + '/api/sequences', {
-        //         method: 'post',
-        //         body: JSON.stringify({input_text: inputText}),
-        //         headers: {
-        //             Accept: 'application/json',
-        //             'Content-Type': 'application/json',
-        //         }
-        //     }).then((response) => { return response.json(); })
-        //         .then((data) => {
-        //             // console.log(data);
-        //             this.setState({
-        //                 mainSuggestion: data.main_pred,
-        //                 moreSuggestions: data.sim_pred
-        //             });
-        //         });
-        // }
     }
 
     squexpandMenu(flag){
@@ -143,6 +124,7 @@ class TextSearch extends React.Component  {
         let negTags = this.state.negTags.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+        let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
@@ -154,21 +136,14 @@ class TextSearch extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop
-            + '&max_price=' + maxPrice;
+            + '&max_price=' + maxPrice
+            + '&brands=' + filterBrands;
         // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
-            let results =  data.res;
-            // let prodImgShown = Object.assign(
-            //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-            //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-            //             'img_count': product['prod_serial'][0]['img_urls'].length
-            //         }}))
-            // );
             this.setState({
                 results: data.res,
                 loading: false,
@@ -600,26 +575,7 @@ class TextSearch extends React.Component  {
                 <div>
                     {
                         this.state.results.length > 0 ? (
-                            <div style={{textAlign: 'center', width: '100%'}}>
-                                {/*<ResultsFromSearch*/}
-                                    {/*isAuth={this.state.isAuth}*/}
-                                    {/*mainCat={this.state.mainCat}*/}
-                                    {/*email={this.state.email}*/}
-                                    {/*searchSimilarImages={(*/}
-                                        {/*img_hash,*/}
-                                        {/*color_1,*/}
-                                        {/*color_2*/}
-                                    {/*) => { this.searchSimilarImages(*/}
-                                        {/*img_hash,*/}
-                                        {/*color_1,*/}
-                                        {/*color_2*/}
-                                    {/*) }}*/}
-                                    {/*results={this.state.results}*/}
-                                    {/*prodImgShown={this.state.prodImgShown}*/}
-                                    {/*setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
-                                    {/*setColorPosTags={(selection) => {this.setColorPosTags(selection)}}*/}
-                                    {/*selectedColors={this.state.selectedColors}*/}
-                                {/*/>*/}
+                            <div style={{width: '100%'}}>
                                 <ResultsFromSearch
                                     isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
@@ -648,10 +604,24 @@ class TextSearch extends React.Component  {
                                     {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
                                     {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
                                 {/*/>*/}
-                                <PriceFilter
+                                {/*<PriceFilter*/}
+                                {/*    range={rangeVal}*/}
+                                {/*    updateRange={this.updateRange}*/}
+                                {/*    loading={this.state.loading}*/}
+                                {/*/>*/}
+                                <ResultFilters
                                     range={rangeVal}
                                     updateRange={this.updateRange}
                                     loading={this.state.loading}
+                                    posTags={this.state.posTags}
+                                    negTags={this.state.negTags}
+                                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                                    setColor={(selection) => {this.setColorPosTags(selection)}}
+                                    selectedColors={this.state.selectedColors}
+                                    searchSimilarImages={(imgHash, color1, color2) => {
+                                        this.searchSimilarImages(imgHash, color1, color2)
+                                    }}
+                                    results={this.state.results}
                                 />
                             </div>
                         ) : (
@@ -661,20 +631,20 @@ class TextSearch extends React.Component  {
 
                     <NoResults />
 
-                    <TagCloud
-                        posTags={this.state.posTags}
-                        negTags={this.state.negTags}
-                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                    />
+                    {/*<TagCloud*/}
+                    {/*    posTags={this.state.posTags}*/}
+                    {/*    negTags={this.state.negTags}*/}
+                    {/*    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
+                    {/*/>*/}
 
-                    <ColorPicker
-                        setColor={(selection) => {this.setColorPosTags(selection)}}
-                        selectedColors={this.state.selectedColors}
-                        searchSimilarImages={(imgHash, color1, color2) => {
-                            this.searchSimilarImages(imgHash, color1, color2)
-                        }}
-                        results={this.state.results}
-                    />
+                    {/*<ColorPicker*/}
+                    {/*    setColor={(selection) => {this.setColorPosTags(selection)}}*/}
+                    {/*    selectedColors={this.state.selectedColors}*/}
+                    {/*    searchSimilarImages={(imgHash, color1, color2) => {*/}
+                    {/*        this.searchSimilarImages(imgHash, color1, color2)*/}
+                    {/*    }}*/}
+                    {/*    results={this.state.results}*/}
+                    {/*/>*/}
 
                     {
                         (this.state.results.length > 0)

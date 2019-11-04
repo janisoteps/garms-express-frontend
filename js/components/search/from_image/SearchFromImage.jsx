@@ -6,14 +6,14 @@ import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ColorChoiceModal from './ColorChoiceModal';
-// import SexSelector from '../results/SexSelector';
 import ResultsFromSearch from '../results/ResultsFromSearch';
 import TagCloud from '../results/TagCloud';
-import ColorPicker from './ColorPicker';
+import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import PriceFilter from './../results/PriceFilter';
+import ResultFilters from "../results/ResultFilters";
 
 
 //Component to search for products using an uploaded image
@@ -41,7 +41,8 @@ class SearchFromImage extends React.Component  {
             viewPortHeight: null,
             previewImgDims: {},
             firstLogin: this.props.firstLogin,
-            rangeVal: 500
+            rangeVal: 500,
+            filterBrands: []
         };
 
         this.changeSex = this.changeSex.bind(this);
@@ -412,6 +413,7 @@ class SearchFromImage extends React.Component  {
         let negTags = this.state.negTags.toString().replace(/\s+/g, '');
         let sex = this.state.sex;
         let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+        let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
         let color_1 = colorRgb1.toString().replace(/\s+/g, '');
         let color_2 = colorRgb2.toString().replace(/\s+/g, '');
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
@@ -423,7 +425,8 @@ class SearchFromImage extends React.Component  {
             + '&color_2=' + color_2
             + '&sex=' + sex
             + '&no_shop=' + noShop
-            + '&max_price=' + maxPrice;
+            + '&max_price=' + maxPrice
+            + '&brands=' + filterBrands;
         // console.log('Search string: ', searchString);
         fetch(searchString, {
             method: 'get',
@@ -625,10 +628,24 @@ class SearchFromImage extends React.Component  {
                         {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
                         {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
                     {/*/>*/}
-                    <PriceFilter
+                    {/*<PriceFilter*/}
+                    {/*    range={rangeVal}*/}
+                    {/*    updateRange={this.updateRange}*/}
+                    {/*    loading={this.state.loading}*/}
+                    {/*/>*/}
+                    <ResultFilters
                         range={rangeVal}
                         updateRange={this.updateRange}
                         loading={this.state.loading}
+                        posTags={this.state.posTags}
+                        negTags={this.state.negTags}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                        setColor={(selection) => {this.setColorPosTags(selection)}}
+                        selectedColors={this.state.selectedColors}
+                        searchSimilarImages={(imgHash, color1, color2) => {
+                            this.searchSimilarImages(imgHash, color1, color2)
+                        }}
+                        results={this.state.results}
                     />
                 </div>
             ) : (
@@ -650,20 +667,21 @@ class SearchFromImage extends React.Component  {
             <div>
                 {searchOrResults}
 
-                <TagCloud
-                    posTags={this.state.posTags}
-                    negTags={this.state.negTags}
-                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                />
 
-                <ColorPicker
-                    setColor={(selection) => {this.setColor(selection)}}
-                    selectedColors={this.state.selectedColors}
-                    searchSimilarImages={(imgHash, color1, color2) => {
-                        this.searchSimilarImages(imgHash, color1, color2)
-                    }}
-                    results={this.state.results}
-                />
+                {/*<TagCloud*/}
+                {/*    posTags={this.state.posTags}*/}
+                {/*    negTags={this.state.negTags}*/}
+                {/*    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
+                {/*/>*/}
+
+                {/*<ColorPicker*/}
+                {/*    setColor={(selection) => {this.setColor(selection)}}*/}
+                {/*    selectedColors={this.state.selectedColors}*/}
+                {/*    searchSimilarImages={(imgHash, color1, color2) => {*/}
+                {/*        this.searchSimilarImages(imgHash, color1, color2)*/}
+                {/*    }}*/}
+                {/*    results={this.state.results}*/}
+                {/*/>*/}
 
                 <ColorChoiceModal
                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}

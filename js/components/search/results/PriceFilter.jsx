@@ -50,37 +50,42 @@ class PriceFilter extends React.Component {
             <MuiThemeProvider>
                 <div
                     style={{
-                        padding: '5',
-                        display: 'flex',
-                        alignItems: 'center',
-                        position: 'fixed',
-                        top: '50px',
-                        cursor: 'pointer'
+                        display: 'inline-block'
                     }}
                 >
-                    <Tooltip title="Set Maximum Price">
+                    <div
+                        style={{
+                            padding: '0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            cursor: 'pointer',
+                            marginBottom: '5px'
+                        }}
+                    >
+                        <Tooltip title="Set Maximum Price">
                         <span
                             id="output"
                             onClick={() => {this.showHideSlider()}}
                         >
                             £{range < 500 ? range : <span style={{fontSize: '1.5rem', lineHeight: '1'}}>∞</span>}
                         </span>
-                    </Tooltip>
-                    {this.state.showSlider === true && (
-                        <input
-                            id="range"
-                            type="range"
-                            value={range}
-                            min="0"
-                            max="500"
-                            step="1"
-                            onChange={this.updateRange}
-                            style={{
-                                position: 'fixed',
-                                left: '90px'
-                            }}
-                        />
-                    )}
+                        </Tooltip>
+                        {this.state.showSlider === true && (
+                            <input
+                                id="range"
+                                type="range"
+                                value={range}
+                                min="0"
+                                max="500"
+                                step="1"
+                                onChange={this.updateRange}
+                                style={{
+                                    position: 'fixed',
+                                    left: '90px'
+                                }}
+                            />
+                        )}
+                    </div>
                 </div>
             </MuiThemeProvider>
         )
