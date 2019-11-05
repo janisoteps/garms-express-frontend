@@ -44,7 +44,6 @@ class Login extends React.Component {
 
 
     render() {
-        console.log('Login file isAuth', this.state.isAuth);
         const loginForm = this.state.isAuth === true || this.state.isAuth === "true" ? (
             <Route render={({history}) => (
                 <div className="login-welcome" onClick={() => {

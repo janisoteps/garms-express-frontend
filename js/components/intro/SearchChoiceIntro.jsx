@@ -24,7 +24,6 @@ class SearchChoiceIntro extends React.Component  {
         };
 
         // this.classes = this.props.classes;
-        console.log(this.props);
         this.goToStep = this.goToStep.bind(this);
     }
 
@@ -39,7 +38,6 @@ class SearchChoiceIntro extends React.Component  {
         const { classes } = this.props;
 
         const IntroStep = () => {
-            console.log(`Showing intro step: ${this.state.introStep}`);
             const steps = {
                 0: (
                     <div style={{

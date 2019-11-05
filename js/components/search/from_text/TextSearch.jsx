@@ -47,7 +47,8 @@ class TextSearch extends React.Component  {
             noShop: [],
             firstLogin: this.props.firstLogin,
             rangeVal: 500,
-            filterBrands: []
+            filterBrands: [],
+            brandPickerShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -64,6 +65,8 @@ class TextSearch extends React.Component  {
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.updateRange = this.updateRange.bind(this);
+        this.showBrandPicker = this.showBrandPicker.bind(this);
+        this.addBrandFilter = this.addBrandFilter.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -116,31 +119,78 @@ class TextSearch extends React.Component  {
         }
     };
 
+    // searchSimilarImages(imgHash, colorRgb1, colorRgb2){
+    //     this.setState({
+    //         loading: true
+    //     });
+    //     let posTags = this.state.posTags.toString().replace(/\s+/g, '');
+    //     let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+    //     let sex = this.state.sex;
+    //     let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+    //     let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
+    //     let color_1 = colorRgb1.toString().replace(/\s+/g, '');
+    //     let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+    //     let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+    //     let searchString = window.location.origin + '/api/search_similar?'
+    //         + 'img_hash=' + imgHash
+    //         + '&tags_positive=' + posTags
+    //         + '&tags_negative=' + negTags
+    //         + '&color_1=' + color_1
+    //         + '&color_2=' + color_2
+    //         + '&sex=' + sex
+    //         + '&no_shop=' + noShop
+    //         + '&max_price=' + maxPrice
+    //         + '&brands=' + filterBrands;
+    //     // console.log('Search string: ', searchString);
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         this.setState({
+    //             results: data.res,
+    //             loading: false,
+    //             // prodImgShown: prodImgShown
+    //         });
+    //         window.scrollTo({
+    //             top: 0,
+    //             behavior: "smooth"
+    //         });
+    //         window.scrollTo(0, 0);
+    //     });
+    // }
+
     searchSimilarImages(imgHash, colorRgb1, colorRgb2){
         this.setState({
             loading: true
         });
-        let posTags = this.state.posTags.toString().replace(/\s+/g, '');
-        let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
         let sex = this.state.sex;
-        let noShop = this.state.noShop.toString().replace(/\s+/g, '');
-        let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
-        let color_1 = colorRgb1.toString().replace(/\s+/g, '');
-        let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let noShop = this.state.noShop;
+        let filterBrands = this.state.filterBrands;
+        let color_1 = colorRgb1;
+        let color_2 = colorRgb2;
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-        let searchString = window.location.origin + '/api/search_similar?'
-            + 'img_hash=' + imgHash
-            + '&tags_positive=' + posTags
-            + '&tags_negative=' + negTags
-            + '&color_1=' + color_1
-            + '&color_2=' + color_2
-            + '&sex=' + sex
-            + '&no_shop=' + noShop
-            + '&max_price=' + maxPrice
-            + '&brands=' + filterBrands;
-        // console.log('Search string: ', searchString);
-        fetch(searchString, {
-            method: 'get',
+
+        fetch(window.location.origin + '/api/search_similar', {
+            method: 'post',
+            body: JSON.stringify({
+                img_hash: imgHash,
+                tags_positive: posTags,
+                tags_negative: negTags,
+                color_1: color_1,
+                color_2: color_2,
+                sex: sex,
+                no_shop: noShop,
+                max_price: maxPrice,
+                brands: filterBrands
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) {
             return response.json();
         }).then(data => {
@@ -273,13 +323,6 @@ class TextSearch extends React.Component  {
                         noResult: true
                     });
                 } else {
-                    // let results =  data.res;
-                    // let prodImgShown = Object.assign(
-                    //     {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                    //             'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                    //             'img_count': product['prod_serial'][0]['img_urls'].length
-                    //         }}))
-                    // );
                     this.setState({
                         results: data.res,
                         loading: false,
@@ -402,6 +445,41 @@ class TextSearch extends React.Component  {
         this.setState({
             rangeVal: val
         })
+    }
+
+    showBrandPicker(show) {
+        this.setState({
+            brandPickerShown: show
+        })
+    }
+
+    addBrandFilter(brand, showPicker) {
+        // console.log(brand);
+        let currentFilterBrands = this.state.filterBrands;
+        // console.log(currentFilterBrands);
+        if (currentFilterBrands.indexOf(brand) !== -1) {
+            const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
+                return checkedBrand !== brand
+            });
+            if (newFilterBrands.length === 0) {
+                this.setState({
+                    filterBrands: newFilterBrands,
+                    brandPickerShown: false
+                });
+            } else {
+                this.setState({
+                    filterBrands: newFilterBrands,
+                    brandPickerShown: true
+                });
+            }
+        } else {
+            currentFilterBrands.push(brand);
+            // console.log(currentFilterBrands);
+            this.setState({
+                filterBrands: currentFilterBrands,
+                brandPickerShown: showPicker
+            });
+        }
     }
 
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
@@ -597,18 +675,6 @@ class TextSearch extends React.Component  {
                                     firstLogin={this.props.firstLogin}
                                 />
 
-
-                                {/*<SexSelector*/}
-                                    {/*sex={this.state.sex}*/}
-                                    {/*sexPickerWidth={this.state.sexPickerWidth}*/}
-                                    {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
-                                    {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
-                                {/*/>*/}
-                                {/*<PriceFilter*/}
-                                {/*    range={rangeVal}*/}
-                                {/*    updateRange={this.updateRange}*/}
-                                {/*    loading={this.state.loading}*/}
-                                {/*/>*/}
                                 <ResultFilters
                                     range={rangeVal}
                                     updateRange={this.updateRange}
@@ -622,6 +688,10 @@ class TextSearch extends React.Component  {
                                         this.searchSimilarImages(imgHash, color1, color2)
                                     }}
                                     results={this.state.results}
+                                    filterBrands={this.state.filterBrands}
+                                    brandPickerShown={this.state.brandPickerShown}
+                                    showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                                    addBrandFilter={(brand) => {this.addBrandFilter(brand)}}
                                 />
                             </div>
                         ) : (
@@ -630,21 +700,6 @@ class TextSearch extends React.Component  {
                     }
 
                     <NoResults />
-
-                    {/*<TagCloud*/}
-                    {/*    posTags={this.state.posTags}*/}
-                    {/*    negTags={this.state.negTags}*/}
-                    {/*    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}*/}
-                    {/*/>*/}
-
-                    {/*<ColorPicker*/}
-                    {/*    setColor={(selection) => {this.setColorPosTags(selection)}}*/}
-                    {/*    selectedColors={this.state.selectedColors}*/}
-                    {/*    searchSimilarImages={(imgHash, color1, color2) => {*/}
-                    {/*        this.searchSimilarImages(imgHash, color1, color2)*/}
-                    {/*    }}*/}
-                    {/*    results={this.state.results}*/}
-                    {/*/>*/}
 
                     {
                         (this.state.results.length > 0)

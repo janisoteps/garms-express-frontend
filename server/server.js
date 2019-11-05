@@ -29,7 +29,6 @@ app.post('/api/upload_image', upload.single('image'), function (req, res) {
     const imgId = sha1(`${timestamp}`);
     const image = req.file.path;
     const fileType = req.file.mimetype;
-    console.log(`filetype: ${fileType}`);
     let extension = null;
     if (fileType === 'image/jpeg') {
         extension = 'jpg'
@@ -852,7 +851,6 @@ app.post('/api/get_prod_hash', function (req, res) {
 app.post('/api/recommend_tags', function (req, res) {
     const email = req.body.email;
     const sex = req.body.sex;
-    console.log('called');
 
     const options = {
         method: 'POST',

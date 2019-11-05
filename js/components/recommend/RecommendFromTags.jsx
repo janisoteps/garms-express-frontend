@@ -22,7 +22,6 @@ class RecommendFromTags extends React.Component  {
     }
 
     componentDidMount() {
-        console.log('component did mount');
         fetch(`${window.location.origin}/api/recommend_tags`, {
             method: 'post',
             body: JSON.stringify({'email': this.state.email, 'sex': this.state.sex}),
@@ -64,7 +63,6 @@ class RecommendFromTags extends React.Component  {
                 } : {
                     textDecoration: 'none'
                 };
-                // console.log(prodSuggestion);
                 const imgHash = prodSuggestion.image_hash[0];
 
                 if (this.props.lookFilter === null || this.props.lookFilter === lookName) {

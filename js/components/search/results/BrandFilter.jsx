@@ -107,29 +107,32 @@ class BrandFilter extends React.Component {
                     width: '100%',
                 }}
             >
-                <div
-                    style={{
-                        display: 'inline-block',
-                        marginLeft: '10px',
-                        borderRadius: '5px',
-                        border: '2px #000000 solid',
-                        paddingLeft: '5px',
-                        paddingRight: '5px',
-                        cursor: 'pointer'
-                    }}
-                    onClick={() => {
-                        this.props.showBrandPicker(true)
-                    }}
-                >
-                    <b>BRANDS</b>
-                    {this.props.filterBrands.length === 0 ? (
-                        <div>
-                            ALL
-                        </div>
-                    ) : (
-                        brandList
-                    )}
-                </div>
+                <Tooltip title="Change brand filter">
+                    <div
+                        style={{
+                            display: 'inline-block',
+                            marginLeft: '10px',
+                            borderRadius: '5px',
+                            border: '2px #000000 solid',
+                            paddingLeft: '5px',
+                            paddingRight: '5px',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        }}
+                        onClick={() => {
+                            this.props.showBrandPicker(true)
+                        }}
+                    >
+                        {/*<b>BRANDS</b>*/}
+                        {this.props.filterBrands.length === 0 ? (
+                            <div>
+                                ALL BRANDS
+                            </div>
+                        ) : (
+                            brandList
+                        )}
+                    </div>
+                </Tooltip>
                 {this.props.brandPickerShown === true && (
                     <div style={{
                         position: 'fixed',
