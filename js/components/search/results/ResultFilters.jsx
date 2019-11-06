@@ -19,6 +19,20 @@ class ResultFilters extends React.Component {
                     top: '50px'
                 }}
             >
+                <TagCloud
+                    posTags={this.props.posTags}
+                    negTags={this.props.negTags}
+                    setTags={(tag, type, flag) => {this.props.setTags(tag, type, flag)}}
+                    addTagFilter={(tag, showPicker) => {this.props.addTagFilter(tag, showPicker)}}
+                    showTagPicker={(show) => {this.props.showTagPicker(show)}}
+                    tagPickerShown={this.props.tagPickerShown}
+                />
+                <BrandFilter
+                    filterBrands={this.props.filterBrands}
+                    brandPickerShown={this.props.brandPickerShown}
+                    showBrandPicker={(show) => {this.props.showBrandPicker(show)}}
+                    addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
+                />
                 <PriceFilter
                     range={this.props.range}
                     updateRange={this.props.updateRange}
@@ -31,17 +45,6 @@ class ResultFilters extends React.Component {
                         this.props.searchSimilarImages(imgHash, color1, color2)
                     }}
                     results={this.props.results}
-                />
-                <TagCloud
-                    posTags={this.props.posTags}
-                    negTags={this.props.negTags}
-                    setTags={(tag, type, flag) => {this.props.setTags(tag, type, flag)}}
-                />
-                <BrandFilter
-                    filterBrands={this.props.filterBrands}
-                    brandPickerShown={this.props.brandPickerShown}
-                    showBrandPicker={(show) => {this.props.showBrandPicker(show)}}
-                    addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                 />
             </div>
         )

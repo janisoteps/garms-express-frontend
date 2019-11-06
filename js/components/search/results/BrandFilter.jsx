@@ -42,7 +42,7 @@ class BrandFilter extends React.Component {
         const brandList = this.props.filterBrands.map(filterBrand => {
             return (
                 <div key={`${filterBrand}-${Math.random()}`}>
-                    {filterBrand}
+                    <b>{filterBrand}</b>
                 </div>
             )
         });
@@ -57,7 +57,7 @@ class BrandFilter extends React.Component {
                                 border: '2px #000000 solid',
                                 cursor: 'pointer',
                                 width: '80vw',
-                                maxWidth: '250px',
+                                maxWidth: '300px',
                                 margin: '0 auto',
                                 marginBottom: '3px'
                             }}
@@ -111,21 +111,25 @@ class BrandFilter extends React.Component {
                 <Tooltip title="Change brand filter">
                     <div
                         style={{
-                            display: 'inline-block',
+                            // display: 'inline-block',
                             marginLeft: '10px',
                             borderRadius: '5px',
                             border: '2px #000000 solid',
                             paddingLeft: '5px',
                             paddingRight: '5px',
                             cursor: 'pointer',
-                            fontSize: '1rem'
+                            fontSize: '0.8rem',
+                            marginBottom: '15px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
                         }}
                         onClick={() => {
                             this.props.showBrandPicker(true)
                         }}
                     >
                         {this.props.filterBrands.length === 0 ? (
-                            <div>
+                            <div style={{
+                                whiteSpace: 'nowrap'
+                            }}>
                                 <b>ALL BRANDS</b>
                             </div>
                         ) : (

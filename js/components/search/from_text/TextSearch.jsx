@@ -38,7 +38,7 @@ class TextSearch extends React.Component  {
             selectedColors: [],
             posTags: [],
             negTags: [],
-            searchString: null,
+            searchString: '',
             noResult: false,
             sexPickerWidth: '48px',
             catsOn: false,
@@ -48,7 +48,8 @@ class TextSearch extends React.Component  {
             firstLogin: this.props.firstLogin,
             rangeVal: 500,
             filterBrands: [],
-            brandPickerShown: false
+            brandPickerShown: false,
+            tagPickerShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -62,6 +63,8 @@ class TextSearch extends React.Component  {
         this.updateRange = this.updateRange.bind(this);
         this.showBrandPicker = this.showBrandPicker.bind(this);
         this.addBrandFilter = this.addBrandFilter.bind(this);
+        this.showTagPicker = this.showTagPicker.bind(this);
+        this.addTagFilter = this.addTagFilter.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -454,7 +457,7 @@ class TextSearch extends React.Component  {
         this.setState({
             brandPickerShown: show
         });
-        if (show === false && this.state.filterBrands.length > 0) {
+        if (show === false) {
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
                 this.state.selectedColors[0],
@@ -469,28 +472,55 @@ class TextSearch extends React.Component  {
             const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
                 return checkedBrand !== brand
             });
-            if (newFilterBrands.length === 0) {
-                this.setState({
-                    filterBrands: newFilterBrands,
-                    brandPickerShown: false
-                }, () => {
-                    this.searchSimilarImages(
-                        this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColors[0],
-                        this.state.selectedColors[1]
-                    );
-                });
-            } else {
-                this.setState({
-                    filterBrands: newFilterBrands,
-                    brandPickerShown: true
-                });
-            }
+            this.setState({
+                filterBrands: newFilterBrands,
+                brandPickerShown: showPicker
+            });
         } else {
             currentFilterBrands.push(brand);
             this.setState({
                 filterBrands: currentFilterBrands,
                 brandPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
+                }
+            });
+        }
+    }
+
+    showTagPicker(show) {
+        this.setState({
+            tagPickerShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColors[0],
+                this.state.selectedColors[1]
+            );
+        }
+    }
+
+    addTagFilter(tag, showPicker) {
+        let currentFilterTags = this.state.posTags;
+        if (currentFilterTags.indexOf(tag) !== -1) {
+            const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                return checkedTag !== tag
+            });
+            this.setState({
+                posTags: newFilterBrandTags,
+                tagPickerShown: showPicker
+            });
+        } else {
+            currentFilterTags.push(tag);
+            this.setState({
+                posTags: currentFilterTags,
+                tagPickerShown: showPicker
             }, () => {
                 if (showPicker === false) {
                     this.searchSimilarImages(
@@ -595,6 +625,7 @@ class TextSearch extends React.Component  {
                             autoFocus="autofocus"
                             className="text-search-input"
                             hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
+                            value={this.state.searchString.toUpperCase()}
                             floatingLabelText="What's your outfit idea?"
                             floatingLabelStyle={{
                                 color: 'black'
@@ -700,6 +731,9 @@ class TextSearch extends React.Component  {
                                     posTags={this.state.posTags}
                                     negTags={this.state.negTags}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                                    addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
+                                    showTagPicker={(show) => {this.showTagPicker(show)}}
+                                    tagPickerShown={this.state.tagPickerShown}
                                     setColor={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColors={this.state.selectedColors}
                                     searchSimilarImages={(imgHash, color1, color2) => {
