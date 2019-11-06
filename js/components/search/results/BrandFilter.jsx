@@ -10,7 +10,7 @@ class BrandFilter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchString: null,
+            searchString: '',
             suggestedTags: null
         };
         // this.removeTag = this.removeTag.bind(this);
@@ -23,7 +23,7 @@ class BrandFilter extends React.Component {
         if(e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
             this.setState({
-                searchString: null
+                searchString: ''
             });
             this.props.addBrandFilter(this.state.searchString, false);
         }
@@ -84,9 +84,10 @@ class BrandFilter extends React.Component {
                         }}
                         onClick={() => {
                             this.setState({
-                                searchString: null
+                                searchString: ''
+                            }, () => {
+                                this.props.addBrandFilter(suggestBrand, true);
                             });
-                            this.props.addBrandFilter(suggestBrand, false);
                         }}
                     >
                         {suggestBrand}
@@ -123,14 +124,14 @@ class BrandFilter extends React.Component {
                             this.props.showBrandPicker(true)
                         }}
                     >
-                        {/*<b>BRANDS</b>*/}
                         {this.props.filterBrands.length === 0 ? (
                             <div>
-                                ALL BRANDS
+                                <b>ALL BRANDS</b>
                             </div>
                         ) : (
                             brandList
                         )}
+                        <div className="brand-picker-bubble-plus" />
                     </div>
                 </Tooltip>
                 {this.props.brandPickerShown === true && (
@@ -151,7 +152,8 @@ class BrandFilter extends React.Component {
                         <TextField
                             autoFocus="autofocus"
                             className="text-search-input"
-                            hintText={this.state.searchString ? this.state.searchString : "Brand..."}
+                            hintText={"Brand..."}
+                            value={this.state.searchString}
                             floatingLabelText="Add brand"
                             floatingLabelStyle={{
                                 color: 'black'
@@ -168,7 +170,7 @@ class BrandFilter extends React.Component {
                         />
                         <div
                             onClick={() => {
-                                if (this.state.searchString === null) {
+                                if (this.state.searchString === '') {
                                     this.props.showBrandPicker(false)
                                 } else {
                                     this.props.addBrandFilter(this.state.searchString, false)
@@ -191,7 +193,7 @@ class BrandFilter extends React.Component {
                         <div style={{
                             marginTop: '30px'
                         }}>
-                            {this.state.searchString !== null && (<PickerSuggestions />)}
+                            {this.state.searchString !== '' && (<PickerSuggestions />)}
                         </div>
                     </div>
                 )}

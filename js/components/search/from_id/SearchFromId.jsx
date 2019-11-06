@@ -175,8 +175,8 @@ class SearchFromId extends React.Component  {
         let sex = this.state.sex;
         let noShop = this.state.noShop;
         let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1;
-        let color_2 = colorRgb2;
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColors[0];
+        let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
 
         fetch(window.location.origin + '/api/search_similar', {
@@ -371,7 +371,14 @@ class SearchFromId extends React.Component  {
     showBrandPicker(show) {
         this.setState({
             brandPickerShown: show
-        })
+        });
+        if (show === false && this.state.filterBrands.length > 0) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColors[0],
+                this.state.selectedColors[1]
+            );
+        }
     }
 
     addBrandFilter(brand, showPicker) {
@@ -384,6 +391,12 @@ class SearchFromId extends React.Component  {
                 this.setState({
                     filterBrands: newFilterBrands,
                     brandPickerShown: false
+                }, () => {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
                 });
             } else {
                 this.setState({
@@ -396,6 +409,14 @@ class SearchFromId extends React.Component  {
             this.setState({
                 filterBrands: currentFilterBrands,
                 brandPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
+                }
             });
         }
     }
@@ -597,7 +618,7 @@ class SearchFromId extends React.Component  {
 
                     <NoResults />
                     <ResultFilters
-                        range={rangeVal}
+                        range={this.state.rangeVal}
                         updateRange={this.updateRange}
                         loading={this.state.loading}
                         posTags={this.state.posTags}
@@ -612,7 +633,7 @@ class SearchFromId extends React.Component  {
                         filterBrands={this.state.filterBrands}
                         brandPickerShown={this.state.brandPickerShown}
                         showBrandPicker={(show) => {this.showBrandPicker(show)}}
-                        addBrandFilter={(brand) => {this.addBrandFilter(brand)}}
+                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                     />
 
                     {

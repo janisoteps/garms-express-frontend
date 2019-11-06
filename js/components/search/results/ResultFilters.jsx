@@ -20,7 +20,7 @@ class ResultFilters extends React.Component {
                 }}
             >
                 <PriceFilter
-                    range={this.props.rangeVal}
+                    range={this.props.range}
                     updateRange={this.props.updateRange}
                     loading={this.props.loading}
                 />
@@ -41,7 +41,7 @@ class ResultFilters extends React.Component {
                     filterBrands={this.props.filterBrands}
                     brandPickerShown={this.props.brandPickerShown}
                     showBrandPicker={(show) => {this.props.showBrandPicker(show)}}
-                    addBrandFilter={(brand) => {this.props.addBrandFilter(brand)}}
+                    addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                 />
             </div>
         )

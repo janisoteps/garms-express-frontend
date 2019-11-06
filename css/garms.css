@@ -532,6 +532,19 @@
     margin-top: 2px;
 }
 
+.brand-picker-bubble-plus{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background: #FFFFFF url('../images/baseline-add-24px.svg') no-repeat center;
+    background-size: 24px 24px;
+    border: 2px #000000 solid;
+    float: left;
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
 .search-similar{
     width: 54px;
     height: 54px;

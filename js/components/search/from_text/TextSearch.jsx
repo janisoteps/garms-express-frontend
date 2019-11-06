@@ -7,12 +7,12 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-import TagCloud from '../results/TagCloud';
-import ColorPicker from '../results/ColorPicker';
+// import TagCloud from '../results/TagCloud';
+// import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import PriceFilter from './../results/PriceFilter';
+// import PriceFilter from './../results/PriceFilter';
 import ResultFilters from "../results/ResultFilters";
 
 
@@ -55,13 +55,8 @@ class TextSearch extends React.Component  {
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
-        this.changeSex = this.changeSex.bind(this);
-        this.changeSex = this.changeSex.bind(this);
-        this.expandSexSelector = this.expandSexSelector.bind(this);
         this.showCatPicker = this.showCatPicker.bind(this);
         this.setMainCats = this.setMainCats.bind(this);
-        this.setMainCatsAndSearchSimilar = this.setMainCatsAndSearchSimilar.bind(this);
-        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.updateRange = this.updateRange.bind(this);
@@ -170,8 +165,8 @@ class TextSearch extends React.Component  {
         let sex = this.state.sex;
         let noShop = this.state.noShop;
         let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1;
-        let color_2 = colorRgb2;
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.results[0]['image_data']['color_1'];
+        let color_2 = colorRgb2 ? colorRgb2 : this.state.results[0]['image_data']['color_2'];
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
 
         fetch(window.location.origin + '/api/search_similar', {
@@ -196,8 +191,16 @@ class TextSearch extends React.Component  {
         }).then(data => {
             this.setState({
                 results: data.res,
-                loading: false,
-                // prodImgShown: prodImgShown
+                loading: false
+            }, () => {
+                if(this.state.selectedColors.length === 0 && this.state.results.length > 0) {
+                    this.setState({
+                        selectedColors: [
+                            this.state.results[0]['image_data']['color_1'],
+                            this.state.results[0]['image_data']['color_2']
+                        ]
+                    })
+                }
             });
             window.scrollTo({
                 top: 0,
@@ -338,89 +341,89 @@ class TextSearch extends React.Component  {
             });
     }
 
-    //Submits login request to server and sets state/cookies if successful
-    handleLoginSubmit(event) {
-        event.preventDefault();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
-        fetch(window.location.origin + '/api/login', {
-            method: 'post',
-            body: JSON.stringify({email: email, pwd: pwd}),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(function(data) {
-                // console.log(data);
-                if (data === "OK") {
-                    this.setState({
-                        isAuth: true
-                    });
-                }
-            });
-    }
+    // //Submits login request to server and sets state/cookies if successful
+    // handleLoginSubmit(event) {
+    //     event.preventDefault();
+    //     let email = this.state.email;
+    //     let pwd = this.state.pwd;
+    //     fetch(window.location.origin + '/api/login', {
+    //         method: 'post',
+    //         body: JSON.stringify({email: email, pwd: pwd}),
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) { return response.json(); })
+    //         .then(function(data) {
+    //             // console.log(data);
+    //             if (data === "OK") {
+    //                 this.setState({
+    //                     isAuth: true
+    //                 });
+    //             }
+    //         });
+    // }
 
-    setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        // console.log('Similar image search launched, prod id: ', prod_id);
-        this.setState({
-            loading: true
-        });
+    // setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
+    //     // console.log('Similar image search launched, prod id: ', prod_id);
+    //     this.setState({
+    //         loading: true
+    //     });
+    //
+    //     let mainColor = color_1.toString().replace(/\s+/g, '');
+    //     // let mainColor = this.state.mainColor;
+    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
+    //
+    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
+    //         + '&main_cat=' + mainCat1
+    //         + '&main_cat2=' + mainCat2
+    //         + '&nr1_cat_sc=' + nr1_cat_sc
+    //         + '&color_1=[' + mainColor
+    //         + ']&pca_256=[' + siam_64
+    //         + ']&sex=' + this.state.sex
+    //         + '&id=' + prod_id;
+    //
+    //     // console.log('search string: ', searchString);
+    //
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         // console.log(data);
+    //         this.setState({
+    //             results: data.res,
+    //             loading: false
+    //         });
+    //         window.scrollTo({
+    //             top: 0,
+    //             behavior: "smooth"
+    //         });
+    //         window.scrollTo(0, 0);
+    //     });
+    // }
 
-        let mainColor = color_1.toString().replace(/\s+/g, '');
-        // let mainColor = this.state.mainColor;
-        let siam_64 = siamese_64.toString().replace(/\s+/g, '');
-
-        let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-            + '&main_cat=' + mainCat1
-            + '&main_cat2=' + mainCat2
-            + '&nr1_cat_sc=' + nr1_cat_sc
-            + '&color_1=[' + mainColor
-            + ']&pca_256=[' + siam_64
-            + ']&sex=' + this.state.sex
-            + '&id=' + prod_id;
-
-        // console.log('search string: ', searchString);
-
-        fetch(searchString, {
-            method: 'get',
-        }).then(function(response) {
-            return response.json();
-        }).then(data => {
-            // console.log(data);
-            this.setState({
-                results: data.res,
-                loading: false
-            });
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-            window.scrollTo(0, 0);
-        });
-    }
-
-    changeSex(sex){
-        this.props.changeSex(sex);
-        this.setState({
-            sex: sex
-        });
-    }
-
-    expandSexSelector(){
-        let currentWidth = this.state.sexPickerWidth;
-
-        // console.log('Expanding sex selector ', currentWidth);
-        if(currentWidth === '48px'){
-            this.setState({
-                sexPickerWidth: '270px'
-            });
-        } else {
-            this.setState({
-                sexPickerWidth: '48px'
-            });
-        }
-    }
+    // changeSex(sex){
+    //     this.props.changeSex(sex);
+    //     this.setState({
+    //         sex: sex
+    //     });
+    // }
+    //
+    // expandSexSelector(){
+    //     let currentWidth = this.state.sexPickerWidth;
+    //
+    //     // console.log('Expanding sex selector ', currentWidth);
+    //     if(currentWidth === '48px'){
+    //         this.setState({
+    //             sexPickerWidth: '270px'
+    //         });
+    //     } else {
+    //         this.setState({
+    //             sexPickerWidth: '48px'
+    //         });
+    //     }
+    // }
 
     showCatPicker(){
         if(this.state.catsOn === false){
@@ -444,19 +447,24 @@ class TextSearch extends React.Component  {
     updateRange(val) {
         this.setState({
             rangeVal: val
-        })
+        });
     }
 
     showBrandPicker(show) {
         this.setState({
             brandPickerShown: show
-        })
+        });
+        if (show === false && this.state.filterBrands.length > 0) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColors[0],
+                this.state.selectedColors[1]
+            );
+        }
     }
 
     addBrandFilter(brand, showPicker) {
-        // console.log(brand);
         let currentFilterBrands = this.state.filterBrands;
-        // console.log(currentFilterBrands);
         if (currentFilterBrands.indexOf(brand) !== -1) {
             const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
                 return checkedBrand !== brand
@@ -465,6 +473,12 @@ class TextSearch extends React.Component  {
                 this.setState({
                     filterBrands: newFilterBrands,
                     brandPickerShown: false
+                }, () => {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
                 });
             } else {
                 this.setState({
@@ -474,10 +488,17 @@ class TextSearch extends React.Component  {
             }
         } else {
             currentFilterBrands.push(brand);
-            // console.log(currentFilterBrands);
             this.setState({
                 filterBrands: currentFilterBrands,
                 brandPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
+                }
             });
         }
     }
@@ -646,8 +667,6 @@ class TextSearch extends React.Component  {
             </div>
         );
 
-        const rangeVal = this.state.rangeVal;
-
         return(
             <MuiThemeProvider>
                 <div>
@@ -668,7 +687,6 @@ class TextSearch extends React.Component  {
                                         color_2
                                     ) }}
                                     results={this.state.results}
-                                    // prodImgShown={this.state.prodImgShown}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColors={this.state.selectedColors}
@@ -676,7 +694,7 @@ class TextSearch extends React.Component  {
                                 />
 
                                 <ResultFilters
-                                    range={rangeVal}
+                                    range={this.state.rangeVal}
                                     updateRange={this.updateRange}
                                     loading={this.state.loading}
                                     posTags={this.state.posTags}
@@ -691,7 +709,7 @@ class TextSearch extends React.Component  {
                                     filterBrands={this.state.filterBrands}
                                     brandPickerShown={this.state.brandPickerShown}
                                     showBrandPicker={(show) => {this.showBrandPicker(show)}}
-                                    addBrandFilter={(brand) => {this.addBrandFilter(brand)}}
+                                    addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                                 />
                             </div>
                         ) : (
