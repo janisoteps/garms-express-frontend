@@ -42,7 +42,11 @@ class BrandFilter extends React.Component {
         const brandList = this.props.filterBrands.map(filterBrand => {
             return (
                 <div key={`${filterBrand}-${Math.random()}`}>
-                    <b>{filterBrand}</b>
+                    <div>
+                        <div>
+                            {filterBrand}
+                        </div>
+                    </div>
                 </div>
             )
         });
@@ -54,7 +58,7 @@ class BrandFilter extends React.Component {
                         <div
                             style={{
                                 borderRadius: '5px',
-                                border: '2px #000000 solid',
+                                border: '1px rgba(1,1,1,0.8) solid',
                                 cursor: 'pointer',
                                 width: '80vw',
                                 maxWidth: '300px',
@@ -103,39 +107,37 @@ class BrandFilter extends React.Component {
         };
 
         return (
-            <div
-                style={{
-                    width: '100%',
-                }}
-            >
+            <div>
                 <Tooltip title="Change brand filter">
                     <div
                         style={{
-                            // display: 'inline-block',
+                            position: 'relative',
                             marginLeft: '10px',
                             borderRadius: '5px',
-                            border: '2px #000000 solid',
+                            border: '2px rgba(1,1,1,0) solid',
                             paddingLeft: '5px',
                             paddingRight: '5px',
                             cursor: 'pointer',
-                            fontSize: '0.8rem',
-                            marginBottom: '15px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                            fontSize: '1rem',
+                            marginBottom: '10px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px'
                         }}
                         onClick={() => {
                             this.props.showBrandPicker(true)
                         }}
                     >
+                        <div className="brand-picker-bubble-plus" />
                         {this.props.filterBrands.length === 0 ? (
                             <div style={{
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap',
+                                fontSize: '0.9rem'
                             }}>
-                                <b>ALL BRANDS</b>
+                                ALL BRANDS
                             </div>
                         ) : (
                             brandList
                         )}
-                        <div className="brand-picker-bubble-plus" />
                     </div>
                 </Tooltip>
                 {this.props.brandPickerShown === true && (

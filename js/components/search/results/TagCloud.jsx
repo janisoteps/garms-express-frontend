@@ -491,7 +491,7 @@ class TagCloud extends React.Component {
                         // onClick={() => {this.removeTag(tag, 'positive')}}
                     >
                         <div>
-                            <b>{tag.toUpperCase()}</b>
+                            {tag.toUpperCase()}
                         </div>
                     </div>
                 </div>
@@ -505,7 +505,7 @@ class TagCloud extends React.Component {
                         // onClick={() => {this.removeTag(tag, 'negative');}}
                     >
                         <div>
-                            <b>{tag.toUpperCase()}</b>
+                            {tag.toUpperCase()}
                         </div>
                     </div>
                 </div>
@@ -574,19 +574,22 @@ class TagCloud extends React.Component {
                         style={{
                             marginLeft: '10px',
                             borderRadius: '5px',
-                            border: '2px #000000 solid',
+                            border: '2px rgba(1,1,1,0) solid',
                             paddingLeft: '5px',
                             paddingRight: '5px',
                             cursor: 'pointer',
-                            fontSize: '0.8rem',
+                            fontSize: '1rem',
                             marginTop: '10px',
                             marginBottom: '15px',
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)'
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                            position: 'relative'
                         }}
                         onClick={() => {
                             this.props.showTagPicker(true)
                         }}
                     >
+                        <div className="brand-picker-bubble-plus" />
                         {(this.props.posTags.length > 0 || this.props.negTags.length > 0) ? (
                             <div>
                                 {posTags}
@@ -595,7 +598,6 @@ class TagCloud extends React.Component {
                         ) : (
                             <div style={{height: '0'}}/>
                         )}
-                        <div className="brand-picker-bubble-plus" />
                     </div>
                 </Tooltip>
                 {this.props.tagPickerShown === true && (

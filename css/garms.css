@@ -1,5 +1,5 @@
 body{
-    background-color: #fffaed;
+    background-color: #fffdf9;
 }
 
 .content-wrapper{
@@ -543,13 +543,11 @@ body{
     border-radius: 10px;
     background: #FFFFFF url('../images/baseline-add-24px.svg') no-repeat center;
     background-size: 20px 20px;
-    border: 2px #000000 solid;
-    float: right;
-    /*margin-right: 2px;*/
-    /*margin-bottom: 2px;*/
-    position: relative;
-    right: -16px;
-    bottom: 8px;
+    border: 1px #000000 solid;
+    float: left;
+    position: absolute;
+    left: -10px;
+    top: -10px;
 }
 
 .search-similar{
