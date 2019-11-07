@@ -1,3 +1,7 @@
+body{
+    background-color: #fffdf9;
+}
+
 .content-wrapper{
     font-size: larger;
 }
@@ -517,6 +521,33 @@
     background: #FFFFFF url('../images/baseline-remove-24px.svg') no-repeat center;
     background-size: 42px 42px;
     filter: invert(100%);
+}
+
+.brand-picker-bubble-minus{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background: #FFFFFF url('../images/baseline-remove-24px.svg') no-repeat center;
+    background-size: 24px 24px;
+    border: 2px #000000 solid;
+    float: right;
+    margin-right: 2px;
+    margin-top: 2px;
+}
+
+.brand-picker-bubble-plus{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #FFFFFF url('../images/baseline-add-24px.svg') no-repeat center;
+    background-size: 20px 20px;
+    border: 1px #000000 solid;
+    float: left;
+    position: absolute;
+    left: -10px;
+    top: -10px;
 }
 
 .search-similar{

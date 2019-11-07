@@ -29,7 +29,6 @@ app.post('/api/upload_image', upload.single('image'), function (req, res) {
     const imgId = sha1(`${timestamp}`);
     const image = req.file.path;
     const fileType = req.file.mimetype;
-    console.log(`filetype: ${fileType}`);
     let extension = null;
     if (fileType === 'image/jpeg') {
         extension = 'jpg'
@@ -517,20 +516,37 @@ app.post('/api/search_from_image_v2', function (req, res) {
 
 
 // Search products based on confirmation modal input
-app.get('/api/search_similar', function (req, res) {
-    let img_hash = req.query.img_hash;
-    let tags_positive = req.query.tags_positive;
-    let tags_negative = req.query.tags_negative;
-    let color_1 = req.query.color_1;
-    let color_2 = req.query.color_2;
-    let no_shop = req.query.no_shop;
-    let sex = req.query.sex;
-    let max_price = req.query.max_price;
+app.post('/api/search_similar', function (req, res) {
+    let img_hash = req.body.img_hash;
+    let tags_positive = req.body.tags_positive;
+    let tags_negative = req.body.tags_negative;
+    let color_1 = req.body.color_1;
+    let color_2 = req.body.color_2;
+    let no_shop = req.body.no_shop;
+    let sex = req.body.sex;
+    let max_price = req.body.max_price;
+    let brands = req.body.brands;
+
+    // let options = {
+    //     method: 'GET',
+    //     url: api_base_url + 'search_similar',
+    //     qs: {
+    //         img_hash: img_hash,
+    //         tags_positive: tags_positive,
+    //         tags_negative: tags_negative,
+    //         color_1: color_1,
+    //         color_2: color_2,
+    //         sex: sex,
+    //         no_shop: no_shop,
+    //         max_price: max_price,
+    //         brands: brands
+    //     }
+    // };
 
     let options = {
-        method: 'GET',
+        method: 'POST',
         url: api_base_url + 'search_similar',
-        qs: {
+        body: JSON.stringify({
             img_hash: img_hash,
             tags_positive: tags_positive,
             tags_negative: tags_negative,
@@ -538,17 +554,15 @@ app.get('/api/search_similar', function (req, res) {
             color_2: color_2,
             sex: sex,
             no_shop: no_shop,
-            max_price: max_price
-        }
+            max_price: max_price,
+            brands: brands
+        }),
+        json: true
     };
-
-    // console.log('Search similar images , options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
-
-            res.send(response_data);
+            res.send(body);
         }
     }
 
@@ -837,7 +851,6 @@ app.post('/api/get_prod_hash', function (req, res) {
 app.post('/api/recommend_tags', function (req, res) {
     const email = req.body.email;
     const sex = req.body.sex;
-    console.log('called');
 
     const options = {
         method: 'POST',

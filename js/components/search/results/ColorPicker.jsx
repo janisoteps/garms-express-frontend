@@ -20,7 +20,7 @@ class ColorPicker extends React.Component {
     }
 
     handleChangeComplete = (color) => {
-        console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
+        // console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
         if ((color.rgb['r'] + color.rgb['g'] + color.rgb['b']) < 10) {
             this.props.setColor({
                 'index': this.state.pickerIndex,
@@ -142,11 +142,10 @@ class ColorPicker extends React.Component {
             };
 
             let colorPickerStyle = {
-                top: '119px',
-                left: '10px',
+                marginLeft: '5px',
                 height: '132px',
-                width: '74px',
-                position: 'fixed'
+                display: 'inline-block',
+                width: '80px'
             };
             return (
                 <div>

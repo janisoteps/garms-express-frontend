@@ -82,7 +82,6 @@ class App extends React.Component {
     };
 
     changeSex(sex){
-        console.log('Changins App.jsx sex to: ', sex);
         this.setState({
             sex: sex
         });
@@ -93,7 +92,6 @@ class App extends React.Component {
         event.preventDefault();
         let email = this.state.email;
         let pwd = this.state.pwd;
-        console.log('Email: ', email, ' pwd: ', pwd);
         const {cookies} = this.props;
 
         fetch(window.location.origin + '/api/login', {
@@ -124,8 +122,6 @@ class App extends React.Component {
 
     // Asks the API if submitted pwd is correct and logs the user in if yes
     handleLogin = (email, password) => {
-
-        console.log('Email: ', email, ' pwd: ', password);
         const {cookies} = this.props;
 
         fetch(window.location.origin + '/api/login', {
@@ -155,8 +151,6 @@ class App extends React.Component {
     };
 
     handleResultLogin = (email, password, imgHash) => {
-
-        console.log('Email: ', email, ' pwd: ', password);
         const {cookies} = this.props;
 
         fetch(window.location.origin + '/api/login', {
@@ -186,7 +180,6 @@ class App extends React.Component {
     };
 
     handleHigherCat = (higherCat) => {
-        console.log('App higherCat: ', higherCat);
         this.setState({
             higherCat: higherCat
         });

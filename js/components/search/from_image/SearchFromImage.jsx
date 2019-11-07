@@ -6,14 +6,11 @@ import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ColorChoiceModal from './ColorChoiceModal';
-// import SexSelector from '../results/SexSelector';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-import TagCloud from '../results/TagCloud';
-import ColorPicker from './ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import PriceFilter from './../results/PriceFilter';
+import ResultFilters from "../results/ResultFilters";
 
 
 //Component to search for products using an uploaded image
@@ -41,11 +38,12 @@ class SearchFromImage extends React.Component  {
             viewPortHeight: null,
             previewImgDims: {},
             firstLogin: this.props.firstLogin,
-            rangeVal: 500
+            rangeVal: 500,
+            filterBrands: [],
+            brandPickerShown: false,
+            tagPickerShown: false
         };
 
-        this.changeSex = this.changeSex.bind(this);
-        this.expandSexSelector = this.expandSexSelector.bind(this);
         this.getImageFeatures = this.getImageFeatures.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
@@ -58,6 +56,10 @@ class SearchFromImage extends React.Component  {
         this.updateRange = this.updateRange.bind(this);
         this.addOwnColor = this.addOwnColor.bind(this);
         this.addOwnCat = this.addOwnCat.bind(this);
+        this.showBrandPicker = this.showBrandPicker.bind(this);
+        this.addBrandFilter = this.addBrandFilter.bind(this);
+        this.showTagPicker = this.showTagPicker.bind(this);
+        this.addTagFilter = this.addTagFilter.bind(this);
     }
 
     componentDidMount() {
@@ -114,26 +116,25 @@ class SearchFromImage extends React.Component  {
         });
     }
 
-    changeSex(sex){
-        this.props.changeSex(sex);
-        this.setState({
-            sex: sex
-        });
-    }
-
-    expandSexSelector(){
-        let currentWidth = this.state.sexPickerWidth;
-        // console.log('Expanding sex selector ', currentWidth);
-        if(currentWidth === '48px'){
-            this.setState({
-                sexPickerWidth: '270px'
-            });
-        } else {
-            this.setState({
-                sexPickerWidth: '48px'
-            });
-        }
-    }
+    // changeSex(sex){
+    //     this.props.changeSex(sex);
+    //     this.setState({
+    //         sex: sex
+    //     });
+    // }
+    //
+    // expandSexSelector(){
+    //     let currentWidth = this.state.sexPickerWidth;
+    //     if(currentWidth === '48px'){
+    //         this.setState({
+    //             sexPickerWidth: '270px'
+    //         });
+    //     } else {
+    //         this.setState({
+    //             sexPickerWidth: '48px'
+    //         });
+    //     }
+    // }
 
     uploadFromUrl = (imgUrl) => {
         const responseStatus = function (response) {
@@ -271,18 +272,16 @@ class SearchFromImage extends React.Component  {
 
     // Set main color and category state based on selection from modal
     setColorPosTags(selection){
-        if(selection['cat'].length > 0) {
+        if(selection['cat']) {
             let selectedCat = selection['cat'];
-            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
                 this.setState({
-                            posTags: filteredTags
-                        });
+                    posTags: filteredTags
+                });
             } else {
                 tags = tags.concat(selectedCat);
-                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -291,7 +290,6 @@ class SearchFromImage extends React.Component  {
                 mainCat: selectedCat
             });
         } else {
-            // let colorNr = selection['color_nr'];
             let colorRgb = selection['color_rgb'];
             let selectedColors = this.state.selectedColors;
             selectedColors.unshift(colorRgb);
@@ -305,6 +303,41 @@ class SearchFromImage extends React.Component  {
             });
         }
     }
+    // setColorPosTags(selection){
+    //     if(selection['cat'].length > 0) {
+    //         let selectedCat = selection['cat'];
+    //         // console.log('Cat selections: ', selectedCat);
+    //         let tags = this.state.posTags;
+    //         if (tags.includes(selectedCat)){
+    //             let filteredTags = tags.filter(function(e) { return e !== selectedCat });
+    //             this.setState({
+    //                         posTags: filteredTags
+    //                     });
+    //         } else {
+    //             tags = tags.concat(selectedCat);
+    //             // console.log('New posTags: ', tags);
+    //             this.setState({
+    //                 posTags: tags
+    //             });
+    //         }
+    //         this.setState({
+    //             mainCat: selectedCat
+    //         });
+    //     } else {
+    //         // let colorNr = selection['color_nr'];
+    //         let colorRgb = selection['color_rgb'];
+    //         let selectedColors = this.state.selectedColors;
+    //         selectedColors.unshift(colorRgb);
+    //         if (selectedColors.length > 2) {
+    //             selectedColors.pop();
+    //         } else if (selectedColors.length === 1) {
+    //             selectedColors.unshift(colorRgb);
+    //         }
+    //         this.setState({
+    //             selectedColors: selectedColors
+    //         });
+    //     }
+    // }
 
     setColor(selection){
         let color_index = selection['index'];
@@ -404,36 +437,85 @@ class SearchFromImage extends React.Component  {
             });
     }
 
+    // searchSimilarImages(imgHash, colorRgb1, colorRgb2){
+    //     this.setState({
+    //         loading: true
+    //     });
+    //     let posTags = this.state.posTags.toString().replace(/\s+/g, '');
+    //     let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+    //     let sex = this.state.sex;
+    //     let noShop = this.state.noShop.toString().replace(/\s+/g, '');
+    //     let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
+    //     let color_1 = colorRgb1.toString().replace(/\s+/g, '');
+    //     let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+    //     let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+    //     let searchString = window.location.origin + '/api/search_similar?'
+    //         + 'img_hash=' + imgHash
+    //         + '&tags_positive=' + posTags
+    //         + '&tags_negative=' + negTags
+    //         + '&color_1=' + color_1
+    //         + '&color_2=' + color_2
+    //         + '&sex=' + sex
+    //         + '&no_shop=' + noShop
+    //         + '&max_price=' + maxPrice
+    //         + '&brands=' + filterBrands;
+    //     // console.log('Search string: ', searchString);
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //
+    //         this.setState({
+    //             results: data.res,
+    //             loading: false
+    //         });
+    //         window.scrollTo({
+    //             top: 0,
+    //             behavior: "smooth"
+    //         });
+    //         window.scrollTo(0, 0);
+    //     });
+    // }
+
     searchSimilarImages(imgHash, colorRgb1, colorRgb2){
         this.setState({
             loading: true
         });
-        let posTags = this.state.posTags.toString().replace(/\s+/g, '');
-        let negTags = this.state.negTags.toString().replace(/\s+/g, '');
+
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
         let sex = this.state.sex;
-        let noShop = this.state.noShop.toString().replace(/\s+/g, '');
-        let color_1 = colorRgb1.toString().replace(/\s+/g, '');
-        let color_2 = colorRgb2.toString().replace(/\s+/g, '');
+        let noShop = this.state.noShop;
+        let filterBrands = this.state.filterBrands;
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColors[0];
+        let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-        let searchString = window.location.origin + '/api/search_similar?'
-            + 'img_hash=' + imgHash
-            + '&tags_positive=' + posTags
-            + '&tags_negative=' + negTags
-            + '&color_1=' + color_1
-            + '&color_2=' + color_2
-            + '&sex=' + sex
-            + '&no_shop=' + noShop
-            + '&max_price=' + maxPrice;
-        // console.log('Search string: ', searchString);
-        fetch(searchString, {
-            method: 'get',
+
+        fetch(window.location.origin + '/api/search_similar', {
+            method: 'post',
+            body: JSON.stringify({
+                img_hash: imgHash,
+                tags_positive: posTags,
+                tags_negative: negTags,
+                color_1: color_1,
+                color_2: color_2,
+                sex: sex,
+                no_shop: noShop,
+                max_price: maxPrice,
+                brands: filterBrands
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
         }).then(function(response) {
             return response.json();
         }).then(data => {
-
             this.setState({
                 results: data.res,
-                loading: false
+                loading: false,
+                // prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -495,6 +577,85 @@ class SearchFromImage extends React.Component  {
         })
     }
 
+    showBrandPicker(show) {
+        this.setState({
+            brandPickerShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColors[0],
+                this.state.selectedColors[1]
+            );
+        }
+    }
+
+    addBrandFilter(brand, showPicker) {
+        let currentFilterBrands = this.state.filterBrands;
+        if (currentFilterBrands.indexOf(brand) !== -1) {
+            const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
+                return checkedBrand !== brand
+            });
+            this.setState({
+                filterBrands: newFilterBrands,
+                brandPickerShown: showPicker
+            });
+        } else {
+            currentFilterBrands.push(brand);
+            this.setState({
+                filterBrands: currentFilterBrands,
+                brandPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
+                }
+            });
+        }
+    }
+
+    showTagPicker(show) {
+        this.setState({
+            tagPickerShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColors[0],
+                this.state.selectedColors[1]
+            );
+        }
+    }
+
+    addTagFilter(tag, showPicker) {
+        let currentFilterTags = this.state.posTags;
+        if (currentFilterTags.indexOf(tag) !== -1) {
+            const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                return checkedTag !== tag
+            });
+            this.setState({
+                posTags: newFilterBrandTags,
+                tagPickerShown: showPicker
+            });
+        } else {
+            currentFilterTags.push(tag);
+            this.setState({
+                posTags: currentFilterTags,
+                tagPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.searchSimilarImages(
+                        this.state.results[0]['image_data']['img_hash'],
+                        this.state.selectedColors[0],
+                        this.state.selectedColors[1]
+                    );
+                }
+            });
+        }
+    }
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
@@ -612,23 +773,32 @@ class SearchFromImage extends React.Component  {
                             color_2
                         ) }}
                         results={this.state.results}
-                        // prodImgShown={this.state.prodImgShown}
                         setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                         setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                         selectedColors={this.state.selectedColors}
                         firstLogin={this.props.firstLogin}
                     />
 
-                    {/*<SexSelector*/}
-                        {/*sex={this.state.sex}*/}
-                        {/*sexPickerWidth={this.state.sexPickerWidth}*/}
-                        {/*changeSex={(sex) => {this.changeSex(sex)}}*/}
-                        {/*expandSexSelector={() => {this.expandSexSelector()}}*/}
-                    {/*/>*/}
-                    <PriceFilter
-                        range={rangeVal}
+                    <ResultFilters
+                        range={this.state.rangeVal}
                         updateRange={this.updateRange}
                         loading={this.state.loading}
+                        posTags={this.state.posTags}
+                        negTags={this.state.negTags}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                        addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
+                        showTagPicker={(show) => {this.showTagPicker(show)}}
+                        tagPickerShown={this.state.tagPickerShown}
+                        setColor={(selection) => {this.setColorPosTags(selection)}}
+                        selectedColors={this.state.selectedColors}
+                        searchSimilarImages={(imgHash, color1, color2) => {
+                            this.searchSimilarImages(imgHash, color1, color2)
+                        }}
+                        results={this.state.results}
+                        filterBrands={this.state.filterBrands}
+                        brandPickerShown={this.state.brandPickerShown}
+                        showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                     />
                 </div>
             ) : (
@@ -649,21 +819,6 @@ class SearchFromImage extends React.Component  {
         return (
             <div>
                 {searchOrResults}
-
-                <TagCloud
-                    posTags={this.state.posTags}
-                    negTags={this.state.negTags}
-                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                />
-
-                <ColorPicker
-                    setColor={(selection) => {this.setColor(selection)}}
-                    selectedColors={this.state.selectedColors}
-                    searchSimilarImages={(imgHash, color1, color2) => {
-                        this.searchSimilarImages(imgHash, color1, color2)
-                    }}
-                    results={this.state.results}
-                />
 
                 <ColorChoiceModal
                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}

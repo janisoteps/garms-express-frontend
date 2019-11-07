@@ -73,9 +73,7 @@ class ImageSearch extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(function(data) {
-                console.log(data);
                 if (data === "OK") {
-                    // this.setLoginState();
                     this.setState({
                         isAuth: true
                     });
@@ -119,12 +117,10 @@ class ImageSearch extends React.Component  {
         acceptedFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = () => {
-                console.log('Reader loaded');
                 const fileAsBinaryString = reader.result;
 
                 let img = document.createElement("img");
                 img.onload = () => {
-                    console.log('Img loaded');
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0);
@@ -133,8 +129,6 @@ class ImageSearch extends React.Component  {
                     let MAX_HEIGHT = 600;
                     let width = img.width;
                     let height = img.height;
-
-                    console.log('Width: ', width);
 
                     if (width > height) {
                         if (width > MAX_WIDTH) {
@@ -183,7 +177,6 @@ class ImageSearch extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 colors: data.res,
                 loading: false
@@ -209,7 +202,6 @@ class ImageSearch extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 colors: data.res.colors,
                 cats: data.res['img_cats_ai_txt'],
@@ -247,7 +239,6 @@ class ImageSearch extends React.Component  {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -274,14 +265,11 @@ class ImageSearch extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        console.log('search string: ', searchString);
-
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -298,13 +286,11 @@ class ImageSearch extends React.Component  {
     // Updates results state with the response
     similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
 
-        // console.log('Similar image search launched, prod id: ', prod_id);
         this.setState({
             loading: true
         });
 
         let mainColor = color_1.toString().replace(/\s+/g, '');
-        // let mainColor = this.state.mainColor;
         let siam_64 = siamese_64.toString().replace(/\s+/g, '');
 
         let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai

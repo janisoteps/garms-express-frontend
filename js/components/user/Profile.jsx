@@ -39,7 +39,6 @@ class Profile extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data.res);
             let usernamePrompt = !data.insta_username ? 'Instagram username' : data.insta_username;
             this.setState({
                 insta_pics: data.res,

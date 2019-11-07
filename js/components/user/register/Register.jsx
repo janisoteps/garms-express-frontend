@@ -56,7 +56,6 @@ export default class Register extends React.Component {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
                 if (data === true) {
                     this.setState({
                         regComplete: true

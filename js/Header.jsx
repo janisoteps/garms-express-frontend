@@ -16,15 +16,8 @@ class Header extends React.Component {
     }
 
     render() {
-        // console.log('header state: ', this.state);
         const buttons = this.state.isAuth === "true" ? (
             <div style={{width: '100vw'}}>
-                {/*<Route render={({history}) => (*/}
-                    {/*<div className="home-button" onClick={() => {*/}
-                        {/*history.push('/')*/}
-                    {/*}}>*/}
-                    {/*</div>*/}
-                {/*)}/>*/}
                 <Route render={({history}) => (
                     <Tooltip title="Your Profile">
                         <div className="profile-button" onClick={() => {
