@@ -40,9 +40,9 @@ class ResultFilters extends React.Component {
                 />
                 <ColorPicker
                     setColor={(selection) => {this.props.setColor(selection)}}
-                    selectedColors={this.props.selectedColors}
-                    searchSimilarImages={(imgHash, color1, color2) => {
-                        this.props.searchSimilarImages(imgHash, color1, color2)
+                    selectedColor={this.props.selectedColor}
+                    searchSimilarImages={(imgHash, color1) => {
+                        this.props.searchSimilarImages(imgHash, color1)
                     }}
                     results={this.props.results}
                 />
