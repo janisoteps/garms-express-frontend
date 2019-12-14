@@ -60,6 +60,7 @@ class SearchFromImage extends React.Component  {
         this.addBrandFilter = this.addBrandFilter.bind(this);
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
+        this.changeSex = this.changeSex.bind(this);
     }
 
     componentDidMount() {
@@ -546,6 +547,13 @@ class SearchFromImage extends React.Component  {
                 }
             });
         }
+    }
+
+    changeSex(sex){
+        this.props.changeSex(sex);
+        this.setState({
+            sex: sex
+        });
     }
 
     // -------------------------- MAIN RENDER FUNCTION ----------------------------

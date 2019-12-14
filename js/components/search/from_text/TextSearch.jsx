@@ -56,8 +56,6 @@ class TextSearch extends React.Component  {
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
-        // this.showCatPicker = this.showCatPicker.bind(this);
-        // this.setMainCats = this.setMainCats.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.updateRange = this.updateRange.bind(this);
@@ -65,6 +63,7 @@ class TextSearch extends React.Component  {
         this.addBrandFilter = this.addBrandFilter.bind(this);
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
+        this.changeSex = this.changeSex.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -382,6 +381,13 @@ class TextSearch extends React.Component  {
                 }
             });
         }
+    }
+
+    changeSex(sex){
+        this.props.changeSex(sex);
+        this.setState({
+            sex: sex
+        });
     }
 
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
