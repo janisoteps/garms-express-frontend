@@ -35,7 +35,7 @@ class TextSearch extends React.Component  {
             mainColorNr: 1,
             cats: [],
             mainCat: '',
-            selectedColors: [],
+            selectedColor: [],
             posTags: [],
             negTags: [],
             searchString: '',
@@ -56,8 +56,6 @@ class TextSearch extends React.Component  {
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
-        this.showCatPicker = this.showCatPicker.bind(this);
-        this.setMainCats = this.setMainCats.bind(this);
         this.setTags = this.setTags.bind(this);
         this.squexpandMenu = this.squexpandMenu.bind(this);
         this.updateRange = this.updateRange.bind(this);
@@ -65,6 +63,7 @@ class TextSearch extends React.Component  {
         this.addBrandFilter = this.addBrandFilter.bind(this);
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
+        this.changeSex = this.changeSex.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -117,48 +116,7 @@ class TextSearch extends React.Component  {
         }
     };
 
-    // searchSimilarImages(imgHash, colorRgb1, colorRgb2){
-    //     this.setState({
-    //         loading: true
-    //     });
-    //     let posTags = this.state.posTags.toString().replace(/\s+/g, '');
-    //     let negTags = this.state.negTags.toString().replace(/\s+/g, '');
-    //     let sex = this.state.sex;
-    //     let noShop = this.state.noShop.toString().replace(/\s+/g, '');
-    //     let filterBrands = this.state.filterBrands.toString().replace(/\s+/g, '');
-    //     let color_1 = colorRgb1.toString().replace(/\s+/g, '');
-    //     let color_2 = colorRgb2.toString().replace(/\s+/g, '');
-    //     let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-    //     let searchString = window.location.origin + '/api/search_similar?'
-    //         + 'img_hash=' + imgHash
-    //         + '&tags_positive=' + posTags
-    //         + '&tags_negative=' + negTags
-    //         + '&color_1=' + color_1
-    //         + '&color_2=' + color_2
-    //         + '&sex=' + sex
-    //         + '&no_shop=' + noShop
-    //         + '&max_price=' + maxPrice
-    //         + '&brands=' + filterBrands;
-    //     // console.log('Search string: ', searchString);
-    //     fetch(searchString, {
-    //         method: 'get',
-    //     }).then(function(response) {
-    //         return response.json();
-    //     }).then(data => {
-    //         this.setState({
-    //             results: data.res,
-    //             loading: false,
-    //             // prodImgShown: prodImgShown
-    //         });
-    //         window.scrollTo({
-    //             top: 0,
-    //             behavior: "smooth"
-    //         });
-    //         window.scrollTo(0, 0);
-    //     });
-    // }
-
-    searchSimilarImages(imgHash, colorRgb1, colorRgb2){
+    searchSimilarImages(imgHash, colorRgb1){
         this.setState({
             loading: true
         });
@@ -168,8 +126,7 @@ class TextSearch extends React.Component  {
         let sex = this.state.sex;
         let noShop = this.state.noShop;
         let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.results[0]['image_data']['color_1'];
-        let color_2 = colorRgb2 ? colorRgb2 : this.state.results[0]['image_data']['color_2'];
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
 
         fetch(window.location.origin + '/api/search_similar', {
@@ -179,7 +136,7 @@ class TextSearch extends React.Component  {
                 tags_positive: posTags,
                 tags_negative: negTags,
                 color_1: color_1,
-                color_2: color_2,
+                // color_2: color_2,
                 sex: sex,
                 no_shop: noShop,
                 max_price: maxPrice,
@@ -194,16 +151,8 @@ class TextSearch extends React.Component  {
         }).then(data => {
             this.setState({
                 results: data.res,
-                loading: false
-            }, () => {
-                if(this.state.selectedColors.length === 0 && this.state.results.length > 0) {
-                    this.setState({
-                        selectedColors: [
-                            this.state.results[0]['image_data']['color_1'],
-                            this.state.results[0]['image_data']['color_2']
-                        ]
-                    })
-                }
+                loading: false,
+                // prodImgShown: prodImgShown
             });
             window.scrollTo({
                 top: 0,
@@ -215,10 +164,8 @@ class TextSearch extends React.Component  {
 
     // Set main color and category state based on selection from modal
     setColorPosTags(selection){
-        // console.log(selection)
         if(selection['cat']) {
             let selectedCat = selection['cat'];
-            // console.log('Cat selections: ', selectedCat);
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
                 let filteredTags = tags.filter(function(e) { return e !== selectedCat });
@@ -227,7 +174,6 @@ class TextSearch extends React.Component  {
                 });
             } else {
                 tags = tags.concat(selectedCat);
-                // console.log('New posTags: ', tags);
                 this.setState({
                     posTags: tags
                 });
@@ -236,17 +182,9 @@ class TextSearch extends React.Component  {
                 mainCat: selectedCat
             });
         } else {
-            // let colorNr = selection['color_nr'];
             let colorRgb = selection['color_rgb'];
-            let selectedColors = this.state.selectedColors;
-            selectedColors.unshift(colorRgb);
-            if (selectedColors.length > 2) {
-                selectedColors.pop();
-            } else if (selectedColors.length === 1) {
-                selectedColors.unshift(colorRgb);
-            }
             this.setState({
-                selectedColors: selectedColors
+                selectedColor: colorRgb
             });
         }
     }
@@ -344,108 +282,24 @@ class TextSearch extends React.Component  {
             });
     }
 
-    // //Submits login request to server and sets state/cookies if successful
-    // handleLoginSubmit(event) {
-    //     event.preventDefault();
-    //     let email = this.state.email;
-    //     let pwd = this.state.pwd;
-    //     fetch(window.location.origin + '/api/login', {
-    //         method: 'post',
-    //         body: JSON.stringify({email: email, pwd: pwd}),
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         }
-    //     }).then(function(response) { return response.json(); })
-    //         .then(function(data) {
-    //             // console.log(data);
-    //             if (data === "OK") {
-    //                 this.setState({
-    //                     isAuth: true
-    //                 });
-    //             }
-    //         });
-    // }
-
-    // setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-    //     // console.log('Similar image search launched, prod id: ', prod_id);
-    //     this.setState({
-    //         loading: true
-    //     });
-    //
-    //     let mainColor = color_1.toString().replace(/\s+/g, '');
-    //     // let mainColor = this.state.mainColor;
-    //     let siam_64 = siamese_64.toString().replace(/\s+/g, '');
-    //
-    //     let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + nr1_cat_ai
-    //         + '&main_cat=' + mainCat1
-    //         + '&main_cat2=' + mainCat2
-    //         + '&nr1_cat_sc=' + nr1_cat_sc
-    //         + '&color_1=[' + mainColor
-    //         + ']&pca_256=[' + siam_64
-    //         + ']&sex=' + this.state.sex
-    //         + '&id=' + prod_id;
-    //
-    //     // console.log('search string: ', searchString);
-    //
-    //     fetch(searchString, {
-    //         method: 'get',
-    //     }).then(function(response) {
-    //         return response.json();
-    //     }).then(data => {
-    //         // console.log(data);
+    // showCatPicker(){
+    //     if(this.state.catsOn === false){
     //         this.setState({
-    //             results: data.res,
-    //             loading: false
-    //         });
-    //         window.scrollTo({
-    //             top: 0,
-    //             behavior: "smooth"
-    //         });
-    //         window.scrollTo(0, 0);
-    //     });
-    // }
-
-    // changeSex(sex){
-    //     this.props.changeSex(sex);
-    //     this.setState({
-    //         sex: sex
-    //     });
-    // }
-    //
-    // expandSexSelector(){
-    //     let currentWidth = this.state.sexPickerWidth;
-    //
-    //     // console.log('Expanding sex selector ', currentWidth);
-    //     if(currentWidth === '48px'){
-    //         this.setState({
-    //             sexPickerWidth: '270px'
+    //             catsOn: true
     //         });
     //     } else {
     //         this.setState({
-    //             sexPickerWidth: '48px'
+    //             catsOn: false
     //         });
     //     }
     // }
 
-    showCatPicker(){
-        if(this.state.catsOn === false){
-            this.setState({
-                catsOn: true
-            });
-        } else {
-            this.setState({
-                catsOn: false
-            });
-        }
-    }
-
-    setMainCats(mainCat, mainCat2){
-        this.setState({
-            mainCat: mainCat,
-            mainCat2: mainCat2
-        });
-    }
+    // setMainCats(mainCat, mainCat2){
+    //     this.setState({
+    //         mainCat: mainCat,
+    //         mainCat2: mainCat2
+    //     });
+    // }
 
     updateRange(val) {
         this.setState({
@@ -460,8 +314,7 @@ class TextSearch extends React.Component  {
         if (show === false) {
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColors[0],
-                this.state.selectedColors[1]
+                this.state.selectedColor
             );
         }
     }
@@ -485,8 +338,7 @@ class TextSearch extends React.Component  {
                 if (showPicker === false) {
                     this.searchSimilarImages(
                         this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColors[0],
-                        this.state.selectedColors[1]
+                        this.state.selectedColor
                     );
                 }
             });
@@ -500,8 +352,7 @@ class TextSearch extends React.Component  {
         if (show === false) {
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColors[0],
-                this.state.selectedColors[1]
+                this.state.selectedColor
             );
         }
     }
@@ -525,12 +376,18 @@ class TextSearch extends React.Component  {
                 if (showPicker === false) {
                     this.searchSimilarImages(
                         this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColors[0],
-                        this.state.selectedColors[1]
+                        this.state.selectedColor
                     );
                 }
             });
         }
+    }
+
+    changeSex(sex){
+        this.props.changeSex(sex);
+        this.setState({
+            sex: sex
+        });
     }
 
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
@@ -710,17 +567,15 @@ class TextSearch extends React.Component  {
                                     email={this.state.email}
                                     searchSimilarImages={(
                                         img_hash,
-                                        color_1,
-                                        color_2
+                                        color_1
                                     ) => { this.searchSimilarImages(
                                         img_hash,
-                                        color_1,
-                                        color_2
+                                        color_1
                                     ) }}
                                     results={this.state.results}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
-                                    selectedColors={this.state.selectedColors}
+                                    selectedColor={this.state.selectedColor}
                                     firstLogin={this.props.firstLogin}
                                 />
 
@@ -735,9 +590,9 @@ class TextSearch extends React.Component  {
                                     showTagPicker={(show) => {this.showTagPicker(show)}}
                                     tagPickerShown={this.state.tagPickerShown}
                                     setColor={(selection) => {this.setColorPosTags(selection)}}
-                                    selectedColors={this.state.selectedColors}
-                                    searchSimilarImages={(imgHash, color1, color2) => {
-                                        this.searchSimilarImages(imgHash, color1, color2)
+                                    selectedColor={this.state.selectedColor}
+                                    searchSimilarImages={(imgHash, color1) => {
+                                        this.searchSimilarImages(imgHash, color1)
                                     }}
                                     results={this.state.results}
                                     filterBrands={this.state.filterBrands}

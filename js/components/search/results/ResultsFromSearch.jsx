@@ -309,11 +309,11 @@ class ResultsFromSearch extends React.Component  {
         this.props.setColorPosTags(selection);
     }
 
-    searchSimilarImages(imgHash, color_1, color_2){
+    searchSimilarImages(imgHash, color_1){
         this.setState({
             pickerExpanded: 0
         });
-        this.props.searchSimilarImages(imgHash, color_1, color_2);
+        this.props.searchSimilarImages(imgHash, color_1);
     };
 
     // Expands color picker drawer
@@ -627,19 +627,19 @@ class ResultsFromSearch extends React.Component  {
                                 style={colorStyle1}
                                 onClick={() => {
                                     this.setColorPosTags({'color_rgb': color_1, 'cat':''});
-                                    this.searchSimilarImages(img_hash, color_1, color_1);
+                                    this.searchSimilarImages(img_hash, color_1);
                                 }} />
                             <div
                                 style={colorStyle2}
                                 onClick={() => {
                                     this.setColorPosTags({'color_rgb': color_2, 'cat':''});
-                                    this.searchSimilarImages(img_hash, color_2, color_2);
+                                    this.searchSimilarImages(img_hash, color_2);
                                 }} />
                             <div
                                 style={colorStyle3}
                                 onClick={() => {
                                     this.setColorPosTags({'color_rgb': color_3, 'cat':''});
-                                    this.searchSimilarImages(img_hash, color_3, color_3);
+                                    this.searchSimilarImages(img_hash, color_3);
                                 }} />
                         </div>
                         <Tooltip title="Search By Color">
@@ -696,7 +696,7 @@ class ResultsFromSearch extends React.Component  {
                             className="search-similar"
                             onClick={() => {
                                 this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
-                                this.searchSimilarImages(fst_img_hash, fst_img_color, this.props.selectedColors[1]);
+                                this.searchSimilarImages(fst_img_hash, fst_img_color);
                             }}
                         />
                     </Tooltip>

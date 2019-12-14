@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-const api_base_url = 'http://18.203.186.0/api/';
-// const api_base_url = 'http://127.0.0.1:5000/api/';
+// const api_base_url = 'http://18.203.186.0/api/';
+const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -483,7 +483,7 @@ app.post('/api/search_from_image', function (req, res) {
 app.post('/api/search_from_image_v2', function (req, res) {
     let tags = req.body.tags;
     let color_rgb_1 = req.body.color_rgb_1;
-    let color_rgb_2 = req.body.color_rgb_2;
+    // let color_rgb_2 = req.body.color_rgb_2;
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let encoding_rcnn = req.body.encoding_rcnn;
@@ -495,7 +495,7 @@ app.post('/api/search_from_image_v2', function (req, res) {
         body: JSON.stringify({
             tags: tags,
             color_1: color_rgb_1,
-            color_2: color_rgb_2,
+            // color_2: color_rgb_2,
             sex: sex,
             no_shop: no_shop,
             encoding_rcnn: encoding_rcnn,
@@ -521,7 +521,7 @@ app.post('/api/search_similar', function (req, res) {
     let tags_positive = req.body.tags_positive;
     let tags_negative = req.body.tags_negative;
     let color_1 = req.body.color_1;
-    let color_2 = req.body.color_2;
+    // let color_2 = req.body.color_2;
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let max_price = req.body.max_price;
@@ -551,7 +551,7 @@ app.post('/api/search_similar', function (req, res) {
             tags_positive: tags_positive,
             tags_negative: tags_negative,
             color_1: color_1,
-            color_2: color_2,
+            // color_2: color_2,
             sex: sex,
             no_shop: no_shop,
             max_price: max_price,

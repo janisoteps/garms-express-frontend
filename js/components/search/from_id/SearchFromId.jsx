@@ -33,7 +33,7 @@ class SearchFromId extends React.Component  {
             mainColorNr: 1,
             cats: [],
             mainCat: '',
-            selectedColors: [],
+            selectedColor: [],
             posTags: [],
             negTags: [],
             searchString: null,
@@ -89,12 +89,9 @@ class SearchFromId extends React.Component  {
                 this.setState({
                     posTags: img_data.all_cats,
                     sex: img_data.sex,
-                    selectedColors: [
-                        img_data.color_1,
-                        img_data.color_2
-                    ]
+                    selectedColor: img_data.color_1
                 });
-                this.searchSimilarImages(this.state.imgHash, img_data.color_1, img_data.color_2)
+                this.searchSimilarImages(this.state.imgHash, img_data.color_1)
             });
         }
     }
@@ -168,7 +165,7 @@ class SearchFromId extends React.Component  {
         }
     };
 
-    searchSimilarImages(imgHash, colorRgb1, colorRgb2){
+    searchSimilarImages(imgHash, colorRgb1){
         this.setState({
             loading: true
         });
@@ -178,8 +175,8 @@ class SearchFromId extends React.Component  {
         let sex = this.state.sex;
         let noShop = this.state.noShop;
         let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColors[0];
-        let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+        // let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
         let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
 
         fetch(window.location.origin + '/api/search_similar', {
@@ -189,7 +186,7 @@ class SearchFromId extends React.Component  {
                 tags_positive: posTags,
                 tags_negative: negTags,
                 color_1: color_1,
-                color_2: color_2,
+                // color_2: color_2,
                 sex: sex,
                 no_shop: noShop,
                 max_price: maxPrice,
@@ -236,15 +233,8 @@ class SearchFromId extends React.Component  {
             });
         } else {
             let colorRgb = selection['color_rgb'];
-            let selectedColors = this.state.selectedColors;
-            selectedColors.unshift(colorRgb);
-            if (selectedColors.length > 2) {
-                selectedColors.pop();
-            } else if (selectedColors.length === 1) {
-                selectedColors.unshift(colorRgb);
-            }
             this.setState({
-                selectedColors: selectedColors
+                selectedColor: colorRgb
             });
         }
     }
@@ -378,8 +368,7 @@ class SearchFromId extends React.Component  {
         if (show === false) {
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColors[0],
-                this.state.selectedColors[1]
+                this.state.selectedColor
             );
         }
     }
@@ -403,8 +392,7 @@ class SearchFromId extends React.Component  {
                 if (showPicker === false) {
                     this.searchSimilarImages(
                         this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColors[0],
-                        this.state.selectedColors[1]
+                        this.state.selectedColor
                     );
                 }
             });
@@ -418,8 +406,7 @@ class SearchFromId extends React.Component  {
         if (show === false) {
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColors[0],
-                this.state.selectedColors[1]
+                this.state.selectedColor
             );
         }
     }
@@ -443,8 +430,7 @@ class SearchFromId extends React.Component  {
                 if (showPicker === false) {
                     this.searchSimilarImages(
                         this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColors[0],
-                        this.state.selectedColors[1]
+                        this.state.selectedColor
                     );
                 }
             });
@@ -627,18 +613,15 @@ class SearchFromId extends React.Component  {
                                     email={this.state.email}
                                     searchSimilarImages={(
                                         img_hash,
-                                        color_1,
-                                        color_2
+                                        color_1
                                     ) => { this.searchSimilarImages(
                                         img_hash,
-                                        color_1,
-                                        color_2
+                                        color_1
                                     ) }}
                                     results={this.state.results}
-                                    // prodImgShown={this.state.prodImgShown}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
-                                    selectedColors={this.state.selectedColors}
+                                    selectedColor={this.state.selectedColor}
                                     firstLogin={this.props.firstLogin}
                                 />
                             </div>
@@ -657,9 +640,9 @@ class SearchFromId extends React.Component  {
                         showTagPicker={(show) => {this.showTagPicker(show)}}
                         tagPickerShown={this.state.tagPickerShown}
                         setColor={(selection) => {this.setColorPosTags(selection)}}
-                        selectedColors={this.state.selectedColors}
-                        searchSimilarImages={(imgHash, color1, color2) => {
-                            this.searchSimilarImages(imgHash, color1, color2)
+                        selectedColor={this.state.selectedColor}
+                        searchSimilarImages={(imgHash, color1) => {
+                            this.searchSimilarImages(imgHash, color1)
                         }}
                         results={this.state.results}
                         filterBrands={this.state.filterBrands}

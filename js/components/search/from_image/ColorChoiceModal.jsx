@@ -25,7 +25,7 @@ class ColorChoiceModal extends React.Component{
     }
 
     colorCatImageSearch(){
-        if (this.props.tags.length > 0 && this.props.selectedColors.length > 0) {
+        if (this.props.tags.length > 0 && this.props.selectedColor.length > 0) {
             this.props.colorCatImageSearch();
         } else {
             this.setState({
@@ -130,14 +130,14 @@ class ColorChoiceModal extends React.Component{
                 display: 'inline-block',
                 cursor: 'pointer',
                 borderWidth:
-                    this.props.selectedColors[0] === this.props.colors.color_1
-                        ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_1 && '5px'),
+                    this.props.selectedColor === this.props.colors.color_1
+                        ? ('5px') : (this.props.selectedColor === this.props.colors.color_1 && '5px'),
                 borderColor:
-                    this.props.selectedColors[0] === this.props.colors.color_1
-                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_1 && '#000000'),
+                    this.props.selectedColor === this.props.colors.color_1
+                        ? ('#000000') : (this.props.selectedColor === this.props.colors.color_1 && '#000000'),
                 borderStyle:
-                    this.props.selectedColors[0] === this.props.colors.color_1
-                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_1 && 'solid')
+                    this.props.selectedColor === this.props.colors.color_1
+                        ? ('solid') : (this.props.selectedColor === this.props.colors.color_1 && 'solid')
             };
             var colorStyle2 = {
                 width: '70px',
@@ -148,14 +148,14 @@ class ColorChoiceModal extends React.Component{
                 display: 'inline-block',
                 cursor: 'pointer',
                 borderWidth:
-                    this.props.selectedColors[0] === this.props.colors.color_2
-                ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_2 && '5px'),
+                    this.props.selectedColor === this.props.colors.color_2
+                ? ('5px') : (this.props.selectedColor === this.props.colors.color_2 && '5px'),
                 borderColor:
-                    this.props.selectedColors[0] === this.props.colors.color_2
-                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_2 && '#000000'),
+                    this.props.selectedColor === this.props.colors.color_2
+                        ? ('#000000') : (this.props.selectedColor === this.props.colors.color_2 && '#000000'),
                 borderStyle:
-                    this.props.selectedColors[0] === this.props.colors.color_2
-                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_2 && 'solid')
+                    this.props.selectedColor === this.props.colors.color_2
+                        ? ('solid') : (this.props.selectedColor === this.props.colors.color_2 && 'solid')
             };
             var colorStyle3 = {
                 width: '70px',
@@ -166,14 +166,14 @@ class ColorChoiceModal extends React.Component{
                 display: 'inline-block',
                 cursor: 'pointer',
                 borderWidth:
-                    this.props.selectedColors[0] === this.props.colors.color_3
-                        ? ('5px') : (this.props.selectedColors[1] === this.props.colors.color_3 && '5px'),
+                    this.props.selectedColor === this.props.colors.color_3
+                        ? ('5px') : (this.props.selectedColor === this.props.colors.color_3 && '5px'),
                 borderColor:
-                    this.props.selectedColors[0] === this.props.colors.color_3
-                        ? ('#000000') : (this.props.selectedColors[1] === this.props.colors.color_3 && '#000000'),
+                    this.props.selectedColor === this.props.colors.color_3
+                        ? ('#000000') : (this.props.selectedColor === this.props.colors.color_3 && '#000000'),
                 borderStyle:
-                    this.props.selectedColors[0] === this.props.colors.color_3
-                        ? ('solid') : (this.props.selectedColors[1] === this.props.colors.color_3 && 'solid')
+                    this.props.selectedColor === this.props.colors.color_3
+                        ? ('solid') : (this.props.selectedColor === this.props.colors.color_3 && 'solid')
             };
             var colorStyle4 = {
                 width: '70px',
@@ -183,11 +183,14 @@ class ColorChoiceModal extends React.Component{
                 margin: '10px',
                 display: 'inline-block',
                 cursor: 'pointer',
-                border: this.props.colors.color_4 && ((this.props.colors.color_4.length === this.props.selectedColors[0].length
-                    && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[0][index])
-                || this.props.colors.color_4.length === this.props.selectedColors[1].length
-                    && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[1][index]))
-                ?('5px #000000 solid') : (''))
+                // border: this.props.colors.color_4 && ((this.props.colors.color_4.length === this.props.selectedColor.length
+                //     && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[0][index])
+                // || this.props.colors.color_4.length === this.props.selectedColors[1].length
+                //     && this.props.colors.color_4.every((value, index) => value === this.props.selectedColors[1][index]))
+                // ?('5px #000000 solid') : (''))
+                border: this.props.colors.color_4 && ((this.props.colors.color_4.length === this.props.selectedColor.length
+                    && this.props.colors.color_4.every((value, index) => value === this.props.selectedColor[index])
+                    ) ? ('5px #000000 solid') : (''))
             };
         }
 
