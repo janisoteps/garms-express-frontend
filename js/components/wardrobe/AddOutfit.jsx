@@ -14,7 +14,8 @@ class AddOutfit extends React.Component  {
             newLookInput: '',
             addingLook: false,
             imgHash: this.props.imgHash,
-            prodId: null
+            prodId: null,
+            prodInfo: null
         };
 
         this.showAddLookModal = this.showAddLookModal.bind(this);
@@ -38,6 +39,26 @@ class AddOutfit extends React.Component  {
             // console.log(data);
             this.setState({
                 prodId: data.prod_id
+            });
+
+            fetch(`${window.location.origin}/api/get_products`, {
+                method: 'post',
+                body: JSON.stringify({'prod_hashes': [data.prod_id]}),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(function(response) {
+                return response.json();
+            }).then(prodData => {
+                console.log(prodData);
+                this.setState({
+                    prodInfo: prodData[0][0]
+                });
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
             })
         });
         fetch(`${window.location.origin}/api/get_looks`, {
@@ -61,7 +82,12 @@ class AddOutfit extends React.Component  {
                     looks: looksArr
                 });
             }
-        })
+        });
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+        window.scrollTo(0, 0);
     }
 
     handleInputChange(event) {
@@ -153,50 +179,51 @@ class AddOutfit extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div>
+                    {/*<div*/}
+                    {/*    style={{*/}
+                    {/*        width: '400px',*/}
+                    {/*        height: '25vh',*/}
+                    {/*        marginLeft: 'calc((100vw - 400px) / 2)',*/}
+                    {/*        backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,1))',*/}
+                    {/*        position: 'fixed',*/}
+                    {/*        top: '0px'*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                     <div
                         style={{
                             width: '400px',
-                            height: '25vh',
-                            marginLeft: 'calc((100vw - 400px) / 2)',
-                            backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,1))',
-                            position: 'fixed',
-                            top: '0px'
-                        }}
-                    />
-                    <div
-                        style={{
-                            width: '400px',
-                            height: '50vh',
+                            height: '110vh',
                             marginLeft: 'calc((100vw - 400px) / 2)',
                             backgroundColor: '#FFFFFF',
                             position: 'fixed',
-                            top: '25vh'
+                            top: '0'
                         }}
                     />
-                    <div
-                        style={{
-                            width: '400px',
-                            height: '25vh',
-                            marginLeft: 'calc((100vw - 400px) / 2)',
-                            backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0.3), rgba(255,255,255,1))',
-                            position: 'fixed',
-                            top: '75vh'
-                        }}
-                    />
+                    {/*<div*/}
+                    {/*    style={{*/}
+                    {/*        width: '400px',*/}
+                    {/*        height: '25vh',*/}
+                    {/*        marginLeft: 'calc((100vw - 400px) / 2)',*/}
+                    {/*        backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0.3), rgba(255,255,255,1))',*/}
+                    {/*        position: 'fixed',*/}
+                    {/*        top: '75vh'*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                     <div
                         style={{
                             width: '400px',
                             height: '100vh',
+                            overflowY: 'scroll',
                             marginLeft: 'calc((100vw - 400px) / 2)',
-                            position: 'fixed',
-                            top: '50px',
+                            position: 'relative',
+                            top: '0px',
                             display: 'table'
                         }}
                     >
                         <div
                             style={{
                                 display: 'table-cell',
-                                verticalAlign: 'middle'
+                                verticalAlign: 'top'
                             }}
                         >
                             <div
@@ -208,6 +235,62 @@ class AddOutfit extends React.Component  {
                                     paddingTop: '-100px'
                                 }}
                             >
+                                {(this.state.prodInfo !== null) && (
+                                    <div>
+                                        <div
+                                            style={{
+                                                display: 'grid',
+                                                gridTemplateColumns: '2fr 3fr',
+                                                gridTemplateRows: '3fr',
+                                                gridColumnGap: '0px',
+                                                gridRowGap: '0px',
+                                                width: '100vw',
+                                                maxWidth: '400px',
+                                                borderRadius: '5px',
+                                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                                marginTop: '70px',
+                                                marginLeft: 'auto',
+                                                marginRight: 'auto'
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    gridArea: '1 / 1 / 2 / 2',
+                                                    paddingLeft: '10px'
+                                                }}
+                                            >
+                                                <img
+                                                    alt="image"
+                                                    className="product-image"
+                                                    src={this.state.prodInfo.image_urls[0]}
+                                                    style={{
+                                                        width: '100%'
+                                                    }}
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    gridArea: '1 / 2 / 2 / 3',
+                                                    paddingLeft: '10px',
+                                                    paddingTop: '10px',
+                                                    textAlign: 'left'
+                                                }}
+                                            >
+                                                <h6>Add to wardrobe:</h6>
+                                                <h6>{this.state.prodInfo.name}</h6>
+                                                <p>From {this.state.prodInfo.shop}</p>
+                                                <div style={{
+                                                    textDecoration: this.state.prodInfo.sale ? 'line-through' : 'none'
+                                                }}>
+                                                    <h6>£{this.state.prodInfo.price}</h6></div>
+                                                {(this.state.prodInfo.sale) && (<div style={{color: '#d6181e'}}>
+                                                    <h6>£{this.state.prodInfo.saleprice}</h6>
+                                                </div>)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                <br />
                                 <div
                                     className="add-outfit-cancel"
                                     onClick={() => {this.cancelAddOutfit()}}

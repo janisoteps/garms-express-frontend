@@ -21,64 +21,64 @@ class Profile extends React.Component  {
             rangeVal: 0
         };
 
-        this.changeInstaUsername = this.changeInstaUsername.bind(this);
-        this.saveInstaUsername = this.saveInstaUsername.bind(this);
-        this.getInstaPicks = this.getInstaPicks.bind(this);
+        // this.changeInstaUsername = this.changeInstaUsername.bind(this);
+        // this.saveInstaUsername = this.saveInstaUsername.bind(this);
+        // this.getInstaPicks = this.getInstaPicks.bind(this);
         this.updateRange = this.updateRange.bind(this);
     }
 
     componentDidMount() {
-        this.getInstaPicks(this.state.email);
+        // this.getInstaPicks(this.state.email);
     }
 
-    getInstaPicks(user_email) {
-        let searchString = window.location.origin + '/api/insta_pics?email=' + user_email;
-
-        fetch(searchString, {
-            method: 'get',
-        }).then(function(response) {
-            return response.json();
-        }).then(data => {
-            let usernamePrompt = !data.insta_username ? 'Instagram username' : data.insta_username;
-            this.setState({
-                insta_pics: data.res,
-                insta_username: data.insta_username,
-                insta_username_prompt: usernamePrompt,
-                loaded: true
-            });
-        });
-    }
-
-    changeInstaUsername(event) {
-        this.setState({insta_username_prompt: event.target.value});
-    }
-
-    saveInstaUsername(event) {
-        // console.log('Username was submitted: ' + this.state.insta_username_prompt);
-        event.preventDefault();
-
-        fetch(window.location.origin + '/api/save_insta_username', {
-            method: 'post',
-            body: JSON.stringify({
-                email: this.state.email,
-                insta_username: this.state.insta_username_prompt
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-                // console.log('Save Insta username response: ' , data);
-                if (data.insta_username !== false) {
-                    this.setState({
-                        insta_username: data.insta_username
-                    });
-
-                    this.getInstaPicks(this.state.email);
-                }
-            });
-    }
+    // getInstaPicks(user_email) {
+    //     let searchString = window.location.origin + '/api/insta_pics?email=' + user_email;
+    //
+    //     fetch(searchString, {
+    //         method: 'get',
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         let usernamePrompt = !data.insta_username ? 'Instagram username' : data.insta_username;
+    //         this.setState({
+    //             insta_pics: data.res,
+    //             insta_username: data.insta_username,
+    //             insta_username_prompt: usernamePrompt,
+    //             loaded: true
+    //         });
+    //     });
+    // }
+    //
+    // changeInstaUsername(event) {
+    //     this.setState({insta_username_prompt: event.target.value});
+    // }
+    //
+    // saveInstaUsername(event) {
+    //     // console.log('Username was submitted: ' + this.state.insta_username_prompt);
+    //     event.preventDefault();
+    //
+    //     fetch(window.location.origin + '/api/save_insta_username', {
+    //         method: 'post',
+    //         body: JSON.stringify({
+    //             email: this.state.email,
+    //             insta_username: this.state.insta_username_prompt
+    //         }),
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) { return response.json(); })
+    //         .then(data => {
+    //             // console.log('Save Insta username response: ' , data);
+    //             if (data.insta_username !== false) {
+    //                 this.setState({
+    //                     insta_username: data.insta_username
+    //                 });
+    //
+    //                 this.getInstaPicks(this.state.email);
+    //             }
+    //         });
+    // }
 
     updateRange(val) {
         this.setState({

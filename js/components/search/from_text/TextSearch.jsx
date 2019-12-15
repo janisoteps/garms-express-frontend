@@ -49,7 +49,8 @@ class TextSearch extends React.Component  {
             rangeVal: 500,
             filterBrands: [],
             brandPickerShown: false,
-            tagPickerShown: false
+            tagPickerShown: false,
+            addOutfitShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -64,6 +65,7 @@ class TextSearch extends React.Component  {
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
         this.changeSex = this.changeSex.bind(this);
+        this.changeOutfitShown = this.changeOutfitShown.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -282,25 +284,6 @@ class TextSearch extends React.Component  {
             });
     }
 
-    // showCatPicker(){
-    //     if(this.state.catsOn === false){
-    //         this.setState({
-    //             catsOn: true
-    //         });
-    //     } else {
-    //         this.setState({
-    //             catsOn: false
-    //         });
-    //     }
-    // }
-
-    // setMainCats(mainCat, mainCat2){
-    //     this.setState({
-    //         mainCat: mainCat,
-    //         mainCat2: mainCat2
-    //     });
-    // }
-
     updateRange(val) {
         this.setState({
             rangeVal: val
@@ -388,6 +371,12 @@ class TextSearch extends React.Component  {
         this.setState({
             sex: sex
         });
+    }
+
+    changeOutfitShown(isShown){
+        this.setState({
+            addOutfitShown: isShown
+        })
     }
 
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
@@ -577,29 +566,32 @@ class TextSearch extends React.Component  {
                                     setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                                     selectedColor={this.state.selectedColor}
                                     firstLogin={this.props.firstLogin}
+                                    changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
                                 />
 
-                                <ResultFilters
-                                    range={this.state.rangeVal}
-                                    updateRange={this.updateRange}
-                                    loading={this.state.loading}
-                                    posTags={this.state.posTags}
-                                    negTags={this.state.negTags}
-                                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                                    addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
-                                    showTagPicker={(show) => {this.showTagPicker(show)}}
-                                    tagPickerShown={this.state.tagPickerShown}
-                                    setColor={(selection) => {this.setColorPosTags(selection)}}
-                                    selectedColor={this.state.selectedColor}
-                                    searchSimilarImages={(imgHash, color1) => {
-                                        this.searchSimilarImages(imgHash, color1)
-                                    }}
-                                    results={this.state.results}
-                                    filterBrands={this.state.filterBrands}
-                                    brandPickerShown={this.state.brandPickerShown}
-                                    showBrandPicker={(show) => {this.showBrandPicker(show)}}
-                                    addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
-                                />
+                                {this.state.addOutfitShown === false && (
+                                    <ResultFilters
+                                        range={this.state.rangeVal}
+                                        updateRange={this.updateRange}
+                                        loading={this.state.loading}
+                                        posTags={this.state.posTags}
+                                        negTags={this.state.negTags}
+                                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                                        addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
+                                        showTagPicker={(show) => {this.showTagPicker(show)}}
+                                        tagPickerShown={this.state.tagPickerShown}
+                                        setColor={(selection) => {this.setColorPosTags(selection)}}
+                                        selectedColor={this.state.selectedColor}
+                                        searchSimilarImages={(imgHash, color1) => {
+                                            this.searchSimilarImages(imgHash, color1)
+                                        }}
+                                        results={this.state.results}
+                                        filterBrands={this.state.filterBrands}
+                                        brandPickerShown={this.state.brandPickerShown}
+                                        showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                                    />
+                                )}
                             </div>
                         ) : (
                             searchForm

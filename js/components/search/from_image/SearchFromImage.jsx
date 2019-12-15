@@ -41,7 +41,8 @@ class SearchFromImage extends React.Component  {
             rangeVal: 500,
             filterBrands: [],
             brandPickerShown: false,
-            tagPickerShown: false
+            tagPickerShown: false,
+            addOutfitShown: false
         };
 
         this.getImageFeatures = this.getImageFeatures.bind(this);
@@ -61,6 +62,7 @@ class SearchFromImage extends React.Component  {
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
         this.changeSex = this.changeSex.bind(this);
+        this.changeOutfitShown = this.changeOutfitShown.bind(this);
     }
 
     componentDidMount() {
@@ -556,6 +558,12 @@ class SearchFromImage extends React.Component  {
         });
     }
 
+    changeOutfitShown(isShown){
+        this.setState({
+            addOutfitShown: isShown
+        })
+    }
+
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
         const rangeVal = this.state.rangeVal;
@@ -568,8 +576,7 @@ class SearchFromImage extends React.Component  {
             width: `calc(${this.state.viewPortWidth}px - 20px)`,
             height: "auto"
         };
-        // console.log('File from URL');
-        // console.log(this.state.fileFromUrl);
+
         // Element that shows preview of just uploaded photo
         let preview = this.state.files.length > 0 && this.state.rcnnEncoding.length === 0 ? (
             <div className="preview-container">
@@ -674,29 +681,32 @@ class SearchFromImage extends React.Component  {
                         setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
                         selectedColor={this.state.selectedColor}
                         firstLogin={this.props.firstLogin}
+                        changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
                     />
 
-                    <ResultFilters
-                        range={this.state.rangeVal}
-                        updateRange={this.updateRange}
-                        loading={this.state.loading}
-                        posTags={this.state.posTags}
-                        negTags={this.state.negTags}
-                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                        addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
-                        showTagPicker={(show) => {this.showTagPicker(show)}}
-                        tagPickerShown={this.state.tagPickerShown}
-                        setColor={(selection) => {this.setColorPosTags(selection)}}
-                        selectedColor={this.state.selectedColor}
-                        searchSimilarImages={(imgHash, color1) => {
-                            this.searchSimilarImages(imgHash, color1)
-                        }}
-                        results={this.state.results}
-                        filterBrands={this.state.filterBrands}
-                        brandPickerShown={this.state.brandPickerShown}
-                        showBrandPicker={(show) => {this.showBrandPicker(show)}}
-                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
-                    />
+                    {this.state.addOutfitShown === false && (
+                        <ResultFilters
+                            range={this.state.rangeVal}
+                            updateRange={this.updateRange}
+                            loading={this.state.loading}
+                            posTags={this.state.posTags}
+                            negTags={this.state.negTags}
+                            setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                            addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
+                            showTagPicker={(show) => {this.showTagPicker(show)}}
+                            tagPickerShown={this.state.tagPickerShown}
+                            setColor={(selection) => {this.setColorPosTags(selection)}}
+                            selectedColor={this.state.selectedColor}
+                            searchSimilarImages={(imgHash, color1) => {
+                                this.searchSimilarImages(imgHash, color1)
+                            }}
+                            results={this.state.results}
+                            filterBrands={this.state.filterBrands}
+                            brandPickerShown={this.state.brandPickerShown}
+                            showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                            addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                        />
+                    )}
                 </div>
             ) : (
                 searchForm

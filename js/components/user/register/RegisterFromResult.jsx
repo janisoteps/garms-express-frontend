@@ -22,7 +22,8 @@ export default class RegisterFromResult extends React.Component {
             regComplete: false,
             imgHash: null,
             prodHash: null,
-            prodInfo: null
+            prodInfo: null,
+            navSelection: 'choice'
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -48,13 +49,14 @@ export default class RegisterFromResult extends React.Component {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
+                console.log(data);
                 this.setState({
-                    prodId: data.prod_hash
+                    prodId: data.prod_id
                 });
 
                 fetch(`${window.location.origin}/api/get_products`, {
                     method: 'post',
-                    body: JSON.stringify({'prod_hashes': [data.prod_hash]}),
+                    body: JSON.stringify({'prod_hashes': [data.prod_id]}),
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
@@ -62,6 +64,7 @@ export default class RegisterFromResult extends React.Component {
                 }).then(function(response) {
                     return response.json();
                 }).then(prodData => {
+                    console.log(prodData);
                     this.setState({
                         prodInfo: prodData[0][0],
                         sex: prodData[0][0]['sex']
@@ -124,118 +127,259 @@ export default class RegisterFromResult extends React.Component {
         let email = this.state.email;
         let pwd = this.state.pwd;
 
-        this.props.handleLogin(email, pwd);
+        this.props.handleResultLogin(email, pwd, this.state.imgHash);
+        // this.props.handleLogin(email, pwd);
     }
 
     render() {
         const regForm = (
-            <div className="register-form">
-                <h3>Welcome to Garms app!</h3>
-                <h5>Register to add outfits to your wardrobe</h5>
-                <TextField
-                    hintText="Your name"
-                    name="username"
-                    floatingLabelText="First name:"
-                    onChange={this.handleChange.bind(this)}
-                    underlineFocusStyle={{
-                        borderBottom: '2px solid rgb(0, 0, 0)'
-                    }}
-                    underlineDisabledStyle={{
-                        borderBottom: '0px solid rgb(0, 0, 0)'
-                    }}
-                    floatingLabelStyle={{
-                        color: 'black'
-                    }}
-                />
-                <br></br>
-                <br></br>
-                <RadioButtonGroup
-                    name="sex"
-                    defaultSelected={this.state.sex}
-                    onChange={this.handleChange.bind(this)}
-                >
-                    <RadioButton
-                        value="women"
-                        label="Her"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                    <RadioButton
-                        value="men"
-                        label="Him"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                    <RadioButton
-                        value="both"
-                        label="Them"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                </RadioButtonGroup>
-                <TextField
-                    name="email"
-                    hintText="Your e-mail"
-                    floatingLabelText="E-mail address:"
-                    onChange={this.handleChange.bind(this)}
-                    underlineFocusStyle={{
-                        borderBottom: '2px solid rgb(0, 0, 0)'
-                    }}
-                    underlineDisabledStyle={{
-                        borderBottom: '0px solid rgb(0, 0, 0)'
-                    }}
-                    floatingLabelStyle={{
-                        color: 'black'
-                    }}
-                />
-                <br></br>
-                <TextField
-                    name="pwd"
-                    hintText="Password"
-                    floatingLabelText="Password:"
-                    type="password"
-                    onChange={this.handleChange.bind(this)}
-                    underlineFocusStyle={{
-                        borderBottom: '2px solid rgb(0, 0, 0)'
-                    }}
-                    underlineDisabledStyle={{
-                        borderBottom: '0px solid rgb(0, 0, 0)'
-                    }}
-                    floatingLabelStyle={{
-                        color: 'black'
-                    }}
-                />
-                <br></br>
-                <RaisedButton
-                    label="Register"
-                    primary={true}
-                    onClick={this.handleSubmit}
-                    buttonStyle={{
-                        backgroundColor: 'black'
-                    }}
-                    style={{
-                        marginTop: '20px'
-                    }}
-                />
-                <br />
-                <br />
-                <br />
+            <div>
                 {(this.state.prodInfo !== null) && (
                     <div>
-                        <h4>Item added to wardrobe:</h4>
-                        <h6>{this.state.prodInfo.name}</h6>
-                        <p>From {this.state.prodInfo.shop}</p>
-                        <div style={{
-                            textDecoration: this.state.prodInfo.sale ? 'line-through' : 'none'
-                        }}>
-                            <h5>{this.state.prodInfo.currency}{this.state.prodInfo.price}</h5></div>
-                        {(this.state.prodInfo.sale) && (<div style={{color: '#d6181e'}}>
-                            <h5>{this.state.prodInfo.currency}{this.state.prodInfo.saleprice}</h5>
-                        </div>)}
-                        <img className="product-image" src={this.state.prodInfo.img_url} />
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: '2fr 3fr',
+                                gridTemplateRows: '3fr',
+                                gridColumnGap: '0px',
+                                gridRowGap: '0px',
+                                width: '100vw',
+                                maxWidth: '400px',
+                                borderRadius: '5px',
+                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                marginTop: '70px',
+                                marginLeft: 'auto',
+                                marginRight: 'auto'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    gridArea: '1 / 1 / 2 / 2',
+                                    paddingLeft: '10px'
+                                }}
+                            >
+                                <img
+                                    alt="image"
+                                    className="product-image"
+                                    src={this.state.prodInfo.image_urls[0]}
+                                    style={{
+                                        width: '100%'
+                                    }}
+                                />
+                            </div>
+                            <div
+                                style={{
+                                    gridArea: '1 / 2 / 2 / 3',
+                                    paddingLeft: '10px',
+                                    paddingTop: '10px'
+                                }}
+                            >
+                                <h6>Add to wardrobe:</h6>
+                                <h6>{this.state.prodInfo.name}</h6>
+                                <p>From {this.state.prodInfo.shop}</p>
+                                <div style={{
+                                    textDecoration: this.state.prodInfo.sale ? 'line-through' : 'none'
+                                }}>
+                                    <h6>£{this.state.prodInfo.price}</h6></div>
+                                {(this.state.prodInfo.sale) && (<div style={{color: '#d6181e'}}>
+                                    <h6>£{this.state.prodInfo.saleprice}</h6>
+                                </div>)}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {(this.state.navSelection === 'choice') && (
+                    <div className="register-form">
+                        <div
+                            style={{
+                                width: '100%'
+                            }}
+                        >
+                            <RaisedButton
+                                label="Register"
+                                primary={true}
+                                onClick={() => {
+                                    this.setState({
+                                        navSelection: 'register'
+                                    })
+                                }}
+                                buttonStyle={{
+                                    backgroundColor: 'black'
+                                }}
+                                style={{
+                                    marginTop: '20px',
+                                    width: '150px'
+                                }}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                width: '100%'
+                            }}
+                        >
+                            <RaisedButton
+                                label="Log In"
+                                primary={true}
+                                onClick={() => {
+                                    this.setState({
+                                        navSelection: 'login'
+                                    })
+                                }}
+                                buttonStyle={{
+                                    backgroundColor: 'black'
+                                }}
+                                style={{
+                                    marginTop: '20px',
+                                    width: '150px'
+                                }}
+                            />
+                        </div>
+                    </div>
+                )}
+                {(this.state.navSelection === 'register') && (
+                    <div className="register-form">
+                        {/*<h3>Welcome to Garms app!</h3>*/}
+                        {/*<h5>Register to add outfits to your wardrobe</h5>*/}
+                        <br />
+                        <TextField
+                            hintText="Your name"
+                            name="username"
+                            floatingLabelText="First name:"
+                            onChange={this.handleChange.bind(this)}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
+                        />
+                        <br></br>
+                        <br></br>
+                        <RadioButtonGroup
+                            name="sex"
+                            defaultSelected={this.state.sex}
+                            onChange={this.handleChange.bind(this)}
+                        >
+                            <RadioButton
+                                value="women"
+                                label="Her"
+                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
+                                uncheckedIcon={<Loyalty/>}
+                                labelStyle={{textAlign: 'left'}}
+                            />
+                            <RadioButton
+                                value="men"
+                                label="Him"
+                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
+                                uncheckedIcon={<Loyalty/>}
+                                labelStyle={{textAlign: 'left'}}
+                            />
+                            <RadioButton
+                                value="both"
+                                label="Them"
+                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
+                                uncheckedIcon={<Loyalty/>}
+                                labelStyle={{textAlign: 'left'}}
+                            />
+                        </RadioButtonGroup>
+                        <TextField
+                            name="email"
+                            hintText="Your e-mail"
+                            floatingLabelText="E-mail address:"
+                            onChange={this.handleChange.bind(this)}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
+                        />
+                        <br></br>
+                        <TextField
+                            name="pwd"
+                            hintText="Password"
+                            floatingLabelText="Password:"
+                            type="password"
+                            onChange={this.handleChange.bind(this)}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
+                        />
+                        <br></br>
+                        <RaisedButton
+                            label="Register"
+                            primary={true}
+                            onClick={this.handleSubmit}
+                            buttonStyle={{
+                                backgroundColor: 'black'
+                            }}
+                            style={{
+                                marginTop: '20px'
+                            }}
+                        />
+                        <br />
+                        <br />
+                        <br />
+
+                    </div>
+                )}
+                {(this.state.navSelection === 'login') && (
+                    <div className="register-form">
+                        <TextField
+                            name="email"
+                            hintText="Your e-mail"
+                            floatingLabelText="E-mail address:"
+                            onChange={this.handleChange.bind(this)}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
+                        />
+                        <br></br>
+                        <TextField
+                            name="pwd"
+                            hintText="Password"
+                            floatingLabelText="Password:"
+                            type="password"
+                            onChange={this.handleChange.bind(this)}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            floatingLabelStyle={{
+                                color: 'black'
+                            }}
+                        />
+                        <RaisedButton
+                            label="Log In"
+                            primary={true}
+                            onClick={this.handleLogin}
+                            buttonStyle={{
+                                backgroundColor: 'black'
+                            }}
+                            style={{
+                                marginTop: '20px'
+                            }}
+                        />
                     </div>
                 )}
             </div>

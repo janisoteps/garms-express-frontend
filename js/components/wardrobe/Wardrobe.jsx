@@ -1,5 +1,6 @@
 // Wardrobe.jsx
 import React from "react";
+import {isMobile} from "react-device-detect";
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
@@ -45,6 +46,12 @@ class Wardrobe extends React.Component  {
     }
 
     componentDidMount() {
+        if (isMobile) {
+            this.setState({
+                showingLooks: false
+            })
+        }
+
         // Handle registration redirect from RegisterFromResult
         const queryString = window.location.search;
         if(queryString.length > 0) {
@@ -620,6 +627,24 @@ class Wardrobe extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div className="profile-product-list">
+                    {(this.state.imgHash !== null) && (
+                        <div
+                            style={{
+                                width: '100vw',
+                                backgroundColor: 'white',
+                                height: 'calc(100vh)',
+                                top: '0px',
+                                position: 'relative'
+                            }}
+                        >
+                            <AddOutfit
+                                imgHash={this.state.imgHash}
+                                email={this.props.email}
+                                addOutfitComplete={this.addOutfitComplete}
+                            />
+                        </div>
+                    )}
+
                     <h1 style={greetingStyle}>{this.state.username}'s wardrobe</h1>
                     <br />
                     {(this.state.noLooks === true) && (
@@ -687,23 +712,6 @@ class Wardrobe extends React.Component  {
                         )}
                     </div>
 
-                    {(this.state.imgHash !== null) && (
-                        <div
-                            style={{
-                                width: '100vw',
-                                backgroundColor: 'white',
-                                height: 'calc(100vh)',
-                                top: '0px',
-                                position: 'fixed'
-                            }}
-                        >
-                            <AddOutfit
-                                imgHash={this.state.imgHash}
-                                email={this.props.email}
-                                addOutfitComplete={this.addOutfitComplete}
-                            />
-                        </div>
-                    )}
                 </div>
             </MuiThemeProvider>
         )
