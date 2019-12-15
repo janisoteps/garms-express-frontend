@@ -346,7 +346,8 @@ class ResultsFromSearch extends React.Component  {
     showLookList = (img_hash) => {
         this.setState({
             addOutfitInput: img_hash
-        })
+        });
+        this.props.changeOutfitShown(true);
     };
 
     addToFavs = (img_hash, id) => {
@@ -379,7 +380,8 @@ class ResultsFromSearch extends React.Component  {
     addOutfitComplete = () => {
         this.setState({
             addOutfitInput: null
-        })
+        });
+        this.props.changeOutfitShown(false);
     };
 
     buyNow = (prodUrl) => {
@@ -785,19 +787,24 @@ class ResultsFromSearch extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div>
+                    {(this.state.addOutfitInput !== null) && (
+                        <div>
+                            <AddOutfit
+                                imgHash={this.state.addOutfitInput}
+                                email={this.props.email}
+                                addOutfitComplete={this.addOutfitComplete}
+                            />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </div>
+                    )}
                     <div className="result-pane">
                         {tiles}
                     </div>
 
                     <PosNegButton />
-                    {(this.state.addOutfitInput !== null)
-                    && (
-                        <AddOutfit
-                            imgHash={this.state.addOutfitInput}
-                            email={this.props.email}
-                            addOutfitComplete={this.addOutfitComplete}
-                        />
-                    )}
                 </div>
             </MuiThemeProvider>
         );

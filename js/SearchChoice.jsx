@@ -50,74 +50,15 @@ class SearchChoice extends React.Component {
             <MuiThemeProvider>
                 <div>
                     <div className="search-choice">
-
-                        <Route render={({ history }) => (
-                            <div
-                                className="search-choice-button-image"
-                                onClick={() => { history.push('/search-from-image') }}>
-                                <div className="search-choice-title">
-                                    <div className="image-search-icon"></div>
-                                    <div className="search-choice-text">Search by photo</div>
-                                </div>
-                            </div>
-                        )} />
-
-                        <Route render={({ history }) => (
-                            <div
-                                className="search-choice-button-type"
-                                onClick={() => { history.push('/textsearch') }}>
-                                <div className="search-choice-title">
-                                    <div className="text-search-icon"></div>
-                                    <div className="search-choice-text">Type your search</div>
-                                </div>
-                            </div>
-                        )} />
-
-                        {/*<Route render={({ history }) => (*/}
-                            {/*<div*/}
-                                {/*className="search-choice-button-explore"*/}
-                                {/*onClick={() => { history.push('/explorer') }}>*/}
-                                {/*<div className="search-choice-title">*/}
-                                    {/*<div className="search-glass-icon"></div>*/}
-                                    {/*<div className="search-choice-text">Or explore...</div>*/}
-                                {/*</div>*/}
-                            {/*</div>*/}
-                        {/*)} />*/}
-                        {(this.state.isAuth === "true") ? (
-                            <div
-                                style={{
-                                    marginTop: '-75px'
-                                }}
-                            >
-                                <RecommendFromTags
-                                    email={this.state.email}
-                                    sex={this.state.sex}
-                                    lookFilter={this.state.lookFilter}
-                                    showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
-                                />
-                            </div>
-                        ) : (
-                            <div
-                                style={{
-                                    marginTop: '-75px'
-                                }}
-                            >
-                                <RecommendRandom
-                                    sex={this.state.sex}
-                                    showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
-                                />
-                            </div>
-                        )}
-
-
-                        {(this.state.imgHash !== null) && (
+                        {(this.state.imgHash !== null) ? (
                             <div
                                 style={{
                                     width: '100vw',
                                     backgroundColor: 'white',
                                     height: 'calc(100vh)',
                                     top: '0px',
-                                    position: 'fixed'
+                                    position: 'relative',
+                                    zIndex: '100'
                                 }}
                             >
                                 <AddOutfit
@@ -126,7 +67,58 @@ class SearchChoice extends React.Component {
                                     addOutfitComplete={this.addOutfitComplete}
                                 />
                             </div>
+                        ) : (
+                            <div>
+                                <Route render={({ history }) => (
+                                    <div
+                                        className="search-choice-button-image"
+                                        onClick={() => { history.push('/search-from-image') }}>
+                                        <div className="search-choice-title">
+                                            <div className="image-search-icon"></div>
+                                            <div className="search-choice-text">Search by photo</div>
+                                        </div>
+                                    </div>
+                                )} />
+
+                                <Route render={({ history }) => (
+                                    <div
+                                        className="search-choice-button-type"
+                                        onClick={() => { history.push('/textsearch') }}>
+                                        <div className="search-choice-title">
+                                            <div className="text-search-icon"></div>
+                                            <div className="search-choice-text">Type your search</div>
+                                        </div>
+                                    </div>
+                                )} />
+
+                                {(this.state.isAuth === "true") ? (
+                                    <div
+                                        style={{
+                                            marginTop: '-75px'
+                                        }}
+                                    >
+                                        <RecommendFromTags
+                                            email={this.state.email}
+                                            sex={this.state.sex}
+                                            lookFilter={this.state.lookFilter}
+                                            showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        style={{
+                                            marginTop: '-75px'
+                                        }}
+                                    >
+                                        <RecommendRandom
+                                            sex={this.state.sex}
+                                            showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         )}
+
                     </div>
 
                     {/*{(this.state.firstLogin === '1') && (*/}
