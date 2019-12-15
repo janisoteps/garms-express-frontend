@@ -87,9 +87,12 @@ class SearchFromId extends React.Component  {
                 return response.json();
             }).then(data => {
                 const img_data = data[0];
-                // console.log(img_data);
+                let posTags = img_data.all_cats;
+                if(posTags.includes('dress') && posTags.includes('dresses')) {
+                    posTags = posTags.filter(item => {return item !== 'dresses'});
+                }
                 this.setState({
-                    posTags: img_data.all_cats,
+                    posTags: posTags,
                     sex: img_data.sex,
                     selectedColor: img_data.color_1
                 });
