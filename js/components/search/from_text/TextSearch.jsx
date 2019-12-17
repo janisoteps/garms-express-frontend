@@ -7,13 +7,11 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-// import TagCloud from '../results/TagCloud';
-// import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-// import PriceFilter from './../results/PriceFilter';
 import ResultFilters from "../results/ResultFilters";
+import LoadingScreen from "../../loading/LoadingScreen";
 
 
 //Component to search for products using text input
@@ -50,7 +48,8 @@ class TextSearch extends React.Component  {
             filterBrands: [],
             brandPickerShown: false,
             tagPickerShown: false,
-            addOutfitShown: false
+            addOutfitShown: false,
+            loadingContent: null
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -119,31 +118,8 @@ class TextSearch extends React.Component  {
     };
 
     searchSimilarImages(imgHash, colorRgb1){
-        this.setState({
-            loading: true
-        });
-
-        let posTags = this.state.posTags;
-        let negTags = this.state.negTags;
-        let sex = this.state.sex;
-        let noShop = this.state.noShop;
-        let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
-        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-
-        fetch(window.location.origin + '/api/search_similar', {
-            method: 'post',
-            body: JSON.stringify({
-                img_hash: imgHash,
-                tags_positive: posTags,
-                tags_negative: negTags,
-                color_1: color_1,
-                // color_2: color_2,
-                sex: sex,
-                no_shop: noShop,
-                max_price: maxPrice,
-                brands: filterBrands
-            }),
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -152,15 +128,52 @@ class TextSearch extends React.Component  {
             return response.json();
         }).then(data => {
             this.setState({
-                results: data.res,
-                loading: false,
-                // prodImgShown: prodImgShown
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true
+                });
+
+                let posTags = this.state.posTags;
+                let negTags = this.state.negTags;
+                let sex = this.state.sex;
+                let noShop = this.state.noShop;
+                let filterBrands = this.state.filterBrands;
+                let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+                let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+
+                fetch(window.location.origin + '/api/search_similar', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        img_hash: imgHash,
+                        tags_positive: posTags,
+                        tags_negative: negTags,
+                        color_1: color_1,
+                        // color_2: color_2,
+                        sex: sex,
+                        no_shop: noShop,
+                        max_price: maxPrice,
+                        brands: filterBrands
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(function(response) {
+                    return response.json();
+                }).then(data => {
+                    this.setState({
+                        results: data.res,
+                        loading: false,
+                        // prodImgShown: prodImgShown
+                    });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                    window.scrollTo(0, 0);
+                });
             });
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-            window.scrollTo(0, 0);
         });
     }
 
@@ -240,48 +253,62 @@ class TextSearch extends React.Component  {
 
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
-        this.setState({
-            loading: true,
-            mainSuggestion: null,
-            moreSuggestions: []
-        });
-        let inputString = input ? input : this.state.searchString;
-        if(inputString.length === 0){
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
             this.setState({
-                loading: false,
-                noResult: true
-            });
-            return
-        }
-        let inputArray = inputString.split(' ');
-        let searchString = inputArray.join('+');
-
-        // console.log('String search with: ', searchString);
-        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
-            method: 'get'
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-                // console.log('Response: ', data);
-                if (typeof data.res === "undefined") {
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true,
+                    mainSuggestion: null,
+                    moreSuggestions: []
+                });
+                let inputString = input ? input : this.state.searchString;
+                if(inputString.length === 0){
                     this.setState({
-                        results: [],
                         loading: false,
                         noResult: true
                     });
-                } else {
-                    this.setState({
-                        results: data.res,
-                        loading: false,
-                        // prodImgShown: prodImgShown,
-                        posTags: data.tags
-                    });
-                    if (data.res.length === 0) {
-                        this.setState({
-                            noResult: true
-                        });
-                    }
+                    return
                 }
+                let inputArray = inputString.split(' ');
+                let searchString = inputArray.join('+');
+
+                // console.log('String search with: ', searchString);
+                fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
+                    method: 'get'
+                }).then(function(response) { return response.json(); })
+                    .then(data => {
+                        // console.log('Response: ', data);
+                        if (typeof data.res === "undefined") {
+                            this.setState({
+                                results: [],
+                                loading: false,
+                                noResult: true
+                            });
+                        } else {
+                            this.setState({
+                                results: data.res,
+                                loading: false,
+                                // prodImgShown: prodImgShown,
+                                posTags: data.tags
+                            });
+                            if (data.res.length === 0) {
+                                this.setState({
+                                    noResult: true
+                                });
+                            }
+                        }
+                    });
             });
+        });
     }
 
     updateRange(val) {
@@ -386,14 +413,9 @@ class TextSearch extends React.Component  {
             return(
                 <div>
                     {(this.state.loading === true) && (
-                        <div className="overlay">
-                            <div className="la-ball-atom la-3x">
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                            </div>
-                        </div>
+                        <LoadingScreen
+                            loadingContent={this.state.loadingContent}
+                        />
                     )}
                 </div>
             )
