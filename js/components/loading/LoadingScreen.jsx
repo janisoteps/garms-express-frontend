@@ -40,12 +40,27 @@ class LoadingScreen extends React.Component {
                                 margin: '0 auto',
                                 fontSize: '1.1rem',
                                 position: 'relative',
-                                fontStyle: 'italic'
+                                fontStyle: 'italic',
+                                paddingLeft: '5px',
+                                paddingRight: '5px',
+                                textAlign: 'center'
                             }}
                         >
-                            <p>
-                                {this.state.content.content_text}
-                            </p>
+                            {this.state.content.content_type === 'quote' && (
+                                <p>
+                                    {this.state.content.content_text}
+                                </p>
+                            )}
+                            {this.state.content.content_type === 'meme' && (
+                                <img
+                                    alt="load screen meme"
+                                    src={this.state.content.content_image}
+                                    style={{
+                                        width: '100%',
+                                        height: 'auto'
+                                    }}
+                                />
+                            )}
                         </div>
                     )}
                     <div className="la-ball-atom la-3x">
