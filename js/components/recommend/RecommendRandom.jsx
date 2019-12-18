@@ -133,7 +133,11 @@ class RecommendRandom extends React.Component  {
                         {outfitTiles}
                     </div>
                 ) : (
-                    <div>
+                    <div
+                        style={{
+                            paddingTop: '100px'
+                        }}
+                    >
                         <br />
                         <div className="la-ball-atom la-3x">
                             <div />
