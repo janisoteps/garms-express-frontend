@@ -11,6 +11,7 @@ import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import ResultFilters from "../results/ResultFilters";
+import LoadingScreen from "../../loading/LoadingScreen";
 
 
 //Component to search for products using an uploaded image
@@ -42,7 +43,8 @@ class SearchFromImage extends React.Component  {
             filterBrands: [],
             brandPickerShown: false,
             tagPickerShown: false,
-            addOutfitShown: false
+            addOutfitShown: false,
+            loadingContent: null
         };
 
         this.getImageFeatures = this.getImageFeatures.bind(this);
@@ -224,31 +226,45 @@ class SearchFromImage extends React.Component  {
 
     // Sends feature prediction request to server, sets state to data in response
     getImageFeatures(){
-        this.setState({
-            loading: true
-        });
-        let imageFile;
-        if (this.state.fileFromUrl) {
-            imageFile = this.state.fileFromUrl.file;
-        } else {
-            imageFile = this.state.files[0];
-        }
-        let data = new FormData();
-        data.append('image', imageFile);
-        fetch(window.location.origin + '/api/img_features_v2', {
-            method: 'post',
-            body: data
-        }).then(response => {
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
             this.setState({
-                colors: data.res.colors,
-                cats: data.res['img_cats_ai_txt'],
-                mainCat: data.res['img_cats_ai_txt'][0],
-                rcnnEncoding: data.res['rcnn_encoding'],
-                vgg16Encoding: data.res['vgg16_encoding'],
-                loading: false
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true
+                });
+                let imageFile;
+                if (this.state.fileFromUrl) {
+                    imageFile = this.state.fileFromUrl.file;
+                } else {
+                    imageFile = this.state.files[0];
+                }
+                let data = new FormData();
+                data.append('image', imageFile);
+                fetch(window.location.origin + '/api/img_features_v2', {
+                    method: 'post',
+                    body: data
+                }).then(response => {
+                    return response.json();
+                }).then(data => {
+                    // console.log(data);
+                    this.setState({
+                        colors: data.res.colors,
+                        cats: data.res['img_cats_ai_txt'],
+                        mainCat: data.res['img_cats_ai_txt'][0],
+                        rcnnEncoding: data.res['rcnn_encoding'],
+                        vgg16Encoding: data.res['vgg16_encoding'],
+                        loading: false
+                    });
+                });
             });
         });
     }
@@ -339,70 +355,8 @@ class SearchFromImage extends React.Component  {
     }
 
     searchFromImage(){
-        let colorRgb1 = this.state.selectedColor;
-        // let colorRgb2 = this.state.selectedColors[1];
-        let tags = this.state.posTags;
-        let noShop = this.state.noShop;
-        let sex = this.state.sex;
-        let rcnnEncoding = this.state.rcnnEncoding;
-        let vgg16Encoding = this.state.vgg16Encoding;
-        // console.log('SearchFromImage encoding nocrop: ', encodingNoCrop);
-        this.setState({
-            colors: {},
-            cats: [],
-            files: [],
-            loading: true
-        });
-        fetch(window.location.origin + '/api/search_from_image_v2', {
-            method: 'post',
-            body: JSON.stringify({
-                tags: tags,
-                color_rgb_1: colorRgb1,
-                // color_rgb_2: colorRgb2,
-                sex: sex,
-                no_shop: noShop,
-                encoding_rcnn: rcnnEncoding,
-                vgg16_encoding: vgg16Encoding
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-                this.setState({
-                    results: data.res,
-                    loading: false,
-                    // prodImgShown: prodImgShown
-                });
-            });
-    }
-
-    searchSimilarImages(imgHash, colorRgb1){
-        this.setState({
-            loading: true
-        });
-
-        let posTags = this.state.posTags;
-        let negTags = this.state.negTags;
-        let sex = this.state.sex;
-        let noShop = this.state.noShop;
-        let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
-        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-
-        fetch(window.location.origin + '/api/search_similar', {
-            method: 'post',
-            body: JSON.stringify({
-                img_hash: imgHash,
-                tags_positive: posTags,
-                tags_negative: negTags,
-                color_1: color_1,
-                sex: sex,
-                no_shop: noShop,
-                max_price: maxPrice,
-                brands: filterBrands
-            }),
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -411,15 +365,101 @@ class SearchFromImage extends React.Component  {
             return response.json();
         }).then(data => {
             this.setState({
-                results: data.res,
-                loading: false,
-                // prodImgShown: prodImgShown
+                loadingContent: data
+            }, () => {
+                let colorRgb1 = this.state.selectedColor;
+                let tags = this.state.posTags;
+                let noShop = this.state.noShop;
+                let sex = this.state.sex;
+                let rcnnEncoding = this.state.rcnnEncoding;
+                let vgg16Encoding = this.state.vgg16Encoding;
+                this.setState({
+                    colors: {},
+                    cats: [],
+                    files: [],
+                    loading: true
+                });
+                fetch(window.location.origin + '/api/search_from_image_v2', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        tags: tags,
+                        color_rgb_1: colorRgb1,
+                        sex: sex,
+                        no_shop: noShop,
+                        encoding_rcnn: rcnnEncoding,
+                        vgg16_encoding: vgg16Encoding
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(function(response) { return response.json(); })
+                    .then(data => {
+                        this.setState({
+                            results: data.res,
+                            loading: false,
+                        });
+                    });
             });
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
+        });
+    }
+
+    searchSimilarImages(imgHash, colorRgb1){
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            this.setState({
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true
+                });
+
+                let posTags = this.state.posTags;
+                let negTags = this.state.negTags;
+                let sex = this.state.sex;
+                let noShop = this.state.noShop;
+                let filterBrands = this.state.filterBrands;
+                let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+                let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+
+                fetch(window.location.origin + '/api/search_similar', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        img_hash: imgHash,
+                        tags_positive: posTags,
+                        tags_negative: negTags,
+                        color_1: color_1,
+                        sex: sex,
+                        no_shop: noShop,
+                        max_price: maxPrice,
+                        brands: filterBrands
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(function(response) {
+                    return response.json();
+                }).then(data => {
+                    this.setState({
+                        results: data.res,
+                        loading: false,
+                        // prodImgShown: prodImgShown
+                    });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                    window.scrollTo(0, 0);
+                });
             });
-            window.scrollTo(0, 0);
         });
     }
 
@@ -751,14 +791,9 @@ class SearchFromImage extends React.Component  {
                 }
 
                 {(this.state.loading === true) && (
-                    <div className="overlay">
-                        <div className="la-ball-atom la-3x">
-                            <div />
-                            <div />
-                            <div />
-                            <div />
-                        </div>
-                    </div>
+                    <LoadingScreen
+                        loadingContent={this.state.loadingContent}
+                    />
                 )}
             </div>
         );

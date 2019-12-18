@@ -14,6 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 // import PriceFilter from './../results/PriceFilter';
 import ResultFilters from './../results/ResultFilters';
+import LoadingScreen from "../../loading/LoadingScreen";
 
 
 //Component to search for products using text input
@@ -49,7 +50,8 @@ class SearchFromId extends React.Component  {
             filterBrands: [],
             brandPickerShown: false,
             tagPickerShown: false,
-            addOutfitShown: false
+            addOutfitShown: false,
+            loadingContent: null
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -171,32 +173,8 @@ class SearchFromId extends React.Component  {
     };
 
     searchSimilarImages(imgHash, colorRgb1){
-        this.setState({
-            loading: true
-        });
-
-        let posTags = this.state.posTags;
-        let negTags = this.state.negTags;
-        let sex = this.state.sex;
-        let noShop = this.state.noShop;
-        let filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
-        // let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
-        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-
-        fetch(window.location.origin + '/api/search_similar', {
-            method: 'post',
-            body: JSON.stringify({
-                img_hash: imgHash,
-                tags_positive: posTags,
-                tags_negative: negTags,
-                color_1: color_1,
-                // color_2: color_2,
-                sex: sex,
-                no_shop: noShop,
-                max_price: maxPrice,
-                brands: filterBrands
-            }),
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -205,15 +183,53 @@ class SearchFromId extends React.Component  {
             return response.json();
         }).then(data => {
             this.setState({
-                results: data.res,
-                loading: false,
-                // prodImgShown: prodImgShown
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true
+                });
+
+                let posTags = this.state.posTags;
+                let negTags = this.state.negTags;
+                let sex = this.state.sex;
+                let noShop = this.state.noShop;
+                let filterBrands = this.state.filterBrands;
+                let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+                // let color_2 = colorRgb2 ? colorRgb2 : this.state.selectedColors[1];
+                let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+
+                fetch(window.location.origin + '/api/search_similar', {
+                    method: 'post',
+                    body: JSON.stringify({
+                        img_hash: imgHash,
+                        tags_positive: posTags,
+                        tags_negative: negTags,
+                        color_1: color_1,
+                        // color_2: color_2,
+                        sex: sex,
+                        no_shop: noShop,
+                        max_price: maxPrice,
+                        brands: filterBrands
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(function(response) {
+                    return response.json();
+                }).then(data => {
+                    this.setState({
+                        results: data.res,
+                        loading: false,
+                        // prodImgShown: prodImgShown
+                    });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                    window.scrollTo(0, 0);
+                });
             });
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-            window.scrollTo(0, 0);
         });
     }
 
@@ -292,53 +308,67 @@ class SearchFromId extends React.Component  {
 
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
-        this.setState({
-            loading: true,
-            mainSuggestion: null,
-            moreSuggestions: []
-        });
-        let inputString = input ? input : this.state.searchString;
-        if(inputString.length === 0){
+        fetch(`${window.location.origin}/api/get_random_loading_content`, {
+            method: 'get',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
             this.setState({
-                loading: false,
-                noResult: true
-            });
-            return
-        }
-        let inputArray = inputString.split(' ');
-        let searchString = inputArray.join('+');
-
-        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
-            method: 'get'
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-                if (typeof data.res === "undefined") {
+                loadingContent: data
+            }, () => {
+                this.setState({
+                    loading: true,
+                    mainSuggestion: null,
+                    moreSuggestions: []
+                });
+                let inputString = input ? input : this.state.searchString;
+                if(inputString.length === 0){
                     this.setState({
-                        results: [],
                         loading: false,
                         noResult: true
                     });
-                } else {
-                    let results =  data.res;
-                    let prodImgShown = Object.assign(
-                        {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
-                                'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
-                                'img_count': product['prod_serial'][0]['img_urls'].length
-                            }}))
-                    );
-                    this.setState({
-                        results: data.res,
-                        loading: false,
-                        prodImgShown: prodImgShown,
-                        posTags: data.tags
-                    });
-                    if (data.res.length === 0) {
-                        this.setState({
-                            noResult: true
-                        });
-                    }
+                    return
                 }
+                let inputArray = inputString.split(' ');
+                let searchString = inputArray.join('+');
+
+                fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + this.state.sex, {
+                    method: 'get'
+                }).then(function(response) { return response.json(); })
+                    .then(data => {
+                        if (typeof data.res === "undefined") {
+                            this.setState({
+                                results: [],
+                                loading: false,
+                                noResult: true
+                            });
+                        } else {
+                            let results =  data.res;
+                            let prodImgShown = Object.assign(
+                                {}, ...results.map(product => ({[product['prod_serial'][0]['prod_hash']]: {
+                                        'img_shown': Math.floor(Math.random() * (product['prod_serial'][0]['img_urls'].length)),
+                                        'img_count': product['prod_serial'][0]['img_urls'].length
+                                    }}))
+                            );
+                            this.setState({
+                                results: data.res,
+                                loading: false,
+                                prodImgShown: prodImgShown,
+                                posTags: data.tags
+                            });
+                            if (data.res.length === 0) {
+                                this.setState({
+                                    noResult: true
+                                });
+                            }
+                        }
+                    });
             });
+        });
     }
 
     showCatPicker(){
@@ -455,14 +485,9 @@ class SearchFromId extends React.Component  {
             return(
                 <div>
                     {(this.state.loading === true) && (
-                        <div className="overlay">
-                            <div className="la-ball-atom la-3x">
-                                <div />
-                                <div />
-                                <div />
-                                <div />
-                            </div>
-                        </div>
+                        <LoadingScreen
+                            loadingContent={this.state.loadingContent}
+                        />
                     )}
                 </div>
             )

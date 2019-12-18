@@ -426,9 +426,9 @@ class Wardrobe extends React.Component  {
                         <a href={outfitDict.info.url} target="_blank">
                             <div className="product-name"><h4>{outfitDict.info.name}</h4></div>
                         </a>
-                        <div style={priceStyle}><h5>{outfitDict.info.currency}{outfitDict.info.price}</h5></div>
+                        <div style={priceStyle}><h5>£{outfitDict.info.price}</h5></div>
                         {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
-                            <h5>{outfitDict.info.currency}{outfitDict.info.salePrice}</h5>
+                            <h5>£{outfitDict.info.salePrice}</h5>
                         </div>)}
 
                         <Route render={({history}) => (

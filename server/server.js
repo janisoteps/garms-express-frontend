@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-const api_base_url = 'http://18.203.186.0/api/';
-// const api_base_url = 'http://127.0.0.1:5000/api/';
+// const api_base_url = 'http://18.203.186.0/api/';
+const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -885,6 +885,50 @@ app.post('/api/recommend_random', function (req, res) {
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
             res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/add_loading_content', function (req, res) {
+    const content_type = req.body.content_type;
+    const content_text = req.body.content_text;
+    const content_image = req.body.content_image;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'add_loading_content',
+        body: {
+            content_type: content_type,
+            content_text: content_text,
+            content_image: content_image
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.get('/api/get_random_loading_content', function (req, res) {
+    let options = {
+        method: 'GET',
+        url: api_base_url + 'get_random_loading_content'
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
         }
     }
 

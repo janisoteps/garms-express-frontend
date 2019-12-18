@@ -79,11 +79,11 @@ class RecommendFromTags extends React.Component  {
                                 <h5>{prodSuggestion.name}</h5>
                             </div>
                             <div style={priceStyle}>
-                                <h6>{prodSuggestion.currency}{prodSuggestion.price}</h6>
+                                <h6>£{prodSuggestion.price}</h6>
                             </div>
                             {(prodSuggestion.sale) && (
                                 <div style={{color: '#d6181e'}}>
-                                    <h6>{prodSuggestion.currency}{prodSuggestion.saleprice}</h6>
+                                    <h6>£{prodSuggestion.saleprice}</h6>
                                 </div>
                             )}
 
@@ -135,7 +135,11 @@ class RecommendFromTags extends React.Component  {
                         {outfitTiles}
                     </div>
                 ) : (
-                    <div>
+                    <div
+                        style={{
+                            paddingTop: '100px'
+                        }}
+                    >
                         <div className="la-ball-atom la-3x">
                             <div />
                             <div />
