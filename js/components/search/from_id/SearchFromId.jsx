@@ -446,29 +446,55 @@ class SearchFromId extends React.Component  {
         }
     }
 
-    addTagFilter(tag, showPicker) {
-        let currentFilterTags = this.state.posTags;
-        if (currentFilterTags.indexOf(tag) !== -1) {
-            const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
-                return checkedTag !== tag
-            });
-            this.setState({
-                posTags: newFilterBrandTags,
-                tagPickerShown: showPicker
-            });
+    addTagFilter(posTag, negTag, showPicker) {
+        if(posTag) {
+            let currentFilterTags = this.state.posTags;
+            if (currentFilterTags.indexOf(posTag) !== -1) {
+                const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                    return checkedTag !== posTag
+                });
+                this.setState({
+                    posTags: newFilterBrandTags,
+                    tagPickerShown: showPicker
+                });
+            } else {
+                currentFilterTags.push(posTag);
+                this.setState({
+                    posTags: currentFilterTags,
+                    tagPickerShown: showPicker
+                }, () => {
+                    if (showPicker === false) {
+                        this.searchSimilarImages(
+                            this.state.results[0]['image_data']['img_hash'],
+                            this.state.selectedColor
+                        );
+                    }
+                });
+            }
         } else {
-            currentFilterTags.push(tag);
-            this.setState({
-                posTags: currentFilterTags,
-                tagPickerShown: showPicker
-            }, () => {
-                if (showPicker === false) {
-                    this.searchSimilarImages(
-                        this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColor
-                    );
-                }
-            });
+            let currentFilterTags = this.state.negTags;
+            if (currentFilterTags.indexOf(negTag) !== -1) {
+                const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                    return checkedTag !== negTag
+                });
+                this.setState({
+                    negTags: newFilterBrandTags,
+                    tagPickerShown: showPicker
+                });
+            } else {
+                currentFilterTags.push(negTag);
+                this.setState({
+                    negTags: currentFilterTags,
+                    tagPickerShown: showPicker
+                }, () => {
+                    if (showPicker === false) {
+                        this.searchSimilarImages(
+                            this.state.results[0]['image_data']['img_hash'],
+                            this.state.selectedColor
+                        );
+                    }
+                });
+            }
         }
     }
 
@@ -675,7 +701,7 @@ class SearchFromId extends React.Component  {
                             posTags={this.state.posTags}
                             negTags={this.state.negTags}
                             setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                            addTagFilter={(tag, showPicker) => {this.addTagFilter(tag, showPicker)}}
+                            addTagFilter={(posTag, negTag, showPicker) => {this.addTagFilter(posTag, negTag, showPicker)}}
                             showTagPicker={(show) => {this.showTagPicker(show)}}
                             tagPickerShown={this.state.tagPickerShown}
                             setColor={(selection) => {this.setColorPosTags(selection)}}

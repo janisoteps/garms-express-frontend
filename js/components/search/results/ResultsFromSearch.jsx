@@ -409,7 +409,7 @@ class ResultsFromSearch extends React.Component  {
             // let currency = productInfo.currency;
             const currency = '£';
             let price = productInfo.price.toFixed(2);
-            let prod_id = productInfo.id;
+            let prod_id = productInfo.prod_id;
             let prod_url = productInfo.prod_url;
             let sale = productInfo.sale;
             let saleprice = productInfo.saleprice;
