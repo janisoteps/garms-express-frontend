@@ -504,7 +504,11 @@ class TagCloud extends React.Component {
                     <div
                         // onClick={() => {this.removeTag(tag, 'negative');}}
                     >
-                        <div>
+                        <div
+                            style={{
+                                textDecoration: 'line-through'
+                            }}
+                        >
                             {tag.toUpperCase()}
                         </div>
                     </div>
@@ -526,7 +530,31 @@ class TagCloud extends React.Component {
                                 margin: '0 auto',
                                 marginBottom: '3px'
                             }}
-                            onClick={() => {this.props.addTagFilter(filterTag, true)}}
+                            onClick={() => {this.props.addTagFilter(filterTag, null, true)}}
+                        >
+                            {filterTag}
+                            <div className="brand-picker-bubble-minus" />
+                        </div>
+                    </Tooltip>
+                </div>
+            )
+        });
+        const pickerNegTagList = this.props.negTags.map(filterTag => {
+            return (
+                <div key={`${filterTag}-${Math.random()}`}>
+                    <Tooltip title="Remove tag">
+                        <div
+                            style={{
+                                borderRadius: '5px',
+                                border: '2px #000000 solid',
+                                cursor: 'pointer',
+                                width: '80vw',
+                                maxWidth: '300px',
+                                margin: '0 auto',
+                                marginBottom: '3px',
+                                textDecoration: 'line-through'
+                            }}
+                            onClick={() => {this.props.addTagFilter(null, filterTag, true)}}
                         >
                             {filterTag}
                             <div className="brand-picker-bubble-minus" />
@@ -551,7 +579,7 @@ class TagCloud extends React.Component {
                             this.setState({
                                 searchString: ''
                             }, () => {
-                                this.props.addTagFilter(suggestTag, true);
+                                this.props.addTagFilter(suggestTag, null, true);
                             });
                         }}
                     >
@@ -615,6 +643,9 @@ class TagCloud extends React.Component {
                         {this.props.posTags.length > 0 && (
                             pickerTagList
                         )}
+                        {this.props.negTags.length > 0 && (
+                            pickerNegTagList
+                        )}
                         <TextField
                             autoFocus="autofocus"
                             className="text-search-input"
@@ -639,7 +670,7 @@ class TagCloud extends React.Component {
                                 if (this.state.searchString === '') {
                                     this.props.showTagPicker(false)
                                 } else {
-                                    this.props.addTagFilter(this.state.searchString, false)
+                                    this.props.addTagFilter(this.state.searchString, null, false)
                                 }
                             }}
                             style={{

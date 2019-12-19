@@ -23,7 +23,7 @@ class ResultFilters extends React.Component {
                     posTags={this.props.posTags}
                     negTags={this.props.negTags}
                     setTags={(tag, type, flag) => {this.props.setTags(tag, type, flag)}}
-                    addTagFilter={(tag, showPicker) => {this.props.addTagFilter(tag, showPicker)}}
+                    addTagFilter={(posTag, negTag, showPicker) => {this.props.addTagFilter(posTag, negTag, showPicker)}}
                     showTagPicker={(show) => {this.props.showTagPicker(show)}}
                     tagPickerShown={this.props.tagPickerShown}
                 />
