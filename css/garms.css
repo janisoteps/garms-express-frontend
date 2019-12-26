@@ -1318,6 +1318,7 @@ div #output {
     height: 65px;
     width: 65px;
     padding: 18px 7px 3px;
+    cursor: pointer;
 }
 /*div #output::before {*/
     /*content: '';*/
