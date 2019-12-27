@@ -49,6 +49,7 @@ export default class RegisterFromResult extends React.Component {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
+                // console.log(data);
                 this.setState({
                     prodId: data.prod_id
                 });
@@ -63,6 +64,7 @@ export default class RegisterFromResult extends React.Component {
                 }).then(function(response) {
                     return response.json();
                 }).then(prodData => {
+                    // console.log(prodData);
                     this.setState({
                         prodInfo: prodData[0][0],
                         sex: prodData[0][0]['sex']

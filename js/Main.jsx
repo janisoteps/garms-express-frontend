@@ -12,6 +12,7 @@ import Explorer from './components/search/from_explore/Explorer'
 import SearchFromImage from './components/search/from_image/SearchFromImage'
 import SearchFromId from './components/search/from_id/SearchFromId'
 import OutfitPage from './components/search/from_id/OutfitPage'
+import Intro from './components/intro/Intro'
 
 
 // The Main component renders one of the provided
@@ -63,7 +64,6 @@ class Main extends React.Component {
                             handleLogin={(email, password) => {this.props.handleLogin(email, password)}}
                         />
                     }/>
-                    <Route path='/login' component={Login} />
                     <Route path='/logout' component={Logout} />
                     <Route path='/textsearch'
                            render={(props) => <TextSearch
@@ -73,7 +73,7 @@ class Main extends React.Component {
                            email={this.props.email}
                            changeSex={(sex) => {this.changeSex(sex);}}
                            firstLogin={this.props.firstLogin}
-                           completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                           completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                         />}
                     />
                     <Route path='/wardrobe'
@@ -114,7 +114,7 @@ class Main extends React.Component {
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
                                firstLogin={this.props.firstLogin}
-                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                               completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                            />}
                     />
                     <Route path='/search-from-id'
@@ -126,7 +126,7 @@ class Main extends React.Component {
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
                                firstLogin={this.props.firstLogin}
-                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                               completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                            />}
                     />
                     <Route path='/outfit-page'
@@ -137,8 +137,17 @@ class Main extends React.Component {
                                isAuth={this.props.isAuth}
                                email={this.props.email}
                                firstLogin={this.props.firstLogin}
-                               completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                               completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                            />}
+                    />
+                    <Route
+                        path='/intro'
+                        render={(props) => <Intro
+                            {...props}
+                            username={this.props.username}
+                            sex={this.props.sex}
+                            completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                        />}
                     />
                 </Switch>
             </main>
