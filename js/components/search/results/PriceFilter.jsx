@@ -1,5 +1,4 @@
 import React from 'react';
-// import Slider from '@material-ui/core/Slider';
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -10,7 +9,6 @@ class PriceFilter extends React.Component {
         super(props);
         this.state = {
             sliderValue: 0,
-            showSlider: false,
             loading: this.props.loading
         };
         this.updateRange = this.updateRange.bind(this);
@@ -32,14 +30,10 @@ class PriceFilter extends React.Component {
     }
 
     showHideSlider() {
-        if (this.state.showSlider === true) {
-            this.setState({
-                showSlider: false
-            })
+        if (this.props.priceFilterShown === true) {
+            this.props.showPriceFilter(false);
         } else {
-            this.setState({
-                showSlider: true
-            })
+            this.props.showPriceFilter(true);
         }
     }
 
@@ -69,7 +63,7 @@ class PriceFilter extends React.Component {
                                 £{range < 500 ? range : <span style={{fontSize: '1.5rem', lineHeight: '1'}}>∞</span>}
                             </span>
                         </Tooltip>
-                        {this.state.showSlider === true && (
+                        {this.props.priceFilterShown === true && (
                             <div style={{
                                 position: 'fixed',
                                 top: '50px',
@@ -105,9 +99,7 @@ class PriceFilter extends React.Component {
                                 >
                                     <div
                                         onClick={() => {
-                                            this.setState({
-                                                showSlider: false
-                                            })
+                                            this.props.showPriceFilter(false);
                                         }}
                                         style={{
                                             display: 'inline-block',

@@ -7,12 +7,9 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
-// import TagCloud from '../results/TagCloud';
-// import ColorPicker from '../results/ColorPicker';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-// import PriceFilter from './../results/PriceFilter';
 import ResultFilters from './../results/ResultFilters';
 import LoadingScreen from "../../loading/LoadingScreen";
 
@@ -51,7 +48,8 @@ class SearchFromId extends React.Component  {
             brandPickerShown: false,
             tagPickerShown: false,
             addOutfitShown: false,
-            loadingContent: null
+            loadingContent: null,
+            priceFilterShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -68,6 +66,7 @@ class SearchFromId extends React.Component  {
         this.showTagPicker = this.showTagPicker.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
         this.changeOutfitShown = this.changeOutfitShown.bind(this);
+        this.showPriceFilter = this.showPriceFilter.bind(this);
     }
 
     componentDidMount() {
@@ -504,6 +503,18 @@ class SearchFromId extends React.Component  {
         })
     }
 
+    showPriceFilter(show) {
+        this.setState({
+            priceFilterShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColor
+            );
+        }
+    }
+
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
     render () {
         // Render a spinner if loading state is true
@@ -714,6 +725,8 @@ class SearchFromId extends React.Component  {
                             brandPickerShown={this.state.brandPickerShown}
                             showBrandPicker={(show) => {this.showBrandPicker(show)}}
                             addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                            showPriceFilter={(show) => {this.showPriceFilter(show)}}
+                            priceFilterShown={this.state.priceFilterShown}
                         />
                     )}
 

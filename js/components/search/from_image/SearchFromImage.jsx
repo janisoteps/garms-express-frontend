@@ -44,7 +44,8 @@ class SearchFromImage extends React.Component  {
             brandPickerShown: false,
             tagPickerShown: false,
             addOutfitShown: false,
-            loadingContent: null
+            loadingContent: null,
+            priceFilterShown: false
         };
 
         this.getImageFeatures = this.getImageFeatures.bind(this);
@@ -65,6 +66,7 @@ class SearchFromImage extends React.Component  {
         this.addTagFilter = this.addTagFilter.bind(this);
         this.changeSex = this.changeSex.bind(this);
         this.changeOutfitShown = this.changeOutfitShown.bind(this);
+        this.showPriceFilter = this.showPriceFilter.bind(this);
     }
 
     componentDidMount() {
@@ -630,6 +632,18 @@ class SearchFromImage extends React.Component  {
         })
     }
 
+    showPriceFilter(show) {
+        this.setState({
+            priceFilterShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColor
+            );
+        }
+    }
+
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
         const rangeVal = this.state.rangeVal;
@@ -771,6 +785,8 @@ class SearchFromImage extends React.Component  {
                             brandPickerShown={this.state.brandPickerShown}
                             showBrandPicker={(show) => {this.showBrandPicker(show)}}
                             addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                            showPriceFilter={(show) => {this.showPriceFilter(show)}}
+                            priceFilterShown={this.state.priceFilterShown}
                         />
                     )}
                 </div>

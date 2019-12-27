@@ -37,6 +37,8 @@ class ResultFilters extends React.Component {
                     range={this.props.range}
                     updateRange={this.props.updateRange}
                     loading={this.props.loading}
+                    showPriceFilter={(show) => {this.props.showPriceFilter(show)}}
+                    priceFilterShown={this.props.priceFilterShown}
                 />
                 <ColorPicker
                     setColor={(selection) => {this.props.setColor(selection)}}

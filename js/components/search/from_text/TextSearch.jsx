@@ -19,7 +19,6 @@ class TextSearch extends React.Component  {
 
     constructor(props) {
         super(props);
-        // console.log('constructor sex: ', this.props.sex);
 
         this.state = {
             isAuth: this.props.isAuth,
@@ -49,7 +48,8 @@ class TextSearch extends React.Component  {
             brandPickerShown: false,
             tagPickerShown: false,
             addOutfitShown: false,
-            loadingContent: null
+            loadingContent: null,
+            priceFilterShown: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -65,6 +65,7 @@ class TextSearch extends React.Component  {
         this.addTagFilter = this.addTagFilter.bind(this);
         this.changeSex = this.changeSex.bind(this);
         this.changeOutfitShown = this.changeOutfitShown.bind(this);
+        this.showPriceFilter = this.showPriceFilter.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -431,6 +432,18 @@ class TextSearch extends React.Component  {
         })
     }
 
+    showPriceFilter(show) {
+        this.setState({
+            priceFilterShown: show
+        });
+        if (show === false) {
+            this.searchSimilarImages(
+                this.state.results[0]['image_data']['img_hash'],
+                this.state.selectedColor
+            );
+        }
+    }
+
     // ------------------------ MAIN RENDER FUNCTION ----------------------------
     render () {
         // Render a spinner if loading state is true
@@ -637,6 +650,8 @@ class TextSearch extends React.Component  {
                                         brandPickerShown={this.state.brandPickerShown}
                                         showBrandPicker={(show) => {this.showBrandPicker(show)}}
                                         addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                                        showPriceFilter={(show) => {this.showPriceFilter(show)}}
+                                        priceFilterShown={this.state.priceFilterShown}
                                     />
                                 )}
                             </div>
