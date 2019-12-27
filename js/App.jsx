@@ -60,7 +60,7 @@ class App extends React.Component {
         });
     }
 
-    completeFirstLogin = () => {
+    completeFirstLogin = (callback) => {
         const {cookies} = this.props;
 
         fetch(window.location.origin + '/api/complete_first_login', {
@@ -76,6 +76,8 @@ class App extends React.Component {
                     cookies.set('first_login', 0, {path: '/'});
                     this.setState({
                         firstLogin: 0
+                    }, () => {
+                        callback();
                     })
                 }
             });
@@ -202,7 +204,7 @@ class App extends React.Component {
                             higherCat={this.state.higherCat}
                             firstLogin={this.state.firstLogin}
                             handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                            completeFirstLogin={() => {this.completeFirstLogin();}}
+                            completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
                             handleLogin={(email, password) => {this.handleLogin(email, password)}}
                             handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
                         />
