@@ -1,7 +1,6 @@
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route } from 'react-router-dom';
-import SearchChoiceIntro from './components/intro/SearchChoiceIntro';
 import RecommendFromTags from './components/recommend/RecommendFromTags';
 import RecommendRandom from './components/recommend/RecommendRandom';
 import AddOutfit from './components/wardrobe/AddOutfit';
@@ -24,11 +23,29 @@ class SearchChoice extends React.Component {
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
     }
 
+    componentWillMount() {
+        this._ismounted = true;
+    }
+
+    componentDidMount() {
+        this._ismounted = true;
+        if (this.props.firstLogin === '1') {
+            this._ismounted = false;
+            window.location.pathname = '/intro'
+        }
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
+    }
+
     componentDidUpdate(prevProps){
-        if(prevProps.firstLogin !== this.props.firstLogin){
-            this.setState({
-                firstLogin: this.props.firstLogin
-            });
+        if (this._ismounted) {
+            if(prevProps.firstLogin !== this.props.firstLogin){
+                this.setState({
+                    firstLogin: this.props.firstLogin
+                });
+            }
         }
     }
 
@@ -91,7 +108,7 @@ class SearchChoice extends React.Component {
                                     </div>
                                 )} />
 
-                                {(this.state.isAuth === "true") ? (
+                                {(this.state.isAuth === "true" && this._ismounted) ? (
                                     <div
                                         style={{
                                             marginTop: '-75px'
@@ -110,22 +127,18 @@ class SearchChoice extends React.Component {
                                             marginTop: '-75px'
                                         }}
                                     >
-                                        <RecommendRandom
-                                            sex={this.state.sex}
-                                            showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
-                                        />
+                                        {this._ismounted && (
+                                            <RecommendRandom
+                                                sex={this.state.sex}
+                                                showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                            />
+                                        )}
                                     </div>
                                 )}
                             </div>
                         )}
 
                     </div>
-
-                    {/*{(this.state.firstLogin === '1') && (*/}
-                        {/*<SearchChoiceIntro*/}
-                            {/*username={this.props.username}*/}
-                        {/*/>*/}
-                    {/*)}*/}
                 </div>
             </MuiThemeProvider>
         )

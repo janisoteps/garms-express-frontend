@@ -70,8 +70,6 @@ app.post('/api/login', function (req, res) {
     pwd = pwd.replace(/[^A-Za-z0-9]/g, "");
 
     if (emailValidator.validate(email) && typeof pwd === 'string' && pwd.length < 30) {
-        console.log('Email: ', email);
-        console.log('Pwd: ', pwd);
 
         let options = {
             method: 'POST',
@@ -82,8 +80,6 @@ app.post('/api/login', function (req, res) {
                 'Content-Type': 'application/json',
             }
         };
-
-        console.log('Login', options);
 
         function handleResponse(error, response, body){
             if (!error && response.statusCode === 200) {
@@ -121,8 +117,6 @@ app.post('/api/register', function (req, res) {
         }),
         json: true
     };
-
-    console.log('Register, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
@@ -731,8 +725,8 @@ app.post('/api/get_looks', function (req, res) {
     // console.log('Get Looks, options: ', options);
 
     function handleResponse(error, response, body){
+        console.log('GetLook response: ', body);
         if (!error && response.statusCode === 200) {
-            // console.log('GetLook response: ', body);
             res.send(body);
         }
     }

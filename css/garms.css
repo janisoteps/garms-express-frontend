@@ -426,6 +426,19 @@ body{
     cursor: pointer;
 }
 
+.add-to-favorites-intro{
+    width: 100px;
+    height: 100px;
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 100px 100px;
+    border-radius: 50px;
+    position: absolute;
+    margin-top: -60px;
+    right: 15px;
+    cursor: pointer;
+}
+
 .add-to-favorites-outfit-page{
     width: 54px;
     height: 54px;
@@ -1231,6 +1244,7 @@ body{
     position: absolute;
     left: calc(50% - 15px);
     top: calc(80% - 100px);
+    margin-top: 100px;
     -webkit-transform-origin: 60% 60%;
     transform-origin: 60% 60%;
     -webkit-transform: translate3d(-80%, -80%, 0);
