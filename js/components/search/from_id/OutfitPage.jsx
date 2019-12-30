@@ -4,8 +4,6 @@ import AddOutfit from '../../wardrobe/AddOutfit';
 import {Route} from 'react-router-dom';
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import ImageSearch from "../../depracated/ImageSearch";
-// import SearchFromId from "./SearchFromId";
 
 
 //Component to search for products using text input
@@ -46,9 +44,7 @@ class OutfitPage extends React.Component  {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
-                // console.log(data);
                 const prod_data = data[0];
-                // console.log(prod_data);
                 this.setState({
                     prodData: prod_data[0],
                     shownImg: prod_data[0].image_urls[0],
@@ -110,7 +106,89 @@ class OutfitPage extends React.Component  {
             )
         }) : null;
 
-        const OutfitDetails = () => {
+        const SideImagesMobile = () => {
+            if (this.state.prodData.image_urls.length > 1) {
+                const secondaryImages = this.state.prodData.image_urls.map(imgUrl => {
+                    return (
+                        <div
+                            style={{
+                                width: `calc(100% / ${this.state.prodData.image_urls.length})`,
+                                display: 'inline-block'
+                            }}
+                            key={imgUrl}
+                        >
+                            <img
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    border: imgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
+                                    cursor: 'pointer'
+                                }}
+                                src={imgUrl}
+                                onClick={() => {this.changeShownImg(imgUrl)}}
+                            />
+                        </div>
+                    )
+                });
+
+                return (
+                    <div
+                        style={{
+                            width: '100%'
+                        }}
+                    >
+                        {secondaryImages}
+                    </div>
+                )
+            } else {
+                return (
+                    <div />
+                )
+            }
+        };
+
+        const SideImagesDesktop = () => {
+            if (this.state.prodData.image_urls.length > 1) {
+                const secondaryImages = this.state.prodData.image_urls.map(imgUrl => {
+                    return (
+                        <div
+                            style={{
+                                height: `calc(100% / ${this.state.prodData.image_urls.length})`,
+                                display: 'inline-block'
+                            }}
+                            key={imgUrl}
+                        >
+                            <img
+                                style={{
+                                    height: '100%',
+                                    width: 'auto',
+                                    border: imgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
+                                    cursor: 'pointer'
+                                }}
+                                src={imgUrl}
+                                onClick={() => {this.changeShownImg(imgUrl)}}
+                            />
+                        </div>
+                    )
+                });
+
+                return (
+                    <div
+                        style={{
+                            height: '100%'
+                        }}
+                    >
+                        {secondaryImages}
+                    </div>
+                )
+            } else {
+                return (
+                    <div />
+                )
+            }
+        };
+
+        const NameDescription = () => {
             const priceStyle = this.state.prodData.sale ? {
                 textDecoration: 'line-through',
                 display: 'inline-block',
@@ -122,179 +200,687 @@ class OutfitPage extends React.Component  {
             };
 
             return (
+                <div>
+                    <br/>
+                    <h5>{this.state.prodData.name}</h5>
+                    <h6>By {this.state.prodData.brand} in {this.state.prodData.shop}</h6>
+                    <div
+                        style={{
+                            height: '25px'
+                        }}
+                    >
+                        <h6
+                            style={{
+                                display: 'inline-block'
+                            }}
+                        >Price </h6>
+                        <div style={priceStyle}>
+                            <h6>£{this.state.prodData.price}</h6>
+                        </div>
+                        {this.state.prodData.sale && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block',
+                                marginLeft: '10px'
+                            }}>
+                                <h6>£{this.state.prodData.saleprice}</h6>
+                            </div>
+                        )}
+                    </div>
+                    <br/>
+                    <p
+                        dangerouslySetInnerHTML={{__html: this.state.prodData.description}}
+                    />
+                </div>
+            )
+        };
+
+        const MainProdImg = () => {
+            return (
                 <div
                     style={{
+                        overflow: 'hidden',
+                        position: 'relative',
                         width: '100%'
                     }}
                 >
+                    <img
+                        src={this.state.shownImg}
+                        style={{
+                            width: '100vw',
+                            maxWidth: '550px',
+                            height: 'auto',
+                            margin: '0 auto'
+                        }}
+                    />
+                    <div
+                        style={{
+                            position: 'absolute',
+                            height: '100%',
+                            width: '100%',
+                            top: 0,
+                            left: 0
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: '50%',
+                                height: '100%',
+                                display: 'inline-block',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => {
+                                const currentImgIndex = this.state.prodData.image_urls.indexOf(this.state.shownImg);
+                                let nextImgIndex = currentImgIndex - 1;
+                                if(nextImgIndex < 0) {
+                                    nextImgIndex = this.state.prodData.image_urls.length - 1;
+                                }
+                                const nextImgUrl = this.state.prodData.image_urls[nextImgIndex];
+                                this.changeShownImg(nextImgUrl);
+                            }}
+                        >
+                            <img
+                                alt='Previous image'
+                                src={require('./../../../../images/baseline_keyboard_arrow_left_black_48dp.png')}
+                                style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    position: 'absolute',
+                                    top: 'calc(50% - 24px)',
+                                    left: 0
+                                }}
+                            />
+                        </div>
+                        <div
+                            style={{
+                                width: '50%',
+                                height: '100%',
+                                display: 'inline-block',
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => {
+                                const currentImgIndex = this.state.prodData.image_urls.indexOf(this.state.shownImg);
+                                let nextImgIndex = currentImgIndex + 1;
+                                if(nextImgIndex > this.state.prodData.image_urls.length - 1) {
+                                    nextImgIndex = 0
+                                }
+                                const nextImgUrl = this.state.prodData.image_urls[nextImgIndex];
+                                this.changeShownImg(nextImgUrl);
+                            }}
+                        >
+                            <img
+                                alt='Next image'
+                                src={require('./../../../../images/baseline_keyboard_arrow_right_black_48dp.png')}
+                                style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    position: 'absolute',
+                                    top: 'calc(50% - 24px)',
+                                    right: 0
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        };
+
+        const ActionButtons = () => {
+            return (
+                <div>
+                    {(this.state.isAuth === "true") ? (
+                        <div
+                            style={{
+                                height: '40px',
+                                verticalAlign: 'middle',
+                                cursor: 'pointer',
+                                width: '180px',
+                                borderRadius: '10px',
+                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                padding: '5px',
+                                display: 'inline-block',
+                                margin: '5px',
+                                marginRight: 'calc(50vw - 98px)',
+                                marginLeft: 'calc(50vw - 98px)'
+                            }}
+                            onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
+                        >
+                            <div
+                                className="add-to-favorites-outfit-page"
+                            />
+                            <b
+                                style={{
+                                    display: 'inline-block',
+                                    marginLeft: '10px',
+                                    position: 'absolute',
+                                    marginTop: '5px'
+                                }}
+                            >Add to wardrobe</b>
+                        </div>
+                    ) : (
+                        <Route render={({history}) => (
+                            <div
+                                style={{
+                                    height: '40px',
+                                    verticalAlign: 'middle',
+                                    cursor: 'pointer',
+                                    width: '180px',
+                                    margin: '5px',
+                                    marginRight: 'calc(50vw - 98px)',
+                                    marginLeft: 'calc(50vw - 98px)',
+                                    borderRadius: '10px',
+                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    padding: '5px',
+                                    display: 'inline-block'
+                                }}
+                                onClick={() => {
+                                    history.push(`/register-from-result?id=${this.state.shownImgHash}`)
+                                }}
+                            >
+                                <div
+                                    className="add-to-favorites-outfit-page"
+                                />
+                                <b
+                                    style={{
+                                        display: 'inline-block',
+                                        marginLeft: '10px',
+                                        position: 'absolute',
+                                        marginTop: '5px'
+                                    }}
+                                >Add to Wardrobe</b>
+                            </div>
+                        )}/>
+                    )}
+
+                    <Route render={({history}) => (
+                        <div
+                            style={{
+                                height: '40px',
+                                verticalAlign: 'middle',
+                                cursor: 'pointer',
+                                width: '180px',
+                                margin: '5px',
+                                marginRight: 'calc(50vw - 98px)',
+                                marginLeft: 'calc(50vw - 98px)',
+                                borderRadius: '10px',
+                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                padding: '5px',
+                                display: 'inline-block'
+                            }}
+                            onClick={() => {
+                                history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                            }}
+                        >
+                            <div
+                                className="search-similar-outfit-page"
+                            />
+                            <b
+                                style={{
+                                    display: 'inline-block',
+                                    marginLeft: '10px',
+                                    position: 'absolute',
+                                    marginTop: '5px'
+                                }}
+                            >Search Similar</b>
+                        </div>
+                    )}/>
+
+                    <div
+                        style={{
+                            height: '40px',
+                            verticalAlign: 'middle',
+                            cursor: 'pointer',
+                            width: '180px',
+                            margin: '5px',
+                            marginRight: 'calc(50vw - 98px)',
+                            marginLeft: 'calc(50vw - 98px)',
+                            borderRadius: '10px',
+                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                            padding: '5px',
+                            display: 'inline-block'
+                        }}
+                        onClick={() => {
+                            if (navigator.share) {
+                                navigator.share({
+                                    title: 'Fashion item found on Garms',
+                                    url: window.location.href
+                                }).then(() => {
+                                    console.log('Thanks for sharing!');
+                                }).catch(console.error);
+                            } else {
+                                console.log('fallback')
+                            }
+                        }}
+                    >
+                        <div
+                            className="share-outfit-page"
+                        />
+                        <b
+                            style={{
+                                display: 'inline-block',
+                                marginLeft: '10px',
+                                position: 'absolute',
+                                marginTop: '5px'
+                            }}
+                        >Share</b>
+                    </div>
+
+                    <a
+                        href={this.state.prodData.prod_url}
+                        target="_blank"
+                    >
+                        <div
+                            style={{
+                                height: '40px',
+                                verticalAlign: 'middle',
+                                cursor: 'pointer',
+                                width: '180px',
+                                margin: '5px',
+                                marginRight: 'calc(50vw - 98px)',
+                                marginLeft: 'calc(50vw - 98px)',
+                                borderRadius: '10px',
+                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                padding: '5px',
+                                display: 'inline-block'
+                            }}
+                        >
+                            <div
+                                className="buy-outfit-page"
+                            />
+                            <b
+                                style={{
+                                    display: 'inline-block',
+                                    marginLeft: '10px',
+                                    position: 'absolute',
+                                    marginTop: '5px'
+                                }}
+                            >Buy Now</b>
+                        </div>
+                    </a>
+
+                </div>
+            )
+        };
+
+        const ActionButtonsDesktop = () => {
+            return (
+                <div>
+                    {(this.state.isAuth === "true") ? (
+                        <div
+                            style={{width: '100%'}}
+                        >
+                            <div
+                                style={{
+                                    height: '40px',
+                                    verticalAlign: 'middle',
+                                    cursor: 'pointer',
+                                    width: '200px',
+                                    borderRadius: '10px',
+                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    padding: '5px',
+                                    display: 'inline-block',
+                                    margin: '5px',
+                                    // marginRight: 'calc(50vw - 98px)',
+                                    // marginLeft: 'calc(50vw - 98px)'
+                                }}
+                                onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
+                            >
+                                <div
+                                    className="add-to-favorites-outfit-page"
+                                />
+                                <b
+                                    style={{
+                                        display: 'inline-block',
+                                        marginLeft: '10px',
+                                        position: 'absolute',
+                                        // marginTop: '5px'
+                                    }}
+                                >Add to wardrobe</b>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            style={{width: '100%'}}
+                        >
+                            <Route render={({history}) => (
+                                <div
+                                    style={{
+                                        height: '40px',
+                                        verticalAlign: 'middle',
+                                        cursor: 'pointer',
+                                        width: '200px',
+                                        margin: '5px',
+                                        // marginRight: 'calc(50vw - 98px)',
+                                        // marginLeft: 'calc(50vw - 98px)',
+                                        borderRadius: '10px',
+                                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                        padding: '5px',
+                                        display: 'inline-block'
+                                    }}
+                                    onClick={() => {
+                                        history.push(`/register-from-result?id=${this.state.shownImgHash}`)
+                                    }}
+                                >
+                                    <div
+                                        className="add-to-favorites-outfit-page"
+                                    />
+                                    <b
+                                        style={{
+                                            display: 'inline-block',
+                                            marginLeft: '10px',
+                                            position: 'absolute',
+                                            // marginTop: '5px'
+                                        }}
+                                    >Add to Wardrobe</b>
+                                </div>
+                            )}/>
+                        </div>
+
+                    )}
+
+                    <div
+                        style={{width: '100%'}}
+                    >
+                        <Route render={({history}) => (
+                            <div
+                                style={{
+                                    height: '40px',
+                                    verticalAlign: 'middle',
+                                    cursor: 'pointer',
+                                    width: '200px',
+                                    margin: '5px',
+                                    // marginRight: 'calc(50vw - 98px)',
+                                    // marginLeft: 'calc(50vw - 98px)',
+                                    borderRadius: '10px',
+                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    padding: '5px',
+                                    display: 'inline-block'
+                                }}
+                                onClick={() => {
+                                    history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                                }}
+                            >
+                                <div
+                                    className="search-similar-outfit-page"
+                                />
+                                <b
+                                    style={{
+                                        display: 'inline-block',
+                                        marginLeft: '10px',
+                                        position: 'absolute',
+                                        // marginTop: '5px'
+                                    }}
+                                >Search Similar</b>
+                            </div>
+                        )}/>
+                    </div>
+
+
+                    <div
+                        style={{width: '100%'}}
+                    >
+                        <div
+                            style={{
+                                height: '40px',
+                                verticalAlign: 'middle',
+                                cursor: 'pointer',
+                                width: '200px',
+                                margin: '5px',
+                                // marginRight: 'calc(50vw - 98px)',
+                                // marginLeft: 'calc(50vw - 98px)',
+                                borderRadius: '10px',
+                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                padding: '5px',
+                                display: 'inline-block'
+                            }}
+                            onClick={() => {
+                                if (navigator.share) {
+                                    navigator.share({
+                                        title: 'Fashion item found on Garms',
+                                        url: window.location.href
+                                    }).then(() => {
+                                        console.log('Thanks for sharing!');
+                                    }).catch(console.error);
+                                } else {
+                                    console.log('fallback')
+                                }
+                            }}
+                        >
+                            <div
+                                className="share-outfit-page"
+                            />
+                            <b
+                                style={{
+                                    display: 'inline-block',
+                                    marginLeft: '10px',
+                                    position: 'absolute',
+                                    // marginTop: '5px'
+                                }}
+                            >Share</b>
+                        </div>
+                    </div>
+
+
+                    <div
+                        style={{width: '100%'}}
+                    >
+                        <a
+                            href={this.state.prodData.prod_url}
+                            target="_blank"
+                        >
+                            <div
+                                style={{
+                                    height: '40px',
+                                    verticalAlign: 'middle',
+                                    cursor: 'pointer',
+                                    width: '200px',
+                                    margin: '5px',
+                                    // marginRight: 'calc(50vw - 98px)',
+                                    // marginLeft: 'calc(50vw - 98px)',
+                                    borderRadius: '10px',
+                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    padding: '5px',
+                                    display: 'inline-block'
+                                }}
+                            >
+                                <div
+                                    className="buy-outfit-page"
+                                />
+                                <b
+                                    style={{
+                                        display: 'inline-block',
+                                        marginLeft: '10px',
+                                        position: 'absolute',
+                                        // marginTop: '5px'
+                                    }}
+                                >Buy Now</b>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            )
+        };
+
+        const SizeStock = () => {
+            const sizeRows = this.state.prodData.size_stock.map(sizeDict => {
+                const key = Math.random();
+                return (
+                    <tr key={key}>
+                        <td
+                            style={{
+                                textAlign: 'center',
+                                border: '1px rgba(0,0,0,1) solid'
+                            }}
+                        >
+                            {sizeDict.size}
+                        </td>
+                        <td
+                            style={{
+                                textAlign: 'center',
+                                border: '1px rgba(0,0,0,1) solid'
+                            }}
+                        >
+                            {sizeDict.stock}
+                        </td>
+                    </tr>
+                )
+            });
+            return (
+                <div>
                     <table
                         style={{
-                            margin: '0 auto'
+                            margin: '0 auto',
+                            marginBottom: '30px'
                         }}
                     >
                         <tbody>
-                            <tr>
+                            <tr
+                                style={{
+                                    backgroundColor: 'rgba(0,0,0,1)',
+                                    color: 'rgba(255,255,255,1)',
+                                    width: '300px'
+                                }}
+                            >
                                 <td
                                     style={{
-                                        verticalAlign: 'top'
+                                        border: '1px rgba(0,0,0,1) solid'
                                     }}
                                 >
-                                    <div
+                                    <h6
                                         style={{
-                                            maxHeight: '90vh',
-                                            width: '180px',
-                                            overflow: 'scroll'
+                                            margin: '5px',
+                                            marginRight: '15px',
+                                            marginLeft: '15px'
                                         }}
-                                    >
-                                    {sideImages}
-                                    </div>
+                                    >Size</h6>
                                 </td>
                                 <td
                                     style={{
-                                        verticalAlign: 'top'
+                                        border: '1px rgba(0,0,0,1) solid'
                                     }}
                                 >
-                                    <img
-                                        src={this.state.shownImg}
+                                    <h6
                                         style={{
-                                            width: 'calc(80vw - 200px)',
-                                            maxWidth: '550px',
-                                            height: 'auto'
+                                            margin: '5px',
+                                            marginRight: '15px',
+                                            marginLeft: '15px'
                                         }}
-                                    />
-                                </td>
-                                <td
-                                    style={{
-                                        verticalAlign: 'top',
-                                        paddingLeft: '15px'
-                                    }}
-                                >
-                                    <h1>{this.state.prodData.name}</h1>
-                                    <h3>By {this.state.prodData.brand} in {this.state.prodData.shop}</h3>
-                                    <br/>
-                                    <div
-                                        style={{
-                                            height: '25px'
-                                        }}
-                                    >
-                                        <h3
-                                            style={{
-                                                display: 'inline-block'
-                                            }}
-                                        >Price </h3>
-                                        <div style={priceStyle}>
-                                            <h3>£{this.state.prodData.price}</h3>
-                                        </div>
-                                        {this.state.prodData.sale && (
-                                            <div style={{
-                                                color: '#d6181e',
-                                                display: 'inline-block',
-                                                marginLeft: '10px'
-                                            }}>
-                                                <h3>£{this.state.prodData.saleprice}</h3>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <br/>
-                                    <a
-                                        href={this.state.prodData.prod_url}
-                                        target="_blank"
-                                    >
-                                        <h3>Open item in shop</h3>
-                                    </a>
-                                    <br/>
-                                    {(this.state.isAuth === "true") ? (
-                                        <div
-                                            style={{
-                                                height: '70px',
-                                                verticalAlign: 'middle',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
-                                        >
-                                            <div
-                                                className="add-to-favorites-outfit-page"
-                                            />
-                                            <h4
-                                                style={{
-                                                    display: 'inline-block',
-                                                    marginLeft: '10px',
-                                                    position: 'absolute',
-                                                    marginTop: '15px'
-                                                }}
-                                            >Add to wardrobe</h4>
-                                        </div>
-                                    ) : (
-                                        <Route render={({history}) => (
-                                            <div
-                                                style={{
-                                                    height: '70px',
-                                                    verticalAlign: 'middle',
-                                                    cursor: 'pointer'
-                                                }}
-                                                onClick={() => {
-                                                    history.push(`/register-from-result?id=${this.state.shownImgHash}`)
-                                                }}
-                                            >
-                                                <div
-                                                    className="add-to-favorites-outfit-page"
-                                                />
-                                                <h4
-                                                    style={{
-                                                        display: 'inline-block',
-                                                        marginLeft: '10px',
-                                                        position: 'absolute',
-                                                        marginTop: '15px'
-                                                    }}
-                                                >Add to wardrobe</h4>
-                                            </div>
-                                        )}/>
-                                    )}
-
-                                    <Route render={({history}) => (
-                                        <div
-                                            style={{
-                                                height: '70px',
-                                                verticalAlign: 'middle',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => {
-                                                history.push(`/search-from-id?id=${this.state.shownImgHash}`)
-                                            }}
-                                        >
-                                            <div
-                                                className="search-similar-outfit-page"
-                                            />
-                                            <h4
-                                                style={{
-                                                    display: 'inline-block',
-                                                    marginLeft: '10px',
-                                                    position: 'absolute',
-                                                    marginTop: '15px'
-                                                }}
-                                            >Search similar items</h4>
-                                        </div>
-                                    )}/>
+                                    >Availability</h6>
                                 </td>
                             </tr>
+                            {sizeRows}
                         </tbody>
                     </table>
-                    <br/>
+                </div>
+            )
+        };
+
+        const SizeStockDesktop = () => {
+            const sizeRows = this.state.prodData.size_stock.map(sizeDict => {
+                const key = Math.random();
+                return (
+                    <tr key={key}>
+                        <td
+                            style={{
+                                textAlign: 'center',
+                                border: '1px rgba(0,0,0,1) solid'
+                            }}
+                        >
+                            {sizeDict.size}
+                        </td>
+                        <td
+                            style={{
+                                textAlign: 'center',
+                                border: '1px rgba(0,0,0,1) solid'
+                            }}
+                        >
+                            {sizeDict.stock}
+                        </td>
+                    </tr>
+                )
+            });
+            return (
+                <div>
+                    <table
+                        style={{
+                            margin: '0 auto',
+                            marginBottom: '10px',
+                            marginLeft: '5px'
+                        }}
+                    >
+                        <tbody>
+                        <tr
+                            style={{
+                                backgroundColor: 'rgba(0,0,0,1)',
+                                color: 'rgba(255,255,255,1)',
+                                width: '300px'
+                            }}
+                        >
+                            <td
+                                style={{
+                                    border: '1px rgba(0,0,0,1) solid'
+                                }}
+                            >
+                                <h6
+                                    style={{
+                                        margin: '5px',
+                                        marginRight: '20px',
+                                        marginLeft: '20px'
+                                    }}
+                                >Size</h6>
+                            </td>
+                            <td
+                                style={{
+                                    border: '1px rgba(0,0,0,1) solid'
+                                }}
+                            >
+                                <h6
+                                    style={{
+                                        margin: '5px',
+                                        marginRight: '20px',
+                                        marginLeft: '20px'
+                                    }}
+                                >Availability</h6>
+                            </td>
+                        </tr>
+                        {sizeRows}
+                        </tbody>
+                    </table>
+                </div>
+            )
+        };
+
+        const OutfitDetailsDesktop = () => {
+            return (
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 6fr 4fr',
+                        gridTemplateRows: '8fr',
+                        gridColumnGap: '0px',
+                        gridRowGap: '0px'
+                    }}
+                >
+                    <div>
+                        <SideImagesDesktop />
+                    </div>
+                    <div>
+                        <MainProdImg />
+                    </div>
+                    <div
+                        style={{
+                            textAlign: 'left'
+                        }}
+                    >
+                        <NameDescription />
+                        <SizeStockDesktop />
+                        <ActionButtonsDesktop />
+                    </div>
                 </div>
             )
         };
 
         const OutfitDetailsMobile = () => {
-            const priceStyle = this.state.prodData.sale ? {
-                textDecoration: 'line-through',
-                display: 'inline-block',
-                marginLeft: '10px'
-            } : {
-                textDecoration: 'none',
-                display: 'inline-block',
-                marginLeft: '10px'
-            };
-
             return (
                 <div
                     style={{
@@ -302,30 +888,13 @@ class OutfitPage extends React.Component  {
                         textAlign: 'center'
                     }}
                 >
-                    <img
-                        src={this.state.shownImg}
-                        style={{
-                            width: '90vw',
-                            maxWidth: '550px',
-                            height: 'auto',
-                            margin: '0 auto'
-                        }}
-                    />
+                    <MainProdImg />
                     <table
                         style={{
                             margin: '0 auto'
                         }}
                     >
                         <tbody>
-                        <tr>
-                            <td
-                                style={{
-                                    verticalAlign: 'top'
-                                }}
-                            >
-
-                            </td>
-                        </tr>
                         <tr>
                             <td
                                 style={{
@@ -338,7 +907,7 @@ class OutfitPage extends React.Component  {
                                         overflow: 'scroll'
                                     }}
                                 >
-                                    {sideImages}
+                                    <SideImagesMobile />
                                 </div>
                             </td>
                         </tr>
@@ -346,116 +915,12 @@ class OutfitPage extends React.Component  {
                             <td
                                 style={{
                                     verticalAlign: 'top',
-                                    paddingLeft: '15px'
+                                    paddingLeft: '15px',
                                 }}
                             >
-                                <br/>
-                                <h1>{this.state.prodData.name}</h1>
-                                <h3>By {this.state.prodData.brand} in {this.state.prodData.shop}</h3>
-                                <br/>
-                                <div
-                                    style={{
-                                        height: '25px'
-                                    }}
-                                >
-                                    <h3
-                                        style={{
-                                            display: 'inline-block'
-                                        }}
-                                    >Price </h3>
-                                    <div style={priceStyle}>
-                                        <h3>£{this.state.prodData.price}</h3>
-                                    </div>
-                                    {this.state.prodData.sale && (
-                                        <div style={{
-                                            color: '#d6181e',
-                                            display: 'inline-block',
-                                            marginLeft: '10px'
-                                        }}>
-                                            <h3>£{this.state.prodData.saleprice}</h3>
-                                        </div>
-                                    )}
-                                </div>
-                                <br/>
-                                <a
-                                    href={this.state.prodData.prod_url}
-                                    target="_blank"
-                                >
-                                    <h3>Open item in shop</h3>
-                                </a>
-                                <br/>
-                                {(this.state.isAuth === "true") ? (
-                                    <div
-                                        style={{
-                                            height: '70px',
-                                            verticalAlign: 'middle',
-                                            cursor: 'pointer'
-                                        }}
-                                        onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
-                                    >
-                                        <div
-                                            className="add-to-favorites-outfit-page"
-                                        />
-                                        <h4
-                                            style={{
-                                                display: 'inline-block',
-                                                marginLeft: '10px',
-                                                position: 'absolute',
-                                                marginTop: '15px'
-                                            }}
-                                        >Add to wardrobe</h4>
-                                    </div>
-                                ) : (
-                                    <Route render={({history}) => (
-                                        <div
-                                            style={{
-                                                height: '70px',
-                                                verticalAlign: 'middle',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => {
-                                                history.push(`/register-from-result?id=${this.state.shownImgHash}`)
-                                            }}
-                                        >
-                                            <div
-                                                className="add-to-favorites-outfit-page"
-                                            />
-                                            <h4
-                                                style={{
-                                                    display: 'inline-block',
-                                                    marginLeft: '10px',
-                                                    position: 'absolute',
-                                                    marginTop: '15px'
-                                                }}
-                                            >Add to wardrobe</h4>
-                                        </div>
-                                    )}/>
-                                )}
-
-                                <Route render={({history}) => (
-                                    <div
-                                        style={{
-                                            height: '70px',
-                                            verticalAlign: 'middle',
-                                            cursor: 'pointer'
-                                        }}
-                                        onClick={() => {
-                                            history.push(`/search-from-id?id=${this.state.shownImgHash}`)
-                                        }}
-                                    >
-                                        <div
-                                            className="search-similar-outfit-page"
-                                        />
-                                        <h4
-                                            style={{
-                                                display: 'inline-block',
-                                                marginLeft: '10px',
-                                                position: 'absolute',
-                                                marginTop: '15px'
-                                            }}
-                                        >Search similar items</h4>
-                                    </div>
-                                )}/>
+                                <NameDescription />
+                                <SizeStock />
+                                <ActionButtons />
                             </td>
                         </tr>
                         </tbody>
@@ -469,7 +934,7 @@ class OutfitPage extends React.Component  {
             return (
                 <div>
                     {this.state.width > 930 ? (
-                        <OutfitDetails/>
+                        <OutfitDetailsDesktop/>
                     ) : (
                         <OutfitDetailsMobile />
                     )}
@@ -496,7 +961,7 @@ class OutfitPage extends React.Component  {
                                 backgroundColor: 'white',
                                 height: 'calc(100vh)',
                                 top: '0px',
-                                position: 'fixed'
+                                position: 'absolute'
                             }}
                         >
                             <AddOutfit

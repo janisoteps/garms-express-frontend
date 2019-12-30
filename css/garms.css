@@ -439,17 +439,6 @@ body{
     cursor: pointer;
 }
 
-.add-to-favorites-outfit-page{
-    width: 54px;
-    height: 54px;
-    background: #FFFFFF url('../images/hanger_small.png') no-repeat center;
-    background-size: 54px 54px;
-    border-radius: 27px;
-    right: 15px;
-    cursor: pointer;
-    display: inline-block;
-}
-
 .buy-now{
     width: 54px;
     height: 54px;
@@ -589,14 +578,50 @@ body{
     cursor: pointer;
 }
 
+.add-to-favorites-outfit-page{
+    width: 27px;
+    height: 27px;
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 23px 23px;
+    border-radius: 13px;
+    right: 15px;
+    cursor: pointer;
+    display: inline-block;
+}
+
 .search-similar-outfit-page{
-    width: 54px;
-    height: 54px;
+    width: 27px;
+    height: 27px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
-    border-radius: 27px;
-    right: 82px;
+    background-size: 21px 21px;
+    border-radius: 13px;
+    right: 41px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.share-outfit-page{
+    width: 27px;
+    height: 27px;
+    background: #FFFFFF url('../images/share-24px.svg') no-repeat 30% 50%;
+    filter: invert(100%);
+    background-size: 21px 21px;
+    border-radius: 13px;
+    right: 41px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.buy-outfit-page{
+    width: 27px;
+    height: 27px;
+    background: #FFFFFF url('../images/shopping-cart.svg') no-repeat 50% 50%;
+    filter: invert(100%);
+    background-size: 21px 21px;
+    border-radius: 13px;
+    right: 41px;
     cursor: pointer;
     display: inline-block;
 }
