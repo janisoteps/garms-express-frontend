@@ -440,8 +440,8 @@ class ResultsFromSearch extends React.Component  {
 
             let singleCatStyle = {
                 // width: '50px',
-                height: '50px',
-                borderRadius: '25px',
+                height: '46px',
+                borderRadius: '23px',
                 backgroundColor: '#f5e8ff',
                 margin: '7px',
                 display: 'inline-block',
@@ -459,22 +459,22 @@ class ResultsFromSearch extends React.Component  {
                 catPickerDrawerHeight = '600px';
                 catPickerDrawerWidth = '';
             } else {
-                catPickerDrawerHeight = '52px';
-                catPickerDrawerWidth = '52px';
+                catPickerDrawerHeight = '46px';
+                catPickerDrawerWidth = '46px';
             }
 
             let catPickerDrawerStyle = {
                 transition: 'width 300ms ease-in-out',
                 maxHeight: catPickerDrawerHeight,
                 maxWidth: catPickerDrawerWidth,
-                borderRadius: '26px',
+                borderRadius: '23px',
                 backgroundColor: '#FFFFFF',
                 bottom: '11px',
-                right: '135px',
+                right: '105px',
                 position: 'absolute',
                 textAlign: 'left',
                 overflow: 'hidden',
-                paddingBottom: '54px'
+                paddingBottom: '46px'
             };
 
             let ImageCarousel = () => {
@@ -509,9 +509,9 @@ class ResultsFromSearch extends React.Component  {
                 // Dynamic CSS for image color choice modal
                 if(color_1_hex.length > 0){
                     var colorStyle1 = {
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '25px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '21px',
                         backgroundColor: color_1_hex,
                         margin: '2px',
                         marginRight: '0px',
@@ -519,9 +519,9 @@ class ResultsFromSearch extends React.Component  {
                         cursor: 'pointer'
                     };
                     var colorStyle2 = {
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '25px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '21px',
                         backgroundColor: color_2_hex,
                         margin: '2px',
                         marginRight: '0px',
@@ -529,9 +529,9 @@ class ResultsFromSearch extends React.Component  {
                         cursor: 'pointer'
                     };
                     var colorStyle3 = {
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '25px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '21px',
                         backgroundColor: color_3_hex,
                         margin: '2px',
                         marginRight: '0px',
@@ -587,36 +587,36 @@ class ResultsFromSearch extends React.Component  {
                 }
 
                 let pickerStyle = {
-                    width: '54px',
-                    height: '54px',
+                    width: '46px',
+                    height: '46px',
                     backgroundColor: color_1_hex,
                     backgroundImage: pickerBgUrl,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundSize: '42px 42px',
-                    borderRadius: '27px',
+                    backgroundSize: '36px 36px',
+                    borderRadius: '23px',
                     position: 'absolute',
-                    marginTop: '-48px',
-                    right: '195px',
+                    marginTop: '-38px',
+                    right: '153px',
                     cursor: 'pointer'
                 };
 
                 var pickerDrawerHeight;
 
                 if (this.state.pickerExpanded === img_hash){
-                    pickerDrawerHeight = '250px';
+                    pickerDrawerHeight = '190px';
                 } else {
-                    pickerDrawerHeight = '54px';
+                    pickerDrawerHeight = '44px';
                 }
 
                 let pickerDrawerStyle = {
-                    width: '54px',
+                    width: '46px',
                     transition: 'width 300ms ease-in-out',
                     height: pickerDrawerHeight,
-                    borderRadius: '27px',
+                    borderRadius: '23px',
                     backgroundColor: '#FFFFFF',
-                    bottom: '11px',
-                    right: '195px',
+                    bottom: '10px',
+                    right: '153px',
                     position: 'absolute',
                     textAlign: 'left',
                     overflow: 'hidden'

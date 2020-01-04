@@ -389,10 +389,12 @@ class SearchFromId extends React.Component  {
         });
     }
 
-    updateRange(val) {
+    updateRange(val, callback) {
         this.setState({
             rangeVal: val
-        })
+        }, () => {
+            callback();
+        });
     }
 
     showBrandPicker(show) {
@@ -707,7 +709,7 @@ class SearchFromId extends React.Component  {
                     {this.state.addOutfitShown === false && (
                         <ResultFilters
                             range={this.state.rangeVal}
-                            updateRange={this.updateRange}
+                            updateRange={(val, callback) => {this.updateRange(val, callback)}}
                             loading={this.state.loading}
                             posTags={this.state.posTags}
                             negTags={this.state.negTags}

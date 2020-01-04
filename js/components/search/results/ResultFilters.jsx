@@ -35,7 +35,7 @@ class ResultFilters extends React.Component {
                 />
                 <PriceFilter
                     range={this.props.range}
-                    updateRange={this.props.updateRange}
+                    updateRange={(val, callback) => this.props.updateRange(val, callback)}
                     loading={this.props.loading}
                     showPriceFilter={(show) => {this.props.showPriceFilter(show)}}
                     priceFilterShown={this.props.priceFilterShown}

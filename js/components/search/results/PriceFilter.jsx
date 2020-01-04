@@ -2,17 +2,19 @@ import React from 'react';
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Tooltip from '@material-ui/core/Tooltip';
+import TextField from "material-ui/TextField";
 
 
 class PriceFilter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sliderValue: 0,
+            filterValue: '',
             loading: this.props.loading
         };
-        this.updateRange = this.updateRange.bind(this);
+        this.onEnterPress = this.onEnterPress.bind(this);
         this.showHideSlider = this.showHideSlider.bind(this);
+        this.changeFilterValue = this.changeFilterValue.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -25,8 +27,20 @@ class PriceFilter extends React.Component {
         }
     }
 
-    updateRange(e) {
-        this.props.updateRange(e.target.value);
+    onEnterPress = (e) => {
+        if(e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault();
+
+            this.props.updateRange(this.state.filterValue, () => {
+                this.props.showPriceFilter(false);
+            });
+        }
+    };
+
+    changeFilterValue(e) {
+        this.setState({
+            filterValue: e.target.value
+        })
     }
 
     showHideSlider() {
@@ -52,7 +66,8 @@ class PriceFilter extends React.Component {
                             padding: '0',
                             display: 'flex',
                             alignItems: 'center',
-                            marginBottom: '5px'
+                            marginBottom: '5px',
+                            fontSize: '1rem'
                         }}
                     >
                         <Tooltip title="Set Maximum Price">
@@ -76,22 +91,43 @@ class PriceFilter extends React.Component {
                                 paddingTop: '10vh'
                             }}>
                                 <h2>
-                                    £{range < 500 ? range : <span style={{fontSize: '2rem', lineHeight: '1'}}>∞</span>}
+                                    £{this.state.filterValue < 500 ? this.state.filterValue : <span style={{fontSize: '2rem', lineHeight: '1'}}>∞</span>}
                                 </h2>
-                                <input
+
+                                <TextField
+                                    autoFocus="autofocus"
+                                    className="price-filter-input"
                                     id="range"
-                                    type="range"
-                                    value={range}
-                                    min="0"
-                                    max="500"
-                                    step="1"
-                                    onChange={this.updateRange}
+                                    hintText={this.state.filterValue}
+                                    value={this.state.filterValue}
+                                    name="searchString"
+                                    onChange={this.changeFilterValue.bind(this)}
+                                    onKeyDown={this.onEnterPress}
+                                    underlineFocusStyle={{
+                                        borderBottom: '2px solid rgb(0, 0, 0)'
+                                    }}
+                                    underlineDisabledStyle={{
+                                        borderBottom: '0px solid rgb(0, 0, 0)'
+                                    }}
                                     style={{
-                                        position: 'relative',
-                                        margin: 'auto',
-                                        cursor: 'pointer'
+                                        textAlign: 'center'
                                     }}
                                 />
+
+                                {/*<input*/}
+                                {/*    id="range"*/}
+                                {/*    type="range"*/}
+                                {/*    value={range}*/}
+                                {/*    min="0"*/}
+                                {/*    max="500"*/}
+                                {/*    step="1"*/}
+                                {/*    onChange={this.updateRange}*/}
+                                {/*    style={{*/}
+                                {/*        position: 'relative',*/}
+                                {/*        margin: 'auto',*/}
+                                {/*        cursor: 'pointer'*/}
+                                {/*    }}*/}
+                                {/*/>*/}
                                 <div
                                     style={{
                                         width: '100%'
@@ -99,7 +135,9 @@ class PriceFilter extends React.Component {
                                 >
                                     <div
                                         onClick={() => {
-                                            this.props.showPriceFilter(false);
+                                            this.props.updateRange(this.state.filterValue, () => {
+                                                this.props.showPriceFilter(false);
+                                            });
                                         }}
                                         style={{
                                             display: 'inline-block',
@@ -109,7 +147,8 @@ class PriceFilter extends React.Component {
                                             marginTop: '30px',
                                             color: '#FFFFFF',
                                             backgroundColor: '#000000',
-                                            borderRadius: '3px'
+                                            borderRadius: '3px',
+                                            paddingTop: '2px'
                                         }}
                                     >
                                         OK
