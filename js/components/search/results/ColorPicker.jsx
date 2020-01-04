@@ -189,9 +189,9 @@ class ColorPicker extends React.Component {
 
             let colorPickerStyle = {
                 marginLeft: '5px',
-                height: '132px',
+                height: '60px',
                 display: 'inline-block',
-                width: '80px'
+                width: '60px'
             };
             return (
                 <div>
