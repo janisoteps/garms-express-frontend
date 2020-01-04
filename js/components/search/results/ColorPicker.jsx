@@ -69,10 +69,10 @@ class ColorPicker extends React.Component {
                     backgroundImage: pickerBgUrl,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundSize:  '48px',
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '32px',
+                    backgroundSize:  '42px',
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '28px',
                     display: 'inline-block',
                     margin: '5px',
                     marginBottom: '8px',
@@ -174,7 +174,7 @@ class ColorPicker extends React.Component {
                             paddingTop: '85px',
                             textAlign: 'center'
                         }}>
-                            <h1 style={{marginLeft: '90px', width: 'calc(100vw - 130px)'}}>pick another color</h1>
+                            <h6 style={{marginLeft: '90px', width: 'calc(100vw - 130px)'}}>pick another color</h6>
                             <br></br>
                             <br></br>
                             <SWPicker/>

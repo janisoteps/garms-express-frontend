@@ -311,9 +311,11 @@ class TextSearch extends React.Component  {
         });
     }
 
-    updateRange(val) {
+    updateRange(val, callback) {
         this.setState({
             rangeVal: val
+        }, () => {
+            callback();
         });
     }
 
@@ -546,7 +548,7 @@ class TextSearch extends React.Component  {
                                 borderBottom: '0px solid rgb(0, 0, 0)'
                             }}
                         />
-                        <div className="text-search-button" onClick={this.textImageSearch}>
+                        <div className="text-search-button" onClick={() => {this.textImageSearch(this.state.searchString)}}>
                             <div className="search-icon" />
                             {/*<div className="search-text"> search</div>*/}
                         </div>
@@ -632,7 +634,7 @@ class TextSearch extends React.Component  {
                                 {this.state.addOutfitShown === false && (
                                     <ResultFilters
                                         range={this.state.rangeVal}
-                                        updateRange={this.updateRange}
+                                        updateRange={(val, callback) => {this.updateRange(val, callback)}}
                                         loading={this.state.loading}
                                         posTags={this.state.posTags}
                                         negTags={this.state.negTags}

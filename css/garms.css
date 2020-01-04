@@ -198,8 +198,8 @@ body{
     display: table;
     text-align: center;
     height: 60px;
-    width: 350px;
-    margin-left: calc(50vw - 175px);
+    width: 320px;
+    margin-left: calc(50vw - 160px);
     margin-top: calc(((20vh - 25px) / 2) - 30px);
     background-color: white;
     border-radius: 4px;
@@ -401,15 +401,15 @@ body{
 }
 
 .add-to-favorites{
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 54px 54px;
-    border-radius: 27px;
+    background-size: 42px 42px;
+    border-radius: 23px;
     position: absolute;
-    margin-top: -48px;
-    right: 72px;
+    margin-top: -38px;
+    right: 56px;
     cursor: pointer;
 }
 
@@ -440,16 +440,16 @@ body{
 }
 
 .buy-now{
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     background: #FFFFFF url('../images/shopping-cart.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
-    border-radius: 27px;
+    background-size: 38px 38px;
+    border-radius: 23px;
     position: absolute;
-    margin-top: -48px;
+    margin-top: -38px;
     cursor: pointer;
-    right: 10px;
+    right: 7px;
 }
 
 .color-picker{
@@ -489,15 +489,15 @@ body{
 }
 
 .cat-picker-bubble{
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     background: #FFFFFF url('../images/baseline-tune-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
-    border-radius: 27px;
+    background-size: 38px 38px;
+    border-radius: 23px;
     position: absolute;
-    margin-top: -48px;
-    right: 134px;
+    margin-top: -38px;
+    right: 105px;
     cursor: pointer;
 }
 
@@ -553,15 +553,15 @@ body{
 }
 
 .search-similar{
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
-    border-radius: 27px;
+    background-size: 38px 38px;
+    border-radius: 23px;
     position: absolute;
-    margin-top: -48px;
-    right: 256px;
+    margin-top: -38px;
+    right: 201px;
     cursor: pointer;
 }
 
@@ -745,7 +745,15 @@ body{
 }
 
 .text-search-input{
+     color: #7f649c;
+     max-width: 70vw;
+     margin: 0 auto;
+ }
+
+.price-filter-input{
     color: #7f649c;
+    width: 200px;
+    margin: 0 auto;
 }
 
 .favorites-button{
@@ -1354,9 +1362,9 @@ div #output {
     margin: 0px 10px;
     text-align: center;
     position: relative;
-    height: 65px;
-    width: 65px;
-    padding: 18px 7px 3px;
+    height: 56px;
+    width: 56px;
+    padding: 15px 7px 3px;
     cursor: pointer;
 }
 /*div #output::before {*/

@@ -25,6 +25,7 @@ class SearchChoice extends React.Component {
 
     componentWillMount() {
         this._ismounted = true;
+        window.scrollTo(0, 0);
     }
 
     componentDidMount() {

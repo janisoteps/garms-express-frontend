@@ -56,8 +56,9 @@ class LoadingScreen extends React.Component {
                                     alt="load screen meme"
                                     src={this.state.content.content_image}
                                     style={{
-                                        width: '100%',
-                                        height: 'auto'
+                                        width: '80%',
+                                        height: 'auto',
+                                        margin: 'auto'
                                     }}
                                 />
                             )}
