@@ -56,12 +56,14 @@ class Main extends React.Component {
                             {...props}
                             handleResultLogin={(email, password, imgHash) => {this.props.handleResultLogin(email, password, imgHash)}}
                             sex={this.props.sex}
+                            failedLogin={this.props.failedLogin}
                         />
                     } />
                     <Route path='/login' render={(props) =>
                         <Login
                             {...props}
                             handleLogin={(email, password) => {this.props.handleLogin(email, password)}}
+                            failedLogin={this.props.failedLogin}
                         />
                     }/>
                     <Route path='/logout' component={Logout} />

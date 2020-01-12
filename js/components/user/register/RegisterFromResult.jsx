@@ -367,6 +367,14 @@ export default class RegisterFromResult extends React.Component {
                                 color: 'black'
                             }}
                         />
+                        {this.props.failedLogin && (
+                            <p style={{
+                                color: 'red'
+                            }}>
+                                Incorrect e-mail or password
+                            </p>
+                        )
+                        }
                         <RaisedButton
                             label="Log In"
                             primary={true}
