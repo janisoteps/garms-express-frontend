@@ -128,9 +128,6 @@ class RecommendFromTags extends React.Component  {
                     <div>
                         <br />
                         <br />
-                        <hr />
-                        <br />
-                        <h1>Recommended</h1>
                         <br />
                         {outfitTiles}
                     </div>

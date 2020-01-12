@@ -532,11 +532,17 @@ class TextSearch extends React.Component  {
                         <TextField
                             autoFocus="autofocus"
                             className="text-search-input"
-                            hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
+                            // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
                             value={this.state.searchString.toUpperCase()}
-                            floatingLabelText="What's your outfit idea?"
+                            inputStyle={{
+                                fontWeight: '900',
+                                fontSize: '1.2rem'
+                            }}
+                            floatingLabelText="What are you looking for?"
                             floatingLabelStyle={{
-                                color: 'black'
+                                color: 'black',
+                                fontSize: '1.2rem',
+                                fontWeight: '400',
                             }}
                             name="searchString"
                             onChange={this.handleTextInputChange.bind(this)}

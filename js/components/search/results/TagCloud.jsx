@@ -606,7 +606,7 @@ class TagCloud extends React.Component {
                             paddingLeft: '5px',
                             paddingRight: '5px',
                             cursor: 'pointer',
-                            fontSize: '1rem',
+                            fontSize: '0.8rem',
                             marginTop: '10px',
                             marginBottom: '15px',
                             backgroundColor: 'rgba(255, 255, 255, 0.7)',
