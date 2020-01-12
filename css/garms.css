@@ -340,23 +340,24 @@ body{
 
 .recommend-product-tile{
     text-align: center;
-    margin: 15px;
-    width: 80vw;
-    max-width: 400px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    margin: 5px;
+    width: 45vw;
+    max-width: 300px;
+    /*padding-top: 15px;*/
+    /*padding-bottom: 15px;*/
     display: inline-block;
     position: relative;
     vertical-align: top;
+    font-size: 0.9rem;
 }
 
 .profile-product-tile{
     text-align: center;
-    margin: 2vw;
-    width: 85vw;
-    min-width: 300px;
-    max-width: 420px;
-    padding-top: 15px;
+    margin: 1vw;
+    width: 45vw;
+    /*min-width: 300px;*/
+    max-width: 320px;
+    padding-top: 10px;
     padding-bottom: 5px;
     display: inline-block;
     position: relative;
@@ -424,15 +425,15 @@ body{
 }
 
 .add-to-favorites-wardrobe{
-    width: 54px;
-    height: 54px;
+    width: 36px;
+    height: 36px;
     background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 54px 54px;
-    border-radius: 27px;
+    background-size: 32px 32px;
+    border-radius: 18px;
     position: absolute;
-    margin-top: -60px;
-    right: 15px;
+    margin-top: -50px;
+    right: 5px;
     cursor: pointer;
 }
 
@@ -576,15 +577,15 @@ body{
 }
 
 .search-similar-recommend{
-    width: 54px;
-    height: 54px;
+    width: 36px;
+    height: 36px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
-    border-radius: 27px;
+    background-size: 32px 32px;
+    border-radius: 18px;
     position: absolute;
-    margin-top: -60px;
-    right: 82px;
+    margin-top: -50px;
+    right: 47px;
     cursor: pointer;
 }
 
@@ -889,14 +890,14 @@ body{
 }
 
 .profile-product-delete{
-    width: 54px;
-    height: 54px;
+    width: 36px;
+    height: 36px;
     background: #FFFFFF url('../images/baseline-delete_forever-24px.svg') no-repeat center;
-    background-size: 42px 42px;
-    border-radius: 27px;
+    background-size: 32px 32px;
+    border-radius: 18px;
     position: absolute;
-    bottom: 75px;
-    right: 15px;
+    bottom: 70px;
+    right: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
     filter: invert(1);
@@ -904,17 +905,17 @@ body{
 }
 
 .profile-product-buy{
-    width: 54px;
-    height: 54px;
-    background: #a2dda5 url('../images/baseline-shopping_basket-24px.svg') no-repeat center;
-    background-size: 42px 42px;
-    border-radius: 27px;
+    width: 36px;
+    height: 36px;
+    background: #FFFFFF url('../images/baseline-shopping_basket-24px.svg') no-repeat center;
+    background-size: 28px 28px;
+    border-radius: 18px;
     position: absolute;
-    bottom: 0;
-    right: -20px;
+    right: 90px;
     cursor: pointer;
-    box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);
-    opacity: 0.7;
+    bottom: 70px;
+    filter: invert(1);
+    /*box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);*/
 }
 
 .sex-selector{

@@ -59,7 +59,8 @@ class RecommendFromTags extends React.Component  {
                 const prodSuggestion = prodSuggestionArr[0];
                 const key = prodSuggestion.prod_id;
                 const priceStyle = prodSuggestion.sale ? {
-                    textDecoration: 'line-through'
+                    textDecoration: 'line-through',
+                    display: 'inline-block'
                 } : {
                     textDecoration: 'none'
                 };
@@ -68,7 +69,7 @@ class RecommendFromTags extends React.Component  {
                 if (this.props.lookFilter === null || this.props.lookFilter === lookName) {
                     return (
                         <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                            <h6>Recommended in {lookName.toUpperCase()}</h6>
+                            Recommended in {lookName.toUpperCase()}
                             <div
                                 className="product-name"
                                 style={{
@@ -76,14 +77,18 @@ class RecommendFromTags extends React.Component  {
                                     marginLeft: '5px'
                                 }}
                             >
-                                <h5>{prodSuggestion.name}</h5>
+                                <b>{prodSuggestion.name}</b>
                             </div>
                             <div style={priceStyle}>
-                                <h6>£{prodSuggestion.price}</h6>
+                                £{prodSuggestion.price}
                             </div>
                             {(prodSuggestion.sale) && (
-                                <div style={{color: '#d6181e'}}>
-                                    <h6>£{prodSuggestion.saleprice}</h6>
+                                <div style={{
+                                    color: '#d6181e',
+                                    display: 'inline-block',
+                                    marginLeft: '5px'
+                                }}>
+                                    £{prodSuggestion.saleprice}
                                 </div>
                             )}
 
@@ -115,8 +120,8 @@ class RecommendFromTags extends React.Component  {
                             )}/>
 
                             <br />
-                            <h4>{prodSuggestion.brand}</h4>
-                            <p>From {prodSuggestion.shop}</p>
+                            <h6>{prodSuggestion.brand}</h6>
+                            From {prodSuggestion.shop}
                         </Paper>
                     )
                 }

@@ -406,7 +406,8 @@ class Wardrobe extends React.Component  {
         let outfitTiles = this.state.outfits.map(outfitDict => {
             const key = `${outfitDict.prod_id}-${outfitDict.outfit_date}`;
             const priceStyle = outfitDict.info.sale ? {
-                textDecoration: 'line-through'
+                textDecoration: 'line-through',
+                display: 'inline-block'
             } : {
                 textDecoration: 'none'
             };
@@ -418,18 +419,35 @@ class Wardrobe extends React.Component  {
                             className="product-name"
                             style={{
                                 marginLeft: '5px',
-                                marginRight: '5px'
+                                marginRight: '5px',
+                                fontSize: '1rem'
                             }}
                         >
-                            <h3>{outfitDict.look_name.toUpperCase()}</h3>
+                            {outfitDict.look_name.toUpperCase()}
                         </div>
-                        <a href={outfitDict.info.url} target="_blank">
-                            <div className="product-name"><h4>{outfitDict.info.name}</h4></div>
-                        </a>
-                        <div style={priceStyle}><h5>£{outfitDict.info.price}</h5></div>
-                        {(outfitDict.info.sale) && (<div style={{color: '#d6181e'}}>
-                            <h5>£{outfitDict.info.salePrice}</h5>
-                        </div>)}
+                        <Route render={({history}) => (
+                                <div
+                                    className="product-name"
+                                    onClick={() => {
+                                        history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                                    }}
+                                >
+                                    <b>{outfitDict.info.name}</b>
+                                </div>
+                            )}
+                        />
+                        <div style={priceStyle}>£{outfitDict.info.price}</div>
+                        {(outfitDict.info.sale) && (
+                            <div
+                                style={{
+                                    color: '#d6181e',
+                                    display: 'inline-block',
+                                    marginLeft: '5px'
+                                }}
+                            >
+                                £{outfitDict.info.salePrice}
+                            </div>
+                        )}
 
                         <Route render={({history}) => (
                             <img
@@ -459,12 +477,19 @@ class Wardrobe extends React.Component  {
                             href={outfitDict.info.url}
                             target="_blank"
                         >
-                            <h5>{outfitDict.info.brand} from {outfitDict.info.shop}</h5>
-                            <h5>Open in shop</h5>
+                            <h6>{outfitDict.info.brand}</h6> from {outfitDict.info.shop}
                         </a>
                         <Tooltip title="Delete From Favorites" >
                             <div
                                 className="profile-product-delete"
+                                onClick={() => {
+                                    this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
+                                }}
+                            />
+                        </Tooltip>
+                        <Tooltip title="Buy Now" >
+                            <div
+                                className="profile-product-buy"
                                 onClick={() => {
                                     this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
                                 }}
