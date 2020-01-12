@@ -118,7 +118,7 @@ class BrandFilter extends React.Component {
                             paddingLeft: '5px',
                             paddingRight: '5px',
                             cursor: 'pointer',
-                            fontSize: '1rem',
+                            fontSize: '0.8rem',
                             marginBottom: '10px',
                             backgroundColor: 'rgba(255, 255, 255, 0.7)',
                             boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px'
@@ -131,7 +131,7 @@ class BrandFilter extends React.Component {
                         {this.props.filterBrands.length === 0 ? (
                             <div style={{
                                 whiteSpace: 'nowrap',
-                                fontSize: '0.9rem'
+                                fontSize: '0.8rem'
                             }}>
                                 ALL BRANDS
                             </div>

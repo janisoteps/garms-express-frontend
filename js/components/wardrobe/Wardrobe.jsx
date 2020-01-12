@@ -657,7 +657,7 @@ class Wardrobe extends React.Component  {
                         {tilesOrLoading}
                     </div>
                     <div className="look-pane" style={{
-                        top: '70px',
+                        top: '50px',
                         left: '10px',
                         position: 'fixed',
                         zIndex: '10'
@@ -667,12 +667,17 @@ class Wardrobe extends React.Component  {
                         )}
                     </div>
                     {(this.state.looks.length > 0) && (
-                        <RecommendFromTags
-                            email={this.state.email}
-                            sex={this.state.sex}
-                            lookFilter={this.state.lookFilter}
-                            showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
-                        />
+                        <div>
+                            <br />
+                            <br />
+                            <h3>Recommended</h3>
+                            <RecommendFromTags
+                                email={this.state.email}
+                                sex={this.state.sex}
+                                lookFilter={this.state.lookFilter}
+                                showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                            />
+                        </div>
                     )}
 
                     <div>
