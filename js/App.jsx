@@ -26,7 +26,8 @@ class App extends React.Component {
             email: cookies.get('email'),
             username: cookies.get('username'),
             higherCat: '',
-            firstLogin: false
+            firstLogin: false,
+            failedLogin: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -42,7 +43,6 @@ class App extends React.Component {
 
     componentDidMount() {
         const {cookies} = this.props;
-        // console.log('Updating state')
         this.setState({
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
@@ -105,20 +105,27 @@ class App extends React.Component {
             }
         }).then(response => response.json())
             .then(data => {
-                cookies.set('isAuth', data['auth'], {path: '/'});
-                cookies.set('sex', data['res']['sex'], {path: '/'});
-                cookies.set('username', data['res']['username'], {path: '/'});
-                cookies.set('email', data['res']['email'], {path: '/'});
-                cookies.set('first_login', data['res']['first_login'], {path: '/'});
-                this.setState({
-                    isAuth: data['auth'],
-                    sex: data['res']['sex'],
-                    username: data['res']['username'],
-                    email: data['res']['email'],
-                    pwd: '',
-                    firstLogin: data['res']['first_login']
-                });
-                window.location.reload();
+                if (data === false) {
+                    this.setState({
+                        failedLogin: true
+                    });
+                } else {
+                    cookies.set('isAuth', data['auth'], {path: '/'});
+                    cookies.set('sex', data['res']['sex'], {path: '/'});
+                    cookies.set('username', data['res']['username'], {path: '/'});
+                    cookies.set('email', data['res']['email'], {path: '/'});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    this.setState({
+                        isAuth: data['auth'],
+                        sex: data['res']['sex'],
+                        username: data['res']['username'],
+                        email: data['res']['email'],
+                        pwd: '',
+                        firstLogin: data['res']['first_login']
+                    });
+                    window.location.reload();
+                }
+
             });
     };
 
@@ -135,20 +142,26 @@ class App extends React.Component {
             }
         }).then(response => response.json())
             .then(data => {
-                cookies.set('isAuth', data['auth'], {path: '/'});
-                cookies.set('sex', data['res']['sex'], {path: '/'});
-                cookies.set('username', data['res']['username'], {path: '/'});
-                cookies.set('email', data['res']['email'], {path: '/'});
-                cookies.set('first_login', data['res']['first_login'], {path: '/'});
-                this.setState({
-                    isAuth: data['auth'],
-                    sex: data['res']['sex'],
-                    username: data['res']['username'],
-                    email: data['res']['email'],
-                    pwd: '',
-                    firstLogin: data['res']['first_login']
-                });
-                window.location.pathname = '/';
+                if (data === false) {
+                    this.setState({
+                        failedLogin: true
+                    })
+                } else {
+                    cookies.set('isAuth', data['auth'], {path: '/'});
+                    cookies.set('sex', data['res']['sex'], {path: '/'});
+                    cookies.set('username', data['res']['username'], {path: '/'});
+                    cookies.set('email', data['res']['email'], {path: '/'});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    this.setState({
+                        isAuth: data['auth'],
+                        sex: data['res']['sex'],
+                        username: data['res']['username'],
+                        email: data['res']['email'],
+                        pwd: '',
+                        firstLogin: data['res']['first_login']
+                    });
+                    window.location.pathname = '/';
+                }
             });
     };
 
@@ -164,20 +177,26 @@ class App extends React.Component {
             }
         }).then(response => response.json())
             .then(data => {
-                cookies.set('isAuth', data['auth'], {path: '/'});
-                cookies.set('sex', data['res']['sex'], {path: '/'});
-                cookies.set('username', data['res']['username'], {path: '/'});
-                cookies.set('email', data['res']['email'], {path: '/'});
-                cookies.set('first_login', data['res']['first_login'], {path: '/'});
-                this.setState({
-                    isAuth: data['auth'],
-                    sex: data['res']['sex'],
-                    username: data['res']['username'],
-                    email: data['res']['email'],
-                    pwd: '',
-                    firstLogin: data['res']['first_login']
-                });
-                window.location.pathname = `/wardrobe`;
+                if (data === false) {
+                    this.setState({
+                        failedLogin: true
+                    })
+                } else {
+                    cookies.set('isAuth', data['auth'], {path: '/'});
+                    cookies.set('sex', data['res']['sex'], {path: '/'});
+                    cookies.set('username', data['res']['username'], {path: '/'});
+                    cookies.set('email', data['res']['email'], {path: '/'});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    this.setState({
+                        isAuth: data['auth'],
+                        sex: data['res']['sex'],
+                        username: data['res']['username'],
+                        email: data['res']['email'],
+                        pwd: '',
+                        firstLogin: data['res']['first_login']
+                    });
+                    window.location.pathname = `/wardrobe`;
+                }
             });
     };
 
@@ -207,6 +226,7 @@ class App extends React.Component {
                             completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
                             handleLogin={(email, password) => {this.handleLogin(email, password)}}
                             handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
+                            failedLogin={this.state.failedLogin}
                         />
                     </div>
                 </div>
