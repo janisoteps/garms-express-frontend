@@ -102,8 +102,8 @@ body{
     text-align: center;
     height: 100%;
     width: 100vw;
-    max-width: 350px;
-    margin-left: calc(50vw - 175px);
+    max-width: 320px;
+    margin-left: calc(50vw - 160px);
 }
 
 .search-choice-button-type{
