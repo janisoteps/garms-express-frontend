@@ -22,9 +22,15 @@ class RecommendFromTags extends React.Component  {
     }
 
     componentDidMount() {
+        this._ismounted = true;
+        console.log(this.props.lookFilter);
         fetch(`${window.location.origin}/api/recommend_tags`, {
             method: 'post',
-            body: JSON.stringify({'email': this.state.email, 'sex': this.state.sex}),
+            body: JSON.stringify({
+                'email': this.state.email,
+                'sex': this.state.sex,
+                'req_looks': this.props.lookFilter
+            }),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -36,6 +42,40 @@ class RecommendFromTags extends React.Component  {
                 outfits: data
             })
         })
+    }
+
+    componentDidUpdate(prevProps){
+        if (this._ismounted) {
+            if(prevProps.lookFilter !== this.props.lookFilter){
+                this.setState({
+                    lookFilter: this.props.lookFilter,
+                    outfits: []
+                }, () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                });
+                fetch(`${window.location.origin}/api/recommend_tags`, {
+                    method: 'post',
+                    body: JSON.stringify({
+                        'email': this.state.email,
+                        'sex': this.state.sex,
+                        'req_looks': this.props.lookFilter
+                    }),
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(function(response) {
+                    return response.json();
+                }).then(data => {
+                    this.setState({
+                        outfits: data
+                    })
+                })
+            }
+        }
     }
 
     showAddOutfit(imgHash) {
@@ -51,7 +91,7 @@ class RecommendFromTags extends React.Component  {
     }
 
     render() {
-        const outfitTiles = this.shuffle(this.state.outfits).map(lookDict => {
+        const outfitTiles = this.state.outfits.map(lookDict => {
             const lookName = lookDict.look_name;
             const suggestionArr = lookDict.prod_suggestions;
 
@@ -69,7 +109,9 @@ class RecommendFromTags extends React.Component  {
                 if (this.props.lookFilter === null || this.props.lookFilter === lookName) {
                     return (
                         <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                            Recommended in {lookName.toUpperCase()}
+                            {lookName !== 'all' && (<div>
+                                    Recommended in {lookName.toUpperCase()}
+                            </div>)}
                             <div
                                 className="product-name"
                                 style={{
@@ -86,7 +128,7 @@ class RecommendFromTags extends React.Component  {
                                 <div style={{
                                     color: '#d6181e',
                                     display: 'inline-block',
-                                    marginLeft: '5px'
+                                    marginLeft: '5px    '
                                 }}>
                                     £{prodSuggestion.saleprice}
                                 </div>
