@@ -845,11 +845,16 @@ app.post('/api/get_prod_hash', function (req, res) {
 app.post('/api/recommend_tags', function (req, res) {
     const email = req.body.email;
     const sex = req.body.sex;
+    const req_looks = req.body.req_looks;
 
     const options = {
         method: 'POST',
         url: api_base_url + 'recommend_tags',
-        body: {email: email, sex: sex},
+        body: {
+            email: email,
+            sex: sex,
+            req_looks: req_looks
+        },
         json: true
     };
 

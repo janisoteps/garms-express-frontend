@@ -48,7 +48,9 @@ class RecommendRandom extends React.Component  {
                 const prodSuggestion = prodSuggestionArr[0];
                 const key = prodSuggestion.prod_id;
                 const priceStyle = prodSuggestion.sale ? {
-                    textDecoration: 'line-through'
+                    textDecoration: 'line-through',
+                    display: 'inline-block',
+                    marginRight: '5px'
                 } : {
                     textDecoration: 'none'
                 };
@@ -64,14 +66,17 @@ class RecommendRandom extends React.Component  {
                                 marginLeft: '5px'
                             }}
                         >
-                            <h5>{prodSuggestion.name}</h5>
+                            <b>{prodSuggestion.name}</b>
                         </div>
                         <div style={priceStyle}>
-                            <h6>£{prodSuggestion.price}</h6>
+                            £{prodSuggestion.price}
                         </div>
                         {(prodSuggestion.sale) && (
-                            <div style={{color: '#d6181e'}}>
-                                <h6>£{prodSuggestion.saleprice}</h6>
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block'
+                            }}>
+                                £{prodSuggestion.saleprice}
                             </div>
                         )}
 
