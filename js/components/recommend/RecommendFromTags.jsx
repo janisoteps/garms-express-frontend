@@ -23,7 +23,7 @@ class RecommendFromTags extends React.Component  {
 
     componentDidMount() {
         this._ismounted = true;
-        console.log(this.props.lookFilter);
+        // console.log(this.props.lookFilter);
         fetch(`${window.location.origin}/api/recommend_tags`, {
             method: 'post',
             body: JSON.stringify({

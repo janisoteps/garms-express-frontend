@@ -227,6 +227,7 @@ class Wardrobe extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
+
                 const looksArr = data.looks.sort(function(a, b){
                     if(a.look_name < b.look_name) { return -1; }
                     if(a.look_name > b.look_name) { return 1; }
@@ -238,7 +239,6 @@ class Wardrobe extends React.Component  {
                 });
 
                 this.getProducts(prodHashes, prodData => {
-
                     const prodHashInfoDict = {};
                     prodData.forEach(prodDict => {
                         prodHashInfoDict[prodDict[0]['prod_id']] = {
@@ -250,7 +250,8 @@ class Wardrobe extends React.Component  {
                             url: prodDict[0]['prod_url'],
                             sale: prodDict[0]['sale'],
                             salePrice: prodDict[0]['saleprice'],
-                            shop: prodDict[0]['shop']
+                            shop: prodDict[0]['shop'],
+                            imgHash: prodDict[0]['image_hash'][0]
                         };
                     });
 
@@ -412,7 +413,6 @@ class Wardrobe extends React.Component  {
                 textDecoration: 'none'
             };
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
-                // console.log(outfitDict.info);
                 return (
                     <Paper zDepth={1} className="profile-product-tile" key={key}>
                         <div
