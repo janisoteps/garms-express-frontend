@@ -883,6 +883,7 @@ body{
     background-color: #110a16;
     color: white;
     border-radius: 4px;
+    width: 200px;
 }
 
 .greeting-text{

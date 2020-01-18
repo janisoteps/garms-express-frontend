@@ -13,7 +13,8 @@ import SearchFromImage from './components/search/from_image/SearchFromImage'
 import SearchFromId from './components/search/from_id/SearchFromId'
 import OutfitPage from './components/search/from_id/OutfitPage'
 import Intro from './components/intro/Intro'
-
+import PasswordReset from "./components/user/PasswordReset";
+import PasswordResetEmail from "./components/user/PasswordResetEmail";
 
 // The Main component renders one of the provided
 // Routes (provided that one matches). The / route will only match
@@ -67,6 +68,20 @@ class Main extends React.Component {
                         />
                     }/>
                     <Route path='/logout' component={Logout} />
+                    <Route path='/password-reset' render={(props) =>
+                        <PasswordReset
+                            {...props}
+                            email={this.props.email}
+                            isAuth={this.props.isAuth}
+                            username={this.props.username}
+                        />
+                    }/>
+                    <Route path='/password-reset-email' render={(props) =>
+                        <PasswordResetEmail
+                            {...props}
+                            isAuth={this.props.isAuth}
+                        />
+                    }/>
                     <Route path='/textsearch'
                            render={(props) => <TextSearch
                            {...props}

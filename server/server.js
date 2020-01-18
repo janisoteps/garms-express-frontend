@@ -96,6 +96,103 @@ app.post('/api/login', function (req, res) {
 });
 
 
+app.post('/api/pw_reset_token', function (req, res) {
+    let email = req.body.email;
+    let pw = req.body.pw;
+
+    if (emailValidator.validate(email) && typeof pw === 'string' && pw.length < 30) {
+
+        let options = {
+            method: 'POST',
+            url: api_base_url + 'pw_reset_token',
+            body: JSON.stringify({email: email, pw: pw}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        };
+
+        function handleResponse(error, response, body){
+            if (!error && response.statusCode === 200) {
+                // console.log(body);
+                let response_data = JSON.parse(body);
+
+                res.send(response_data);
+            }
+        }
+
+        request(options, handleResponse);
+    } else {
+        res.send(JSON.parse("Unauthorized"));
+    }
+});
+
+
+app.post('/api/pw_reset', function (req, res) {
+    let email = req.body.email;
+    let token = req.body.token;
+    let new_pw = req.body.new_pw;
+
+    if (emailValidator.validate(email) && typeof new_pw === 'string' && new_pw.length < 30) {
+        let options = {
+            method: 'POST',
+            url: api_base_url + 'pw_reset',
+            body: JSON.stringify({
+                email: email,
+                new_pw: new_pw,
+                token: token
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        };
+
+        function handleResponse(error, response, body){
+            if (!error && response.statusCode === 200) {
+                let response_data = JSON.parse(body);
+                console.log(response_data);
+                res.send(response_data);
+            }
+        }
+
+        request(options, handleResponse);
+    } else {
+        res.send(JSON.stringify({res:"Unauthorized"}));
+    }
+});
+
+
+app.post('/api/pw_reset_email', function (req, res) {
+    let email = req.body.email;
+
+    if (emailValidator.validate(email)) {
+        let options = {
+            method: 'POST',
+            url: api_base_url + 'pw_reset_email',
+            body: JSON.stringify({
+                email: email
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        };
+
+        function handleResponse(error, response, body){
+            if (!error && response.statusCode === 200) {
+                let response_data = JSON.parse(body);
+                console.log(response_data);
+                res.send(response_data);
+            }
+        }
+
+        request(options, handleResponse);
+    } else {
+        res.send(JSON.stringify({response:"Unauthorized"}));
+    }
+});
+
 // Register new user
 app.post('/api/register', function (req, res) {
     let email = req.body.email;
