@@ -25,6 +25,7 @@ class Profile extends React.Component  {
         // this.saveInstaUsername = this.saveInstaUsername.bind(this);
         // this.getInstaPicks = this.getInstaPicks.bind(this);
         this.updateRange = this.updateRange.bind(this);
+
     }
 
     componentDidMount() {
@@ -92,13 +93,35 @@ class Profile extends React.Component  {
         const rangeVal = this.state.rangeVal;
         const logOutButton = this.state.isAuth === "true" ? (
             <Route render={({ history }) => (
-                <RaisedButton className="login-button" label="Log Out" onClick={() => { history.push('/logout') }} />
+                <RaisedButton
+                    style={{
+                        maxWidth: '170px',
+                        minWidth: '170px',
+                        marginTop: '20px'
+                    }}
+                    label="Log Out"
+                    onClick={() => { history.push('/logout') }} />
             )} />
         ) : (
             <Route render={({ history }) => (
                 <RaisedButton className="login-button" label="Log In" onClick={() => { history.push('/login') }} />
             )} />
         );
+        const ChangePwButton = () => {
+            return (
+                <Route render={({ history }) => (
+                    <RaisedButton
+                        style={{
+                            maxWidth: '170px',
+                            minWidth: '170px',
+                            marginTop: '-10px'
+                        }}
+                        label="Change Password"
+                        onClick={() => { history.push('/password-reset') }}
+                    />
+                )} />
+            )
+        };
 
         let greetingStyle = {
             textAlign: 'center',
@@ -185,6 +208,9 @@ class Profile extends React.Component  {
                     {/*</div>*/}
                     {/*<br />*/}
                     <br />
+                    {this.state.isAuth && (
+                        <ChangePwButton/>
+                    )}
                     <br />
                     {logOutButton}
 

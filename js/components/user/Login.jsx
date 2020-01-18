@@ -113,6 +113,20 @@ class Login extends React.Component {
                 />
                 <br/>
                 <br/>
+                <Route render={({history}) => (
+                    <div
+                        style={{
+                            color: '#002e5d',
+                            fontSize: '0.9rem',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            history.push('/password-reset-email')
+                        }}
+                    >
+                        <p>Forgot my password</p>
+                    </div>
+                )} />
                 <br/>
                 <br/>
                 <h5>Don't have an account?</h5>
