@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: garms-express-env
+    environment: garms-express-env-2
     group_suffix: null
 global:
   application_name: garms-express-1
