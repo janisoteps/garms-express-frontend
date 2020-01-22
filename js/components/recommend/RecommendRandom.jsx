@@ -40,6 +40,14 @@ class RecommendRandom extends React.Component  {
         this.props.showAddOutfit(imgHash);
     }
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
     render() {
         const outfitTiles = this.state.outfits.map(lookDict => {
             const suggestionArr = lookDict.prod_suggestions;
@@ -83,7 +91,7 @@ class RecommendRandom extends React.Component  {
                         <Route render={({history}) => (
                             <Tooltip title="Open Product Details Page">
                                 <img
-                                    className="product-image" src={prodSuggestion.image_urls[0]}
+                                    className="product-image" src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
                                     style={{
                                         marginBottom: '20px',
                                         cursor: 'pointer'

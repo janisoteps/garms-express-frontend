@@ -619,22 +619,6 @@ app.post('/api/search_similar', function (req, res) {
     let max_price = req.body.max_price;
     let brands = req.body.brands;
 
-    // let options = {
-    //     method: 'GET',
-    //     url: api_base_url + 'search_similar',
-    //     qs: {
-    //         img_hash: img_hash,
-    //         tags_positive: tags_positive,
-    //         tags_negative: tags_negative,
-    //         color_1: color_1,
-    //         color_2: color_2,
-    //         sex: sex,
-    //         no_shop: no_shop,
-    //         max_price: max_price,
-    //         brands: brands
-    //     }
-    // };
-
     let options = {
         method: 'POST',
         url: api_base_url + 'search_similar',

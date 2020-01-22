@@ -372,6 +372,14 @@ class Wardrobe extends React.Component  {
         })
     };
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
 
     // ######################################## MAIN RENDER FUNCTION ###########################################
     render () {
@@ -451,7 +459,7 @@ class Wardrobe extends React.Component  {
 
                         <Route render={({history}) => (
                             <img
-                                className="product-image" src={outfitDict.info.imgUrl}
+                                className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
                                 style={{
                                     marginBottom: '30px',
                                     cursor: 'pointer'

@@ -81,6 +81,14 @@ class OutfitPage extends React.Component  {
         window.history.replaceState(null, null, window.location.pathname);
     };
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
     render () {
 
         const sideImages = this.state.prodData !== null ? this.state.prodData.image_urls.map(sideImgUrl => {
@@ -99,7 +107,7 @@ class OutfitPage extends React.Component  {
                             border: sideImgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
                             cursor: 'pointer'
                         }}
-                        src={sideImgUrl}
+                        src={this.updateImgProtocol(sideImgUrl)}
                         onClick={() => {this.changeShownImg(sideImgUrl)}}
                     />
                 </div>
@@ -124,7 +132,7 @@ class OutfitPage extends React.Component  {
                                     border: imgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
                                     cursor: 'pointer'
                                 }}
-                                src={imgUrl}
+                                src={this.updateImgProtocol(imgUrl)}
                                 onClick={() => {this.changeShownImg(imgUrl)}}
                             />
                         </div>
@@ -165,7 +173,7 @@ class OutfitPage extends React.Component  {
                                     border: imgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
                                     cursor: 'pointer'
                                 }}
-                                src={imgUrl}
+                                src={this.updateImgProtocol(imgUrl)}
                                 onClick={() => {this.changeShownImg(imgUrl)}}
                             />
                         </div>

@@ -49,7 +49,8 @@ class SearchFromId extends React.Component  {
             tagPickerShown: false,
             addOutfitShown: false,
             loadingContent: null,
-            priceFilterShown: false
+            priceFilterShown: false,
+            initialLoad: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -95,7 +96,8 @@ class SearchFromId extends React.Component  {
                 this.setState({
                     posTags: posTags,
                     sex: img_data.sex,
-                    selectedColor: img_data.color_1
+                    selectedColor: img_data.color_1,
+                    initialLoad: true
                 });
                 this.searchSimilarImages(this.state.imgHash, img_data.color_1)
             });
@@ -190,6 +192,9 @@ class SearchFromId extends React.Component  {
 
                 let posTags = this.state.posTags;
                 let negTags = this.state.negTags;
+                // if (this.state.initialLoad === true) {
+                //     posTags = null
+                // }
                 let sex = this.state.sex;
                 let noShop = this.state.noShop;
                 let filterBrands = this.state.filterBrands;
