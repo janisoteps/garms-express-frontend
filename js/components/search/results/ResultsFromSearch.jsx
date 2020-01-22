@@ -389,6 +389,14 @@ class ResultsFromSearch extends React.Component  {
         win.focus();
     };
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
     //################################## MAIN RENDER FUNCTION ##################################
     render () {
         let key = '';
@@ -483,7 +491,7 @@ class ResultsFromSearch extends React.Component  {
                         <Route render={({history}) => (
                             <img
                                 className="product-image"
-                                src={img_url}
+                                src={this.updateImgProtocol(img_url)}
                                 style={{
                                     cursor: 'pointer'
                                 }}

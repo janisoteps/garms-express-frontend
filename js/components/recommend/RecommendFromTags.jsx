@@ -90,6 +90,14 @@ class RecommendFromTags extends React.Component  {
         return a;
     }
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
     render() {
         const outfitTiles = this.state.outfits.map(lookDict => {
             const lookName = lookDict.look_name;
@@ -136,7 +144,7 @@ class RecommendFromTags extends React.Component  {
 
                             <Route render={({history}) => (
                                 <img
-                                    className="product-image" src={prodSuggestion.image_urls[0]}
+                                    className="product-image" src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
                                     style={{
                                         marginBottom: '20px',
                                         cursor: 'pointer'

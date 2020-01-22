@@ -154,6 +154,14 @@ class AddOutfit extends React.Component  {
         this.props.addOutfitComplete();
     };
 
+    updateImgProtocol(imgUrl) {
+        if (imgUrl.split('https').length > 1) {
+            return imgUrl
+        } else {
+            return imgUrl.replace('http', 'https')
+        }
+    }
+
     //############################# MAIN RENDER FUNCTION ################################
     render () {
         const lookList = this.state.looks.map(lookDict => {
@@ -260,7 +268,7 @@ class AddOutfit extends React.Component  {
                                                 <img
                                                     alt="image"
                                                     className="product-image"
-                                                    src={this.state.prodInfo.image_urls[0]}
+                                                    src={this.updateImgProtocol(this.state.prodInfo.image_urls[0])}
                                                     style={{
                                                         width: '100%'
                                                     }}
