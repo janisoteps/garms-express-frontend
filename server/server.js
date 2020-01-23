@@ -499,36 +499,6 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
         formData:    formData
     };
 
-    console.log('Img features, options: ', options);
-    request(options, handleResponse);
-});
-
-
-// Get product category, color and siamese encoding
-app.post('/api/img_features_v2', upload.single('image'), function (req, res) {
-
-    let image = req.file.path;
-
-    console.log('Image size: ', req.file.size);
-
-    let formData = {
-        image: fs.createReadStream(image),
-    };
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
-
-            res.send(response_data);
-        }
-    }
-
-    let options = {
-        method: 'POST',
-        url: api_base_url + 'img_features_v2',
-        formData:    formData
-    };
-
     // console.log('Img features, options: ', options);
     request(options, handleResponse);
 });
@@ -536,43 +506,6 @@ app.post('/api/img_features_v2', upload.single('image'), function (req, res) {
 
 // Search products based on confirmation modal input
 app.post('/api/search_from_image', function (req, res) {
-    let tags = req.body.tags;
-    let color_rgb_1 = req.body.color_rgb_1;
-    let color_rgb_2 = req.body.color_rgb_2;
-    let no_shop = req.body.no_shop;
-    let sex = req.body.sex;
-    let encoding_nocrop = req.body.encoding_nocrop;
-    const vgg16_encoding = req.body.vgg16_encoding;
-
-    let options = {
-        method: 'POST',
-        url: api_base_url + 'search_from_image',
-        body: JSON.stringify({
-            tags: tags,
-            color_1: color_rgb_1,
-            color_2: color_rgb_2,
-            sex: sex,
-            no_shop: no_shop,
-            encoding_nocrop: encoding_nocrop,
-            vgg16_encoding: vgg16_encoding
-        }),
-        json: true
-    };
-
-    console.log('Search from image, options: ', options);
-
-    function handleResponse(error, response, body){
-        if (!error && response.statusCode === 200) {
-            res.send(body);
-        }
-    }
-
-    request(options, handleResponse);
-});
-
-
-// Search products based on confirmation modal input
-app.post('/api/search_from_image_v2', function (req, res) {
     let tags = req.body.tags;
     let color_rgb_1 = req.body.color_rgb_1;
     // let color_rgb_2 = req.body.color_rgb_2;
@@ -583,7 +516,7 @@ app.post('/api/search_from_image_v2', function (req, res) {
 
     let options = {
         method: 'POST',
-        url: api_base_url + 'search_from_image_v2',
+        url: api_base_url + 'search_from_image',
         body: JSON.stringify({
             tags: tags,
             color_1: color_rgb_1,

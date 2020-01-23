@@ -14,14 +14,14 @@
 .la-ball-atom {
     display: block;
     font-size: 0;
-    color: #fff;
+    color: #000000;
     margin: 0 auto;
     margin-top: 5vh;
     z-index: 100;
 }
 
 .la-ball-atom.la-dark {
-    color: #333;
+    color: #000000;
 }
 
 .la-ball-atom > div {
@@ -43,7 +43,7 @@
     z-index: 200;
     width: 60%;
     height: 60%;
-    background: #2e92eb;
+    background: #000000;
     border-radius: 100%;
     -webkit-transform: translate(-50%, -50%);
        -moz-transform: translate(-50%, -50%);
@@ -289,15 +289,15 @@
 }
 
 .la-ball-atom > div:nth-child(1) {
-    color: #f43e45;
+    color: #000000;
 }
 .la-ball-atom > div:nth-child(2) {
-    color: #c74ffe;
+    color: #000000;
 }
 .la-ball-atom > div:nth-child(3) {
-    color: #44cf31;
+    color: rgba(0, 0, 0, 0.99);
 }
 .la-ball-atom > div:nth-child(3) {
-    color: #e5dc31;
+    color: #000000;
 }
 

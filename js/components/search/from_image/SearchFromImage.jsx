@@ -251,7 +251,7 @@ class SearchFromImage extends React.Component  {
                 }
                 let data = new FormData();
                 data.append('image', imageFile);
-                fetch(window.location.origin + '/api/img_features_v2', {
+                fetch(window.location.origin + '/api/img_features', {
                     method: 'post',
                     body: data
                 }).then(response => {
@@ -381,7 +381,7 @@ class SearchFromImage extends React.Component  {
                     files: [],
                     loading: true
                 });
-                fetch(window.location.origin + '/api/search_from_image_v2', {
+                fetch(window.location.origin + '/api/search_from_image', {
                     method: 'post',
                     body: JSON.stringify({
                         tags: tags,
