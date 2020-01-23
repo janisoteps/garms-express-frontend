@@ -192,9 +192,9 @@ class SearchFromId extends React.Component  {
 
                 let posTags = this.state.posTags;
                 let negTags = this.state.negTags;
-                // if (this.state.initialLoad === true) {
-                //     posTags = null
-                // }
+                if (this.state.initialLoad === true) {
+                    posTags = null
+                }
                 let sex = this.state.sex;
                 let noShop = this.state.noShop;
                 let filterBrands = this.state.filterBrands;
@@ -225,7 +225,7 @@ class SearchFromId extends React.Component  {
                     this.setState({
                         results: data.res,
                         loading: false,
-                        // prodImgShown: prodImgShown
+                        initialLoad: false
                     });
                     window.scrollTo({
                         top: 0,
