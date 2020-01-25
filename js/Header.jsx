@@ -19,6 +19,14 @@ class Header extends React.Component {
         const buttons = this.state.isAuth === "true" ? (
             <div style={{width: '100vw'}}>
                 <Route render={({history}) => (
+                    <Tooltip title="Deal Finder">
+                        <div className="deal-button" onClick={() => {
+                            history.push('/deals')
+                        }}>
+                        </div>
+                    </Tooltip>
+                )}/>
+                <Route render={({history}) => (
                     <Tooltip title="Your Profile">
                         <div className="profile-button" onClick={() => {
                             history.push('/profile')
@@ -36,18 +44,22 @@ class Header extends React.Component {
                 )}/>
             </div>
         ) : (
-            <Route render={({history}) => (
-                <div style={{
-                    paddingTop: '7px',
-                    paddingRight: '7px'
-                }}>
-                    <RaisedButton label="Log In"
-                        primary={false}
-                        onClick={() => {
-                        history.push('/login')
-                    }}/>
-                </div>
-            )}/>
+            <div style={{width: '100vw'}}>
+                <Route render={({history}) => (
+                    <div style={{
+                        paddingTop: '7px',
+                        paddingRight: '7px'
+                    }}>
+                        <RaisedButton
+                            label="Log In"
+                            primary={false}
+                            onClick={() => {
+                                history.push('/login')
+                            }}
+                        />
+                    </div>
+                )}/>
+            </div>
         );
 
         return (

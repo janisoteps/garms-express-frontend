@@ -15,6 +15,7 @@ import OutfitPage from './components/search/from_id/OutfitPage'
 import Intro from './components/intro/Intro'
 import PasswordReset from "./components/user/PasswordReset";
 import PasswordResetEmail from "./components/user/PasswordResetEmail";
+import RecommendDeals from "./components/recommend/RecommendDeals";
 
 // The Main component renders one of the provided
 // Routes (provided that one matches). The / route will only match
@@ -111,13 +112,12 @@ class Main extends React.Component {
                                email={this.props.email}
                            />}
                     />
-                    <Route path='/explorer'
-                           render={(props) => <Explorer
+                    <Route path='/deals'
+                           render={(props) => <RecommendDeals
                                {...props}
                                username={this.props.username}
                                sex={this.props.sex}
                                isAuth={this.props.isAuth}
-                               higherCat={this.props.higherCat}
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
                            />}

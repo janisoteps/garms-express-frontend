@@ -25,6 +25,7 @@ class OutfitPage extends React.Component  {
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.updateDimensions = this.updateDimensions.bind(this);
+        this.filterUnique = this.filterUnique.bind(this);
     }
     componentDidMount() {
         const queryString = window.location.search;
@@ -44,7 +45,8 @@ class OutfitPage extends React.Component  {
             }).then(function(response) {
                 return response.json();
             }).then(data => {
-                const prod_data = data[0];
+                let prod_data = data[0];
+                prod_data[0].image_urls = prod_data[0].image_urls.filter( this.filterUnique );
                 this.setState({
                     prodData: prod_data[0],
                     shownImg: prod_data[0].image_urls[0],
@@ -55,6 +57,10 @@ class OutfitPage extends React.Component  {
         window.addEventListener('resize', this.updateDimensions);
         this.updateDimensions();
     }
+
+    filterUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+    };
 
     updateDimensions = () => {
         this.setState({ width: window.innerWidth, height: window.innerHeight });

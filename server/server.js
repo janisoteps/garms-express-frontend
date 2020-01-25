@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-const api_base_url = 'https://main-api.garms.io/api/';
-// const api_base_url = 'http://127.0.0.1:5000/api/';
+// const api_base_url = 'https://main-api.garms.io/api/';
+const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -892,6 +892,34 @@ app.post('/api/recommend_random', function (req, res) {
         method: 'POST',
         url: api_base_url + 'recommend_random',
         body: {sex: sex},
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/recommend_deals', function (req, res) {
+    const sex = req.body.sex;
+    const cats = req.body.cats;
+    const shops = req.body.shops;
+    const brands = req.body.brands;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'recommend_deals',
+        body: {
+            sex: sex,
+            cats: cats,
+            shops: shops,
+            brands: brands
+        },
         json: true
     };
 
