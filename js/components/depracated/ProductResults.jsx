@@ -276,7 +276,6 @@ class ProductResults extends React.Component  {
     }
 
     setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        console.log('Setting main cat to: ', mainCat1, ' and secondary cat to: ', mainCat2);
         this.setState({
             catPickerExpanded: 0
         });
@@ -287,13 +286,11 @@ class ProductResults extends React.Component  {
         this.setState({
             pickerExpanded: 0
         });
-        console.log('Product results passed id: ', prod_id);
         this.props.simImgSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id);
     }
 
     // Expands color picker drawer
     expandDrawer = (id, pickerId) => {
-        console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 pickerExpanded: 0

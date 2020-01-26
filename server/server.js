@@ -37,8 +37,6 @@ app.post('/api/upload_image', upload.single('image'), function (req, res) {
         extension = 'png'
     }
 
-    console.log('Image size: ', req.file.size);
-
     let s3bucket = new aws.S3({
         accessKeyId: IAM_USER_KEY,
         secretAccessKey: IAM_USER_SECRET,
@@ -340,11 +338,9 @@ app.post('/api/save_insta_username', function (req, res) {
         body: JSON.stringify({email: email, insta_username: insta_username}),
         json: true
     };
-    console.log('Save Insta username, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('Save Insta username response: ', body);
 
             res.send(body);
         }
@@ -892,6 +888,34 @@ app.post('/api/recommend_random', function (req, res) {
         method: 'POST',
         url: api_base_url + 'recommend_random',
         body: {sex: sex},
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/recommend_deals', function (req, res) {
+    const sex = req.body.sex;
+    const cats = req.body.cats;
+    const shops = req.body.shops;
+    const brands = req.body.brands;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'recommend_deals',
+        body: {
+            sex: sex,
+            cats: cats,
+            shops: shops,
+            brands: brands
+        },
         json: true
     };
 
