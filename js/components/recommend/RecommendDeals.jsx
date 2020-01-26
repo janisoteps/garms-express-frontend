@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddOutfit from "../wardrobe/AddOutfit";
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
+import DealFilters from "../search/results/DealFilters";
 
 
 class RecommendDeals extends React.Component  {
@@ -16,13 +17,34 @@ class RecommendDeals extends React.Component  {
         this.state = {
             email: this.props.email,
             sex: this.props.sex ? this.props.sex : 'women',
+            cats: [],
+            shops: [],
+            brands: [],
             outfits: [],
             imgHash: null,
-            changeSex: false
+            changeSex: false,
+            posTags: [],
+            negTags: [],
+            loading: false,
+            brandPickerShown: false,
+            shopPickerShown: false,
+            tagPickerShown: false,
+            addOutfitShown: false,
+            filterBrands: [],
+            filterShops: [],
+            nothingFound: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.updateImgProtocol = this.updateImgProtocol.bind(this);
+        this.setTags = this.setTags.bind(this);
+        this.addTagFilter = this.addTagFilter.bind(this);
+        this.showTagPicker = this.showTagPicker.bind(this);
+        this.showBrandPicker = this.showBrandPicker.bind(this);
+        this.showShopPicker = this.showShopPicker.bind(this);
+        this.addBrandFilter = this.addBrandFilter.bind(this);
+        this.addShopFilter = this.addShopFilter.bind(this);
+        this.applyDealFilter = this.applyDealFilter.bind(this);
     }
 
     componentDidMount() {
@@ -70,6 +92,213 @@ class RecommendDeals extends React.Component  {
         });
     }
 
+    setTags(tag, type, flag){
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
+        if (flag === 'remove') {
+            if (type === 'positive') {
+                posTags = posTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    posTags: posTags,
+                    cats: posTags
+                });
+            } else if (type === 'negative') {
+                negTags = negTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    negTags: negTags
+                });
+            }
+        } else if (flag === 'add') {
+            if (type === 'positive') {
+                if (negTags.includes(tag)) {
+                    negTags = negTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+                if (!posTags.includes(tag)) {
+                    posTags.push(tag);
+                    this.setState({
+                        posTags: posTags,
+                        cats: posTags
+                    });
+                }
+            } else if (type === 'negative') {
+                if (posTags.includes(tag)) {
+                    posTags = posTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        posTags: posTags,
+                        cats: posTags
+                    });
+                }
+                if (!negTags.includes(tag)) {
+                    negTags.push(tag);
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+            }
+        }
+    }
+
+    addTagFilter(posTag, negTag, showPicker) {
+        if(posTag) {
+            let currentFilterTags = this.state.posTags;
+            if (currentFilterTags.indexOf(posTag) !== -1) {
+                const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                    return checkedTag !== posTag
+                });
+                this.setState({
+                    posTags: newFilterBrandTags,
+                    cats: newFilterBrandTags,
+                    tagPickerShown: showPicker
+                });
+            } else {
+                currentFilterTags.push(posTag);
+                this.setState({
+                    posTags: currentFilterTags,
+                    cats: currentFilterTags,
+                    tagPickerShown: showPicker
+                }, () => {
+                    if (showPicker === false) {
+                        this.applyDealFilter();
+                    }
+                });
+            }
+        } else {
+            let currentFilterTags = this.state.negTags;
+            if (currentFilterTags.indexOf(negTag) !== -1) {
+                const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
+                    return checkedTag !== negTag
+                });
+                this.setState({
+                    negTags: newFilterBrandTags,
+                    tagPickerShown: showPicker
+                });
+            } else {
+                currentFilterTags.push(negTag);
+                this.setState({
+                    negTags: currentFilterTags,
+                    tagPickerShown: showPicker
+                }, () => {
+                    if (showPicker === false) {
+                        this.applyDealFilter();
+                    }
+                });
+            }
+        }
+    }
+
+    showTagPicker(show) {
+        this.setState({
+            tagPickerShown: show
+        });
+        if (show === false) {
+            this.applyDealFilter();
+        }
+    }
+
+    showBrandPicker(show) {
+        this.setState({
+            brandPickerShown: show
+        });
+        if (show === false) {
+            this.applyDealFilter();
+        }
+    }
+
+    showShopPicker(show) {
+        this.setState({
+            shopPickerShown: show
+        });
+        if (show === false) {
+            this.applyDealFilter();
+        }
+    }
+
+    addBrandFilter(brand, showPicker) {
+        let currentFilterBrands = this.state.filterBrands;
+        if (currentFilterBrands.indexOf(brand) !== -1) {
+            const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
+                return checkedBrand !== brand
+            });
+            this.setState({
+                filterBrands: newFilterBrands,
+                brands: newFilterBrands,
+                brandPickerShown: showPicker
+            });
+        } else {
+            currentFilterBrands.push(brand);
+            this.setState({
+                filterBrands: currentFilterBrands,
+                brands: currentFilterBrands,
+                brandPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.applyDealFilter();
+                }
+            });
+        }
+    }
+
+    addShopFilter(shop, showPicker) {
+        let currentFilterShops = this.state.filterShops;
+        if (currentFilterShops.indexOf(shop) !== -1) {
+            const newFilterShops = currentFilterShops.filter(checkedShop => {
+                return checkedShop !== shop
+            });
+            this.setState({
+                filterShops: newFilterShops,
+                shops: newFilterShops,
+                shopPickerShown: showPicker
+            });
+        } else {
+            currentFilterShops.push(shop);
+            this.setState({
+                filterShops: currentFilterShops,
+                shops: currentFilterShops,
+                shopPickerShown: showPicker
+            }, () => {
+                if (showPicker === false) {
+                    this.applyDealFilter();
+                }
+            });
+        }
+    }
+
+    applyDealFilter() {
+        this.setState({
+            outfits: [],
+            nothingFound: false
+        });
+        fetch(`${window.location.origin}/api/recommend_deals`, {
+            method: 'post',
+            body: JSON.stringify({
+                'sex': this.state.sex,
+                'cats': this.state.cats,
+                'shops': this.state.shops,
+                'brands': this.state.brands
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (data.prod_suggestions.length === 0) {
+                this.setState({
+                    nothingFound: true
+                })
+            } else {
+                this.setState({
+                    outfits: data.prod_suggestions
+                })
+            }
+        })
+    }
+
+    // ===========================================  MAIN RENDER FUNCTION  ==============================================
     render() {
 
         const outfitTiles = this.state.outfits.map(prodSuggestion => {
@@ -157,22 +386,33 @@ class RecommendDeals extends React.Component  {
                     <div>
                         <br />
                         <br />
-                        <br />
                         {outfitTiles}
                     </div>
                 ) : (
-                    <div
-                        style={{
-                            paddingTop: '100px'
-                        }}
-                    >
-                        <div className="la-ball-atom la-3x">
-                            <div />
-                            <div />
-                            <div />
-                            <div />
+                    this.state.nothingFound ? (
+                        <div
+                            style={{
+                                width: '100%',
+                                paddingTop: '80px',
+                                textAlign: 'center'
+                            }}
+                        >
+                            <h5>Nothing found. Try different filters.</h5>
                         </div>
-                    </div>
+                    ) : (
+                        <div
+                            style={{
+                                paddingTop: '100px'
+                            }}
+                        >
+                            <div className="la-ball-atom la-3x">
+                                <div />
+                                <div />
+                                <div />
+                                <div />
+                            </div>
+                        </div>
+                    )
                 )}
             </div>
         );
@@ -252,7 +492,27 @@ class RecommendDeals extends React.Component  {
                         )}
 
                         {tilesOrLoading}
-
+                        <DealFilters
+                            loading={this.state.loading}
+                            posTags={this.state.posTags}
+                            negTags={this.state.negTags}
+                            setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                            addTagFilter={(posTag, negTag, showPicker) => {this.addTagFilter(posTag, negTag, showPicker)}}
+                            showTagPicker={(show) => {this.showTagPicker(show)}}
+                            tagPickerShown={this.state.tagPickerShown}
+                            searchSimilarImages={(imgHash, color1) => {
+                                this.searchSimilarImages(imgHash, color1)
+                            }}
+                            results={this.state.outfits}
+                            filterBrands={this.state.filterBrands}
+                            brandPickerShown={this.state.brandPickerShown}
+                            showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                            addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                            filterShops={this.state.filterShops}
+                            shopPickerShown={this.state.shopPickerShown}
+                            showShopPicker={(show) => {this.showShopPicker(show)}}
+                            addShopFilter={(shop, showPicker) => {this.addShopFilter(shop, showPicker)}}
+                        />
                         {this.state.changeSex && (
                             <ChangeSex/>
                         )}

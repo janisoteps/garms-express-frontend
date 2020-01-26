@@ -1,10 +1,9 @@
 // DealFilters.jsx
 import React from 'react';
 require('../../../../css/garms.css');
-import PriceFilter from './PriceFilter';
 import TagCloud from './TagCloud';
-import ColorPicker from './ColorPicker';
 import BrandFilter from './BrandFilter';
+import ShopFilter from './ShopFilter';
 
 class DealFilters extends React.Component {
     constructor(props) {
@@ -33,20 +32,11 @@ class DealFilters extends React.Component {
                     showBrandPicker={(show) => {this.props.showBrandPicker(show)}}
                     addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                 />
-                <PriceFilter
-                    range={this.props.range}
-                    updateRange={(val, callback) => this.props.updateRange(val, callback)}
-                    loading={this.props.loading}
-                    showPriceFilter={(show) => {this.props.showPriceFilter(show)}}
-                    priceFilterShown={this.props.priceFilterShown}
-                />
-                <ColorPicker
-                    setColor={(selection) => {this.props.setColor(selection)}}
-                    selectedColor={this.props.selectedColor}
-                    searchSimilarImages={(imgHash, color1) => {
-                        this.props.searchSimilarImages(imgHash, color1)
-                    }}
-                    results={this.props.results}
+                <ShopFilter
+                    filterShops={this.props.filterShops}
+                    shopPickerShown={this.props.shopPickerShown}
+                    showShopPicker={(show) => {this.props.showShopPicker(show)}}
+                    addShopFilter={(shop, showPicker) => {this.props.addShopFilter(shop, showPicker)}}
                 />
             </div>
         )
