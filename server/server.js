@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-// const api_base_url = 'https://main-api.garms.io/api/';
-const api_base_url = 'http://127.0.0.1:5000/api/';
+const api_base_url = 'https://main-api.garms.io/api/';
+// const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -36,8 +36,6 @@ app.post('/api/upload_image', upload.single('image'), function (req, res) {
     if (fileType === 'image/png') {
         extension = 'png'
     }
-
-    console.log('Image size: ', req.file.size);
 
     let s3bucket = new aws.S3({
         accessKeyId: IAM_USER_KEY,
@@ -340,11 +338,9 @@ app.post('/api/save_insta_username', function (req, res) {
         body: JSON.stringify({email: email, insta_username: insta_username}),
         json: true
     };
-    console.log('Save Insta username, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            console.log('Save Insta username response: ', body);
 
             res.send(body);
         }
