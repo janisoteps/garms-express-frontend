@@ -722,6 +722,32 @@ app.post('/api/remove_look', function (req, res) {
 });
 
 
+app.post('/api/rename_look', function (req, res) {
+    let email = req.body.email;
+    let look_name = req.body.look_name;
+    let new_look_name = req.body.new_look_name;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'rename_look',
+        body: JSON.stringify({
+            email: email,
+            look_name: look_name,
+            new_look_name: new_look_name
+        }),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 app.post('/api/get_looks', function (req, res) {
     let email = req.body.email;
     // console.log(email);
