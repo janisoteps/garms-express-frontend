@@ -123,8 +123,10 @@ class RecommendFromTags extends React.Component  {
                             <div
                                 className="product-name"
                                 style={{
-                                    marginRight: '5px',
-                                    marginLeft: '5px'
+                                    marginRight: '1px',
+                                    marginLeft: '1px',
+                                    fontSize: '0.8rem',
+                                    lineHeight: '1'
                                 }}
                             >
                                 <b>{prodSuggestion.name}</b>
@@ -170,7 +172,13 @@ class RecommendFromTags extends React.Component  {
                             )}/>
 
                             <br />
-                            <h6>{prodSuggestion.brand}</h6>
+                            <div
+                                style={{
+                                    lineHeight: '1'
+                                }}
+                            >
+                                <b>{prodSuggestion.brand}</b>
+                            </div>
                             From {prodSuggestion.shop}
                         </Paper>
                     )
