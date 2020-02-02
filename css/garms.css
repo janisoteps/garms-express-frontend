@@ -343,8 +343,7 @@ body{
     margin: 5px;
     width: 45vw;
     max-width: 300px;
-    /*padding-top: 15px;*/
-    /*padding-bottom: 15px;*/
+    padding-top: 3px;
     display: inline-block;
     position: relative;
     vertical-align: top;
@@ -432,7 +431,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -50px;
+    margin-top: -40px;
     right: 5px;
     cursor: pointer;
 }
@@ -584,7 +583,20 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -50px;
+    margin-top: -40px;
+    right: 47px;
+    cursor: pointer;
+}
+
+.search-similar-wardrobe{
+    width: 36px;
+    height: 36px;
+    background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 32px 32px;
+    border-radius: 18px;
+    position: absolute;
+    margin-top: -75px;
     right: 47px;
     cursor: pointer;
 }
@@ -926,12 +938,25 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    bottom: 70px;
+    bottom: 60px;
     right: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
     filter: invert(1);
-    /*opacity: 0.7;*/
+}
+
+.product-delete-wardrobe{
+    width: 36px;
+    height: 36px;
+    background: #FFFFFF url('../images/baseline-delete_forever-24px.svg') no-repeat center;
+    background-size: 32px 32px;
+    border-radius: 18px;
+    position: absolute;
+    margin-top: -75px;
+    right: 5px;
+    cursor: pointer;
+    box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
+    filter: invert(1);
 }
 
 .profile-product-buy{
@@ -945,7 +970,19 @@ body{
     cursor: pointer;
     bottom: 70px;
     filter: invert(1);
-    /*box-shadow: 1px -1px 3px 0 rgba(0, 0, 0, 0.4);*/
+}
+
+.product-buy-wardrobe{
+    width: 36px;
+    height: 36px;
+    background: #FFFFFF url('../images/baseline-shopping_basket-24px.svg') no-repeat center;
+    background-size: 28px 28px;
+    border-radius: 18px;
+    position: absolute;
+    right: 90px;
+    cursor: pointer;
+    margin-top: -75px;
+    filter: invert(1);
 }
 
 .sex-selector{

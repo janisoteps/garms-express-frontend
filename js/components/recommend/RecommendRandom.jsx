@@ -70,8 +70,10 @@ class RecommendRandom extends React.Component  {
                         <div
                             className="product-name"
                             style={{
-                                marginRight: '5px',
-                                marginLeft: '5px'
+                                marginRight: '1px',
+                                marginLeft: '1px',
+                                fontSize: '0.8rem',
+                                lineHeight: '1'
                             }}
                         >
                             <b>{prodSuggestion.name}</b>
@@ -128,10 +130,15 @@ class RecommendRandom extends React.Component  {
                                 />
                             </Tooltip>
                         )}/>
-
                         <br />
-                        <h4>{prodSuggestion.brand}</h4>
-                        <p>From {prodSuggestion.shop}</p>
+                        <div
+                            style={{
+                                lineHeight: '1'
+                            }}
+                        >
+                            <b>{prodSuggestion.brand}</b>
+                        </div>
+                        From {prodSuggestion.shop}
                     </Paper>
                 )
             })

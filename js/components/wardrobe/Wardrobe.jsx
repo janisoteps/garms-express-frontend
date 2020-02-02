@@ -502,9 +502,11 @@ class Wardrobe extends React.Component  {
             const key = `${outfitDict.prod_id}-${outfitDict.outfit_date}`;
             const priceStyle = outfitDict.info.sale ? {
                 textDecoration: 'line-through',
-                display: 'inline-block'
+                display: 'inline-block',
+                fontSize: '0.9rem'
             } : {
-                textDecoration: 'none'
+                textDecoration: 'none',
+                fontSize: '0.9rem'
             };
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
                 return (
@@ -512,9 +514,10 @@ class Wardrobe extends React.Component  {
                         <div
                             className="product-name"
                             style={{
-                                marginLeft: '5px',
-                                marginRight: '5px',
-                                fontSize: '1rem'
+                                marginLeft: '1px',
+                                marginRight: '1px',
+                                fontSize: '1rem',
+                                lineHeight: '1'
                             }}
                         >
                             {outfitDict.look_name.toUpperCase()}
@@ -522,6 +525,11 @@ class Wardrobe extends React.Component  {
                         <Route render={({history}) => (
                                 <div
                                     className="product-name"
+                                    style={{
+                                        marginTop: '3px',
+                                        fontSize: '0.8rem',
+                                        lineHeight: '1'
+                                    }}
                                     onClick={() => {
                                         history.push(`/outfit-page?id=${outfitDict.prod_id}`)
                                     }}
@@ -536,7 +544,9 @@ class Wardrobe extends React.Component  {
                                 style={{
                                     color: '#d6181e',
                                     display: 'inline-block',
-                                    marginLeft: '5px'
+                                    marginLeft: '5px',
+                                    fontSize: '1rem',
+                                    lineHeight: '1'
                                 }}
                             >
                                 £{outfitDict.info.salePrice}
@@ -547,7 +557,7 @@ class Wardrobe extends React.Component  {
                             <img
                                 className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
                                 style={{
-                                    marginBottom: '30px',
+                                    marginBottom: '10px',
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
@@ -556,26 +566,33 @@ class Wardrobe extends React.Component  {
                             />
                         )}/>
 
+                        <a
+                            href={outfitDict.info.url}
+                            target="_blank"
+                        >
+                            <div
+                                style={{
+                                    lineHeight: '1',
+                                    fontSize: '1rem'
+                                }}
+                            >
+                                <b>{outfitDict.info.brand}</b>
+                            </div>
+                            from {outfitDict.info.shop}
+                        </a>
                         <Route render={({history}) => (
                             <Tooltip title="Search Similar Items" >
                                 <div
-                                    className="search-similar-recommend"
+                                    className="search-similar-wardrobe"
                                     onClick={() => {
                                         history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
                                     }}
                                 />
                             </Tooltip>
                         )}/>
-
-                        <a
-                            href={outfitDict.info.url}
-                            target="_blank"
-                        >
-                            <h6>{outfitDict.info.brand}</h6> from {outfitDict.info.shop}
-                        </a>
                         <Tooltip title="Delete From Favorites" >
                             <div
-                                className="profile-product-delete"
+                                className="product-delete-wardrobe"
                                 onClick={() => {
                                     this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
                                 }}
@@ -587,7 +604,7 @@ class Wardrobe extends React.Component  {
                                 target="_blank"
                             >
                                 <div
-                                    className="profile-product-buy"
+                                    className="product-buy-wardrobe"
                                 />
                             </a>
                         </Tooltip>

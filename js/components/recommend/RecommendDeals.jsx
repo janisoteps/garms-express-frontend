@@ -318,16 +318,17 @@ class RecommendDeals extends React.Component  {
                             color: '#d6181e',
                             display: 'inline-block',
                             marginLeft: '5px',
-                            fontSize: '1.5rem'
+                            fontSize: '1.2rem'
                         }}>
                             -{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%
                         </div>
                     )}
                     <div
-                        className="product-name"
                         style={{
-                            marginRight: '5px',
-                            marginLeft: '5px'
+                            marginRight: '1px',
+                            marginLeft: '1px',
+                            fontSize: '0.8rem',
+                            lineHeight: '1'
                         }}
                     >
                         <b>{prodSuggestion.name}</b>
@@ -372,10 +373,16 @@ class RecommendDeals extends React.Component  {
                             />
                         </Tooltip>
                     )}/>
-
-                    <br />
-                    <h6>{prodSuggestion.brand}</h6>
-                    From {prodSuggestion.shop}
+                    <div><b>{prodSuggestion.brand}</b></div>
+                    <div
+                        style={{
+                            lineHeight: '1',
+                            fontSize: '0.8rem',
+                            marginBottom: '2px'
+                        }}
+                    >
+                        From {prodSuggestion.shop}
+                    </div>
                 </Paper>
             )
         });
