@@ -23,11 +23,11 @@ class Wardrobe extends React.Component  {
             addingLook: false,
             newLookInput: '',
             removeLookInput: null,
-            removeShow: null,
             lookFilter: null,
             showingLooks: true,
             noLooks: false,
-            imgHash: null
+            imgHash: null,
+            showRenameModal: false
         };
 
         this.removeLook = this.removeLook.bind(this);
@@ -38,7 +38,6 @@ class Wardrobe extends React.Component  {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.showAddLookModal = this.showAddLookModal.bind(this);
         this.setLookFilter = this.setLookFilter.bind(this);
-        this.showRemove = this.showRemove.bind(this);
         this.showRemoveLookModal = this.showRemoveLookModal.bind(this);
         this.expandLooks = this.expandLooks.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
@@ -157,18 +156,111 @@ class Wardrobe extends React.Component  {
                     return 0;
                 });
 
-                this.setState({
-                    removeLookInput: null,
-                    lookFilter: null,
-                    looks: looksArr
+                const outfitArr = data.wardrobe.reverse();
+                const prodHashes = outfitArr.map(outfitDict => {
+                    return outfitDict.prod_id
+                });
+
+                this.getProducts(prodHashes, prodData => {
+
+                    const prodHashInfoDict = {};
+                    prodData.forEach(prodDict => {
+                        prodHashInfoDict[prodDict[0]['prod_id']] = {
+                            imgUrl: prodDict[0]['image_urls'][0],
+                            brand: prodDict[0]['brand'],
+                            price: prodDict[0]['price'],
+                            currency: prodDict[0]['currency'],
+                            name: prodDict[0]['name'],
+                            url: prodDict[0]['prod_url'],
+                            sale: prodDict[0]['sale'],
+                            salePrice: prodDict[0]['saleprice'],
+                            shop: prodDict[0]['shop'],
+                            imgHash: prodDict[0]['image_hash'][0]
+                        };
+                    });
+
+                    const outfitImgArr = outfitArr.map(outfitDict => {
+                        let resultOutfitDict = outfitDict;
+                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                        return resultOutfitDict
+                    });
+
+                    this.setState({
+                        removeLookInput: null,
+                        lookFilter: null,
+                        looks: looksArr,
+                        outfits: outfitImgArr
+                    });
+                });
+            });
+    };
+
+    renameLook = (lookName) => {
+        const email = this.state.email;
+        const newLookName = this.state.newLookInput;
+
+        fetch(`${window.location.origin}/api/rename_look`, {
+            method: 'post',
+            body: JSON.stringify({
+                email: email,
+                look_name: lookName,
+                new_look_name: newLookName
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) { return response.json(); })
+            .then(data => {
+                const looksArr = data.looks.sort(function(a, b){
+                    if(a.look_name < b.look_name) { return -1; }
+                    if(a.look_name > b.look_name) { return 1; }
+                    return 0;
+                });
+
+                const outfitArr = data.wardrobe.reverse();
+                const prodHashes = outfitArr.map(outfitDict => {
+                    return outfitDict.prod_id
+                });
+
+                this.getProducts(prodHashes, prodData => {
+
+                    const prodHashInfoDict = {};
+                    prodData.forEach(prodDict => {
+                        prodHashInfoDict[prodDict[0]['prod_id']] = {
+                            imgUrl: prodDict[0]['image_urls'][0],
+                            brand: prodDict[0]['brand'],
+                            price: prodDict[0]['price'],
+                            currency: prodDict[0]['currency'],
+                            name: prodDict[0]['name'],
+                            url: prodDict[0]['prod_url'],
+                            sale: prodDict[0]['sale'],
+                            salePrice: prodDict[0]['saleprice'],
+                            shop: prodDict[0]['shop'],
+                            imgHash: prodDict[0]['image_hash'][0]
+                        };
+                    });
+
+                    const outfitImgArr = outfitArr.map(outfitDict => {
+                        let resultOutfitDict = outfitDict;
+                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                        return resultOutfitDict
+                    });
+
+                    this.setState({
+                        newLookInput: '',
+                        lookFilter: newLookName,
+                        looks: looksArr,
+                        outfits: outfitImgArr,
+                        showRenameModal: false
+                    });
                 });
             });
     };
 
     showRemoveLookModal = (lookName) => {
         this.setState({
-            removeLookInput: lookName,
-            lookFilter: null
+            removeLookInput: lookName
         })
     };
 
@@ -283,12 +375,6 @@ class Wardrobe extends React.Component  {
             });
     };
 
-    showRemove = (lookName) => {
-        this.setState({
-            removeShow: lookName
-        })
-    };
-
     expandLooks = () => {
         if (this.state.showingLooks) {
             this.setState({
@@ -385,7 +471,7 @@ class Wardrobe extends React.Component  {
     render () {
         let greetingStyle = {
             textAlign: 'center',
-            marginTop: '95px'
+            marginTop: isMobile ? '0' : '50px'
         };
 
         const LookExpander = () => {
@@ -496,12 +582,14 @@ class Wardrobe extends React.Component  {
                             />
                         </Tooltip>
                         <Tooltip title="Buy Now" >
-                            <div
-                                className="profile-product-buy"
-                                onClick={() => {
-                                    this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
-                                }}
-                            />
+                            <a
+                                href={outfitDict.info.url}
+                                target="_blank"
+                            >
+                                <div
+                                    className="profile-product-buy"
+                                />
+                            </a>
                         </Tooltip>
                     </Paper>
                 )
@@ -512,8 +600,6 @@ class Wardrobe extends React.Component  {
             const bgColor = this.state.lookFilter === null || this.state.lookFilter === lookDict.look_name ? 'black' : '#7a7a7a';
             return (
                 <div
-                    onMouseEnter={() => {this.showRemove(lookDict.look_name)}}
-                    onMouseLeave={() => {this.showRemove(null)}}
                     style={{
                         color: 'white',
                         backgroundColor: bgColor,
@@ -521,17 +607,13 @@ class Wardrobe extends React.Component  {
                         marginTop: '5px',
                         paddingLeft: '5px',
                         paddingRight: '5px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        position: 'relative'
                     }}
                     key={lookDict.look_name}
                     onClick={() => {this.setLookFilter(lookDict.look_name)}}
                 >
-                    {(this.state.removeShow === lookDict.look_name) && (
-                        <div
-                            className='remove-look-button'
-                            onClick={() => {this.showRemoveLookModal(lookDict.look_name)}}
-                        />
-                    )}{lookDict.look_name.toUpperCase()}
+                    {lookDict.look_name.toUpperCase()}
                 </div>
             )
         });
@@ -602,7 +684,7 @@ class Wardrobe extends React.Component  {
             return (
                 <div style={{
                     position: 'fixed',
-                    top: '70px',
+                    top: '80px',
                     width: '300px',
                     left: 'calc(50vw - 150px)'
                 }}>
@@ -613,7 +695,7 @@ class Wardrobe extends React.Component  {
                             paddingBottom: '10px'
                         }}
                     >
-                        <h3>Remove {this.state.removeLookInput.charAt(0).toUpperCase() + this.state.removeLookInput.slice(1)}?</h3>
+                        <h3>Delete {this.state.removeLookInput.toUpperCase()}?</h3>
                         <div
                             style={{
                                 color: 'black',
@@ -631,7 +713,7 @@ class Wardrobe extends React.Component  {
                                 marginLeft: '60px'
                             }}
                             onClick={() => {this.removeLook(this.state.removeLookInput)}}
-                        >Remove</div>
+                        >Delete</div>
                         <div
                             style={{
                                 color: 'black',
@@ -655,6 +737,76 @@ class Wardrobe extends React.Component  {
             )
         };
 
+        const RenameLookModal = () => {
+            return (
+                <div style={{
+                    position: 'fixed',
+                    top: '80px',
+                    width: '300px',
+                    left: 'calc(50vw - 150px)'
+                }}>
+                    <Paper
+                        zDepth={1}
+                        style={{
+                            paddingTop: '10px',
+                            paddingBottom: '10px'
+                        }}
+                    >
+                        <h3>Rename {this.state.lookFilter.toUpperCase()}</h3>
+                        <label>
+                            New look name:
+                            <input
+                                autoFocus
+                                type="text"
+                                name="newLookInput"
+                                value={this.state.newLookInput}
+                                onChange={this.handleInputChange}
+                            />
+                        </label>
+                        <div
+                            style={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                borderRadius: '4px',
+                                borderWidth: '2px',
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                marginTop: '5px',
+                                paddingLeft: '5px',
+                                paddingRight: '5px',
+                                cursor: 'pointer',
+                                marginBottom: '10px',
+                                marginRight: '60px',
+                                marginLeft: '60px'
+                            }}
+                            onClick={() => {this.renameLook(this.state.lookFilter)}}
+                        >Rename</div>
+                        <div
+                            style={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                borderRadius: '4px',
+                                borderWidth: '2px',
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                marginTop: '5px',
+                                paddingLeft: '5px',
+                                paddingRight: '5px',
+                                cursor: 'pointer',
+                                marginBottom: '10px',
+                                marginRight: '60px',
+                                marginLeft: '60px'
+                            }}
+                            onClick={() => {
+                                this.setState({
+                                    showRenameModal: false
+                                })
+                            }}
+                        >Cancel</div>
+                    </Paper>
+                </div>
+            )
+        };
 
         // #################### MAIN RENDER RETURN #######################
         return (
@@ -677,8 +829,42 @@ class Wardrobe extends React.Component  {
                             />
                         </div>
                     )}
+                    {isMobile && (
+                        <br />
+                    )}
+                    <h2 style={greetingStyle}>{this.state.username}'s wardrobe</h2>
+                    {!isMobile && (
+                        <br />
+                    )}
+                    {this.state.lookFilter && (
+                        <h1>{this.state.lookFilter.toUpperCase()}</h1>
+                    )}
+                    {this.state.lookFilter && (
+                        <div>
+                            <div
+                                style={{
+                                    display: 'inline-block',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    this.setState({
+                                        showRenameModal: true
+                                    })
+                                }}
+                            >
+                                rename
+                            </div> | <div
+                                style={{
+                                    display: 'inline-block',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {this.showRemoveLookModal(this.state.lookFilter)}}
+                            >
+                                delete
+                            </div>
 
-                    <h1 style={greetingStyle}>{this.state.username}'s wardrobe</h1>
+                        </div>
+                    )}
                     <br />
                     {(this.state.noLooks === true) && (
                         <div style={{width: '100%', textAlign: 'center'}}>
@@ -748,8 +934,10 @@ class Wardrobe extends React.Component  {
                         {(this.state.removeLookInput !== null) && (
                             <RemoveLookModal />
                         )}
+                        {this.state.showRenameModal === true && (
+                            <RenameLookModal />
+                        )}
                     </div>
-
                 </div>
             </MuiThemeProvider>
         )
