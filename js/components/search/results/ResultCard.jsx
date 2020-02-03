@@ -19,6 +19,23 @@ class ResultCard extends React.Component {
         this.expandDrawer = this.expandDrawer.bind(this);
         this. setColorPosTags = this.setColorPosTags.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll() {
+        if (this.state.showExplore === true) {
+            this.setState({
+                showExplore: false
+            })
+        }
     }
 
     expandDrawer = (id, pickerId) => {
@@ -266,6 +283,17 @@ class ResultCard extends React.Component {
                         paddingTop: '5px'
                     }}
                 >
+                    <img
+                        src={this.updateImgProtocol(img_url)}
+                        style={{
+                            cursor: 'pointer',
+                            height: '100%',
+                            width: 'auto',
+                            position: 'absolute',
+                            left: '5px',
+                            marginTop: '-5px'
+                        }}
+                    />
                     <Tooltip title="Search Similar Items" >
                         <div
                             className="search-similar-mobile"
