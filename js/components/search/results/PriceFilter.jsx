@@ -67,7 +67,7 @@ class PriceFilter extends React.Component {
                             display: 'flex',
                             alignItems: 'center',
                             marginBottom: '5px',
-                            fontSize: '1rem'
+                            fontSize: '0.8rem'
                         }}
                     >
                         <Tooltip title="Set Maximum Price">
@@ -75,7 +75,7 @@ class PriceFilter extends React.Component {
                                 id="output"
                                 onClick={() => {this.showHideSlider()}}
                             >
-                                £{range < 500 ? range : <span style={{fontSize: '1.5rem', lineHeight: '1'}}>∞</span>}
+                                £{range < 500 ? range : <span style={{fontSize: '1rem', lineHeight: '0.8'}}>∞</span>}
                             </span>
                         </Tooltip>
                         {this.props.priceFilterShown === true && (

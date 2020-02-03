@@ -1,4 +1,4 @@
-// ResultsFromImage.jsx
+// ResultsFromSearch.jsx
 import React from "react";
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -7,7 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AddOutfit from '../../wardrobe/AddOutfit';
 import {Route} from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import {isMobile} from "react-device-detect";
+import ResultCard from './ResultCard';
 
 const categories = {
     'accessories': [
@@ -402,19 +403,12 @@ class ResultsFromSearch extends React.Component  {
         let key = '';
         // console.log(this.props.results);
         let tiles = this.props.results.map(product => {
-            // console.log(product);
-            // console.log('Product data passed to result list: ', product[0]);
             let productInfo = product['prod_serial'];
             let imageData = product['image_data'];
-            // console.log('Image data: ', imageData);
             let prod_hash = productInfo.prod_id;
             let brand = productInfo.brand;
-            // let img_cat_sc_txt = productInfo.img_cats_sc_txt[productInfo.img_cats_sc_txt.length - 1];
-            let img_urls = productInfo.image_urls;
             let img_url = imageData.img_url;
             let name = productInfo.name;
-            let description = productInfo.description;
-            // let currency = productInfo.currency;
             const currency = '£';
             let price = productInfo.price.toFixed(2);
             let prod_id = productInfo.prod_id;
@@ -423,10 +417,8 @@ class ResultsFromSearch extends React.Component  {
             let saleprice = productInfo.saleprice;
             let shop = productInfo.shop;
             key = prod_hash + Math.floor(Math.random() * 1000);
-            // let image0 = imageData[0];
             let fst_img_hash = imageData.img_hash;
             let fst_img_color = imageData.color_1;
-            // this.props.results[0]['image_data'][0]['img_hash']
             let catArray = [];
             let catCheckArray = [];
             higherCats.map(hCat => {
@@ -447,7 +439,6 @@ class ResultsFromSearch extends React.Component  {
             });
 
             let singleCatStyle = {
-                // width: '50px',
                 height: '46px',
                 borderRadius: '23px',
                 backgroundColor: '#f5e8ff',
@@ -699,7 +690,7 @@ class ResultsFromSearch extends React.Component  {
                     <ImageCarousel />
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
-                        </div>
+                    </div>
                     <div className="prod-description"> </div>
                     <Tooltip title="Search Similar Items" >
                         <div
@@ -789,9 +780,20 @@ class ResultsFromSearch extends React.Component  {
             }
         };
 
+        const mobileTiles = this.props.results.map(productData => {
+            return(
+                <ResultCard
+                    key={productData['prod_serial'].prod_id + Math.floor(Math.random() * 1000)}
+                    productData={productData}
+                    setColorPosTags={selection => {this.setColorPosTags(selection)}}
+                    searchSimilarImages={(imgHash, color_1) => {this.searchSimilarImages(imgHash, color_1)}}
+                    isAuth={this.props.isAuth}
+                    showLookList={img_hash => {this.showLookList(img_hash)}}
+                />
+            )
+        });
 
-
-        // console.log('Product shown dictionary: ', this.props.prodImgShown);
+        // ================  MAIN RENDER FUNCTION  =================
         return (
             <MuiThemeProvider>
                 <div>
@@ -808,10 +810,16 @@ class ResultsFromSearch extends React.Component  {
                             <br />
                         </div>
                     )}
-                    <div className="result-pane">
-                        {tiles}
-                    </div>
-
+                    {isMobile && (
+                        <div className="result-pane">
+                            {mobileTiles}
+                        </div>
+                    )}
+                    {!isMobile && (
+                        <div className="result-pane">
+                            {tiles}
+                        </div>
+                    )}
                     <PosNegButton />
                 </div>
             </MuiThemeProvider>
