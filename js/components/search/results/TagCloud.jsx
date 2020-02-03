@@ -651,14 +651,14 @@ class TagCloud extends React.Component {
                 <Tooltip title="Change search tags">
                     <div
                         style={{
-                            marginLeft: '10px',
+                            marginLeft: '5px',
                             borderRadius: '5px',
                             border: '2px rgba(1,1,1,0) solid',
-                            paddingLeft: '5px',
-                            paddingRight: '5px',
+                            paddingLeft: '2px',
+                            paddingRight: '2px',
                             cursor: 'pointer',
-                            fontSize: '0.8rem',
-                            marginTop: '10px',
+                            fontSize: '0.7rem',
+                            marginTop: '15px',
                             marginBottom: '15px',
                             backgroundColor: 'rgba(255, 255, 255, 0.7)',
                             boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',

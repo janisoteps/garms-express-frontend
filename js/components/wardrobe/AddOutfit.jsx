@@ -171,7 +171,7 @@ class AddOutfit extends React.Component  {
                     onClick={() => {this.addOutfitToLook(lookDict.look_name, this.state.prodId)}}
                     key={lookDict.look_name}
                     style={{
-                        width: '400px',
+                        width: '320px',
                         textAlign: 'center',
                         cursor: 'pointer',
                         marginTop: '15px'
@@ -197,9 +197,9 @@ class AddOutfit extends React.Component  {
                     {/*/>*/}
                     <div
                         style={{
-                            width: '400px',
+                            width: '320px',
                             height: '110vh',
-                            marginLeft: 'calc((100vw - 400px) / 2)',
+                            marginLeft: 'calc((100vw - 320px) / 2)',
                             backgroundColor: '#FFFFFF',
                             position: 'fixed',
                             top: '0'
@@ -217,10 +217,10 @@ class AddOutfit extends React.Component  {
                     {/*/>*/}
                     <div
                         style={{
-                            width: '400px',
+                            width: '320px',
                             height: '100vh',
                             overflowY: 'scroll',
-                            marginLeft: 'calc((100vw - 400px) / 2)',
+                            marginLeft: 'calc((100vw - 320px) / 2)',
                             position: 'relative',
                             top: '0px',
                             display: 'table'
@@ -236,7 +236,7 @@ class AddOutfit extends React.Component  {
                                 style={{
                                     marginLeft: 'auto',
                                     marginRight: 'auto',
-                                    width: '400px',
+                                    width: '320px',
                                     textAlign: 'center',
                                     paddingTop: '-100px'
                                 }}
@@ -251,7 +251,7 @@ class AddOutfit extends React.Component  {
                                                 gridColumnGap: '0px',
                                                 gridRowGap: '0px',
                                                 width: '100vw',
-                                                maxWidth: '400px',
+                                                maxWidth: '320px',
                                                 borderRadius: '5px',
                                                 boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
                                                 marginTop: '70px',
@@ -302,13 +302,12 @@ class AddOutfit extends React.Component  {
                                     onClick={() => {this.cancelAddOutfit()}}
                                 />
                                 <h3>Add To Look</h3>
-                                <br />
                                 {(this.state.looks.length > 0) ? (lookList) : (
                                     <p>No looks found, add look to continue</p>
                                 )}
                                 <div
                                     style={{
-                                        width: '400px',
+                                        width: '320px',
                                         backgroundColor: '#e3e3e3',
                                         textAlign: 'center',
                                         cursor: 'pointer',

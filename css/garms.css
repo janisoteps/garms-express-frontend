@@ -423,6 +423,18 @@ body{
     cursor: pointer;
 }
 
+.add-to-favorites-mobile{
+    width: 46px;
+    height: 46px;
+    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 42px 42px;
+    border-radius: 23px;
+    position: absolute;
+    right: 60px;
+    cursor: pointer;
+}
+
 .add-to-favorites-wardrobe{
     width: 36px;
     height: 36px;
@@ -460,6 +472,31 @@ body{
     margin-top: -38px;
     cursor: pointer;
     right: 7px;
+}
+
+.buy-now-mobile{
+    width: 46px;
+    height: 46px;
+    background: #FFFFFF url('../images/shopping-cart.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 38px 38px;
+    border-radius: 23px;
+    position: absolute;
+    cursor: pointer;
+    right: 7px;
+}
+
+.explore-options{
+    width: 34px;
+    height: 34px;
+    background: #FFFFFF url('../images/explore-24px.svg') no-repeat center;
+    /*filter: invert(100%);*/
+    background-size: 36px 36px;
+    border-radius: 17px;
+    position: absolute;
+    margin-top: -50px;
+    cursor: pointer;
+    right: 3px;
 }
 
 .color-picker{
@@ -558,8 +595,8 @@ body{
     border: 1px #000000 solid;
     float: left;
     position: absolute;
-    left: -10px;
-    top: -10px;
+    left: -5px;
+    top: -15px;
 }
 
 .search-similar{
@@ -572,6 +609,18 @@ body{
     position: absolute;
     margin-top: -38px;
     right: 201px;
+    cursor: pointer;
+}
+
+.search-similar-mobile{
+    width: 46px;
+    height: 46px;
+    background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
+    filter: invert(100%);
+    background-size: 38px 38px;
+    border-radius: 23px;
+    position: absolute;
+    right: 165px;
     cursor: pointer;
 }
 
@@ -683,7 +732,7 @@ body{
     position: relative;
     display: inline-block;
     cursor: pointer;
-    margin-right: -350px;
+    margin-right: -290px;
 }
 
 .colorcat-search-button:hover{
@@ -1440,12 +1489,12 @@ div #output {
     background: #11161A;
     color: #fff;
     border-radius: 50%;
-    margin: 0px 10px;
+    margin: 0px 5px;
     text-align: center;
     position: relative;
-    height: 56px;
-    width: 56px;
-    padding: 15px 7px 3px;
+    height: 40px;
+    width: 40px;
+    padding: 10px 3px 3px;
     cursor: pointer;
 }
 /*div #output::before {*/

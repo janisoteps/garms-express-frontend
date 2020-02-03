@@ -69,13 +69,11 @@ class ColorPicker extends React.Component {
                     backgroundImage: pickerBgUrl,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    backgroundSize:  '42px',
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '28px',
+                    backgroundSize:  '28px',
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '17px',
                     display: 'inline-block',
-                    margin: '5px',
-                    marginBottom: '8px',
                     boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.4)',
                     cursor: 'pointer'
                 };
