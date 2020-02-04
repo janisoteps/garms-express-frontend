@@ -269,31 +269,33 @@ class ResultCard extends React.Component {
         };
 
         const ExploreOptions = () => {
-
+            const bottom = document.getElementById(prod_hash).getBoundingClientRect().bottom;
             return (
                 <div
                     style={{
                         position: 'fixed',
-                        bottom: '0',
-                        left: '0',
+                        top: `${bottom - 35}px`,
+                        left: 'calc((100vw - 215px) / 2)',
                         height: '55px',
-                        width: '100vw',
+                        width: '215px',
                         zIndex: '10',
                         backgroundColor: '#FFFFFF',
-                        paddingTop: '5px'
+                        paddingTop: '5px',
+                        borderRadius: '27px',
+                        boxShadow: '0px 0px 5px 0 rgba(0, 0, 0, 0.6)'
                     }}
                 >
-                    <img
-                        src={this.updateImgProtocol(img_url)}
-                        style={{
-                            cursor: 'pointer',
-                            height: '100%',
-                            width: 'auto',
-                            position: 'absolute',
-                            left: '5px',
-                            marginTop: '-5px'
-                        }}
-                    />
+                    {/*<img*/}
+                    {/*    src={this.updateImgProtocol(img_url)}*/}
+                    {/*    style={{*/}
+                    {/*        cursor: 'pointer',*/}
+                    {/*        height: '100%',*/}
+                    {/*        width: 'auto',*/}
+                    {/*        position: 'absolute',*/}
+                    {/*        left: '5px',*/}
+                    {/*        marginTop: '-5px'*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                     <Tooltip title="Search Similar Items" >
                         <div
                             className="search-similar-mobile"
@@ -371,11 +373,15 @@ class ResultCard extends React.Component {
                     </div>
                     From {shop}
                     <Tooltip title="Explore Options" >
-                        <div className="explore-options" onClick={() => {
-                            this.setState({
-                                showExplore: true
-                            })
-                        }}/>
+                        <div
+                            className="explore-options"
+                            id={prod_hash}
+                            onClick={() => {
+                                this.setState({
+                                    showExplore: true
+                                })
+                            }}
+                        />
                     </Tooltip>
                     {this.state.showExplore && (
                         <ExploreOptions />
