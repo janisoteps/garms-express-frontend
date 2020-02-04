@@ -426,7 +426,7 @@ body{
 .add-to-favorites-mobile{
     width: 46px;
     height: 46px;
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/grade-24px.svg') center;
     filter: invert(100%);
     background-size: 42px 42px;
     border-radius: 23px;
@@ -438,7 +438,7 @@ body{
 .add-to-favorites-wardrobe{
     width: 36px;
     height: 36px;
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/grade-24px.svg') center;
     filter: invert(100%);
     background-size: 32px 32px;
     border-radius: 18px;
@@ -489,8 +489,8 @@ body{
 .explore-options{
     width: 34px;
     height: 34px;
-    background: #FFFFFF url('../images/explore-24px.svg') no-repeat center;
-    /*filter: invert(100%);*/
+    background: #FFFFFF url('../images/more_horiz-24px.svg') no-repeat center;
+    filter: invert(100%);
     background-size: 36px 36px;
     border-radius: 17px;
     position: absolute;
@@ -933,7 +933,7 @@ body{
     display: inline-block;
     opacity : 0.8;
     cursor: pointer;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .deal-button{
@@ -945,7 +945,7 @@ body{
     display: inline-block;
     opacity : 0.8;
     cursor: pointer;
-    margin-right: 10px;
+    margin-right: 5px;
     filter: invert(1);
     margin-bottom: 4px;
 }
