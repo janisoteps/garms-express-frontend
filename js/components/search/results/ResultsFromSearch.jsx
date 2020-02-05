@@ -403,6 +403,7 @@ class ResultsFromSearch extends React.Component  {
         let key = '';
         // console.log(this.props.results);
         let tiles = this.props.results.map(product => {
+            // console.log(product);
             let productInfo = product['prod_serial'];
             let imageData = product['image_data'];
             let prod_hash = productInfo.prod_id;

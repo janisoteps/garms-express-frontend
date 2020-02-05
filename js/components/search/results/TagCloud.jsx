@@ -567,7 +567,7 @@ class TagCloud extends React.Component {
             )
         });
 
-        const pickerTagList = this.props.posTags.map(filterTag => {
+        const pickerTagList = this.props.posTags.filter(this.getUniqueArr).map(filterTag => {
             return (
                 <div key={`${filterTag}-${Math.random()}`}>
                     <Tooltip title="Remove tag">
