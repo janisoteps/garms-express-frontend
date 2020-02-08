@@ -553,6 +553,7 @@ class TextSearch extends React.Component  {
                             underlineDisabledStyle={{
                                 borderBottom: '0px solid rgb(0, 0, 0)'
                             }}
+                            autoComplete="off"
                         />
                         <div className="text-search-button" onClick={() => {this.textImageSearch(this.state.searchString)}}>
                             <div className="search-icon" />

@@ -567,7 +567,7 @@ class TagCloud extends React.Component {
             )
         });
 
-        const pickerTagList = this.props.posTags.map(filterTag => {
+        const pickerTagList = this.props.posTags.filter(this.getUniqueArr).map(filterTag => {
             return (
                 <div key={`${filterTag}-${Math.random()}`}>
                     <Tooltip title="Remove tag">
@@ -616,7 +616,7 @@ class TagCloud extends React.Component {
         });
 
         const PickerSuggestions = () => {
-            const suggestTags = all_cats.filter(tag => {
+            const suggestTags = all_cats.filter(this.getUniqueArr).filter(tag => {
                 return tag.toLowerCase().indexOf(this.state.searchString.toLowerCase()) !== -1
             });
             const tagTiles = suggestTags.map(suggestTag => {
@@ -721,6 +721,7 @@ class TagCloud extends React.Component {
                             underlineDisabledStyle={{
                                 borderBottom: '0px solid rgb(0, 0, 0)'
                             }}
+                            autoComplete="off"
                         />
                         <div
                             onClick={() => {
