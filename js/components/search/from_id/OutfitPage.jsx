@@ -168,6 +168,7 @@ class OutfitPage extends React.Component  {
                         <div
                             style={{
                                 height: `calc(100% / ${this.state.prodData.image_urls.length})`,
+                                width: '100%',
                                 display: 'inline-block'
                             }}
                             key={imgUrl}

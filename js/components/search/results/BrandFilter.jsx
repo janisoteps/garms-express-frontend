@@ -173,6 +173,7 @@ class BrandFilter extends React.Component {
                             underlineDisabledStyle={{
                                 borderBottom: '0px solid rgb(0, 0, 0)'
                             }}
+                            autoComplete="off"
                         />
                         <div
                             onClick={() => {
