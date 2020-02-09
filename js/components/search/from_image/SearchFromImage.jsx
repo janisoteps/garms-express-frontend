@@ -748,6 +748,7 @@ class SearchFromImage extends React.Component  {
             var searchOrResults = this.state.results.length > 0 ? (
                 <div>
                     <ResultsFromSearch
+                        sex={this.state.sex}
                         isAuth={this.state.isAuth}
                         mainCat={this.state.mainCat}
                         email={this.state.email}

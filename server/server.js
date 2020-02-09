@@ -772,15 +772,20 @@ app.post('/api/get_looks', function (req, res) {
 
 
 app.post('/api/add_outfit', function (req, res) {
-    let email = req.body.email;
-    let look_name = req.body.look_name;
-    let prod_id = req.body.prod_id;
-
+    const email = req.body.email;
+    const look_name = req.body.look_name;
+    const prod_id = req.body.prod_id;
+    const sex = req.body.sex;
 
     let options = {
         method: 'POST',
         url: api_base_url + 'add_outfit',
-        body: JSON.stringify({email: email, look_name: look_name, prod_id: prod_id}),
+        body: JSON.stringify({
+            email: email,
+            look_name: look_name,
+            prod_id: prod_id,
+            sex: sex
+        }),
         json: true
     };
 
@@ -819,12 +824,16 @@ app.post('/api/remove_outfit', function (req, res) {
 
 
 app.post('/api/get_products', function (req, res) {
-    let prod_hashes = req.body.prod_hashes;
+    const prod_hashes = req.body.prod_hashes;
+    const sex = req.body.sex;
 
-    let options = {
+    const options = {
         method: 'POST',
         url: api_base_url + 'get_products',
-        body: JSON.stringify({prod_hashes: prod_hashes}),
+        body: JSON.stringify({
+            prod_hashes: prod_hashes,
+            sex: sex
+        }),
         json: true
     };
 
@@ -839,12 +848,16 @@ app.post('/api/get_products', function (req, res) {
 
 
 app.post('/api/get_image', function (req, res) {
-    let img_hash = req.body.img_hash;
+    const img_hash = req.body.img_hash;
+    const sex = req.body.sex;
 
     let options = {
         method: 'POST',
         url: api_base_url + 'get_image',
-        body: {img_hash: img_hash},
+        body: {
+            img_hash: img_hash,
+            sex: sex
+        },
         json: true
     };
 
@@ -859,12 +872,16 @@ app.post('/api/get_image', function (req, res) {
 
 
 app.post('/api/get_prod_hash', function (req, res) {
-    let img_hash = req.body.img_hash;
+    const img_hash = req.body.img_hash;
+    const sex = req.body.sex;
 
-    let options = {
+    const options = {
         method: 'POST',
         url: api_base_url + 'get_prod_hash',
-        body: JSON.stringify({img_hash: img_hash}),
+        body: JSON.stringify({
+            img_hash: img_hash,
+            sex: sex
+        }),
         json: true
     };
 

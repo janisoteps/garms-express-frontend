@@ -295,7 +295,12 @@ class Wardrobe extends React.Component  {
         let email = this.state.email;
         fetch(`${window.location.origin}/api/add_outfit`, {
             method: 'post',
-            body: JSON.stringify({email: email, look_name: lookName, prod_id: prodId}),
+            body: JSON.stringify({
+                email: email,
+                look_name: lookName,
+                prod_id: prodId,
+                sex: this.props.sex
+            }),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -364,7 +369,10 @@ class Wardrobe extends React.Component  {
     getProducts = (prodHashes, callback) => {
         fetch(`${window.location.origin}/api/get_products`, {
             method: 'post',
-            body: JSON.stringify({prod_hashes: prodHashes}),
+            body: JSON.stringify({
+                prod_hashes: prodHashes,
+                sex: this.state.sex
+            }),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -840,6 +848,7 @@ class Wardrobe extends React.Component  {
                             }}
                         >
                             <AddOutfit
+                                sex={this.state.sex}
                                 imgHash={this.state.imgHash}
                                 email={this.props.email}
                                 addOutfitComplete={this.addOutfitComplete}
