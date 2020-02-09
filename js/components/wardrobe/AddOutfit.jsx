@@ -7,6 +7,7 @@ class AddOutfit extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
+            sex: this.props.sex,
             isAuth: this.props.isAuth,
             username: this.props.username,
             email: this.props.email,
@@ -28,7 +29,10 @@ class AddOutfit extends React.Component  {
     componentDidMount() {
         fetch(`${window.location.origin}/api/get_prod_hash`, {
             method: 'post',
-            body: JSON.stringify({'img_hash': this.state.imgHash}),
+            body: JSON.stringify({
+                'img_hash': this.state.imgHash,
+                'sex': this.state.sex
+            }),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -42,7 +46,10 @@ class AddOutfit extends React.Component  {
 
             fetch(`${window.location.origin}/api/get_products`, {
                 method: 'post',
-                body: JSON.stringify({'prod_hashes': [data.prod_id]}),
+                body: JSON.stringify({
+                    'prod_hashes': [data.prod_id],
+                    'sex': this.props.sex
+                }),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -108,7 +115,8 @@ class AddOutfit extends React.Component  {
             body: JSON.stringify({
                 'email': this.state.email,
                 'look_name': lookName,
-                'prod_id': prodId
+                'prod_id': prodId,
+                'sex': this.state.sex
             }),
             headers: {
                 Accept: 'application/json',

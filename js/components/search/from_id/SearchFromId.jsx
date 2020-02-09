@@ -80,7 +80,10 @@ class SearchFromId extends React.Component  {
 
             fetch(`${window.location.origin}/api/get_image`, {
                 method: 'post',
-                body: JSON.stringify({'img_hash': imgHash}),
+                body: JSON.stringify({
+                    'img_hash': imgHash,
+                    'sex': this.state.sex ? this.state.sex : 'women'
+                }),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -688,6 +691,7 @@ class SearchFromId extends React.Component  {
                         this.state.results.length > 0 && (
                             <div style={{textAlign: 'center', width: '100%'}}>
                                 <ResultsFromSearch
+                                    sex={this.state.sex}
                                     isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
                                     email={this.state.email}

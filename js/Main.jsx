@@ -44,6 +44,7 @@ class Main extends React.Component {
                         render={(props) =>
                             <SearchChoice
                                 {...props}
+                                changeSex={(sex) => {this.changeSex(sex);}}
                                 username={this.props.username}
                                 firstLogin={this.props.firstLogin}
                                 sex={this.props.sex}

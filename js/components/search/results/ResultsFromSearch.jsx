@@ -277,6 +277,7 @@ class ResultsFromSearch extends React.Component  {
     constructor(props) {
         super(props);
         this.state = {
+            sex: this.props.sex,
             isAuth: this.props.isAuth,
             pickerExpanded: 0,
             faveDrawerExpanded: 0,
@@ -801,6 +802,7 @@ class ResultsFromSearch extends React.Component  {
                     {(this.state.addOutfitInput !== null) && (
                         <div>
                             <AddOutfit
+                                sex={this.state.sex}
                                 imgHash={this.state.addOutfitInput}
                                 email={this.props.email}
                                 addOutfitComplete={this.addOutfitComplete}

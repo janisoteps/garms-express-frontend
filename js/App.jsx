@@ -9,6 +9,8 @@ require('../css/garms.css');
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {withRouter} from 'react-router-dom';
+import FlatButton from "material-ui/FlatButton";
+import Loyalty from "material-ui/svg-icons/action/loyalty";
 // import {Route} from 'react-router-dom';
 
 

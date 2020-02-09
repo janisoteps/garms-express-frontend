@@ -491,6 +491,7 @@ class RecommendDeals extends React.Component  {
                                 }}
                             >
                                 <AddOutfit
+                                    sex={this.state.sex}
                                     imgHash={this.state.imgHash}
                                     email={this.props.email}
                                     addOutfitComplete={this.addOutfitComplete}

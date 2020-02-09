@@ -37,7 +37,10 @@ class OutfitPage extends React.Component  {
 
             fetch(`${window.location.origin}/api/get_products`, {
                 method: 'post',
-                body: JSON.stringify({'prod_hashes': [prodId]}),
+                body: JSON.stringify({
+                    'prod_hashes': [prodId],
+                    'sex': this.state.sex ? this.state.sex : 'women'
+                }),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -980,6 +983,7 @@ class OutfitPage extends React.Component  {
                             }}
                         >
                             <AddOutfit
+                                sex={this.state.sex}
                                 imgHash={this.state.imgHash}
                                 email={this.props.email}
                                 addOutfitComplete={this.addOutfitComplete}

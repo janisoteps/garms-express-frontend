@@ -620,6 +620,7 @@ class TextSearch extends React.Component  {
                         this.state.results.length > 0 ? (
                             <div style={{width: '100%'}}>
                                 <ResultsFromSearch
+                                    sex={this.state.sex}
                                     isAuth={this.state.isAuth}
                                     mainCat={this.state.mainCat}
                                     email={this.state.email}
