@@ -1470,6 +1470,29 @@ body{
     background-color: #e3e3e3;
 }
 
+.outfit-details-desktop-grid {
+    display: grid;
+    grid-template-columns: 1fr 6fr 4fr;
+    grid-template-rows: 8fr 2fr;
+    grid-template-areas: "images images description" "nothing nothing description";
+}
+
+.outfit-details-desktop-images {
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "side-images main-image";
+    grid-area: images;
+}
+
+.outfit-details-desktop-side-images { grid-area: side-images; }
+
+.outfit-details-desktop-main-image { grid-area: main-image; }
+
+.outfit-details-desktop-description { grid-area: description; }
+
+.outfit-details-desktop-nothing { grid-area: nothing; }
+
 @-webkit-keyframes arrow-movement {
     0% {
         opacity: 0;
