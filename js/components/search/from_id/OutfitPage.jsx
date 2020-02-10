@@ -54,7 +54,8 @@ class OutfitPage extends React.Component  {
                     prodData: prod_data[0],
                     shownImg: prod_data[0].image_urls[0],
                     shownImgHash: prod_data[0].image_hash[0]
-                })
+                });
+                window.scrollTo(0, 0);
             });
         }
         window.addEventListener('resize', this.updateDimensions);
@@ -100,28 +101,28 @@ class OutfitPage extends React.Component  {
 
     render () {
 
-        const sideImages = this.state.prodData !== null ? this.state.prodData.image_urls.map(sideImgUrl => {
-            return (
-                <div
-                    style={{
-                        width: '180px',
-                        display: 'inline-block'
-                    }}
-                    key={sideImgUrl}
-                >
-                    <img
-                        style={{
-                            width: '100%',
-                            height: 'auto',
-                            border: sideImgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
-                            cursor: 'pointer'
-                        }}
-                        src={this.updateImgProtocol(sideImgUrl)}
-                        onClick={() => {this.changeShownImg(sideImgUrl)}}
-                    />
-                </div>
-            )
-        }) : null;
+        // const sideImages = this.state.prodData !== null ? this.state.prodData.image_urls.map(sideImgUrl => {
+        //     return (
+        //         <div
+        //             style={{
+        //                 width: '180px',
+        //                 display: 'inline-block'
+        //             }}
+        //             key={sideImgUrl}
+        //         >
+        //             <img
+        //                 style={{
+        //                     width: '100%',
+        //                     height: 'auto',
+        //                     border: sideImgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
+        //                     cursor: 'pointer'
+        //                 }}
+        //                 src={this.updateImgProtocol(sideImgUrl)}
+        //                 onClick={() => {this.changeShownImg(sideImgUrl)}}
+        //             />
+        //         </div>
+        //     )
+        // }) : null;
 
         const SideImagesMobile = () => {
             if (this.state.prodData.image_urls.length > 1) {
@@ -170,7 +171,7 @@ class OutfitPage extends React.Component  {
                     return (
                         <div
                             style={{
-                                height: `calc(100% / ${this.state.prodData.image_urls.length})`,
+                                height: `calc(80vh * (1 / ${this.state.prodData.image_urls.length}))`,
                                 width: '100%',
                                 display: 'inline-block'
                             }}
@@ -218,7 +219,12 @@ class OutfitPage extends React.Component  {
             };
 
             return (
-                <div>
+                <div
+                    style={{
+                        fontSize: '0.9rem',
+                        lineHeight: '1'
+                    }}
+                >
                     <br/>
                     <h5>{this.state.prodData.name}</h5>
                     <h6>By {this.state.prodData.brand} in {this.state.prodData.shop}</h6>
@@ -254,6 +260,16 @@ class OutfitPage extends React.Component  {
         };
 
         const MainProdImg = () => {
+            const mainImgStyle = this.state.width > 930 ? {
+                height: '80vh',
+                width: 'auto',
+                margin: '0 auto'
+            } : {
+                width: '100vw',
+                maxWidth: '700px',
+                height: 'auto',
+                margin: '0 auto'
+            };
             return (
                 <div
                     style={{
@@ -264,12 +280,7 @@ class OutfitPage extends React.Component  {
                 >
                     <img
                         src={this.state.shownImg}
-                        style={{
-                            width: '100vw',
-                            maxWidth: '550px',
-                            height: 'auto',
-                            margin: '0 auto'
-                        }}
+                        style={mainImgStyle}
                     />
                     <div
                         style={{
@@ -871,29 +882,40 @@ class OutfitPage extends React.Component  {
         const OutfitDetailsDesktop = () => {
             return (
                 <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 6fr 4fr',
-                        gridTemplateRows: '8fr',
-                        gridColumnGap: '0px',
-                        gridRowGap: '0px'
-                    }}
+                    // style={{
+                    //     display: 'grid',
+                    //     gridTemplateColumns: '1fr 6fr 4fr',
+                    //     gridTemplateRows: '8fr 4fr',
+                    //     gridColumnGap: '0px',
+                    //     gridRowGap: '0px'
+                    // }}
+                    className="outfit-details-desktop-grid"
                 >
-                    <div>
-                        <SideImagesDesktop />
-                    </div>
-                    <div>
-                        <MainProdImg />
+                    <div
+                        className="outfit-details-desktop-images"
+                    >
+                        <div
+                            className="outfit-details-desktop-side-images"
+                        >
+                            <SideImagesDesktop />
+                        </div>
+                        <div
+                            className="outfit-details-desktop-main-image"
+                        >
+                            <MainProdImg />
+                        </div>
                     </div>
                     <div
                         style={{
                             textAlign: 'left'
                         }}
+                        className="outfit-details-desktop-description"
                     >
                         <NameDescription />
                         <SizeStockDesktop />
                         <ActionButtonsDesktop />
                     </div>
+                    <div className="outfit-details-desktop-nothing" />
                 </div>
             )
         };
