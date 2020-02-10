@@ -4,14 +4,9 @@ import Main from './Main'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 require('../css/garms.css');
-// import TextField from 'material-ui/TextField';
-// import RaisedButton from 'material-ui/RaisedButton';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {withRouter} from 'react-router-dom';
-import FlatButton from "material-ui/FlatButton";
-import Loyalty from "material-ui/svg-icons/action/loyalty";
-// import {Route} from 'react-router-dom';
 
 
 class App extends React.Component {
@@ -39,9 +34,6 @@ class App extends React.Component {
         this.handleLogin = this.handleLogin.bind(this);
         this.handleResultLogin = this.handleResultLogin.bind(this);
     }
-
-    // componentWillMount() {
-    // }
 
     componentDidMount() {
         const {cookies} = this.props;

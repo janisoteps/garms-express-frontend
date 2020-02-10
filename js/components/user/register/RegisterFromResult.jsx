@@ -18,7 +18,7 @@ export default class RegisterFromResult extends React.Component {
             email: '',
             pwd: '',
             username: '',
-            sex: 'women',
+            sex: this.props.sex,
             regComplete: false,
             imgHash: null,
             prodHash: null,
@@ -41,7 +41,10 @@ export default class RegisterFromResult extends React.Component {
 
             fetch(`${window.location.origin}/api/get_prod_hash`, {
                 method: 'post',
-                body: JSON.stringify({'img_hash': imgHash}),
+                body: JSON.stringify({
+                    'img_hash': imgHash,
+                    'sex': this.state.sex
+                }),
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
@@ -55,7 +58,10 @@ export default class RegisterFromResult extends React.Component {
 
                 fetch(`${window.location.origin}/api/get_products`, {
                     method: 'post',
-                    body: JSON.stringify({'prod_hashes': [data.prod_id]}),
+                    body: JSON.stringify({
+                        'prod_hashes': [data.prod_id],
+                        'sex': this.state.sex
+                    }),
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
