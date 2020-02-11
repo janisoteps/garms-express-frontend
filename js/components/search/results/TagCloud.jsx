@@ -675,11 +675,7 @@ class TagCloud extends React.Component {
                                 {negTags}
                             </div>
                         ) : (
-                            <div
-                                style={{
-                                    height: '20px'
-                                }}
-                            >
+                            <div>
                                 ALL TAGS
                             </div>
                         )}

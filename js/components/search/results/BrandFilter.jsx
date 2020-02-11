@@ -131,7 +131,7 @@ class BrandFilter extends React.Component {
                         {this.props.filterBrands.length === 0 ? (
                             <div style={{
                                 whiteSpace: 'nowrap',
-                                fontSize: '0.6rem'
+                                fontSize: '0.7rem'
                             }}>
                                 ALL BRANDS
                             </div>
