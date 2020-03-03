@@ -53,6 +53,19 @@ class Main extends React.Component {
                                 isAuth={this.props.isAuth}
                             />}
                     />
+                    <Route exact path='/index.html'
+                           render={(props) =>
+                               <SearchChoice
+                                   {...props}
+                                   changeSex={(sex) => {this.changeSex(sex);}}
+                                   username={this.props.username}
+                                   firstLogin={this.props.firstLogin}
+                                   sex={this.props.sex}
+                                   handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                   email={this.props.email}
+                                   isAuth={this.props.isAuth}
+                               />}
+                    />
                     <Route path='/register' component={Register} />
                     <Route path='/register-from-result' render={(props) =>
                         <RegisterFromResult
