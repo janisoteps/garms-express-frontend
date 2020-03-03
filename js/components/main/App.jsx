@@ -6,7 +6,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 require('../../../css/garms.css');
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Route} from 'react-router-dom';
+import FlatButton from "material-ui/FlatButton";
+import Loyalty from "material-ui/svg-icons/action/loyalty";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 class App extends React.Component {
@@ -207,22 +210,142 @@ class App extends React.Component {
             <MuiThemeProvider>
                 <div>
                     <Header isAuth={isUserAuth}/>
-                    <div className="content-wrapper">
-                        <Main
-                            isAuth={this.state.isAuth}
-                            sex={this.state.sex}
-                            username={this.state.username}
-                            email={this.state.email}
-                            changeSex={(sex) => {this.changeSex(sex);}}
-                            higherCat={this.state.higherCat}
-                            firstLogin={this.state.firstLogin}
-                            handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                            completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
-                            handleLogin={(email, password) => {this.handleLogin(email, password)}}
-                            handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
-                            failedLogin={this.state.failedLogin}
-                        />
+
+                    <div style={{
+                        width: '100vw',
+                        textAlign: 'center',
+                        top: this.state.loaded ? '0px' : '50px',
+                        left: '0',
+                        paddingTop: '100px',
+                        backgroundColor: '#FFFFFF',
+                        height: this.state.loaded ? '0px' : 'calc(100vh - 50px)',
+                        visibility: this.state.loaded ? 'hidden' : 'visible'
+                    }}>
+                        <Route render={({history}) => (
+                            <FlatButton
+                                label="HER"
+                                onClick={() => {
+                                    this.changeSex('women');
+                                    history.push('/');
+                                    this.setState({
+                                        loaded: true
+                                    })
+                                }}
+                                icon={<Loyalty/>}
+                                style={{
+                                    width: '100%'
+                                }}
+                                labelStyle={{
+                                    fontSize: '1.3rem'
+                                }}
+                            />
+                        )}/>
+                        <Route render={({history}) => (
+                            <FlatButton
+                                label="HIM"
+                                onClick={() => {
+                                    this.changeSex('men');
+                                    history.push('/');
+                                }}
+                                icon={<Loyalty/>}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '30px'
+                                }}
+                                labelStyle={{
+                                    fontSize: '1.3rem'
+                                }}
+                            />
+                        )}/>
+
+
+                        <Route render={({history}) => (
+                            <FlatButton
+                                label="THEM"
+                                onClick={() => {
+                                    this.changeSex('both');
+                                    history.push('/');
+                                }}
+                                icon={<Loyalty/>}
+                                labelStyle={{
+                                    fontSize: '1.3rem'
+                                }}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '30px'
+                                }}
+                            />
+                        )}/>
+
+
                     </div>
+
+                    {!this.state.sex ? (
+                            <div style={{
+                                width: '100vw',
+                                textAlign: 'center',
+                                position: 'fixed',
+                                top: '50px',
+                                left: '0',
+                                paddingTop: '100px',
+                                backgroundColor: '#FFFFFF',
+                                height: 'calc(100vh - 50px)'
+                            }}>
+                                <FlatButton
+                                    label="HER"
+                                    onClick={() => {this.changeSex('women')}}
+                                    icon={<Loyalty/>}
+                                    style={{
+                                        width: '100%'
+                                    }}
+                                    labelStyle={{
+                                        fontSize: '1.3rem'
+                                    }}
+                                />
+                                <FlatButton
+                                    label="HIM"
+                                    onClick={() => {this.changeSex('men')}}
+                                    icon={<Loyalty/>}
+                                    style={{
+                                        width: '100%',
+                                        marginTop: '30px'
+                                    }}
+                                    labelStyle={{
+                                        fontSize: '1.3rem'
+                                    }}
+                                />
+                                <FlatButton
+                                    label="THEM"
+                                    onClick={() => {this.changeSex('both')}}
+                                    icon={<Loyalty/>}
+                                    labelStyle={{
+                                        fontSize: '1.3rem'
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        marginTop: '30px'
+                                    }}
+                                />
+                            </div>
+                        ):(
+                        <div className="content-wrapper">
+                            <Main
+                                isAuth={this.state.isAuth}
+                                sex={this.state.sex}
+                                username={this.state.username}
+                                email={this.state.email}
+                                changeSex={(sex) => {this.changeSex(sex);}}
+                                higherCat={this.state.higherCat}
+                                firstLogin={this.state.firstLogin}
+                                handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
+                                handleLogin={(email, password) => {this.handleLogin(email, password)}}
+                                handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
+                                failedLogin={this.state.failedLogin}
+                            />
+                        </div>
+                    )}
+
                 </div>
             </MuiThemeProvider>
         )
