@@ -1,6 +1,6 @@
 import React from "react";
 // import { Button, Grid, Row, Col } from "react-bootstrap";
-require('../css/garms.css');
+require('../../../css/garms.css');
 import RaisedButton from 'material-ui/RaisedButton';
 import {Link} from 'react-router-dom';
 import {Route} from 'react-router-dom';
@@ -68,7 +68,7 @@ class Header extends React.Component {
                     <h1>
                         <Link style={{textDecoration: 'none', color: '#171732'}} to="/">
                             <img
-                                src={require('./../images/garms_logo.png')}
+                                src={require('../../../images/garms_logo.png')}
                                 style={{
                                     height: '34px',
                                     width: 'auto',

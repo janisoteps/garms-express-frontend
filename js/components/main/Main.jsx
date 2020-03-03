@@ -1,21 +1,21 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
-import Register from './components/user/register/Register'
-import RegisterFromResult from './components/user/register/RegisterFromResult'
-import Login from './components/user/Login'
-import Logout from './components/user/Logout'
+import Register from '../user/register/Register'
+import RegisterFromResult from '../user/register/RegisterFromResult'
+import Login from '../user/Login'
+import Logout from '../user/Logout'
 import SearchChoice from './SearchChoice'
-import TextSearch from './components/search/from_text/TextSearch'
-import Wardrobe from './components/wardrobe/Wardrobe'
-import Profile from './components/user/Profile'
-import Explorer from './components/search/from_explore/Explorer'
-import SearchFromImage from './components/search/from_image/SearchFromImage'
-import SearchFromId from './components/search/from_id/SearchFromId'
-import OutfitPage from './components/search/from_id/OutfitPage'
-import Intro from './components/intro/Intro'
-import PasswordReset from "./components/user/PasswordReset";
-import PasswordResetEmail from "./components/user/PasswordResetEmail";
-import RecommendDeals from "./components/recommend/RecommendDeals";
+import TextSearch from '../search/from_text/TextSearch'
+import Wardrobe from '../wardrobe/Wardrobe'
+import Profile from '../user/Profile'
+import Explorer from '../search/from_explore/Explorer'
+import SearchFromImage from '../search/from_image/SearchFromImage'
+import SearchFromId from '../search/from_id/SearchFromId'
+import OutfitPage from '../search/from_id/OutfitPage'
+import Intro from '../intro/Intro'
+import PasswordReset from "../user/PasswordReset";
+import PasswordResetEmail from "../user/PasswordResetEmail";
+import RecommendDeals from "../recommend/RecommendDeals";
 
 // The Main component renders one of the provided
 // Routes (provided that one matches). The / route will only match
