@@ -40,32 +40,6 @@ class Main extends React.Component {
         return (
             <main>
                 <Switch>
-                    <Route exact path='/'
-                        render={(props) =>
-                            <SearchChoice
-                                {...props}
-                                changeSex={(sex) => {this.changeSex(sex);}}
-                                username={this.props.username}
-                                firstLogin={this.props.firstLogin}
-                                sex={this.props.sex}
-                                handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                                email={this.props.email}
-                                isAuth={this.props.isAuth}
-                            />}
-                    />
-                    <Route exact path='/index.html'
-                           render={(props) =>
-                               <SearchChoice
-                                   {...props}
-                                   changeSex={(sex) => {this.changeSex(sex);}}
-                                   username={this.props.username}
-                                   firstLogin={this.props.firstLogin}
-                                   sex={this.props.sex}
-                                   handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                                   email={this.props.email}
-                                   isAuth={this.props.isAuth}
-                               />}
-                    />
                     <Route path='/register' component={Register} />
                     <Route path='/register-from-result' render={(props) =>
                         <RegisterFromResult
@@ -179,6 +153,32 @@ class Main extends React.Component {
                             sex={this.props.sex}
                             completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                         />}
+                    />
+                    <Route path='/'
+                           render={(props) =>
+                               <SearchChoice
+                                   {...props}
+                                   changeSex={(sex) => {this.changeSex(sex);}}
+                                   username={this.props.username}
+                                   firstLogin={this.props.firstLogin}
+                                   sex={this.props.sex}
+                                   handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                   email={this.props.email}
+                                   isAuth={this.props.isAuth}
+                               />}
+                    />
+                    <Route path='/index.html'
+                           render={(props) =>
+                               <SearchChoice
+                                   {...props}
+                                   changeSex={(sex) => {this.changeSex(sex);}}
+                                   username={this.props.username}
+                                   firstLogin={this.props.firstLogin}
+                                   sex={this.props.sex}
+                                   handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                   email={this.props.email}
+                                   isAuth={this.props.isAuth}
+                               />}
                     />
                 </Switch>
             </main>
