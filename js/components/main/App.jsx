@@ -3,7 +3,7 @@ import Header from './Header'
 import Main from './Main'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-require('../css/garms.css');
+require('../../../css/garms.css');
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {withRouter} from 'react-router-dom';

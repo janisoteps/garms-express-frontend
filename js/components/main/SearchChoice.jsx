@@ -1,9 +1,9 @@
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Route } from 'react-router-dom';
-import RecommendFromTags from './components/recommend/RecommendFromTags';
-import RecommendRandom from './components/recommend/RecommendRandom';
-import AddOutfit from './components/wardrobe/AddOutfit';
+import RecommendFromTags from '../recommend/RecommendFromTags';
+import RecommendRandom from '../recommend/RecommendRandom';
+import AddOutfit from '../wardrobe/AddOutfit';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 
