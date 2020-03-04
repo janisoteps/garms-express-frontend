@@ -120,29 +120,6 @@ class RecommendFromTags extends React.Component  {
                             {lookName !== 'all' && (<div>
                                     Recommended in {lookName.toUpperCase()}
                             </div>)}
-                            <div
-                                className="product-name"
-                                style={{
-                                    marginRight: '1px',
-                                    marginLeft: '1px',
-                                    fontSize: '0.8rem',
-                                    lineHeight: '1'
-                                }}
-                            >
-                                <b>{prodSuggestion.name}</b>
-                            </div>
-                            <div style={priceStyle}>
-                                £{prodSuggestion.price}
-                            </div>
-                            {(prodSuggestion.sale) && (
-                                <div style={{
-                                    color: '#d6181e',
-                                    display: 'inline-block',
-                                    marginLeft: '5px    '
-                                }}>
-                                    £{prodSuggestion.saleprice}
-                                </div>
-                            )}
 
                             <Route render={({history}) => (
                                 <img
@@ -172,6 +149,31 @@ class RecommendFromTags extends React.Component  {
                             )}/>
 
                             <br />
+
+                            <div
+                                className="product-name"
+                                style={{
+                                    marginRight: '1px',
+                                    marginLeft: '1px',
+                                    fontSize: '0.8rem',
+                                    lineHeight: '1'
+                                }}
+                            >
+                                <b>{prodSuggestion.name}</b>
+                            </div>
+                            <div style={priceStyle}>
+                                £{prodSuggestion.price}
+                            </div>
+                            {(prodSuggestion.sale) && (
+                                <div style={{
+                                    color: '#d6181e',
+                                    display: 'inline-block',
+                                    marginLeft: '5px    '
+                                }}>
+                                    £{prodSuggestion.saleprice}
+                                </div>
+                            )}
+
                             <div
                                 style={{
                                     lineHeight: '1'

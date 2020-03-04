@@ -67,29 +67,6 @@ class RecommendRandom extends React.Component  {
 
                 return (
                     <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                        <div
-                            className="product-name"
-                            style={{
-                                marginRight: '1px',
-                                marginLeft: '1px',
-                                fontSize: '0.8rem',
-                                lineHeight: '1'
-                            }}
-                        >
-                            <b>{prodSuggestion.name}</b>
-                        </div>
-                        <div style={priceStyle}>
-                            £{prodSuggestion.price}
-                        </div>
-                        {(prodSuggestion.sale) && (
-                            <div style={{
-                                color: '#d6181e',
-                                display: 'inline-block'
-                            }}>
-                                £{prodSuggestion.saleprice}
-                            </div>
-                        )}
-
                         <Route render={({history}) => (
                             <Tooltip title="Open Product Details Page">
                                 <img
@@ -131,6 +108,30 @@ class RecommendRandom extends React.Component  {
                             </Tooltip>
                         )}/>
                         <br />
+
+                        <div
+                            className="product-name"
+                            style={{
+                                marginRight: '1px',
+                                marginLeft: '1px',
+                                fontSize: '0.8rem',
+                                lineHeight: '1'
+                            }}
+                        >
+                            <b>{prodSuggestion.name}</b>
+                        </div>
+                        <div style={priceStyle}>
+                            £{prodSuggestion.price}
+                        </div>
+                        {(prodSuggestion.sale) && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block'
+                            }}>
+                                £{prodSuggestion.saleprice}
+                            </div>
+                        )}
+
                         <div
                             style={{
                                 lineHeight: '1'

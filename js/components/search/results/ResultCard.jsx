@@ -285,17 +285,7 @@ class ResultCard extends React.Component {
                         boxShadow: '0px 0px 5px 0 rgba(0, 0, 0, 0.6)'
                     }}
                 >
-                    {/*<img*/}
-                    {/*    src={this.updateImgProtocol(img_url)}*/}
-                    {/*    style={{*/}
-                    {/*        cursor: 'pointer',*/}
-                    {/*        height: '100%',*/}
-                    {/*        width: 'auto',*/}
-                    {/*        position: 'absolute',*/}
-                    {/*        left: '5px',*/}
-                    {/*        marginTop: '-5px'*/}
-                    {/*    }}*/}
-                    {/*/>*/}
+
                     <Tooltip title="Search Similar Items" >
                         <div
                             className="search-similar-mobile"
@@ -342,7 +332,6 @@ class ResultCard extends React.Component {
                         margin: '3px',
                         width: '46vw',
                         maxWidth: '350px',
-                        paddingTop: '3px',
                         paddingBottom: '2px',
                         display: 'inline-block',
                         position: 'relative',
@@ -350,6 +339,8 @@ class ResultCard extends React.Component {
                         fontSize: '0.9rem'
                     }}
                 >
+                    <ImageCarousel />
+
                     <div
                         className="product-name"
                         style={{
@@ -362,7 +353,7 @@ class ResultCard extends React.Component {
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
-                    <ImageCarousel />
+
                     <div
                         style={{
                             lineHeight: '1',
