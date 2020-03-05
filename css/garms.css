@@ -336,7 +336,6 @@ body{
     margin: 15px;
     width: 80vw;
     max-width: 400px;
-    padding-top: 15px;
     padding-bottom: 15px;
     display: inline-block;
     position: relative;
@@ -348,7 +347,6 @@ body{
     margin: 5px;
     width: 45vw;
     max-width: 300px;
-    padding-top: 3px;
     display: inline-block;
     position: relative;
     vertical-align: top;
@@ -361,7 +359,7 @@ body{
     width: 45vw;
     /*min-width: 300px;*/
     max-width: 320px;
-    padding-top: 10px;
+    padding-top: 2px;
     padding-bottom: 5px;
     display: inline-block;
     position: relative;
@@ -650,7 +648,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -75px;
+    margin-top: -125px;
     right: 47px;
     cursor: pointer;
 }
@@ -965,12 +963,12 @@ body{
 }
 
 .product-price{
-    margin-top: 5px;
+    font-size: 1rem;
 }
 
 .product-price-sale{
-    margin-top: 5px;
     color: #dc1b59;
+    font-size: 1rem;
 }
 
 .profile-product-list{
@@ -1010,7 +1008,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -75px;
+    margin-top: -125px;
     right: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
@@ -1039,7 +1037,7 @@ body{
     position: absolute;
     right: 90px;
     cursor: pointer;
-    margin-top: -75px;
+    margin-top: -125px;
     filter: invert(1);
 }
 
@@ -1399,7 +1397,7 @@ body{
 }
 
 .prod-description{
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .palette-button{
@@ -1483,6 +1481,30 @@ body{
     grid-template-rows: 1fr;
     grid-template-areas: "side-images main-image";
     grid-area: images;
+}
+
+.product-name-results {
+    font-size: 1rem;
+}
+
+.product-brand-results {
+    font-size: 1rem;
+}
+
+.results-card-brand-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #b4a48a;
+    color: #FFFFFF;
+    font-size: 0.8rem;
+    padding-right: 2px;
+    padding-left: 2px;
+    cursor: pointer;
+}
+
+.results-card-brand-tag:hover {
+    background-color: #95856f;
 }
 
 .outfit-details-desktop-side-images { grid-area: side-images; }

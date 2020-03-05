@@ -320,32 +320,9 @@ class RecommendDeals extends React.Component  {
                             marginLeft: '5px',
                             fontSize: '1.2rem'
                         }}>
-                            -{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%
+                            <b>-{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%</b>
                         </div>
                     )}
-                    <div
-                        style={{
-                            marginRight: '1px',
-                            marginLeft: '1px',
-                            fontSize: '0.8rem',
-                            lineHeight: '1'
-                        }}
-                    >
-                        <b>{prodSuggestion.name}</b>
-                    </div>
-                    <div style={priceStyle}>
-                        £{prodSuggestion.price}
-                    </div>
-                    {(prodSuggestion.sale) && (
-                        <div style={{
-                            color: '#d6181e',
-                            display: 'inline-block',
-                            marginLeft: '5px'
-                        }}>
-                            £{prodSuggestion.saleprice}
-                        </div>
-                    )}
-
 
                     <Route render={({history}) => (
                         <img
@@ -373,6 +350,30 @@ class RecommendDeals extends React.Component  {
                             />
                         </Tooltip>
                     )}/>
+
+                    <div
+                        style={{
+                            marginRight: '1px',
+                            marginLeft: '1px',
+                            fontSize: '0.8rem',
+                            lineHeight: '1'
+                        }}
+                    >
+                        <b>{prodSuggestion.name}</b>
+                    </div>
+                    <div style={priceStyle}>
+                        £{prodSuggestion.price}
+                    </div>
+                    {(prodSuggestion.sale) && (
+                        <div style={{
+                            color: '#d6181e',
+                            display: 'inline-block',
+                            marginLeft: '5px'
+                        }}>
+                            £{prodSuggestion.saleprice}
+                        </div>
+                    )}
+
                     <div><b>{prodSuggestion.brand}</b></div>
                     <div
                         style={{

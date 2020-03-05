@@ -765,6 +765,7 @@ class SearchFromImage extends React.Component  {
                         selectedColor={this.state.selectedColor}
                         firstLogin={this.props.firstLogin}
                         changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
+                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                     />
 
                     {this.state.addOutfitShown === false && (

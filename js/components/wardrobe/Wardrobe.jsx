@@ -530,21 +530,35 @@ class Wardrobe extends React.Component  {
                         >
                             {outfitDict.look_name.toUpperCase()}
                         </div>
+
                         <Route render={({history}) => (
-                                <div
-                                    className="product-name"
-                                    style={{
-                                        marginTop: '3px',
-                                        fontSize: '0.8rem',
-                                        lineHeight: '1'
-                                    }}
-                                    onClick={() => {
-                                        history.push(`/outfit-page?id=${outfitDict.prod_id}`)
-                                    }}
-                                >
-                                    <b>{outfitDict.info.name}</b>
-                                </div>
-                            )}
+                            <img
+                                className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
+                                style={{
+                                    marginBottom: '10px',
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                                }}
+                            />
+                        )}/>
+
+                        <Route render={({history}) => (
+                            <div
+                                className="product-name"
+                                style={{
+                                    marginTop: '3px',
+                                    fontSize: '0.8rem',
+                                    lineHeight: '1'
+                                }}
+                                onClick={() => {
+                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                                }}
+                            >
+                                <b>{outfitDict.info.name}</b>
+                            </div>
+                        )}
                         />
                         <div style={priceStyle}>£{outfitDict.info.price}</div>
                         {(outfitDict.info.sale) && (
@@ -560,19 +574,6 @@ class Wardrobe extends React.Component  {
                                 £{outfitDict.info.salePrice}
                             </div>
                         )}
-
-                        <Route render={({history}) => (
-                            <img
-                                className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
-                                style={{
-                                    marginBottom: '10px',
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
-                                }}
-                            />
-                        )}/>
 
                         <a
                             href={outfitDict.info.url}

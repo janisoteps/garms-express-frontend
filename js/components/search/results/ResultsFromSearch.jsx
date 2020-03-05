@@ -687,9 +687,14 @@ class ResultsFromSearch extends React.Component  {
 
             return (
                 <Paper zDepth={1} className="product-tile" key={key}>
-                    <div className="product-name">{name}</div>
-                    <div className="product-brand"><p>{brand} from {shop}</p></div>
                     <ImageCarousel />
+                    <div
+                        className="results-card-brand-tag"
+                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                    >
+                        {brand}
+                    </div>
+                    <div className="product-name-results">{name}</div>
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
@@ -791,6 +796,7 @@ class ResultsFromSearch extends React.Component  {
                     searchSimilarImages={(imgHash, color_1) => {this.searchSimilarImages(imgHash, color_1)}}
                     isAuth={this.props.isAuth}
                     showLookList={img_hash => {this.showLookList(img_hash)}}
+                    addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                 />
             )
         });
