@@ -342,10 +342,18 @@ class ResultCard extends React.Component {
                     <ImageCarousel />
 
                     <div
+                        className="results-card-brand-tag"
+                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                    >
+                        {brand}
+                    </div>
+
+                    <div
                         className="product-name"
                         style={{
                             fontSize: '0.8rem',
-                            lineHeight: '1'
+                            lineHeight: '1',
+                            marginTop: '1px'
                         }}
                     >
                         <b>{name}</b>
@@ -354,15 +362,6 @@ class ResultCard extends React.Component {
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
 
-                    <div
-                        style={{
-                            lineHeight: '1',
-                            fontSize: '0.8rem'
-                        }}
-                    >
-                        <b>{brand}</b>
-                    </div>
-                    From {shop}
                     <Tooltip title="Explore Options" >
                         <div
                             className="explore-options"

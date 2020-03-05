@@ -689,24 +689,12 @@ class ResultsFromSearch extends React.Component  {
                 <Paper zDepth={1} className="product-tile" key={key}>
                     <ImageCarousel />
                     <div
-                        // style={{
-                        //     position: 'absolute',
-                        //     top: '0',
-                        //     left: '0',
-                        //     backgroundColor: '#b4a48a',
-                        //     color: '#FFFFFF',
-                        //     fontSize: '0.8rem',
-                        //     paddingRight: '2px',
-                        //     paddingLeft: '2px',
-                        //     cursor: 'pointer'
-                        // }}
                         className="results-card-brand-tag"
                         onClick={() => {this.props.addBrandFilter(brand, false)}}
                     >
                         {brand}
                     </div>
                     <div className="product-name-results">{name}</div>
-                    <div className="product-brand-results">{brand} from {shop}</div>
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
@@ -808,6 +796,7 @@ class ResultsFromSearch extends React.Component  {
                     searchSimilarImages={(imgHash, color_1) => {this.searchSimilarImages(imgHash, color_1)}}
                     isAuth={this.props.isAuth}
                     showLookList={img_hash => {this.showLookList(img_hash)}}
+                    addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                 />
             )
         });
