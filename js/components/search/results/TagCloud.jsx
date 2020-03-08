@@ -92,7 +92,6 @@ const kind_cats = [
     'swimwear',
     't-shirt',
     't-shirts',
-    'tee',
     'thong',
     'tights',
     'top',
@@ -346,6 +345,7 @@ const style_cats = [
 ];
 const material_cats = [
     'beaded',
+    'borg',
     'cashmere',
     'chiffon',
     'chino',
