@@ -2,14 +2,12 @@ import React from 'react'
 import Header from './Header'
 import Main from './Main'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
 require('../../../css/garms.css');
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {withRouter, Route} from 'react-router-dom';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
-import Tooltip from "@material-ui/core/Tooltip";
 
 
 class App extends React.Component {
@@ -27,7 +25,8 @@ class App extends React.Component {
             username: cookies.get('username'),
             higherCat: '',
             firstLogin: false,
-            failedLogin: false
+            failedLogin: false,
+            loginPage: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -39,13 +38,50 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        this._ismounted = true;
         const {cookies} = this.props;
+        const queryString = window.location.search;
+
         this.setState({
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
             username: cookies.get('username'),
             firstLogin: cookies.get('first_login')
+        }, () => {
+            if (!this.state.sex) {
+                let sex = null;
+                if (queryString.length > 0) {
+                    sex = window.location.search.split('sex=')[1];
+                    if (sex) {
+                        cookies.set('sex', sex, {path: '/'});
+                    }
+                }
+            }
         });
+        const href = window.location.href;
+        if (href.includes('login')) {
+            this.setState({
+                loginPage: true
+            })
+        }
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
+    }
+
+    componentDidUpdate(prevProps){
+        if (this._ismounted) {
+
+            if(prevProps !== this.props){
+                const href = window.location.href;
+                if (href.includes('login')) {
+                    this.setState({
+                        loginPage: true
+                    })
+                }
+            }
+        }
     }
 
     // Updates input field state
@@ -81,8 +117,11 @@ class App extends React.Component {
     };
 
     changeSex(sex){
+        const {cookies} = this.props;
         this.setState({
             sex: sex
+        }, () => {
+            cookies.set('sex', sex, {path: '/'});
         });
     }
 
@@ -211,7 +250,7 @@ class App extends React.Component {
                 <div>
                     <Header isAuth={isUserAuth}/>
 
-                    {!this.state.sex ? (
+                    {!this.state.sex && this.state.loginPage === false ? (
                             <div style={{
                                 width: '100vw',
                                 textAlign: 'center',

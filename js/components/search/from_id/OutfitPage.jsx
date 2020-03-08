@@ -28,9 +28,11 @@ class OutfitPage extends React.Component  {
         this.filterUnique = this.filterUnique.bind(this);
     }
     componentDidMount() {
+        let sex = null;
         const queryString = window.location.search;
         if(queryString.length > 0) {
-            const prodId = window.location.search.split('id=')[1];
+            const prodId = window.location.search.split('id=')[1].split('&')[0];
+            sex = window.location.search.split('sex=')[1];
             this.setState({
                 prodId: prodId
             });
@@ -39,7 +41,7 @@ class OutfitPage extends React.Component  {
                 method: 'post',
                 body: JSON.stringify({
                     'prod_hashes': [prodId],
-                    'sex': this.state.sex ? this.state.sex : 'women'
+                    'sex': sex ? sex : this.state.sex
                 }),
                 headers: {
                     Accept: 'application/json',
@@ -477,7 +479,9 @@ class OutfitPage extends React.Component  {
                                     console.log('Thanks for sharing!');
                                 }).catch(console.error);
                             } else {
-                                console.log('fallback')
+                                console.log('fallback');
+                                console.log(window.location.href);
+                                alert('This browser does not support Share feature. Please copy the URL to share this page.')
                             }
                         }}
                     >
@@ -671,7 +675,9 @@ class OutfitPage extends React.Component  {
                                         console.log('Thanks for sharing!');
                                     }).catch(console.error);
                                 } else {
-                                    console.log('fallback')
+                                    console.log('fallback');
+                                    console.log(window.location.href);
+                                    alert('This browser does not support Share feature. Please copy the URL to share this page.');
                                 }
                             }}
                         >
