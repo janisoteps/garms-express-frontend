@@ -489,7 +489,7 @@ class ResultsFromSearch extends React.Component  {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    history.push(`/outfit-page?id=${prod_hash}`)
+                                    history.push(`/outfit-page?id=${prod_hash}&sex=${productInfo.sex}`)
                                 }}
                             />
                         )}/>

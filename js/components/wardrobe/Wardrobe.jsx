@@ -539,7 +539,7 @@ class Wardrobe extends React.Component  {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                                    history.push(`/outfit-page?id=${outfitDict.prod_id}&sex=${this.state.sex}`)
                                 }}
                             />
                         )}/>

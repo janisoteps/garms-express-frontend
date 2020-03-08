@@ -332,7 +332,7 @@ class RecommendDeals extends React.Component  {
                                 cursor: 'pointer'
                             }}
                             onClick={() => {
-                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}`)
+                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`)
                             }}
                         />
                     )}/>
