@@ -228,6 +228,9 @@ class SearchFromImage extends React.Component  {
 
     // Sends feature prediction request to server, sets state to data in response
     getImageFeatures(){
+        this.setState({
+            loading: true
+        });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
             headers: {
@@ -354,9 +357,16 @@ class SearchFromImage extends React.Component  {
                 }
             }
         }
+        this.searchSimilarImages(
+            this.state.results[0]['image_data']['img_hash'],
+            this.state.selectedColor
+        )
     }
 
     searchFromImage(){
+        this.setState({
+            loading: true
+        });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
             headers: {
@@ -407,6 +417,9 @@ class SearchFromImage extends React.Component  {
     }
 
     searchSimilarImages(imgHash, colorRgb1){
+        this.setState({
+            loading: true
+        });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
             headers: {

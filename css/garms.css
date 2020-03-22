@@ -497,7 +497,7 @@ body{
     background-size: 36px 36px;
     border-radius: 17px;
     position: absolute;
-    margin-top: -50px;
+    bottom: 3px;
     cursor: pointer;
     right: 3px;
 }
@@ -740,6 +740,18 @@ body{
     display: inline-block;
     cursor: pointer;
     margin-right: -290px;
+}
+
+.pick-color-cancel{
+    width: 25px;
+    height: 25px;
+    background: #FFFFFF url('../images/baseline-clear-24px.svg') no-repeat center;
+    background-size: 25px 25px;
+    border-radius: 10px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: calc(100% - 40px);
 }
 
 .colorcat-search-button:hover{
@@ -1492,7 +1504,6 @@ body{
 }
 
 .results-card-brand-tag {
-    position: absolute;
     top: 0;
     left: 0;
     background-color: #b4a48a;
@@ -1501,10 +1512,26 @@ body{
     padding-right: 2px;
     padding-left: 2px;
     cursor: pointer;
+    display: inline-block;
 }
 
 .results-card-brand-tag:hover {
     background-color: #95856f;
+}
+
+.results-card-cat-tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding-right: 3px;
+    padding-left: 3px;
+    margin-left: 1px;
+    background-color: #fff9f0;
+    cursor: pointer;
+    box-shadow: -1px 0 1px -1px #a7a7a7;
+}
+
+.results-card-cat-tag:hover {
+    background-color: #e3ded6;
 }
 
 .outfit-details-desktop-side-images { grid-area: side-images; }

@@ -16,7 +16,8 @@ class ResultFilters extends React.Component {
             <div
                 style={{
                     position: 'fixed',
-                    top: '50px'
+                    top: '50px',
+                    zIndex: '10'
                 }}
             >
                 <TagCloud

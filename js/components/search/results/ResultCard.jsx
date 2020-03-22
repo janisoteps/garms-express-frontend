@@ -11,7 +11,8 @@ class ResultCard extends React.Component {
         super(props);
         this.state = {
             isAuth: this.props.isAuth,
-            showExplore: false
+            showExplore: false,
+            device: this.props.device
         };
 
         this.updateImgProtocol = this.updateImgProtocol.bind(this);
@@ -20,6 +21,7 @@ class ResultCard extends React.Component {
         this. setColorPosTags = this.setColorPosTags.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
+        this.getUniqueArr = this.getUniqueArr.bind(this);
     }
 
     componentDidMount() {
@@ -74,6 +76,10 @@ class ResultCard extends React.Component {
     searchSimilarImages(imgHash, color_1){
         this.props.searchSimilarImages(imgHash, color_1);
     };
+
+    getUniqueArr(value, index, self) {
+        return self.indexOf(value) === index;
+    }
 
     // ================================ MAIN RENDER FUNCTION ====================================
     render() {
@@ -269,21 +275,29 @@ class ResultCard extends React.Component {
         };
 
         const ExploreOptions = () => {
-            const bottom = document.getElementById(prod_hash).getBoundingClientRect().bottom;
+            let exploreOptsStyle = {
+                position: this.state.device === 'desktop' ? 'absolute' : 'fixed',
+                height: '55px',
+                width: '215px',
+                zIndex: '10',
+                backgroundColor: this.state.device === 'mobile' ? '#FFFFFF' : 'rgba(255,255,255,0.7)',
+                paddingTop: '5px'
+            };
+            if (this.state.device === 'desktop') {
+                exploreOptsStyle['bottom'] = '0';
+                exploreOptsStyle['right'] = '0';
+                exploreOptsStyle['borderRadius'] = '27px 0px 0px 0px';
+            } else {
+                const bottom = document.getElementById(prod_hash).getBoundingClientRect().bottom;
+                exploreOptsStyle['top'] = `${bottom - 35}px`;
+                exploreOptsStyle['left'] = 'calc((100vw - 215px) / 2)';
+                exploreOptsStyle['boxShadow'] = '0px 0px 5px 0 rgba(0, 0, 0, 0.6)';
+                exploreOptsStyle['borderRadius'] = '27px';
+            }
+
             return (
                 <div
-                    style={{
-                        position: 'fixed',
-                        top: `${bottom - 35}px`,
-                        left: 'calc((100vw - 215px) / 2)',
-                        height: '55px',
-                        width: '215px',
-                        zIndex: '10',
-                        backgroundColor: '#FFFFFF',
-                        paddingTop: '5px',
-                        borderRadius: '27px',
-                        boxShadow: '0px 0px 5px 0 rgba(0, 0, 0, 0.6)'
-                    }}
+                    style={exploreOptsStyle}
                 >
 
                     <Tooltip title="Search Similar Items" >
@@ -322,6 +336,41 @@ class ResultCard extends React.Component {
             )
         };
 
+        const CardTagList = () => {
+            const prodTagList = productInfo['all_cats'].filter(this.getUniqueArr).map(cat => {
+                return (
+                    <div
+                        className="results-card-cat-tag"
+                        key={cat}
+                        onClick={() => {this.props.setPosNegButtonTag(cat)}}
+                    >
+                        {cat}
+                    </div>
+                )
+            });
+            return (
+                <div
+                    style={{
+                        position: 'relative',
+                        top: '0',
+                        marginBottom: '5px',
+                        textAlign: 'left',
+                        overflow: 'hidden',
+                        height: '19px'
+                    }}
+                >
+                    <div
+                        className="results-card-brand-tag"
+                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                    >
+                        {brand}
+                    </div>
+                    {prodTagList}
+                </div>
+
+            )
+        };
+
         return (
             <MuiThemeProvider>
                 <Paper
@@ -329,7 +378,7 @@ class ResultCard extends React.Component {
                     key={key}
                     style={{
                         textAlign: 'center',
-                        margin: '3px',
+                        margin: this.state.device === 'mobile' ? '3px' : '6px',
                         width: '46vw',
                         maxWidth: '350px',
                         paddingBottom: '2px',
@@ -339,14 +388,32 @@ class ResultCard extends React.Component {
                         fontSize: '0.9rem'
                     }}
                 >
-                    <ImageCarousel />
-
                     <div
-                        className="results-card-brand-tag"
-                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                        style={{
+                            display: 'inline-block',
+                            position: 'relative'
+                        }}
                     >
-                        {brand}
+                        <ImageCarousel />
+                        {(this.state.showExplore || this.state.device === 'desktop') && (
+                            <ExploreOptions />
+                        )}
+                        {this.state.device === 'mobile' && (
+                            <Tooltip title="Explore Options" >
+                                <div
+                                    className="explore-options"
+                                    id={prod_hash}
+                                    onClick={() => {
+                                        this.setState({
+                                            showExplore: true
+                                        })
+                                    }}
+                                />
+                            </Tooltip>
+                        )}
                     </div>
+
+                    <CardTagList />
 
                     <div
                         className="product-name"
@@ -362,20 +429,6 @@ class ResultCard extends React.Component {
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
 
-                    <Tooltip title="Explore Options" >
-                        <div
-                            className="explore-options"
-                            id={prod_hash}
-                            onClick={() => {
-                                this.setState({
-                                    showExplore: true
-                                })
-                            }}
-                        />
-                    </Tooltip>
-                    {this.state.showExplore && (
-                        <ExploreOptions />
-                    )}
                 </Paper>
             </ MuiThemeProvider>
         )
