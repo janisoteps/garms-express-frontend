@@ -358,21 +358,28 @@ class OutfitPage extends React.Component  {
 
         const ActionButtons = () => {
             return (
-                <div>
+                <div
+                    style={{
+                        position: 'fixed',
+                        bottom: 0,
+                        backgroundColor: 'white',
+                        left: 0,
+                        width: '100vw'
+                    }}
+                >
                     {(this.state.isAuth === "true") ? (
                         <div
                             style={{
+                                color: 'white',
                                 height: '40px',
                                 verticalAlign: 'middle',
                                 cursor: 'pointer',
-                                width: '180px',
-                                borderRadius: '10px',
-                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                width: '50%',
                                 padding: '5px',
                                 display: 'inline-block',
-                                margin: '5px',
-                                marginRight: 'calc(50vw - 98px)',
-                                marginLeft: 'calc(50vw - 98px)'
+                                zIndex: '10',
+                                border: 'solid white 1px',
+                                backgroundColor: '#000000'
                             }}
                             onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
                         >
@@ -392,17 +399,16 @@ class OutfitPage extends React.Component  {
                         <Route render={({history}) => (
                             <div
                                 style={{
+                                    color: 'white',
                                     height: '40px',
                                     verticalAlign: 'middle',
                                     cursor: 'pointer',
-                                    width: '180px',
-                                    margin: '5px',
-                                    marginRight: 'calc(50vw - 98px)',
-                                    marginLeft: 'calc(50vw - 98px)',
-                                    borderRadius: '10px',
-                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    width: '50%',
                                     padding: '5px',
-                                    display: 'inline-block'
+                                    display: 'inline-block',
+                                    zIndex: '10',
+                                    border: 'solid white 1px',
+                                    backgroundColor: '#000000'
                                 }}
                                 onClick={() => {
                                     history.push(`/register-from-result?id=${this.state.shownImgHash}`)
@@ -426,17 +432,17 @@ class OutfitPage extends React.Component  {
                     <Route render={({history}) => (
                         <div
                             style={{
+                                color: 'white',
                                 height: '40px',
                                 verticalAlign: 'middle',
                                 cursor: 'pointer',
-                                width: '180px',
-                                margin: '5px',
-                                marginRight: 'calc(50vw - 98px)',
-                                marginLeft: 'calc(50vw - 98px)',
-                                borderRadius: '10px',
-                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                width: '50%',
                                 padding: '5px',
-                                display: 'inline-block'
+                                display: 'inline-block',
+                                zIndex: '10',
+                                border: 'solid white 1px',
+                                backgroundColor: '#000000',
+                                position: 'relative'
                             }}
                             onClick={() => {
                                 history.push(`/search-from-id?id=${this.state.shownImgHash}`)
@@ -458,17 +464,17 @@ class OutfitPage extends React.Component  {
 
                     <div
                         style={{
+                            color: 'white',
                             height: '40px',
                             verticalAlign: 'middle',
                             cursor: 'pointer',
-                            width: '180px',
-                            margin: '5px',
-                            marginRight: 'calc(50vw - 98px)',
-                            marginLeft: 'calc(50vw - 98px)',
-                            borderRadius: '10px',
-                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                            width: '50%',
                             padding: '5px',
-                            display: 'inline-block'
+                            display: 'inline-block',
+                            zIndex: '10',
+                            border: 'solid white 1px',
+                            backgroundColor: '#000000',
+                            position: 'relative'
                         }}
                         onClick={() => {
                             if (navigator.share) {
@@ -504,17 +510,17 @@ class OutfitPage extends React.Component  {
                     >
                         <div
                             style={{
+                                color: 'white',
                                 height: '40px',
                                 verticalAlign: 'middle',
                                 cursor: 'pointer',
-                                width: '180px',
-                                margin: '5px',
-                                marginRight: 'calc(50vw - 98px)',
-                                marginLeft: 'calc(50vw - 98px)',
-                                borderRadius: '10px',
-                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                width: '50%',
                                 padding: '5px',
-                                display: 'inline-block'
+                                display: 'inline-block',
+                                zIndex: '10',
+                                border: 'solid white 1px',
+                                backgroundColor: '#000000',
+                                position: 'relative'
                             }}
                         >
                             <div
@@ -537,24 +543,31 @@ class OutfitPage extends React.Component  {
 
         const ActionButtonsDesktop = () => {
             return (
-                <div>
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        width: '100%'
+                    }}
+                >
                     {(this.state.isAuth === "true") ? (
                         <div
-                            style={{width: '100%'}}
+                            style={{
+                                display: 'inline-block',
+                                width: '50%'
+                            }}
                         >
                             <div
                                 style={{
+                                    color: 'white',
                                     height: '40px',
                                     verticalAlign: 'middle',
                                     cursor: 'pointer',
-                                    width: '200px',
-                                    borderRadius: '10px',
-                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    width: '100%',
                                     padding: '5px',
                                     display: 'inline-block',
-                                    margin: '5px',
-                                    // marginRight: 'calc(50vw - 98px)',
-                                    // marginLeft: 'calc(50vw - 98px)'
+                                    zIndex: '10',
+                                    border: 'solid white 1px',
+                                    backgroundColor: '#000000'
                                 }}
                                 onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
                             >
@@ -573,22 +586,24 @@ class OutfitPage extends React.Component  {
                         </div>
                     ) : (
                         <div
-                            style={{width: '100%'}}
+                            style={{
+                                display: 'inline-block',
+                                width: '50%'
+                            }}
                         >
                             <Route render={({history}) => (
                                 <div
                                     style={{
+                                        color: 'white',
                                         height: '40px',
                                         verticalAlign: 'middle',
                                         cursor: 'pointer',
-                                        width: '200px',
-                                        margin: '5px',
-                                        // marginRight: 'calc(50vw - 98px)',
-                                        // marginLeft: 'calc(50vw - 98px)',
-                                        borderRadius: '10px',
-                                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                        width: '100%',
                                         padding: '5px',
-                                        display: 'inline-block'
+                                        display: 'inline-block',
+                                        zIndex: '10',
+                                        border: 'solid white 1px',
+                                        backgroundColor: '#000000'
                                     }}
                                     onClick={() => {
                                         history.push(`/register-from-result?id=${this.state.shownImgHash}`)
@@ -612,22 +627,24 @@ class OutfitPage extends React.Component  {
                     )}
 
                     <div
-                        style={{width: '100%'}}
+                        style={{
+                            display: 'inline-block',
+                            width: '50%'
+                        }}
                     >
                         <Route render={({history}) => (
                             <div
                                 style={{
+                                    color: 'white',
                                     height: '40px',
                                     verticalAlign: 'middle',
                                     cursor: 'pointer',
-                                    width: '200px',
-                                    margin: '5px',
-                                    // marginRight: 'calc(50vw - 98px)',
-                                    // marginLeft: 'calc(50vw - 98px)',
-                                    borderRadius: '10px',
-                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    width: '100%',
                                     padding: '5px',
-                                    display: 'inline-block'
+                                    display: 'inline-block',
+                                    zIndex: '10',
+                                    border: 'solid white 1px',
+                                    backgroundColor: '#000000'
                                 }}
                                 onClick={() => {
                                     history.push(`/search-from-id?id=${this.state.shownImgHash}`)
@@ -650,21 +667,22 @@ class OutfitPage extends React.Component  {
 
 
                     <div
-                        style={{width: '100%'}}
+                        style={{
+                            display: 'inline-block',
+                            width: '50%'
+                        }}
                     >
                         <div
                             style={{
+                                color: 'white',
                                 height: '40px',
                                 verticalAlign: 'middle',
                                 cursor: 'pointer',
-                                width: '200px',
-                                margin: '5px',
-                                // marginRight: 'calc(50vw - 98px)',
-                                // marginLeft: 'calc(50vw - 98px)',
-                                borderRadius: '10px',
-                                boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                width: '100%',
                                 padding: '5px',
-                                display: 'inline-block'
+                                zIndex: '10',
+                                border: 'solid white 1px',
+                                backgroundColor: '#000000'
                             }}
                             onClick={() => {
                                 if (navigator.share) {
@@ -697,7 +715,10 @@ class OutfitPage extends React.Component  {
 
 
                     <div
-                        style={{width: '100%'}}
+                        style={{
+                            display: 'inline-block',
+                            width: '50%'
+                        }}
                     >
                         <a
                             href={this.state.prodData.prod_url}
@@ -705,17 +726,17 @@ class OutfitPage extends React.Component  {
                         >
                             <div
                                 style={{
+                                    color: 'white',
                                     height: '40px',
                                     verticalAlign: 'middle',
                                     cursor: 'pointer',
-                                    width: '200px',
-                                    margin: '5px',
-                                    // marginRight: 'calc(50vw - 98px)',
-                                    // marginLeft: 'calc(50vw - 98px)',
-                                    borderRadius: '10px',
-                                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                                    width: '100%',
                                     padding: '5px',
-                                    display: 'inline-block'
+                                    display: 'inline-block',
+                                    zIndex: '10',
+                                    border: 'solid white 1px',
+                                    backgroundColor: '#000000',
+                                    marginTop: '-15px'
                                 }}
                             >
                                 <div
@@ -725,8 +746,7 @@ class OutfitPage extends React.Component  {
                                     style={{
                                         display: 'inline-block',
                                         marginLeft: '10px',
-                                        position: 'absolute',
-                                        // marginTop: '5px'
+                                        position: 'absolute'
                                     }}
                                 >Buy Now</b>
                             </div>
@@ -966,6 +986,9 @@ class OutfitPage extends React.Component  {
                             >
                                 <NameDescription />
                                 <SizeStock />
+                                <br />
+                                <br />
+                                <br />
                                 <ActionButtons />
                             </td>
                         </tr>
