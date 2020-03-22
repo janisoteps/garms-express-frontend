@@ -177,6 +177,9 @@ class SearchFromId extends React.Component  {
     };
 
     searchSimilarImages(imgHash, colorRgb1){
+        this.setState({
+            loading: true
+        });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
             headers: {
@@ -311,10 +314,17 @@ class SearchFromId extends React.Component  {
                 }
             }
         }
+        this.searchSimilarImages(
+            this.state.results[0]['image_data']['img_hash'],
+            this.state.selectedColor
+        )
     }
 
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
+        this.setState({
+            loading: true
+        });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
             headers: {

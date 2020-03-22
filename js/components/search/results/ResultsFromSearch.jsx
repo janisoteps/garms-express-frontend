@@ -391,13 +391,18 @@ class ResultsFromSearch extends React.Component  {
         win.focus();
     };
 
-    updateImgProtocol(imgUrl) {
-        if (imgUrl.split('https').length > 1) {
-            return imgUrl
-        } else {
-            return imgUrl.replace('http', 'https')
-        }
-    }
+    setPosNegButtonTag = (tag) => {
+        this.setState({
+            posNegButtonTag: tag
+        })
+    };
+    // updateImgProtocol(imgUrl) {
+    //     if (imgUrl.split('https').length > 1) {
+    //         return imgUrl
+    //     } else {
+    //         return imgUrl.replace('http', 'https')
+    //     }
+    // }
 
     //################################## MAIN RENDER FUNCTION ##################################
     render () {
@@ -735,57 +740,62 @@ class ResultsFromSearch extends React.Component  {
         //     );
         // });
 
-        // let PosNegButton = () => {
-        //     if (this.state.posNegButtonTag.length > 0) {
-        //         let posNegButtonStyle = {
-        //             position: 'fixed',
-        //             width: '100vw',
-        //             height: 'calc(100vh - 50px)',
-        //             top: '50px',
-        //             left: '0'
-        //         };
-        //         let posButtonStyle = {
-        //             width: '100vw',
-        //             height: 'calc((100vh - 50px) / 2)',
-        //             backgroundColor: 'rgba(38, 79, 39, 0.7)',
-        //             textAlign: 'center',
-        //             color: '#FFFFFF',
-        //             fontSize: '2.5rem',
-        //             paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
-        //             cursor: 'pointer'
-        //         };
-        //         let negButtonStyle = {
-        //             width: '100vw',
-        //             height: 'calc((100vh - 50px) / 2)',
-        //             backgroundColor: 'rgba(79, 38, 38, 0.7)',
-        //             textAlign: 'center',
-        //             color: '#FFFFFF',
-        //             fontSize: '2.5rem',
-        //             paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
-        //             cursor: 'pointer'
-        //         };
-        //         return (
-        //             <div style={posNegButtonStyle}>
-        //                 <div
-        //                     style={posButtonStyle}
-        //                     onClick={() => {this.setTags(this.state.posNegButtonTag, 'positive', 'add')}}
-        //                 >
-        //                     <h1>more {this.state.posNegButtonTag}</h1>
-        //                 </div>
-        //                 <div
-        //                     style={negButtonStyle}
-        //                     onClick={() => {this.setTags(this.state.posNegButtonTag, 'negative', 'add')}}
-        //                 >
-        //                     <h1>less {this.state.posNegButtonTag}</h1>
-        //                 </div>
-        //             </div>
-        //         )
-        //     } else {
-        //         return (
-        //             <div style={{height: '0px'}} />
-        //         )
-        //     }
-        // };
+        let PosNegButton = () => {
+            if (this.state.posNegButtonTag.length > 0) {
+                let posNegButtonStyle = {
+                    position: 'fixed',
+                    width: '100vw',
+                    height: 'calc(100vh - 50px)',
+                    top: '50px',
+                    left: '0',
+                    zIndex: '10'
+                };
+                let posButtonStyle = {
+                    width: '100vw',
+                    height: 'calc((100vh - 50px) / 2)',
+                    backgroundColor: 'rgba(38, 79, 39, 0.7)',
+                    textAlign: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '2.5rem',
+                    paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
+                    cursor: 'pointer'
+                };
+                let negButtonStyle = {
+                    width: '100vw',
+                    height: 'calc((100vh - 50px) / 2)',
+                    backgroundColor: 'rgba(79, 38, 38, 0.7)',
+                    textAlign: 'center',
+                    color: '#FFFFFF',
+                    fontSize: '2.5rem',
+                    paddingTop: 'calc(((100vh - 50px) / 4) - 20px)',
+                    cursor: 'pointer'
+                };
+                return (
+                    <div style={posNegButtonStyle}>
+                        <div
+                            style={posButtonStyle}
+                            onClick={() => {
+                                this.setTags(this.state.posNegButtonTag, 'positive', 'add')
+                            }}
+                        >
+                            <h1>more {this.state.posNegButtonTag}</h1>
+                        </div>
+                        <div
+                            style={negButtonStyle}
+                            onClick={() => {
+                                this.setTags(this.state.posNegButtonTag, 'negative', 'add')
+                            }}
+                        >
+                            <h1>less {this.state.posNegButtonTag}</h1>
+                        </div>
+                    </div>
+                )
+            } else {
+                return (
+                    <div style={{height: '0px'}} />
+                )
+            }
+        };
 
         const desktopTiles = this.props.results.map(productData => {
             return (
@@ -798,6 +808,7 @@ class ResultsFromSearch extends React.Component  {
                     showLookList={img_hash => {this.showLookList(img_hash)}}
                     addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                     device='desktop'
+                    setPosNegButtonTag={(tag) => {this.setPosNegButtonTag(tag)}}
                 />
             )
         });
@@ -813,6 +824,7 @@ class ResultsFromSearch extends React.Component  {
                     showLookList={img_hash => {this.showLookList(img_hash)}}
                     addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
                     device='mobile'
+                    setPosNegButtonTag={(tag) => {this.setPosNegButtonTag(tag)}}
                 />
             )
         });
@@ -845,7 +857,7 @@ class ResultsFromSearch extends React.Component  {
                             {desktopTiles}
                         </div>
                     )}
-                    {/*<PosNegButton />*/}
+                    <PosNegButton />
                 </div>
             </MuiThemeProvider>
         );

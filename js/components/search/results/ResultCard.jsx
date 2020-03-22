@@ -21,6 +21,7 @@ class ResultCard extends React.Component {
         this. setColorPosTags = this.setColorPosTags.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
+        this.getUniqueArr = this.getUniqueArr.bind(this);
     }
 
     componentDidMount() {
@@ -75,6 +76,10 @@ class ResultCard extends React.Component {
     searchSimilarImages(imgHash, color_1){
         this.props.searchSimilarImages(imgHash, color_1);
     };
+
+    getUniqueArr(value, index, self) {
+        return self.indexOf(value) === index;
+    }
 
     // ================================ MAIN RENDER FUNCTION ====================================
     render() {
@@ -331,6 +336,41 @@ class ResultCard extends React.Component {
             )
         };
 
+        const CardTagList = () => {
+            const prodTagList = productInfo['all_cats'].filter(this.getUniqueArr).map(cat => {
+                return (
+                    <div
+                        className="results-card-cat-tag"
+                        key={cat}
+                        onClick={() => {this.props.setPosNegButtonTag(cat)}}
+                    >
+                        {cat}
+                    </div>
+                )
+            });
+            return (
+                <div
+                    style={{
+                        position: 'relative',
+                        top: '0',
+                        marginBottom: '5px',
+                        textAlign: 'left',
+                        overflow: 'hidden',
+                        height: '19px'
+                    }}
+                >
+                    <div
+                        className="results-card-brand-tag"
+                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                    >
+                        {brand}
+                    </div>
+                    {prodTagList}
+                </div>
+
+            )
+        };
+
         return (
             <MuiThemeProvider>
                 <Paper
@@ -355,17 +395,25 @@ class ResultCard extends React.Component {
                         }}
                     >
                         <ImageCarousel />
-                        {this.state.showExplore || this.state.device === 'desktop' && (
+                        {(this.state.showExplore || this.state.device === 'desktop') && (
                             <ExploreOptions />
+                        )}
+                        {this.state.device === 'mobile' && (
+                            <Tooltip title="Explore Options" >
+                                <div
+                                    className="explore-options"
+                                    id={prod_hash}
+                                    onClick={() => {
+                                        this.setState({
+                                            showExplore: true
+                                        })
+                                    }}
+                                />
+                            </Tooltip>
                         )}
                     </div>
 
-                    <div
-                        className="results-card-brand-tag"
-                        onClick={() => {this.props.addBrandFilter(brand, false)}}
-                    >
-                        {brand}
-                    </div>
+                    <CardTagList />
 
                     <div
                         className="product-name"
@@ -380,19 +428,7 @@ class ResultCard extends React.Component {
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
                     </div>
-                    {this.state.device === 'mobile' && (
-                        <Tooltip title="Explore Options" >
-                            <div
-                                className="explore-options"
-                                id={prod_hash}
-                                onClick={() => {
-                                    this.setState({
-                                        showExplore: true
-                                    })
-                                }}
-                            />
-                        </Tooltip>
-                    )}
+
                 </Paper>
             </ MuiThemeProvider>
         )
