@@ -215,9 +215,9 @@ app.post('/api/register', function (req, res) {
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
-            let response_data = JSON.parse(body);
+            // let response_data = JSON.parse(body);
 
-            res.send(response_data);
+            res.send(body);
         }
     }
 
