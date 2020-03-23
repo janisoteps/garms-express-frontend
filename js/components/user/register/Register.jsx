@@ -56,12 +56,12 @@ export default class Register extends React.Component {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                if (data === true) {
+                if (data['status'] === true) {
                     this.setState({
                         regComplete: true
                     });
                 } else {
-                    alert('Registration failed');
+                    alert(`Registration failed: ${data['response']}`);
                 }
             });
     }
