@@ -5,6 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import {Route} from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
+import ReactGA from "react-ga";
 
 
 class RecommendFromTags extends React.Component  {
@@ -129,20 +130,37 @@ class RecommendFromTags extends React.Component  {
                                         cursor: 'pointer'
                                     }}
                                     onClick={() => {
+                                        ReactGA.event({
+                                            category: "Recommend From Tags",
+                                            action: 'open outfit',
+                                            label: prodSuggestion.prod_id
+                                        });
                                         history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`)
                                     }}
                                 />
                             )}/>
 
                             <Tooltip title="Add To Favorites" >
-                                <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
+                                <div className="add-to-favorites-wardrobe" onClick={() => {
+                                    ReactGA.event({
+                                        category: "Recommend From Tags",
+                                        action: 'add outfit',
+                                        label: imgHash
+                                    });
+                                    this.showAddOutfit(imgHash);
+                                }} />
                             </Tooltip>
                             <Route render={({history}) => (
                                 <Tooltip title="Search Similar Items" >
                                     <div
                                         className="search-similar-recommend"
                                         onClick={() => {
-                                            history.push(`/search-from-id?id=${imgHash}`)
+                                            ReactGA.event({
+                                                category: "Recommend From Tags",
+                                                action: 'search similar',
+                                                label: imgHash
+                                            });
+                                            history.push(`/search-from-id?id=${imgHash}`);
                                         }}
                                     />
                                 </Tooltip>

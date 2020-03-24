@@ -6,6 +6,7 @@ import RecommendRandom from '../recommend/RecommendRandom';
 import AddOutfit from '../wardrobe/AddOutfit';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
+import ReactGA from 'react-ga';
 
 
 class SearchChoice extends React.Component {
@@ -37,6 +38,7 @@ class SearchChoice extends React.Component {
             this._ismounted = false;
             window.location.pathname = '/intro'
         }
+        ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
     componentWillUnmount() {
@@ -67,6 +69,11 @@ class SearchChoice extends React.Component {
     };
 
     changeSex(sex){
+        ReactGA.event({
+            category: "Home Page",
+            action: 'change sex',
+            label: sex
+        });
         this.setState({
             sex: sex
         });
@@ -151,7 +158,14 @@ class SearchChoice extends React.Component {
                                         <Route render={({ history }) => (
                                             <div
                                                 className="search-choice-button-image"
-                                                onClick={() => { history.push('/search-from-image') }}>
+                                                onClick={() => {
+                                                    ReactGA.event({
+                                                        category: "Home Page",
+                                                        action: 'navigate',
+                                                        label: 'search from image'
+                                                    });
+                                                    history.push('/search-from-image');
+                                                }}>
                                                 <div className="search-choice-title">
                                                     <div className="image-search-icon"></div>
                                                     <div className="search-choice-text">Search by photo</div>
@@ -162,7 +176,14 @@ class SearchChoice extends React.Component {
                                         <Route render={({ history }) => (
                                             <div
                                                 className="search-choice-button-type"
-                                                onClick={() => { history.push('/textsearch') }}>
+                                                onClick={() => {
+                                                    ReactGA.event({
+                                                        category: "Home Page",
+                                                        action: 'navigate',
+                                                        label: 'search from text'
+                                                    });
+                                                    history.push('/textsearch');
+                                                }}>
                                                 <div className="search-choice-title">
                                                     <div className="text-search-icon"></div>
                                                     <div className="search-choice-text">Type your search</div>

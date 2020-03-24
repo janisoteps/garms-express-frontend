@@ -9,6 +9,7 @@ import AddOutfit from "../wardrobe/AddOutfit";
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import DealFilters from "../search/results/DealFilters";
+import ReactGA from "react-ga";
 
 
 class RecommendDeals extends React.Component  {
@@ -48,6 +49,7 @@ class RecommendDeals extends React.Component  {
     }
 
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
         this._ismounted = true;
         // console.log(this.props.lookFilter);
         fetch(`${window.location.origin}/api/recommend_deals`, {
@@ -67,7 +69,7 @@ class RecommendDeals extends React.Component  {
         }).then(data => {
             this.setState({
                 outfits: data.prod_suggestions
-            })
+            });
         })
     }
 
@@ -161,6 +163,11 @@ class RecommendDeals extends React.Component  {
                     tagPickerShown: showPicker
                 }, () => {
                     if (showPicker === false) {
+                        ReactGA.event({
+                            category: "Deal Filter",
+                            action: 'tag',
+                            label: posTag
+                        });
                         this.applyDealFilter();
                     }
                 });
@@ -182,6 +189,11 @@ class RecommendDeals extends React.Component  {
                     tagPickerShown: showPicker
                 }, () => {
                     if (showPicker === false) {
+                        ReactGA.event({
+                            category: "Deal Filter",
+                            action: 'tag',
+                            label: negTag
+                        });
                         this.applyDealFilter();
                     }
                 });
@@ -194,6 +206,10 @@ class RecommendDeals extends React.Component  {
             tagPickerShown: show
         });
         if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'tag'
+            });
             this.applyDealFilter();
         }
     }
@@ -203,6 +219,10 @@ class RecommendDeals extends React.Component  {
             brandPickerShown: show
         });
         if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'brand'
+            });
             this.applyDealFilter();
         }
     }
@@ -212,6 +232,10 @@ class RecommendDeals extends React.Component  {
             shopPickerShown: show
         });
         if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'shop'
+            });
             this.applyDealFilter();
         }
     }
@@ -235,6 +259,11 @@ class RecommendDeals extends React.Component  {
                 brandPickerShown: showPicker
             }, () => {
                 if (showPicker === false) {
+                    ReactGA.event({
+                        category: "Deal Filter",
+                        action: 'brand',
+                        label: brand
+                    });
                     this.applyDealFilter();
                 }
             });
@@ -260,6 +289,11 @@ class RecommendDeals extends React.Component  {
                 shopPickerShown: showPicker
             }, () => {
                 if (showPicker === false) {
+                    ReactGA.event({
+                        category: "Deal Filter",
+                        action: 'shop',
+                        label: shop
+                    });
                     this.applyDealFilter();
                 }
             });
@@ -332,20 +366,37 @@ class RecommendDeals extends React.Component  {
                                 cursor: 'pointer'
                             }}
                             onClick={() => {
-                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`)
+                                ReactGA.event({
+                                    category: "Deal Recommender Action",
+                                    action: 'open outfit',
+                                    label: prodSuggestion.prod_id,
+                                });
+                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`);
                             }}
                         />
                     )}/>
 
                     <Tooltip title="Add To Favorites" >
-                        <div className="add-to-favorites-wardrobe" onClick={() => { this.showAddOutfit(imgHash) }} />
+                        <div className="add-to-favorites-wardrobe" onClick={() => {
+                            ReactGA.event({
+                                category: "Deal Recommender Action",
+                                action: 'add outfit',
+                                label: imgHash,
+                            });
+                            this.showAddOutfit(imgHash);
+                        }} />
                     </Tooltip>
                     <Route render={({history}) => (
                         <Tooltip title="Search Similar Items" >
                             <div
                                 className="search-similar-recommend"
                                 onClick={() => {
-                                    history.push(`/search-from-id?id=${imgHash}`)
+                                    ReactGA.event({
+                                        category: "Deal Recommender Action",
+                                        action: 'search similar',
+                                        label: imgHash,
+                                    });
+                                    history.push(`/search-from-id?id=${imgHash}`);
                                 }}
                             />
                         </Tooltip>

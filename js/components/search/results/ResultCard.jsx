@@ -4,6 +4,7 @@ import Paper from 'material-ui/Paper';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Route} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
+import ReactGA from "react-ga";
 
 
 class ResultCard extends React.Component {
@@ -111,6 +112,11 @@ class ResultCard extends React.Component {
                                 cursor: 'pointer'
                             }}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'open outfit',
+                                    label: prod_hash
+                                });
                                 history.push(`/outfit-page?id=${prod_hash}&sex=${productInfo.sex}`)
                             }}
                         />
@@ -248,18 +254,33 @@ class ResultCard extends React.Component {
                         <div
                             style={colorStyle1}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'search similar color',
+                                    label: `img_hash: ${img_hash}, color: ${color_1}`
+                                });
                                 this.setColorPosTags({'color_rgb': color_1, 'cat':''});
                                 this.searchSimilarImages(img_hash, color_1);
                             }} />
                         <div
                             style={colorStyle2}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'search similar color',
+                                    label: `img_hash: ${img_hash}, color: ${color_2}`
+                                });
                                 this.setColorPosTags({'color_rgb': color_2, 'cat':''});
                                 this.searchSimilarImages(img_hash, color_2);
                             }} />
                         <div
                             style={colorStyle3}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'search similar color',
+                                    label: `img_hash: ${img_hash}, color: ${color_3}`
+                                });
                                 this.setColorPosTags({'color_rgb': color_3, 'cat':''});
                                 this.searchSimilarImages(img_hash, color_3);
                             }} />
@@ -304,6 +325,11 @@ class ResultCard extends React.Component {
                         <div
                             className="search-similar-mobile"
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'search similar',
+                                    label: fst_img_hash
+                                });
                                 this.setColorPosTags({'color_rgb': fst_img_color, 'cat':''});
                                 this.searchSimilarImages(fst_img_hash, fst_img_color);
                             }}
@@ -315,7 +341,14 @@ class ResultCard extends React.Component {
                     {/*<TagPicker/>*/}
                     {(this.state.isAuth === "true") ? (
                         <Tooltip title="Add To Favorites" >
-                            <div className="add-to-favorites-mobile" onClick={() => { this.props.showLookList(fst_img_hash) }} />
+                            <div className="add-to-favorites-mobile" onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'add outfit',
+                                    label: fst_img_hash
+                                });
+                                this.props.showLookList(fst_img_hash);
+                            }} />
                         </Tooltip>
                     ) : (
                         <Route render={({history}) => (
@@ -323,14 +356,26 @@ class ResultCard extends React.Component {
                                 <div
                                     className="add-to-favorites-mobile"
                                     onClick={() => {
-                                        history.push(`/register-from-result?id=${fst_img_hash}`)
+                                        ReactGA.event({
+                                            category: "Result Card Action",
+                                            action: 'add outfit',
+                                            label: fst_img_hash
+                                        });
+                                        history.push(`/register-from-result?id=${fst_img_hash}`);
                                     }}
                                 />
                             </Tooltip>
                         )}/>
                     )}
                     <Tooltip title="Buy Now" >
-                        <div className="buy-now-mobile" onClick={() => {this.buyNow(prod_url)}}/>
+                        <div className="buy-now-mobile" onClick={() => {
+                            ReactGA.event({
+                                category: "Result Card Action",
+                                action: 'buy now',
+                                label: prod_url
+                            });
+                            this.buyNow(prod_url);
+                        }}/>
                     </Tooltip>
                 </div>
             )
@@ -342,7 +387,14 @@ class ResultCard extends React.Component {
                     <div
                         className="results-card-cat-tag"
                         key={cat}
-                        onClick={() => {this.props.setPosNegButtonTag(cat)}}
+                        onClick={() => {
+                            ReactGA.event({
+                                category: "Result Card Action",
+                                action: 'set tag',
+                                label: cat
+                            });
+                            this.props.setPosNegButtonTag(cat);
+                        }}
                     >
                         {cat}
                     </div>
@@ -361,7 +413,14 @@ class ResultCard extends React.Component {
                 >
                     <div
                         className="results-card-brand-tag"
-                        onClick={() => {this.props.addBrandFilter(brand, false)}}
+                        onClick={() => {
+                            ReactGA.event({
+                                category: "Result Card Action",
+                                action: 'set brand',
+                                label: brand
+                            });
+                            this.props.addBrandFilter(brand, false);
+                        }}
                     >
                         {brand}
                     </div>

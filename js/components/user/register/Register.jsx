@@ -8,6 +8,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import FlatButton from 'material-ui/FlatButton';
 import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
+import ReactGA from 'react-ga';
 
 
 export default class Register extends React.Component {
@@ -24,6 +25,14 @@ export default class Register extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+        ReactGA.event({
+            category: "Register",
+            action: "start",
+        });
     }
 
     handleChange(event) {
@@ -59,6 +68,11 @@ export default class Register extends React.Component {
                 if (data['status'] === true) {
                     this.setState({
                         regComplete: true
+                    });
+                    ReactGA.event({
+                        category: "Register",
+                        action: "complete",
+                        label: email
                     });
                 } else {
                     alert(`Registration failed: ${data['response']}`);

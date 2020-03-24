@@ -2,6 +2,7 @@
 import React from "react";
 require('../../../css/garms.css');
 import * as Scroll from 'react-scroll';
+import ReactGA from "react-ga";
 
 let Link = Scroll.Link;
 let Element = Scroll.Element;
@@ -32,6 +33,7 @@ class Intro extends React.Component {
     };
 
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
         this.updateWindowDimensions();
     }
 

@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import ResultFilters from "../results/ResultFilters";
 import LoadingScreen from "../../loading/LoadingScreen";
+import ReactGA from 'react-ga';
 
 
 //Component to search for products using text input
@@ -68,6 +69,10 @@ class TextSearch extends React.Component  {
         this.showPriceFilter = this.showPriceFilter.bind(this);
     }
 
+    componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     componentDidUpdate(prevProps){
         if(prevProps.firstLogin !== this.props.firstLogin){
             this.setState({
@@ -121,6 +126,11 @@ class TextSearch extends React.Component  {
     searchSimilarImages(imgHash, colorRgb1){
         this.setState({
             loading: true
+        });
+        ReactGA.event({
+            category: "Text Search",
+            action: 'search similar',
+            label: imgHash
         });
         fetch(`${window.location.origin}/api/get_random_loading_content`, {
             method: 'get',
@@ -187,6 +197,11 @@ class TextSearch extends React.Component  {
     // Set main color and category state based on selection from modal
     setColorPosTags(selection){
         if(selection['cat']) {
+            ReactGA.event({
+                category: "Tag Filter",
+                action: 'positive',
+                label: selection['cat'],
+            });
             let selectedCat = selection['cat'];
             let tags = this.state.posTags;
             if (tags.includes(selectedCat)){
@@ -204,6 +219,11 @@ class TextSearch extends React.Component  {
                 mainCat: selectedCat
             });
         } else {
+            ReactGA.event({
+                category: "Color Filter",
+                action: 'apply',
+                label: `${selection['color_rgb']}`,
+            });
             let colorRgb = selection['color_rgb'];
             this.setState({
                 selectedColor: colorRgb
@@ -284,6 +304,11 @@ class TextSearch extends React.Component  {
                     moreSuggestions: []
                 });
                 let inputString = input ? input : this.state.searchString;
+                ReactGA.event({
+                    category: "Text Search",
+                    action: 'text search',
+                    label: inputString,
+                });
                 if(inputString.length === 0){
                     this.setState({
                         loading: false,
@@ -342,6 +367,11 @@ class TextSearch extends React.Component  {
     }
 
     addBrandFilter(brand, showPicker) {
+        ReactGA.event({
+            category: "Brand Filter",
+            action: 'apply',
+            label: brand,
+        });
         let currentFilterBrands = this.state.filterBrands;
         if (currentFilterBrands.indexOf(brand) !== -1) {
             const newFilterBrands = currentFilterBrands.filter(checkedBrand => {
@@ -381,6 +411,11 @@ class TextSearch extends React.Component  {
 
     addTagFilter(posTag, negTag, showPicker) {
         if(posTag) {
+            ReactGA.event({
+                category: "Tag Filter",
+                action: 'positive',
+                label: posTag,
+            });
             let currentFilterTags = this.state.posTags;
             if (currentFilterTags.indexOf(posTag) !== -1) {
                 const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
@@ -405,6 +440,11 @@ class TextSearch extends React.Component  {
                 });
             }
         } else {
+            ReactGA.event({
+                category: "Tag Filter",
+                action: 'negative',
+                label: negTag,
+            });
             let currentFilterTags = this.state.negTags;
             if (currentFilterTags.indexOf(negTag) !== -1) {
                 const newFilterBrandTags = currentFilterTags.filter(checkedTag => {
@@ -449,6 +489,11 @@ class TextSearch extends React.Component  {
             priceFilterShown: show
         });
         if (show === false) {
+            ReactGA.event({
+                category: "Price Filter",
+                action: 'apply',
+                value: this.state.rangeVal
+            });
             this.searchSimilarImages(
                 this.state.results[0]['image_data']['img_hash'],
                 this.state.selectedColor

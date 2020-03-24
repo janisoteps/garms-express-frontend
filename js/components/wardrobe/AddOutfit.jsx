@@ -2,6 +2,7 @@ import React from "react";
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
+import ReactGA from "react-ga";
 
 class AddOutfit extends React.Component  {
     constructor(props) {
@@ -42,6 +43,12 @@ class AddOutfit extends React.Component  {
         }).then(data => {
             this.setState({
                 prodId: data.prod_id
+            });
+
+            ReactGA.event({
+                category: "Add Outfit",
+                action: 'add',
+                label: data.prod_id,
             });
 
             fetch(`${window.location.origin}/api/get_products`, {
@@ -110,6 +117,11 @@ class AddOutfit extends React.Component  {
     };
 
     addOutfitToLook = (lookName, prodId) => {
+        ReactGA.event({
+            category: "Add Outfit",
+            action: 'add to look',
+            label: lookName,
+        });
         fetch(`${window.location.origin}/api/add_outfit`, {
             method: 'post',
             body: JSON.stringify({
@@ -136,6 +148,11 @@ class AddOutfit extends React.Component  {
         e.preventDefault();
         let email = this.state.email;
         let lookName = this.state.newLookInput;
+        ReactGA.event({
+            category: "Add Look",
+            action: 'add',
+            label: lookName,
+        });
         fetch(`${window.location.origin}/api/add_look`, {
             method: 'post',
             body: JSON.stringify({email: email, look_name: lookName}),

@@ -4,6 +4,7 @@ require('../../../css/garms.css');
 // import {Route} from 'react-router-dom';
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
+import ReactGA from 'react-ga';
 
 
 class PasswordResetEmail extends React.Component {
@@ -54,10 +55,20 @@ class PasswordResetEmail extends React.Component {
                         response: 'E-mail could not be sent, check if address is correct',
                         result: 'negative'
                     });
+                    ReactGA.event({
+                        category: "Password Reset",
+                        action: 'failed',
+                        label: email
+                    });
                 } else {
                     this.setState({
                         response: 'Password reset e-mail sent',
                         result: 'positive'
+                    });
+                    ReactGA.event({
+                        category: "Password Reset",
+                        action: 'completed',
+                        label: email
                     });
                 }
             })

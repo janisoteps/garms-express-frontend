@@ -1,9 +1,11 @@
 // PasswordReset.jsx
 import React from "react";
 require('../../../css/garms.css');
-import {Route} from 'react-router-dom';
+// import {Route} from 'react-router-dom';
 import TextField from "material-ui/TextField";
 import RaisedButton from "material-ui/RaisedButton";
+import ReactGA from 'react-ga';
+
 
 class PasswordReset extends React.Component  {
     constructor(props) {
@@ -34,6 +36,7 @@ class PasswordReset extends React.Component  {
                 token: token
             });
         }
+        ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
     handleChange(event) {

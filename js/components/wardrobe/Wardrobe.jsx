@@ -8,6 +8,7 @@ import AddOutfit from './AddOutfit';
 import RecommendFromTags from './../recommend/RecommendFromTags';
 import {Route} from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
+import ReactGA from "react-ga";
 
 
 class Wardrobe extends React.Component  {
@@ -45,6 +46,8 @@ class Wardrobe extends React.Component  {
     }
 
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+
         if (isMobile) {
             this.setState({
                 showingLooks: false
@@ -134,12 +137,22 @@ class Wardrobe extends React.Component  {
     };
 
     setLookFilter = (lookName) => {
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'look filter',
+            label: lookName
+        });
         this.setState({
             lookFilter: lookName
         })
     };
 
     removeLook = (lookName) => {
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'remove look',
+            label: lookName,
+        });
         let email = this.state.email;
         fetch(`${window.location.origin}/api/remove_look`, {
             method: 'post',
@@ -198,6 +211,12 @@ class Wardrobe extends React.Component  {
     renameLook = (lookName) => {
         const email = this.state.email;
         const newLookName = this.state.newLookInput;
+
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'rename look',
+            label: `${lookName} => ${newLookName}`,
+        });
 
         fetch(`${window.location.origin}/api/rename_look`, {
             method: 'post',
@@ -268,6 +287,13 @@ class Wardrobe extends React.Component  {
         e.preventDefault();
         let email = this.state.email;
         let lookName = this.state.newLookInput;
+
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'add look',
+            label: lookName
+        });
+
         fetch(`${window.location.origin}/api/add_look`, {
             method: 'post',
             body: JSON.stringify({email: email, look_name: lookName}),
@@ -292,6 +318,11 @@ class Wardrobe extends React.Component  {
     };
 
     addOutfit = (lookName, prodId) => {
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'add outfit',
+            label: prodId,
+        });
         let email = this.state.email;
         fetch(`${window.location.origin}/api/add_outfit`, {
             method: 'post',
@@ -314,6 +345,11 @@ class Wardrobe extends React.Component  {
     };
 
     removeOutfit = (lookName, prodId, outfitDate) => {
+        ReactGA.event({
+            category: "Wardrobe",
+            action: 'remove outfit',
+            label: prodId,
+        });
         let email = this.state.email;
         fetch(`${window.location.origin}/api/remove_outfit`, {
             method: 'post',
@@ -611,6 +647,13 @@ class Wardrobe extends React.Component  {
                             <a
                                 href={outfitDict.info.url}
                                 target="_blank"
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: "Wardrobe",
+                                        action: 'buy now',
+                                        label: outfitDict.info.url,
+                                    });
+                                }}
                             >
                                 <div
                                     className="product-buy-wardrobe"

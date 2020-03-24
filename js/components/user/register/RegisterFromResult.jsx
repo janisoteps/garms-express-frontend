@@ -8,6 +8,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Route} from 'react-router-dom';
+import ReactGA from 'react-ga';
 
 
 export default class RegisterFromResult extends React.Component {
@@ -33,6 +34,8 @@ export default class RegisterFromResult extends React.Component {
 
     componentDidMount() {
         const queryString = window.location.search;
+        ReactGA.pageview(window.location.pathname + window.location.search);
+
         if(queryString.length > 0) {
             const imgHash = window.location.search.split('id=')[1];
             this.setState({
@@ -54,6 +57,16 @@ export default class RegisterFromResult extends React.Component {
             }).then(data => {
                 this.setState({
                     prodId: data.prod_id
+                });
+
+                ReactGA.event({
+                    category: "Register",
+                    action: 'from result',
+                    label: data.prod_id,
+                });
+                ReactGA.event({
+                    category: "Register",
+                    action: "start"
                 });
 
                 fetch(`${window.location.origin}/api/get_products`, {
@@ -113,6 +126,11 @@ export default class RegisterFromResult extends React.Component {
         }).then(function(response) { return response.json(); })
             .then(data => {
                 if (data === true) {
+                    ReactGA.event({
+                        category: "Register",
+                        action: "complete",
+                        label: email
+                    });
                     if (this.state.prodId !== null) {
                         this.props.handleResultLogin(email, pwd, this.state.imgHash);
                     } else {

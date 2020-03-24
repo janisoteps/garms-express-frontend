@@ -1,6 +1,5 @@
 // Register.jsx
 import React from "react";
-
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
@@ -8,6 +7,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
 import {Route} from 'react-router-dom'
+import ReactGA from 'react-ga';
+
 
 class Login extends React.Component {
     static propTypes = {
@@ -26,6 +27,10 @@ class Login extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     handleChange(event) {
         let value = event.target.value;
         let name = event.target.name;
@@ -36,8 +41,15 @@ class Login extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
+
+        const email = this.state.email;
+        const pwd = this.state.pwd;
+
+        ReactGA.event({
+            category: "Log In",
+            action: "User attempted log-in",
+            label: email
+        });
 
         this.props.handleLogin(email, pwd);
     }
