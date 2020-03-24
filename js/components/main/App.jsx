@@ -8,6 +8,8 @@ import {instanceOf} from 'prop-types';
 import {withRouter, Route} from 'react-router-dom';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
+import ReactGA from 'react-ga';
+ReactGA.initialize('UA-161747441-1');
 
 
 class App extends React.Component {
@@ -64,6 +66,11 @@ class App extends React.Component {
                 loginPage: true
             })
         }
+        ReactGA.set({
+            userId: cookies.get('email'),
+            // any data that is relevant to the user session
+            // that you would like to track with google analytics
+        });
     }
 
     componentWillUnmount() {
@@ -197,6 +204,11 @@ class App extends React.Component {
                         firstLogin: data['res']['first_login']
                     });
                     window.location.pathname = '/';
+                    ReactGA.event({
+                        category: "Log In",
+                        action: "User logged in",
+                        label: email
+                    });
                 }
             });
     };

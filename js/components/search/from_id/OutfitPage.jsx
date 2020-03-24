@@ -4,6 +4,7 @@ import AddOutfit from '../../wardrobe/AddOutfit';
 import {Route} from 'react-router-dom';
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ReactGA from "react-ga";
 
 
 //Component to search for products using text input
@@ -28,6 +29,7 @@ class OutfitPage extends React.Component  {
         this.filterUnique = this.filterUnique.bind(this);
     }
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
         let sex = null;
         const queryString = window.location.search;
         if(queryString.length > 0) {
@@ -102,30 +104,6 @@ class OutfitPage extends React.Component  {
     }
 
     render () {
-
-        // const sideImages = this.state.prodData !== null ? this.state.prodData.image_urls.map(sideImgUrl => {
-        //     return (
-        //         <div
-        //             style={{
-        //                 width: '180px',
-        //                 display: 'inline-block'
-        //             }}
-        //             key={sideImgUrl}
-        //         >
-        //             <img
-        //                 style={{
-        //                     width: '100%',
-        //                     height: 'auto',
-        //                     border: sideImgUrl === this.state.shownImg ? '3px solid rgba(0, 0, 0, 1)' : '',
-        //                     cursor: 'pointer'
-        //                 }}
-        //                 src={this.updateImgProtocol(sideImgUrl)}
-        //                 onClick={() => {this.changeShownImg(sideImgUrl)}}
-        //             />
-        //         </div>
-        //     )
-        // }) : null;
-
         const SideImagesMobile = () => {
             if (this.state.prodData.image_urls.length > 1) {
                 const secondaryImages = this.state.prodData.image_urls.map(imgUrl => {
@@ -145,7 +123,14 @@ class OutfitPage extends React.Component  {
                                     cursor: 'pointer'
                                 }}
                                 src={this.updateImgProtocol(imgUrl)}
-                                onClick={() => {this.changeShownImg(imgUrl)}}
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: "Outfit Page",
+                                        action: 'next image',
+                                        label: this.state.prodData.prodId
+                                    });
+                                    this.changeShownImg(imgUrl)
+                                }}
                             />
                         </div>
                     )
@@ -381,7 +366,14 @@ class OutfitPage extends React.Component  {
                                 border: 'solid white 1px',
                                 backgroundColor: '#000000'
                             }}
-                            onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
+                            onClick={() => {
+                                ReactGA.event({
+                                    category: "Outfit Page",
+                                    action: 'add outfit',
+                                    label: this.state.prodData.prodId
+                                });
+                                this.showAddOutfit(this.state.shownImgHash);
+                            }}
                         >
                             <div
                                 className="add-to-favorites-outfit-page"
@@ -411,7 +403,12 @@ class OutfitPage extends React.Component  {
                                     backgroundColor: '#000000'
                                 }}
                                 onClick={() => {
-                                    history.push(`/register-from-result?id=${this.state.shownImgHash}`)
+                                    ReactGA.event({
+                                        category: "Outfit Page",
+                                        action: 'add outfit',
+                                        label: this.state.prodData.prodId
+                                    });
+                                    history.push(`/register-from-result?id=${this.state.shownImgHash}`);
                                 }}
                             >
                                 <div
@@ -445,6 +442,11 @@ class OutfitPage extends React.Component  {
                                 position: 'relative'
                             }}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Outfit Page",
+                                    action: 'search similar',
+                                    label: this.state.shownImgHash
+                                });
                                 history.push(`/search-from-id?id=${this.state.shownImgHash}`)
                             }}
                         >
@@ -477,6 +479,11 @@ class OutfitPage extends React.Component  {
                             position: 'relative'
                         }}
                         onClick={() => {
+                            ReactGA.event({
+                                category: "Outfit Page",
+                                action: 'share outfit',
+                                label: window.location.href
+                            });
                             if (navigator.share) {
                                 navigator.share({
                                     title: 'Fashion item found on Garms',
@@ -507,6 +514,13 @@ class OutfitPage extends React.Component  {
                     <a
                         href={this.state.prodData.prod_url}
                         target="_blank"
+                        onClick={() => {
+                            ReactGA.event({
+                                category: "Outfit Page",
+                                action: 'buy now',
+                                label: this.state.prodData.prod_url,
+                            });
+                        }}
                     >
                         <div
                             style={{
@@ -569,7 +583,14 @@ class OutfitPage extends React.Component  {
                                     border: 'solid white 1px',
                                     backgroundColor: '#000000'
                                 }}
-                                onClick={() => { this.showAddOutfit(this.state.shownImgHash) }}
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: "Outfit Page",
+                                        action: 'add outfit',
+                                        label: this.state.prodData.prodId
+                                    });
+                                    this.showAddOutfit(this.state.shownImgHash);
+                                }}
                             >
                                 <div
                                     className="add-to-favorites-outfit-page"
@@ -606,7 +627,12 @@ class OutfitPage extends React.Component  {
                                         backgroundColor: '#000000'
                                     }}
                                     onClick={() => {
-                                        history.push(`/register-from-result?id=${this.state.shownImgHash}`)
+                                        ReactGA.event({
+                                            category: "Outfit Page",
+                                            action: 'add outfit',
+                                            label: this.state.prodData.prodId
+                                        });
+                                        history.push(`/register-from-result?id=${this.state.shownImgHash}`);
                                     }}
                                 >
                                     <div
@@ -647,6 +673,11 @@ class OutfitPage extends React.Component  {
                                     backgroundColor: '#000000'
                                 }}
                                 onClick={() => {
+                                    ReactGA.event({
+                                        category: "Outfit Page",
+                                        action: 'search similar',
+                                        label: this.state.shownImgHash
+                                    });
                                     history.push(`/search-from-id?id=${this.state.shownImgHash}`)
                                 }}
                             >
@@ -685,6 +716,11 @@ class OutfitPage extends React.Component  {
                                 backgroundColor: '#000000'
                             }}
                             onClick={() => {
+                                ReactGA.event({
+                                    category: "Outfit Page",
+                                    action: 'share outfit',
+                                    label: window.location.href
+                                });
                                 if (navigator.share) {
                                     navigator.share({
                                         title: 'Fashion item found on Garms',
@@ -723,6 +759,13 @@ class OutfitPage extends React.Component  {
                         <a
                             href={this.state.prodData.prod_url}
                             target="_blank"
+                            onClick={() => {
+                                ReactGA.event({
+                                    category: "Outfit Page",
+                                    action: 'buy now',
+                                    label: this.state.prodData.prod_url,
+                                });
+                            }}
                         >
                             <div
                                 style={{
@@ -908,13 +951,6 @@ class OutfitPage extends React.Component  {
         const OutfitDetailsDesktop = () => {
             return (
                 <div
-                    // style={{
-                    //     display: 'grid',
-                    //     gridTemplateColumns: '1fr 6fr 4fr',
-                    //     gridTemplateRows: '8fr 4fr',
-                    //     gridColumnGap: '0px',
-                    //     gridRowGap: '0px'
-                    // }}
                     className="outfit-details-desktop-grid"
                 >
                     <div

@@ -4,7 +4,7 @@ require('../../../css/garms.css');
 import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import Paper from 'material-ui/Paper';
+import ReactGA from 'react-ga';
 
 
 class Profile extends React.Component  {
@@ -29,7 +29,7 @@ class Profile extends React.Component  {
     }
 
     componentDidMount() {
-        // this.getInstaPicks(this.state.email);
+        ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
     // getInstaPicks(user_email) {

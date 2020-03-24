@@ -1,12 +1,12 @@
 // Register.jsx
 import React from "react";
-
 require('../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {withCookies, Cookies} from 'react-cookie';
 import {instanceOf} from 'prop-types';
+import ReactGA from 'react-ga';
 
 
 class Logout extends React.Component {
@@ -25,6 +25,10 @@ class Logout extends React.Component {
         this.handleLogout = this.handleLogout.bind(this);
     }
 
+    componentDidMount() {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     handleLogout(event) {
         // alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
@@ -40,6 +44,11 @@ class Logout extends React.Component {
         cookies.set('username', '', {path: '/'});
         cookies.set('first_login', '0', {path: '/'});
         document.location.href="/";
+
+        ReactGA.event({
+            category: "Log Out",
+            action: "Log-out complete",
+        });
     }
 
     render() {
