@@ -34,6 +34,7 @@
   "baseline-add_a_photo-24px.svg": "bdb001671e710ff9c8bbd32d11d3f102.svg",
   "image-explore.jpg": "c1322f3257ef5ab1ab4289b135d8e7d6.jpg",
   "baseline-image_search-24px.svg": "904b90c035128599119924a7a0c39089.svg",
+  "logo1.png": "b34112cf9783abbb7c4b85aed2d356bb.png",
   "actions_colorpick.jpg": "9546435ab85f17d329ed8558d03ef892.jpg",
   "actions_search.png": "ea3a11ed7851cf618c5a4d671b955cfc.png",
   "search_choice_type.jpg": "8b72716af476b0d20c13169ec1af335b.jpg",
@@ -43,7 +44,7 @@
   "hanger_small.png": "147035719892507bc312bd616f49b184.png",
   "garms_logo.png": "9d2243d089dda8c786fa099b0b323e98.png",
   "manifest.json": "manifest.json",
-  "apple-touch-icon.png": "apple-touch-icon.png",
   ".DS_Store": ".DS_Store",
-  "logo.png": "logo.png"
+  "logo.png": "logo.png",
+  "apple-touch-icon.png": "apple-touch-icon.png"
 }
