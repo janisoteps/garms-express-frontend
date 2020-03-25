@@ -8,7 +8,6 @@ import SearchChoice from './SearchChoice'
 import TextSearch from '../search/from_text/TextSearch'
 import Wardrobe from '../wardrobe/Wardrobe'
 import Profile from '../user/Profile'
-// import Explorer from '../search/from_explore/Explorer'
 import SearchFromImage from '../search/from_image/SearchFromImage'
 import SearchFromId from '../search/from_id/SearchFromId'
 import OutfitPage from '../search/from_id/OutfitPage'
@@ -16,6 +15,8 @@ import Intro from '../intro/Intro'
 import PasswordReset from "../user/PasswordReset";
 import PasswordResetEmail from "../user/PasswordResetEmail";
 import RecommendDeals from "../recommend/RecommendDeals";
+import DataProtectionPolicy from "../policy/DataProtectionPolicy";
+import TermsOfUse from "../policy/TermsOfUse";
 
 // The Main component renders one of the provided
 // Routes (provided that one matches). The / route will only match
@@ -152,6 +153,18 @@ class Main extends React.Component {
                             username={this.props.username}
                             sex={this.props.sex}
                             completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                        />}
+                    />
+                    <Route
+                        path='/data-protection'
+                        render={(props) => <DataProtectionPolicy
+                            {...props}
+                        />}
+                    />
+                    <Route
+                        path='/terms-conditions'
+                        render={(props) => <TermsOfUse
+                            {...props}
                         />}
                     />
                     <Route path='/'

@@ -9,6 +9,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Route} from 'react-router-dom';
 import ReactGA from 'react-ga';
+import Switch from "@material-ui/core/Switch";
 
 
 export default class RegisterFromResult extends React.Component {
@@ -24,12 +25,15 @@ export default class RegisterFromResult extends React.Component {
             imgHash: null,
             prodHash: null,
             prodInfo: null,
-            navSelection: 'choice'
+            navSelection: 'choice',
+            dataProtectionCheck: false,
+            termsOfUseCheck: false
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleSwitchChange = this.handleSwitchChange.bind(this);
     }
 
     componentDidMount() {
@@ -102,46 +106,54 @@ export default class RegisterFromResult extends React.Component {
             [name]: value
         });
     }
+    handleSwitchChange = event => {
+        this.setState({
+            [event.target.name]: event.target.checked
+        });
+    };
 
     handleSubmit(event) {
-        // alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
-        let email = this.state.email;
-        let pwd = this.state.pwd;
-        let username = this.state.username;
-        let sex = this.state.sex;
+        if (this.state.dataProtectionCheck === true && this.state.termsOfUseCheck === true) {
+            event.preventDefault();
+            let email = this.state.email;
+            let pwd = this.state.pwd;
+            let username = this.state.username;
+            let sex = this.state.sex;
 
-        fetch(window.location.origin + '/api/register', {
-            method: 'post',
-            body: JSON.stringify({
-                email: email,
-                pwd: pwd,
-                sex: sex,
-                username: username
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-                if (data === true) {
-                    ReactGA.event({
-                        category: "Register",
-                        action: "complete",
-                        label: email
-                    });
-                    if (this.state.prodId !== null) {
-                        this.props.handleResultLogin(email, pwd, this.state.imgHash);
-                    } else {
-                        this.setState({
-                            regComplete: true
-                        });
-                    }
-                } else {
-                    alert('Registration failed');
+            fetch(window.location.origin + '/api/register', {
+                method: 'post',
+                body: JSON.stringify({
+                    email: email,
+                    pwd: pwd,
+                    sex: sex,
+                    username: username
+                }),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
                 }
-            });
+            }).then(function(response) { return response.json(); })
+                .then(data => {
+                    if (data['status'] === true) {
+                        ReactGA.event({
+                            category: "Register",
+                            action: "complete",
+                            label: email
+                        });
+                        if (this.state.prodId !== null) {
+                            this.props.handleResultLogin(email, pwd, this.state.imgHash);
+                        } else {
+                            this.setState({
+                                regComplete: true
+                            });
+                        }
+                    } else {
+                        alert(`Registration failed: ${data['response']}`);
+                    }
+                });
+        } else {
+            alert('Please accept "Terms and Conditions" and "Data Protection Policy"');
+        }
     }
 
     handleLogin(event) {
@@ -340,6 +352,62 @@ export default class RegisterFromResult extends React.Component {
                             }}
                         />
                         <br></br>
+                        <br />
+                        <p>By registering you agree to:</p>
+                        <div
+                            style={{
+                                width: '100%',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            <Switch
+                                checked={this.state.dataProtectionCheck}
+                                onChange={this.handleSwitchChange}
+                                color="primary"
+                                name="dataProtectionCheck"
+                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                            />
+                            <Route render={({history}) => (
+                                <b
+                                    onClick={() => {
+                                        history.push(`/data-protection`);
+                                    }}
+                                    style={{
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Data Protection Policy
+                                </b>
+                            )}/>
+                        </div>
+
+                        <div
+                            style={{
+                                width: '100%',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            <Switch
+                                checked={this.state.termsOfUseCheck}
+                                onChange={this.handleSwitchChange}
+                                color="primary"
+                                name="termsOfUseCheck"
+                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                            />
+                            <Route render={({history}) => (
+                                <b
+                                    onClick={() => {
+                                        history.push(`/terms-conditions`);
+                                    }}
+                                    style={{
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Terms and Conditions of Use
+                                </b>
+                            )}/>
+                        </div>
+                        <br />
                         <RaisedButton
                             label="Register"
                             primary={true}

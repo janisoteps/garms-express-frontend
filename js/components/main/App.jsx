@@ -61,7 +61,11 @@ class App extends React.Component {
             }
         });
         const href = window.location.href;
-        if (href.includes('login')) {
+        if (href.includes('login')
+            || href.includes('data-protection')
+            || href.includes('terms-conditions')
+            || href.includes('register')
+        ) {
             this.setState({
                 loginPage: true
             })
