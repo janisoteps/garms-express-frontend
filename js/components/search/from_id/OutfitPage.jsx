@@ -346,7 +346,7 @@ class OutfitPage extends React.Component  {
                 <div
                     style={{
                         position: 'fixed',
-                        bottom: 0,
+                        bottom: this.props.showIosNav === true ? '40px' : 0,
                         backgroundColor: 'white',
                         left: 0,
                         width: '100vw'

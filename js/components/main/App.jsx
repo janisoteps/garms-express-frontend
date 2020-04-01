@@ -9,6 +9,8 @@ import {withRouter, Route} from 'react-router-dom';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import ReactGA from 'react-ga';
+import AddToHomeScreenPopup from "./AddToHomeScreenPopup";
+import StandaloneIOSNav from "./StandaloneIOSNav";
 ReactGA.initialize('UA-161747441-1');
 
 
@@ -28,7 +30,9 @@ class App extends React.Component {
             higherCat: '',
             firstLogin: false,
             failedLogin: false,
-            loginPage: false
+            loginPage: false,
+            showInstallPopup: false,
+            showIosNav: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -37,11 +41,27 @@ class App extends React.Component {
         this.completeFirstLogin = this.completeFirstLogin.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleResultLogin = this.handleResultLogin.bind(this);
+        this.iOS = this.iOS.bind(this);
+        this.closeShowInstallPopup = this.closeShowInstallPopup.bind(this);
     }
 
     componentDidMount() {
-        this._ismounted = true;
         const {cookies} = this.props;
+
+        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+        const showInstallPopupCookie = cookies.get('show_install_popup');
+        console.log(`iOS: ${this.iOS()}`);
+        console.log(`standaloneMode: ${isInStandaloneMode()}`);
+        console.log(`showInstallPopupCookie: ${showInstallPopupCookie}`);
+        if (this.iOS() && !isInStandaloneMode() && showInstallPopupCookie !== 'false') {
+            this.setState({ showInstallPopup: true });
+        }
+
+        if (this.iOS() && isInStandaloneMode()) {
+            this.setState({ showIosNav: true });
+        }
+
+        this._ismounted = true;
         const queryString = window.location.search;
 
         this.setState({
@@ -93,6 +113,32 @@ class App extends React.Component {
                 }
             }
         }
+    }
+
+    closeShowInstallPopup() {
+        const {cookies} = this.props;
+        cookies.set('show_install_popup', 'false', {path: '/'});
+
+        this.setState({
+            showInstallPopup: false
+        })
+    }
+
+    iOS() {
+        const iDevices = [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ];
+        if (!!navigator.platform) {
+            while (iDevices.length) {
+                if (navigator.platform === iDevices.pop()){ return true; }
+            }
+        }
+        return false;
     }
 
     // Updates input field state
@@ -328,10 +374,19 @@ class App extends React.Component {
                                 handleLogin={(email, password) => {this.handleLogin(email, password)}}
                                 handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
                                 failedLogin={this.state.failedLogin}
+                                showIosNav={this.state.showIosNav}
                             />
                         </div>
                     )}
 
+                    {this.state.showInstallPopup === true && (
+                        <AddToHomeScreenPopup
+                            closeShowInstallPopup={() => {this.closeShowInstallPopup()}}
+                        />
+                    )}
+                    {this.state.showIosNav === true && (
+                        <StandaloneIOSNav />
+                    )}
                 </div>
             </MuiThemeProvider>
         )

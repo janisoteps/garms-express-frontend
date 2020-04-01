@@ -144,6 +144,7 @@ class Main extends React.Component {
                                email={this.props.email}
                                firstLogin={this.props.firstLogin}
                                completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                               showIosNav={this.props.showIosNav}
                            />}
                     />
                     <Route

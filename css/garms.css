@@ -49,6 +49,17 @@ body{
     cursor: pointer;
 }
 
+.ok-button-pwa {
+    display: inline-block;
+    width: 90px;
+    border: 3px #110a16 solid;
+    border-radius: 3px;
+    cursor: pointer;
+    color: white;
+    background-color: black;
+    margin-bottom: 10px;
+}
+
 .single-test-run-button {
     margin-top: 6px !important;
     margin-right: 15px !important;
