@@ -50,9 +50,9 @@ class App extends React.Component {
 
         const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
         const showInstallPopupCookie = cookies.get('show_install_popup');
-        console.log(`iOS: ${this.iOS()}`);
-        console.log(`standaloneMode: ${isInStandaloneMode()}`);
-        console.log(`showInstallPopupCookie: ${showInstallPopupCookie}`);
+        // console.log(`iOS: ${this.iOS()}`);
+        // console.log(`standaloneMode: ${isInStandaloneMode()}`);
+        // console.log(`showInstallPopupCookie: ${showInstallPopupCookie}`);
         if (this.iOS() && !isInStandaloneMode() && showInstallPopupCookie !== 'false') {
             this.setState({ showInstallPopup: true });
         }
