@@ -13,7 +13,8 @@ class ResultCard extends React.Component {
         this.state = {
             isAuth: this.props.isAuth,
             showExplore: false,
-            device: this.props.device
+            device: this.props.device,
+            imageLoaded: false
         };
 
         this.updateImgProtocol = this.updateImgProtocol.bind(this);
@@ -103,23 +104,42 @@ class ResultCard extends React.Component {
 
         const ImageCarousel = () => {
             return (
-                <div>
+                <div
+                    style={{
+                        width: '100%'
+                    }}
+                >
                     <Route render={({history}) => (
-                        <img
-                            className="product-image"
-                            src={this.updateImgProtocol(img_url)}
+                        <div
                             style={{
-                                cursor: 'pointer'
+                                width: '100%',
+                                paddingBottom: '125%',
+                                position: 'relative',
+                                overflowY: 'hidden'
                             }}
-                            onClick={() => {
-                                ReactGA.event({
-                                    category: "Result Card Action",
-                                    action: 'open outfit',
-                                    label: prod_hash
-                                });
-                                history.push(`/outfit-page?id=${prod_hash}&sex=${productInfo.sex}`)
-                            }}
-                        />
+                        >
+                            <img
+                                className="product-image"
+                                src={this.updateImgProtocol(img_url)}
+                                style={{
+                                    cursor: 'pointer',
+                                    backgroundColor: '#e9dcc9',
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    width: '100%',
+                                    height: 'auto'
+                                }}
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: "Result Card Action",
+                                        action: 'open outfit',
+                                        label: prod_hash
+                                    });
+                                    history.push(`/outfit-page?id=${prod_hash}&sex=${productInfo.sex}`)
+                                }}
+                            />
+                        </div>
                     )}/>
                 </div>
             )
@@ -450,7 +470,8 @@ class ResultCard extends React.Component {
                     <div
                         style={{
                             display: 'inline-block',
-                            position: 'relative'
+                            position: 'relative',
+                            width: '100%'
                         }}
                     >
                         <ImageCarousel />

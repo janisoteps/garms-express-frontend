@@ -469,6 +469,32 @@ app.get('/api/text_search', function (req, res) {
 });
 
 
+app.post('/api/text_search_infinite', function (req, res) {
+    const sex = req.body.sex;
+    const search_string = req.body.search_string;
+    const prev_prod_ids = req.body.prev_prod_ids;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'text_search_infinite',
+        body: {
+            sex: sex,
+            search_string: search_string,
+            prev_prod_ids: prev_prod_ids
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Get product category, color and siamese encoding
 app.post('/api/img_features', upload.single('image'), function (req, res) {
 

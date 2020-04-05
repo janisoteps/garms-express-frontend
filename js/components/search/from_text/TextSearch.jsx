@@ -50,7 +50,10 @@ class TextSearch extends React.Component  {
             tagPickerShown: false,
             addOutfitShown: false,
             loadingContent: null,
-            priceFilterShown: false
+            priceFilterShown: false,
+            loadedProdIds: null,
+            infiniteCount: 0,
+            infiniteLoading: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -67,10 +70,13 @@ class TextSearch extends React.Component  {
         this.changeSex = this.changeSex.bind(this);
         this.changeOutfitShown = this.changeOutfitShown.bind(this);
         this.showPriceFilter = this.showPriceFilter.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+        this.infiniteTextSearch = this.infiniteTextSearch.bind(this);
     }
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
 
         const queryString = window.location.search;
         if(queryString.length > 0) {
@@ -137,6 +143,12 @@ class TextSearch extends React.Component  {
                                         noResult: true
                                     });
                                 }
+                                const loadedProdIds = data.res.map(resDict => {
+                                    return resDict.prod_serial.prod_id
+                                });
+                                this.setState({
+                                    loadedProdIds: loadedProdIds
+                                });
                             }
                         });
                 });
@@ -149,6 +161,28 @@ class TextSearch extends React.Component  {
             this.setState({
                 firstLogin: this.props.firstLogin
             });
+        }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll)
+    }
+
+    handleScroll(event) {
+        const docHeight = document.body.scrollHeight;
+        // console.log(`Doc height: ${docHeight}`);
+        const scrollDistance = window.pageYOffset + document.body.clientHeight;
+        // console.log(`Scroll distance: ${scrollDistance}`);
+
+        if (scrollDistance > (docHeight - docHeight * (0.5 ** (this.state.infiniteCount + 1)))) {
+            console.log('infinite trigger');
+            if(this.state.infiniteLoading === false) {
+                console.log('loading infinite scroll data');
+                this.setState({
+                    infiniteLoading: true
+                });
+                this.infiniteTextSearch();
+            }
         }
     }
 
@@ -413,6 +447,44 @@ class TextSearch extends React.Component  {
                             }
                         }
                     });
+            });
+        });
+    }
+
+    infiniteTextSearch() {
+        const searchStr = window.location.search.split('search=')[1].split('&')[0];
+        const sexString = window.location.search.split('sex=')[1];
+        const parsedSearchString = decodeURIComponent(searchStr);
+        const sex = this.state.sex ? this.state.sex : sexString;
+
+        ReactGA.event({
+            category: "Text Search",
+            action: 'infinite scroll',
+            label: parsedSearchString,
+        });
+
+        fetch(window.location.origin + '/api/text_search_infinite', {
+            method: 'post',
+            body: JSON.stringify({
+                sex: sex,
+                search_string: parsedSearchString,
+                prev_prod_ids: this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            const loadedProdIds = data.res.map(resDict => {
+                return resDict.prod_serial.prod_id
+            });
+            this.setState({
+                loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                results: this.state.results.concat(data.res),
+                infiniteCount: this.state.infiniteCount + 1,
+                infiniteLoading: false
             });
         });
     }
