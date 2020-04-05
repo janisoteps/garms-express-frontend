@@ -218,7 +218,7 @@ body{
     /*margin-top: calc(((20vh - 25px) / 2) - 30px);*/
     background-color: white;
     border-radius: 4px;
-    box-shadow: 0px 0px 8px 0 rgba(0, 0, 0, 0.2);
+    /*box-shadow: 0px 0px 8px 0 rgba(0, 0, 0, 0.2);*/
 }
 
 .image-search-icon{
@@ -818,7 +818,6 @@ body{
 
 .text-search-button{
     display: inline-block;
-    width: 60px;
     cursor: pointer;
     height: 30px;
 }

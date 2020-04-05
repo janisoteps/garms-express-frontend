@@ -71,6 +71,77 @@ class TextSearch extends React.Component  {
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
+
+        const queryString = window.location.search;
+        if(queryString.length > 0) {
+            const searchStr = window.location.search.split('search=')[1].split('&')[0];
+            const sexString = window.location.search.split('sex=')[1];
+            const parsedSearchString = decodeURIComponent(searchStr);
+
+            this.setState({
+                loading: true
+            });
+
+            fetch(`${window.location.origin}/api/get_random_loading_content`, {
+                method: 'get',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(function(response) {
+                return response.json();
+            }).then(data => {
+                this.setState({
+                    loadingContent: data
+                }, () => {
+                    this.setState({
+                        loading: true,
+                        mainSuggestion: null,
+                        moreSuggestions: []
+                    });
+                    // let inputString = input ? input : this.state.searchString;
+                    ReactGA.event({
+                        category: "Text Search",
+                        action: 'text search',
+                        label: parsedSearchString,
+                    });
+                    if(parsedSearchString.length === 0){
+                        this.setState({
+                            loading: false,
+                            noResult: true
+                        });
+                        return
+                    }
+                    const inputArray = parsedSearchString.split(' ');
+                    const searchString = inputArray.join('+');
+                    const sex = this.state.sex ? this.state.sex : sexString;
+
+                    fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+                        method: 'get'
+                    }).then(function(response) { return response.json(); })
+                        .then(data => {
+                            if (typeof data.res === "undefined") {
+                                this.setState({
+                                    results: [],
+                                    loading: false,
+                                    noResult: true
+                                });
+                            } else {
+                                this.setState({
+                                    results: data.res,
+                                    loading: false,
+                                    posTags: data.tags
+                                });
+                                if (data.res.length === 0) {
+                                    this.setState({
+                                        noResult: true
+                                    });
+                                }
+                            }
+                        });
+                });
+            });
+        }
     }
 
     componentDidUpdate(prevProps){
