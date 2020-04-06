@@ -93,7 +93,7 @@ class ResultCard extends React.Component {
         const shop = productInfo.shop;
         const brand = productInfo.brand;
         const img_url = imageData.img_url;
-        const name = productInfo.name;
+        const name = imageData.name;
         const prod_url = productInfo.prod_url;
         const currency = '£';
         const price = productInfo.price.toFixed(2);

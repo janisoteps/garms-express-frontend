@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import ResultFilters from "../results/ResultFilters";
 import LoadingScreen from "../../loading/LoadingScreen";
+import InfiniteSpinner from "../../loading/InfiniteSpinner";
 import ReactGA from 'react-ga';
 
 
@@ -53,7 +54,8 @@ class TextSearch extends React.Component  {
             priceFilterShown: false,
             loadedProdIds: null,
             infiniteCount: 0,
-            infiniteLoading: false
+            infiniteLoading: false,
+            infiniteLoadingComplete: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -174,14 +176,18 @@ class TextSearch extends React.Component  {
         const scrollDistance = window.pageYOffset + document.body.clientHeight;
         // console.log(`Scroll distance: ${scrollDistance}`);
 
-        if (scrollDistance > (docHeight - docHeight * (0.5 ** (this.state.infiniteCount + 1)))) {
-            console.log('infinite trigger');
+        if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
             if(this.state.infiniteLoading === false) {
-                console.log('loading infinite scroll data');
-                this.setState({
-                    infiniteLoading: true
-                });
-                this.infiniteTextSearch();
+                if (this.state.infiniteCount < 6) {
+                    this.setState({
+                        infiniteLoading: true
+                    });
+                    this.infiniteTextSearch();
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    });
+                }
             }
         }
     }
@@ -480,12 +486,18 @@ class TextSearch extends React.Component  {
             const loadedProdIds = data.res.map(resDict => {
                 return resDict.prod_serial.prod_id
             });
-            this.setState({
-                loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
-                results: this.state.results.concat(data.res),
-                infiniteCount: this.state.infiniteCount + 1,
-                infiniteLoading: false
-            });
+            if (loadedProdIds.length > 0) {
+                this.setState({
+                    loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                    results: this.state.results.concat(data.res),
+                    infiniteCount: this.state.infiniteCount + 1,
+                    infiniteLoading: false
+                });
+            } else {
+                this.setState({
+                    infiniteLoadingComplete: true
+                })
+            }
         });
     }
 
@@ -837,6 +849,36 @@ class TextSearch extends React.Component  {
                                     changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
                                     addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                                 />
+
+                                {this.state.infiniteLoading && !this.state.infiniteLoadingComplete && (
+                                    <div
+                                        style={{
+                                            marginBottom: '100px',
+                                            marginTop: '100px',
+                                            paddingBottom: '50px'
+                                        }}
+                                    >
+                                        <br />
+                                            <InfiniteSpinner />
+                                        <br />
+                                    </div>
+                                )}
+                                {this.state.infiniteLoadingComplete && (
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            textAlign: 'center'
+                                        }}
+                                    >
+                                        <br />
+                                        <br />
+                                        <div className="infinite-spinner-done">
+
+                                        </div><h4>All Results Loaded</h4>
+                                        <br />
+                                        <br />
+                                    </div>
+                                )}
 
                                 {this.state.addOutfitShown === false && (
                                     <ResultFilters
