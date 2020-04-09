@@ -55,7 +55,8 @@ class TextSearch extends React.Component  {
             loadedProdIds: null,
             infiniteCount: 0,
             infiniteLoading: false,
-            infiniteLoadingComplete: false
+            infiniteLoadingComplete: false,
+            searchSimilarInfinite: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -178,11 +179,18 @@ class TextSearch extends React.Component  {
 
         if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
             if(this.state.infiniteLoading === false) {
-                if (this.state.infiniteCount < 6) {
+                if (this.state.infiniteCount < 10) {
                     this.setState({
                         infiniteLoading: true
                     });
-                    this.infiniteTextSearch();
+                    if (this.state.searchSimilarInfinite) {
+                        this.searchSimilarImagesInfinite(
+                            this.state.results[0]['image_data']['img_hash'],
+                            this.state.selectedColor
+                        );
+                    } else {
+                        this.infiniteTextSearch();
+                    }
                 } else {
                     this.setState({
                         infiniteLoadingComplete: true
@@ -259,11 +267,11 @@ class TextSearch extends React.Component  {
                     loading: true
                 });
 
-                let posTags = this.state.posTags;
-                let negTags = this.state.negTags;
-                let sex = this.state.sex;
-                let noShop = this.state.noShop;
-                let filterBrands = this.state.filterBrands;
+                const posTags = this.state.posTags;
+                const negTags = this.state.negTags;
+                const sex = this.state.sex;
+                const noShop = this.state.noShop;
+                const filterBrands = this.state.filterBrands;
                 let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
                 if (color_1.length === 0) {
                     color_1 = this.state.results[0]['image_data']['color_1'];
@@ -277,7 +285,6 @@ class TextSearch extends React.Component  {
                         tags_positive: posTags,
                         tags_negative: negTags,
                         color_1: color_1,
-                        // color_2: color_2,
                         sex: sex,
                         no_shop: noShop,
                         max_price: maxPrice,
@@ -290,19 +297,131 @@ class TextSearch extends React.Component  {
                 }).then(function(response) {
                     return response.json();
                 }).then(data => {
+                    const loadedProdIds = data.res.map(resDict => {
+                        return resDict.prod_serial.prod_id
+                    });
+                    if (loadedProdIds.length > 0) {
+                        this.setState({
+                            results: data.res,
+                            loading: false,
+                            infiniteLoading: false,
+                            searchSimilarInfinite: true,
+                            loadedProdIds: loadedProdIds
+                        });
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth"
+                        });
+                        window.scrollTo(0, 0);
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true
+                        })
+                    }
+                });
+            });
+        });
+    }
+
+    searchSimilarImagesInfinite(imgHash, colorRgb1){
+        // this.setState({
+        //     loading: true
+        // });
+        ReactGA.event({
+            category: "Text Search",
+            action: 'search similar',
+            label: imgHash
+        });
+
+        const posTags = this.state.posTags;
+        const negTags = this.state.negTags;
+        const sex = this.state.sex;
+        const noShop = this.state.noShop;
+        const filterBrands = this.state.filterBrands;
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+        if (color_1.length === 0) {
+            color_1 = this.state.results[0]['image_data']['color_1'];
+        }
+        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+
+        fetch(window.location.origin + '/api/search_similar_infinite', {
+            method: 'post',
+            body: JSON.stringify({
+                img_hash: imgHash,
+                tags_positive: posTags,
+                tags_negative: negTags,
+                color_1: color_1,
+                sex: sex,
+                no_shop: noShop,
+                max_price: maxPrice,
+                brands: filterBrands,
+                prev_prod_ids: this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            const loadedProdIds = data.res.map(resDict => {
+                return resDict.prod_serial.prod_id
+            });
+            if (this.state.searchSimilarInfinite) {
+                if (loadedProdIds.length > 0) {
+                    this.setState({
+                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                        results: this.state.results.concat(data.res),
+                        infiniteCount: this.state.infiniteCount + 1,
+                        infiniteLoading: false
+                    });
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    })
+                }
+            } else {
+                if (loadedProdIds.length > 0) {
                     this.setState({
                         results: data.res,
                         loading: false,
-                        // prodImgShown: prodImgShown
+                        infiniteLoading: false,
+                        searchSimilarInfinite: true,
+                        loadedProdIds: loadedProdIds,
+                        infiniteCount: this.state.infiniteCount + 1
                     });
                     window.scrollTo({
                         top: 0,
                         behavior: "smooth"
                     });
                     window.scrollTo(0, 0);
-                });
-            });
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    })
+                }
+            }
         });
+
+        // fetch(`${window.location.origin}/api/get_random_loading_content`, {
+        //     method: 'get',
+        //     headers: {
+        //         Accept: 'application/json',
+        //         'Content-Type': 'application/json',
+        //     }
+        // }).then(function(response) {
+        //     return response.json();
+        // }).then(data => {
+        //     this.setState({
+        //         loadingContent: data
+        //     }, () => {
+        //         this.setState({
+        //             loading: true
+        //         });
+        //
+        //
+        //     });
+        // });
     }
 
     // Set main color and category state based on selection from modal

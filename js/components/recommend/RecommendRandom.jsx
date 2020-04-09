@@ -37,6 +37,17 @@ class RecommendRandom extends React.Component  {
         })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            this.props.lookFilter === nextProps.lookFilter
+            && this.state.outfits.length === nextState.outfits.length
+        ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     showAddOutfit(imgHash) {
         this.props.showAddOutfit(imgHash);
     }

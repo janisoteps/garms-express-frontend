@@ -46,6 +46,7 @@ class ResultsFromSearch extends React.Component  {
         if (
             this.props.results.length === nextProps.results.length
             && this.state.addOutfitInput === nextState.addOutfitInput
+            && this.state.posNegButtonTag === nextState.posNegButtonTag
         ) {
             return false;
         } else {
