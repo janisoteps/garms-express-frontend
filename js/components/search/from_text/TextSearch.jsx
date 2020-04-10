@@ -14,6 +14,7 @@ import ResultFilters from "../results/ResultFilters";
 import LoadingScreen from "../../loading/LoadingScreen";
 import InfiniteSpinner from "../../loading/InfiniteSpinner";
 import ReactGA from 'react-ga';
+import {Route} from "react-router-dom";
 
 
 //Component to search for products using text input
@@ -80,12 +81,17 @@ class TextSearch extends React.Component  {
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
         window.addEventListener('scroll', this.handleScroll, { passive: true });
+        this._ismounted = true;
 
         const queryString = window.location.search;
         if(queryString.length > 0) {
             const searchStr = window.location.search.split('search=')[1].split('&')[0];
-            const sexString = window.location.search.split('sex=')[1];
+            const sexString = window.location.search.split('sex=')[1].split('&')[0];
             const parsedSearchString = decodeURIComponent(searchStr);
+            const searchId = window.location.search.split('id=')[1]
+                ? window.location.search.split('id=')[1].split('&')[0] : null;
+            const searchColorStr = window.location.search.split('clr=')[1]
+                ? window.location.search.split('clr=')[1].split('&')[0] : null;
 
             this.setState({
                 loading: true
@@ -108,52 +114,65 @@ class TextSearch extends React.Component  {
                         mainSuggestion: null,
                         moreSuggestions: []
                     });
-                    // let inputString = input ? input : this.state.searchString;
-                    ReactGA.event({
-                        category: "Text Search",
-                        action: 'text search',
-                        label: parsedSearchString,
-                    });
-                    if(parsedSearchString.length === 0){
-                        this.setState({
-                            loading: false,
-                            noResult: true
-                        });
-                        return
-                    }
-                    const inputArray = parsedSearchString.split(' ');
-                    const searchString = inputArray.join('+');
-                    const sex = this.state.sex ? this.state.sex : sexString;
 
-                    fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
-                        method: 'get'
-                    }).then(function(response) { return response.json(); })
-                        .then(data => {
-                            if (typeof data.res === "undefined") {
-                                this.setState({
-                                    results: [],
-                                    loading: false,
-                                    noResult: true
-                                });
-                            } else {
-                                this.setState({
-                                    results: data.res,
-                                    loading: false,
-                                    posTags: data.tags
-                                });
-                                if (data.res.length === 0) {
+                    if (searchId !== null) {
+                        console.log(searchColorStr);
+                        const decodedSearchColorStr = decodeURIComponent(searchColorStr);
+                        const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
+                        console.log(searchColorInts);
+                        this.setState({
+                            posTags: parsedSearchString.split(' '),
+                            selectedColor: searchColorInts
+                        }, () => {
+                            this.searchSimilarImages(searchId, searchColorInts);
+                        });
+                    } else {
+                        ReactGA.event({
+                            category: "Text Search",
+                            action: 'text search',
+                            label: parsedSearchString,
+                        });
+                        if(parsedSearchString.length === 0){
+                            this.setState({
+                                loading: false,
+                                noResult: true
+                            });
+                            return
+                        }
+                        const inputArray = parsedSearchString.split(' ');
+                        const searchString = inputArray.join('+');
+                        const sex = this.state.sex ? this.state.sex : sexString;
+
+                        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+                            method: 'get'
+                        }).then(function(response) { return response.json(); })
+                            .then(data => {
+                                if (typeof data.res === "undefined") {
                                     this.setState({
+                                        results: [],
+                                        loading: false,
                                         noResult: true
                                     });
+                                } else {
+                                    this.setState({
+                                        results: data.res,
+                                        loading: false,
+                                        posTags: data.tags
+                                    });
+                                    if (data.res.length === 0) {
+                                        this.setState({
+                                            noResult: true
+                                        });
+                                    }
+                                    const loadedProdIds = data.res.map(resDict => {
+                                        return resDict.prod_serial.prod_id
+                                    });
+                                    this.setState({
+                                        loadedProdIds: loadedProdIds
+                                    });
                                 }
-                                const loadedProdIds = data.res.map(resDict => {
-                                    return resDict.prod_serial.prod_id
-                                });
-                                this.setState({
-                                    loadedProdIds: loadedProdIds
-                                });
-                            }
-                        });
+                            });
+                    }
                 });
             });
         }
@@ -168,7 +187,8 @@ class TextSearch extends React.Component  {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll)
+        this._ismounted = false;
+        window.removeEventListener('scroll', this.handleScroll);
     }
 
     handleScroll(event) {
@@ -297,26 +317,34 @@ class TextSearch extends React.Component  {
                 }).then(function(response) {
                     return response.json();
                 }).then(data => {
-                    const loadedProdIds = data.res.map(resDict => {
-                        return resDict.prod_serial.prod_id
-                    });
-                    if (loadedProdIds.length > 0) {
-                        this.setState({
-                            results: data.res,
-                            loading: false,
-                            infiniteLoading: false,
-                            searchSimilarInfinite: true,
-                            loadedProdIds: loadedProdIds
+                    if (this._ismounted) {
+                        const loadedProdIds = data.res.map(resDict => {
+                            return resDict.prod_serial.prod_id
                         });
-                        window.scrollTo({
-                            top: 0,
-                            behavior: "smooth"
-                        });
-                        window.scrollTo(0, 0);
-                    } else {
-                        this.setState({
-                            infiniteLoadingComplete: true
-                        })
+                        if (loadedProdIds.length > 0) {
+                            const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                            const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                            console.log(this.state.selectedColor);
+                            console.log(encodeURIComponent(this.state.selectedColor));
+                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(this.state.selectedColor)}`);
+                            this.setState({
+                                results: data.res,
+                                loading: false,
+                                infiniteLoading: false,
+                                searchSimilarInfinite: true,
+                                loadedProdIds: loadedProdIds,
+                                infiniteCount: 0
+                            });
+                            window.scrollTo({
+                                top: 0,
+                                behavior: "smooth"
+                            });
+                            window.scrollTo(0, 0);
+                        } else {
+                            this.setState({
+                                infiniteLoadingComplete: true
+                            })
+                        }
                     }
                 });
             });
@@ -364,64 +392,46 @@ class TextSearch extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            const loadedProdIds = data.res.map(resDict => {
-                return resDict.prod_serial.prod_id
-            });
-            if (this.state.searchSimilarInfinite) {
-                if (loadedProdIds.length > 0) {
-                    this.setState({
-                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
-                        results: this.state.results.concat(data.res),
-                        infiniteCount: this.state.infiniteCount + 1,
-                        infiniteLoading: false
-                    });
+            if (this._ismounted) {
+                const loadedProdIds = data.res.map(resDict => {
+                    return resDict.prod_serial.prod_id
+                });
+                if (this.state.searchSimilarInfinite) {
+                    if (loadedProdIds.length > 0) {
+                        this.setState({
+                            loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                            results: this.state.results.concat(data.res),
+                            infiniteCount: this.state.infiniteCount + 1,
+                            infiniteLoading: false
+                        });
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true
+                        })
+                    }
                 } else {
-                    this.setState({
-                        infiniteLoadingComplete: true
-                    })
-                }
-            } else {
-                if (loadedProdIds.length > 0) {
-                    this.setState({
-                        results: data.res,
-                        loading: false,
-                        infiniteLoading: false,
-                        searchSimilarInfinite: true,
-                        loadedProdIds: loadedProdIds,
-                        infiniteCount: this.state.infiniteCount + 1
-                    });
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
-                    window.scrollTo(0, 0);
-                } else {
-                    this.setState({
-                        infiniteLoadingComplete: true
-                    })
+                    if (loadedProdIds.length > 0) {
+                        this.setState({
+                            results: data.res,
+                            loading: false,
+                            infiniteLoading: false,
+                            searchSimilarInfinite: true,
+                            loadedProdIds: loadedProdIds,
+                            infiniteCount: this.state.infiniteCount + 1
+                        });
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth"
+                        });
+                        window.scrollTo(0, 0);
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true
+                        })
+                    }
                 }
             }
         });
-
-        // fetch(`${window.location.origin}/api/get_random_loading_content`, {
-        //     method: 'get',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json',
-        //     }
-        // }).then(function(response) {
-        //     return response.json();
-        // }).then(data => {
-        //     this.setState({
-        //         loadingContent: data
-        //     }, () => {
-        //         this.setState({
-        //             loading: true
-        //         });
-        //
-        //
-        //     });
-        // });
     }
 
     // Set main color and category state based on selection from modal
@@ -602,20 +612,22 @@ class TextSearch extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            const loadedProdIds = data.res.map(resDict => {
-                return resDict.prod_serial.prod_id
-            });
-            if (loadedProdIds.length > 0) {
-                this.setState({
-                    loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
-                    results: this.state.results.concat(data.res),
-                    infiniteCount: this.state.infiniteCount + 1,
-                    infiniteLoading: false
+            if (this._ismounted) {
+                const loadedProdIds = data.res.map(resDict => {
+                    return resDict.prod_serial.prod_id
                 });
-            } else {
-                this.setState({
-                    infiniteLoadingComplete: true
-                })
+                if (loadedProdIds.length > 0) {
+                    this.setState({
+                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                        results: this.state.results.concat(data.res),
+                        infiniteCount: this.state.infiniteCount + 1,
+                        infiniteLoading: false
+                    });
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    })
+                }
             }
         });
     }
@@ -797,7 +809,14 @@ class TextSearch extends React.Component  {
                         <div className="overlay">
                             <Paper zDepth={1} className="error-modal">
                                 <h3>Couldn't find anything, try a different search</h3>
-                                <RaisedButton className="ok-button" label="OK" onClick={() => { window.location.reload(); }} />
+                                <Route render={({ history }) => (
+                                    <RaisedButton className="ok-button" label="OK" onClick={() => {
+                                        history.push('/textsearch');
+                                        this.setState({
+                                            noResult: false
+                                        })
+                                    }} />
+                                )} />
                             </Paper>
                         </div>
                     )}
