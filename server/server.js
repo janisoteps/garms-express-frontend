@@ -469,6 +469,32 @@ app.get('/api/text_search', function (req, res) {
 });
 
 
+app.post('/api/text_search_infinite', function (req, res) {
+    const sex = req.body.sex;
+    const search_string = req.body.search_string;
+    const prev_prod_ids = req.body.prev_prod_ids;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'text_search_infinite',
+        body: {
+            sex: sex,
+            search_string: search_string,
+            prev_prod_ids: prev_prod_ids
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Get product category, color and siamese encoding
 app.post('/api/img_features', upload.single('image'), function (req, res) {
 
@@ -535,13 +561,11 @@ app.post('/api/search_from_image', function (req, res) {
 });
 
 
-// Search products based on confirmation modal input
 app.post('/api/search_similar', function (req, res) {
     let img_hash = req.body.img_hash;
     let tags_positive = req.body.tags_positive;
     let tags_negative = req.body.tags_negative;
     let color_1 = req.body.color_1;
-    // let color_2 = req.body.color_2;
     let no_shop = req.body.no_shop;
     let sex = req.body.sex;
     let max_price = req.body.max_price;
@@ -560,6 +584,44 @@ app.post('/api/search_similar', function (req, res) {
             no_shop: no_shop,
             max_price: max_price,
             brands: brands
+        }),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/search_similar_infinite', function (req, res) {
+    const img_hash = req.body.img_hash;
+    const tags_positive = req.body.tags_positive;
+    const tags_negative = req.body.tags_negative;
+    const color_1 = req.body.color_1;
+    const no_shop = req.body.no_shop;
+    const sex = req.body.sex;
+    const max_price = req.body.max_price;
+    const brands = req.body.brands;
+    const prev_prod_ids = req.body.prev_prod_ids;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'search_similar_infinite',
+        body: JSON.stringify({
+            img_hash: img_hash,
+            tags_positive: tags_positive,
+            tags_negative: tags_negative,
+            color_1: color_1,
+            sex: sex,
+            no_shop: no_shop,
+            max_price: max_price,
+            brands: brands,
+            prev_prod_ids: prev_prod_ids
         }),
         json: true
     };

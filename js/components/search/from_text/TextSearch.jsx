@@ -12,7 +12,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
 import ResultFilters from "../results/ResultFilters";
 import LoadingScreen from "../../loading/LoadingScreen";
+import InfiniteSpinner from "../../loading/InfiniteSpinner";
 import ReactGA from 'react-ga';
+import {Route} from "react-router-dom";
 
 
 //Component to search for products using text input
@@ -50,7 +52,12 @@ class TextSearch extends React.Component  {
             tagPickerShown: false,
             addOutfitShown: false,
             loadingContent: null,
-            priceFilterShown: false
+            priceFilterShown: false,
+            loadedProdIds: null,
+            infiniteCount: 0,
+            infiniteLoading: false,
+            infiniteLoadingComplete: false,
+            searchSimilarInfinite: false
         };
 
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -67,16 +74,24 @@ class TextSearch extends React.Component  {
         this.changeSex = this.changeSex.bind(this);
         this.changeOutfitShown = this.changeOutfitShown.bind(this);
         this.showPriceFilter = this.showPriceFilter.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+        this.infiniteTextSearch = this.infiniteTextSearch.bind(this);
     }
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+        this._ismounted = true;
 
         const queryString = window.location.search;
         if(queryString.length > 0) {
             const searchStr = window.location.search.split('search=')[1].split('&')[0];
-            const sexString = window.location.search.split('sex=')[1];
+            const sexString = window.location.search.split('sex=')[1].split('&')[0];
             const parsedSearchString = decodeURIComponent(searchStr);
+            const searchId = window.location.search.split('id=')[1]
+                ? window.location.search.split('id=')[1].split('&')[0] : null;
+            const searchColorStr = window.location.search.split('clr=')[1]
+                ? window.location.search.split('clr=')[1].split('&')[0] : null;
 
             this.setState({
                 loading: true
@@ -99,46 +114,65 @@ class TextSearch extends React.Component  {
                         mainSuggestion: null,
                         moreSuggestions: []
                     });
-                    // let inputString = input ? input : this.state.searchString;
-                    ReactGA.event({
-                        category: "Text Search",
-                        action: 'text search',
-                        label: parsedSearchString,
-                    });
-                    if(parsedSearchString.length === 0){
-                        this.setState({
-                            loading: false,
-                            noResult: true
-                        });
-                        return
-                    }
-                    const inputArray = parsedSearchString.split(' ');
-                    const searchString = inputArray.join('+');
-                    const sex = this.state.sex ? this.state.sex : sexString;
 
-                    fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
-                        method: 'get'
-                    }).then(function(response) { return response.json(); })
-                        .then(data => {
-                            if (typeof data.res === "undefined") {
-                                this.setState({
-                                    results: [],
-                                    loading: false,
-                                    noResult: true
-                                });
-                            } else {
-                                this.setState({
-                                    results: data.res,
-                                    loading: false,
-                                    posTags: data.tags
-                                });
-                                if (data.res.length === 0) {
+                    if (searchId !== null) {
+                        console.log(searchColorStr);
+                        const decodedSearchColorStr = decodeURIComponent(searchColorStr);
+                        const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
+                        console.log(searchColorInts);
+                        this.setState({
+                            posTags: parsedSearchString.split(' '),
+                            selectedColor: searchColorInts
+                        }, () => {
+                            this.searchSimilarImages(searchId, searchColorInts);
+                        });
+                    } else {
+                        ReactGA.event({
+                            category: "Text Search",
+                            action: 'text search',
+                            label: parsedSearchString,
+                        });
+                        if(parsedSearchString.length === 0){
+                            this.setState({
+                                loading: false,
+                                noResult: true
+                            });
+                            return
+                        }
+                        const inputArray = parsedSearchString.split(' ');
+                        const searchString = inputArray.join('+');
+                        const sex = this.state.sex ? this.state.sex : sexString;
+
+                        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+                            method: 'get'
+                        }).then(function(response) { return response.json(); })
+                            .then(data => {
+                                if (typeof data.res === "undefined") {
                                     this.setState({
+                                        results: [],
+                                        loading: false,
                                         noResult: true
                                     });
+                                } else {
+                                    this.setState({
+                                        results: data.res,
+                                        loading: false,
+                                        posTags: data.tags
+                                    });
+                                    if (data.res.length === 0) {
+                                        this.setState({
+                                            noResult: true
+                                        });
+                                    }
+                                    const loadedProdIds = data.res.map(resDict => {
+                                        return resDict.prod_serial.prod_id
+                                    });
+                                    this.setState({
+                                        loadedProdIds: loadedProdIds
+                                    });
                                 }
-                            }
-                        });
+                            });
+                    }
                 });
             });
         }
@@ -149,6 +183,40 @@ class TextSearch extends React.Component  {
             this.setState({
                 firstLogin: this.props.firstLogin
             });
+        }
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll(event) {
+        const docHeight = document.body.scrollHeight;
+        // console.log(`Doc height: ${docHeight}`);
+        const scrollDistance = window.pageYOffset + document.body.clientHeight;
+        // console.log(`Scroll distance: ${scrollDistance}`);
+
+        if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
+            if(this.state.infiniteLoading === false) {
+                if (this.state.infiniteCount < 10) {
+                    this.setState({
+                        infiniteLoading: true
+                    });
+                    if (this.state.searchSimilarInfinite) {
+                        this.searchSimilarImagesInfinite(
+                            this.state.results[0]['image_data']['img_hash'],
+                            this.state.selectedColor
+                        );
+                    } else {
+                        this.infiniteTextSearch();
+                    }
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    });
+                }
+            }
         }
     }
 
@@ -219,11 +287,11 @@ class TextSearch extends React.Component  {
                     loading: true
                 });
 
-                let posTags = this.state.posTags;
-                let negTags = this.state.negTags;
-                let sex = this.state.sex;
-                let noShop = this.state.noShop;
-                let filterBrands = this.state.filterBrands;
+                const posTags = this.state.posTags;
+                const negTags = this.state.negTags;
+                const sex = this.state.sex;
+                const noShop = this.state.noShop;
+                const filterBrands = this.state.filterBrands;
                 let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
                 if (color_1.length === 0) {
                     color_1 = this.state.results[0]['image_data']['color_1'];
@@ -237,7 +305,6 @@ class TextSearch extends React.Component  {
                         tags_positive: posTags,
                         tags_negative: negTags,
                         color_1: color_1,
-                        // color_2: color_2,
                         sex: sex,
                         no_shop: noShop,
                         max_price: maxPrice,
@@ -250,18 +317,120 @@ class TextSearch extends React.Component  {
                 }).then(function(response) {
                     return response.json();
                 }).then(data => {
-                    this.setState({
-                        results: data.res,
-                        loading: false,
-                        // prodImgShown: prodImgShown
-                    });
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
-                    });
-                    window.scrollTo(0, 0);
+                    if (this._ismounted) {
+                        const loadedProdIds = data.res.map(resDict => {
+                            return resDict.prod_serial.prod_id
+                        });
+                        if (loadedProdIds.length > 0) {
+                            const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                            const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                            console.log(this.state.selectedColor);
+                            console.log(encodeURIComponent(this.state.selectedColor));
+                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(this.state.selectedColor)}`);
+                            this.setState({
+                                results: data.res,
+                                loading: false,
+                                infiniteLoading: false,
+                                searchSimilarInfinite: true,
+                                loadedProdIds: loadedProdIds,
+                                infiniteCount: 0
+                            });
+                            window.scrollTo({
+                                top: 0,
+                                behavior: "smooth"
+                            });
+                            window.scrollTo(0, 0);
+                        } else {
+                            this.setState({
+                                infiniteLoadingComplete: true
+                            })
+                        }
+                    }
                 });
             });
+        });
+    }
+
+    searchSimilarImagesInfinite(imgHash, colorRgb1){
+        // this.setState({
+        //     loading: true
+        // });
+        ReactGA.event({
+            category: "Text Search",
+            action: 'search similar',
+            label: imgHash
+        });
+
+        const posTags = this.state.posTags;
+        const negTags = this.state.negTags;
+        const sex = this.state.sex;
+        const noShop = this.state.noShop;
+        const filterBrands = this.state.filterBrands;
+        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+        if (color_1.length === 0) {
+            color_1 = this.state.results[0]['image_data']['color_1'];
+        }
+        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+
+        fetch(window.location.origin + '/api/search_similar_infinite', {
+            method: 'post',
+            body: JSON.stringify({
+                img_hash: imgHash,
+                tags_positive: posTags,
+                tags_negative: negTags,
+                color_1: color_1,
+                sex: sex,
+                no_shop: noShop,
+                max_price: maxPrice,
+                brands: filterBrands,
+                prev_prod_ids: this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (this._ismounted) {
+                const loadedProdIds = data.res.map(resDict => {
+                    return resDict.prod_serial.prod_id
+                });
+                if (this.state.searchSimilarInfinite) {
+                    if (loadedProdIds.length > 0) {
+                        this.setState({
+                            loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                            results: this.state.results.concat(data.res),
+                            infiniteCount: this.state.infiniteCount + 1,
+                            infiniteLoading: false
+                        });
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true
+                        })
+                    }
+                } else {
+                    if (loadedProdIds.length > 0) {
+                        this.setState({
+                            results: data.res,
+                            loading: false,
+                            infiniteLoading: false,
+                            searchSimilarInfinite: true,
+                            loadedProdIds: loadedProdIds,
+                            infiniteCount: this.state.infiniteCount + 1
+                        });
+                        window.scrollTo({
+                            top: 0,
+                            behavior: "smooth"
+                        });
+                        window.scrollTo(0, 0);
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true
+                        })
+                    }
+                }
+            }
         });
     }
 
@@ -414,6 +583,52 @@ class TextSearch extends React.Component  {
                         }
                     });
             });
+        });
+    }
+
+    infiniteTextSearch() {
+        const searchStr = window.location.search.split('search=')[1].split('&')[0];
+        const sexString = window.location.search.split('sex=')[1];
+        const parsedSearchString = decodeURIComponent(searchStr);
+        const sex = this.state.sex ? this.state.sex : sexString;
+
+        ReactGA.event({
+            category: "Text Search",
+            action: 'infinite scroll',
+            label: parsedSearchString,
+        });
+
+        fetch(window.location.origin + '/api/text_search_infinite', {
+            method: 'post',
+            body: JSON.stringify({
+                sex: sex,
+                search_string: parsedSearchString,
+                prev_prod_ids: this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (this._ismounted) {
+                const loadedProdIds = data.res.map(resDict => {
+                    return resDict.prod_serial.prod_id
+                });
+                if (loadedProdIds.length > 0) {
+                    this.setState({
+                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                        results: this.state.results.concat(data.res),
+                        infiniteCount: this.state.infiniteCount + 1,
+                        infiniteLoading: false
+                    });
+                } else {
+                    this.setState({
+                        infiniteLoadingComplete: true
+                    })
+                }
+            }
         });
     }
 
@@ -594,7 +809,14 @@ class TextSearch extends React.Component  {
                         <div className="overlay">
                             <Paper zDepth={1} className="error-modal">
                                 <h3>Couldn't find anything, try a different search</h3>
-                                <RaisedButton className="ok-button" label="OK" onClick={() => { window.location.reload(); }} />
+                                <Route render={({ history }) => (
+                                    <RaisedButton className="ok-button" label="OK" onClick={() => {
+                                        history.push('/textsearch');
+                                        this.setState({
+                                            noResult: false
+                                        })
+                                    }} />
+                                )} />
                             </Paper>
                         </div>
                     )}
@@ -765,6 +987,36 @@ class TextSearch extends React.Component  {
                                     changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
                                     addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                                 />
+
+                                {this.state.infiniteLoading && !this.state.infiniteLoadingComplete && (
+                                    <div
+                                        style={{
+                                            marginBottom: '100px',
+                                            marginTop: '100px',
+                                            paddingBottom: '50px'
+                                        }}
+                                    >
+                                        <br />
+                                            <InfiniteSpinner />
+                                        <br />
+                                    </div>
+                                )}
+                                {this.state.infiniteLoadingComplete && (
+                                    <div
+                                        style={{
+                                            width: '100%',
+                                            textAlign: 'center'
+                                        }}
+                                    >
+                                        <br />
+                                        <br />
+                                        <div className="infinite-spinner-done">
+
+                                        </div><h4>All Results Loaded</h4>
+                                        <br />
+                                        <br />
+                                    </div>
+                                )}
 
                                 {this.state.addOutfitShown === false && (
                                     <ResultFilters

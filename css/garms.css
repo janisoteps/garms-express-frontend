@@ -1544,6 +1544,20 @@ body{
     background-color: #e3ded6;
 }
 
+.infinite-spinner-done {
+    width: 38px;
+    height: 38px;
+    background: #FFFFFF url('../images/done-black-48dp.svg') no-repeat center;
+    /*filter: invert(100%);*/
+    background-size: 38px 38px;
+    border-radius: 23px;
+    display: inline-block;
+    /*position: absolute;*/
+    /*margin-top: -38px;*/
+    /*cursor: pointer;*/
+    /*right: 7px;*/
+}
+
 .outfit-details-desktop-side-images { grid-area: side-images; }
 
 .outfit-details-desktop-main-image { grid-area: main-image; }

@@ -7,8 +7,8 @@ import AddOutfit from '../wardrobe/AddOutfit';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import ReactGA from 'react-ga';
-import TextField from "material-ui/TextField";
 import {isMobile} from "react-device-detect";
+import TextSearchBox from "../search/from_text/TextSearchBox";
 
 
 class SearchChoice extends React.Component {
@@ -21,15 +21,12 @@ class SearchChoice extends React.Component {
             imgHash: null,
             email: this.props.email,
             sex: this.props.sex,
-            isAuth: this.props.isAuth,
-            searchString: ''
+            isAuth: this.props.isAuth
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.changeSex = this.changeSex.bind(this);
-        this.handleTextInputChange = this.handleTextInputChange.bind(this);
-        this.doTextSearch = this.doTextSearch.bind(this);
     }
 
     componentWillMount() {
@@ -58,26 +55,6 @@ class SearchChoice extends React.Component {
                 });
             }
         }
-    }
-
-    handleTextInputChange(event) {
-        const value =  event.target.value;
-        const name = event.target.name;
-        this.setState({
-            [name]: value
-        });
-    }
-
-    onEnterPress = (e) => {
-        if(e.keyCode === 13 && e.shiftKey === false) {
-            e.preventDefault();
-            this.doTextSearch();
-        }
-    };
-
-    doTextSearch() {
-        const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
-        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.state.sex}`);
     }
 
     showAddOutfit = (imgHash) => {
@@ -220,94 +197,14 @@ class SearchChoice extends React.Component {
                                                     paddingLeft: isMobile ? '0px' : '100px'
                                                 }}
                                             >
-                                                <div className="inner-text-search-box">
-                                                    <TextField
-                                                        autoFocus="autofocus"
-                                                        className="text-search-input"
-                                                        // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
-                                                        value={this.state.searchString.toUpperCase()}
-                                                        inputStyle={{
-                                                            fontWeight: '900',
-                                                            fontSize: '1.2rem'
-                                                        }}
-                                                        floatingLabelText="What are you looking for?"
-                                                        floatingLabelStyle={{
-                                                            color: 'black',
-                                                            fontSize: '1.2rem',
-                                                            fontWeight: '400',
-                                                        }}
-                                                        name="searchString"
-                                                        onChange={this.handleTextInputChange.bind(this)}
-                                                        onKeyDown={this.onEnterPress}
-                                                        underlineFocusStyle={{
-                                                            borderBottom: '2px solid rgb(0, 0, 0)'
-                                                        }}
-                                                        underlineDisabledStyle={{
-                                                            borderBottom: '0px solid rgb(0, 0, 0)'
-                                                        }}
-                                                        autoComplete="off"
+                                                <Route render={({ history }) => (
+                                                    <TextSearchBox
+                                                        history={history}
+                                                        sex={this.state.sex}
                                                     />
-                                                    <div className="text-search-button" onClick={() => {this.doTextSearch()}}>
-                                                        <div className="search-icon" />
-                                                        {/*<div className="search-text"> search</div>*/}
-                                                    </div>
-                                                </div>
+                                                )} />
                                             </div>
                                         </div>
-
-
-
-
-                                        {/*<Route render={({ history }) => (*/}
-                                        {/*    <div*/}
-                                        {/*        className="search-choice-button-image"*/}
-                                        {/*        onClick={() => {*/}
-                                        {/*            ReactGA.event({*/}
-                                        {/*                category: "Home Page",*/}
-                                        {/*                action: 'navigate',*/}
-                                        {/*                label: 'search from image'*/}
-                                        {/*            });*/}
-                                        {/*            history.push('/search-from-image');*/}
-                                        {/*        }}>*/}
-                                        {/*        <div className="search-choice-title">*/}
-                                        {/*            <div className="image-search-icon"></div>*/}
-                                        {/*            <div className="search-choice-text">Search by photo</div>*/}
-                                        {/*        </div>*/}
-                                        {/*    </div>*/}
-                                        {/*)} />*/}
-
-                                        {/*<div className="inner-text-search-box">*/}
-                                        {/*    <TextField*/}
-                                        {/*        autoFocus="autofocus"*/}
-                                        {/*        className="text-search-input"*/}
-                                        {/*        // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}*/}
-                                        {/*        value={this.state.searchString.toUpperCase()}*/}
-                                        {/*        inputStyle={{*/}
-                                        {/*            fontWeight: '900',*/}
-                                        {/*            fontSize: '1.2rem'*/}
-                                        {/*        }}*/}
-                                        {/*        floatingLabelText="What are you looking for?"*/}
-                                        {/*        floatingLabelStyle={{*/}
-                                        {/*            color: 'black',*/}
-                                        {/*            fontSize: '1.2rem',*/}
-                                        {/*            fontWeight: '400',*/}
-                                        {/*        }}*/}
-                                        {/*        name="searchString"*/}
-                                        {/*        onChange={this.handleTextInputChange.bind(this)}*/}
-                                        {/*        onKeyDown={this.onEnterPress}*/}
-                                        {/*        underlineFocusStyle={{*/}
-                                        {/*            borderBottom: '2px solid rgb(0, 0, 0)'*/}
-                                        {/*        }}*/}
-                                        {/*        underlineDisabledStyle={{*/}
-                                        {/*            borderBottom: '0px solid rgb(0, 0, 0)'*/}
-                                        {/*        }}*/}
-                                        {/*        autoComplete="off"*/}
-                                        {/*    />*/}
-                                        {/*    <div className="text-search-button" onClick={() => {this.doTextSearch()}}>*/}
-                                        {/*        <div className="search-icon" />*/}
-                                        {/*        /!*<div className="search-text"> search</div>*!/*/}
-                                        {/*    </div>*/}
-                                        {/*</div>*/}
 
                                         {(this.state.isAuth === "true" && this._ismounted) ? (
                                             <div
