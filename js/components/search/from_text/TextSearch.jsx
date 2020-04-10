@@ -115,64 +115,110 @@ class TextSearch extends React.Component  {
                         moreSuggestions: []
                     });
 
-                    if (searchId !== null) {
-                        console.log(searchColorStr);
-                        const decodedSearchColorStr = decodeURIComponent(searchColorStr);
-                        const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
-                        console.log(searchColorInts);
+                    ReactGA.event({
+                        category: "Text Search",
+                        action: 'text search',
+                        label: parsedSearchString,
+                    });
+                    if(parsedSearchString.length === 0){
                         this.setState({
-                            posTags: parsedSearchString.split(' '),
-                            selectedColor: searchColorInts
-                        }, () => {
-                            this.searchSimilarImages(searchId, searchColorInts);
+                            loading: false,
+                            noResult: true
                         });
-                    } else {
-                        ReactGA.event({
-                            category: "Text Search",
-                            action: 'text search',
-                            label: parsedSearchString,
-                        });
-                        if(parsedSearchString.length === 0){
-                            this.setState({
-                                loading: false,
-                                noResult: true
-                            });
-                            return
-                        }
-                        const inputArray = parsedSearchString.split(' ');
-                        const searchString = inputArray.join('+');
-                        const sex = this.state.sex ? this.state.sex : sexString;
+                        return
+                    }
+                    const inputArray = parsedSearchString.split(' ');
+                    const searchString = inputArray.join('+');
+                    const sex = this.state.sex ? this.state.sex : sexString;
 
-                        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
-                            method: 'get'
-                        }).then(function(response) { return response.json(); })
-                            .then(data => {
-                                if (typeof data.res === "undefined") {
+                    fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+                        method: 'get'
+                    }).then(function(response) { return response.json(); })
+                        .then(data => {
+                            if (typeof data.res === "undefined") {
+                                this.setState({
+                                    results: [],
+                                    loading: false,
+                                    noResult: true
+                                });
+                            } else {
+                                this.setState({
+                                    results: data.res,
+                                    loading: false,
+                                    posTags: data.tags
+                                });
+                                if (data.res.length === 0) {
                                     this.setState({
-                                        results: [],
-                                        loading: false,
                                         noResult: true
                                     });
-                                } else {
-                                    this.setState({
-                                        results: data.res,
-                                        loading: false,
-                                        posTags: data.tags
-                                    });
-                                    if (data.res.length === 0) {
-                                        this.setState({
-                                            noResult: true
-                                        });
-                                    }
-                                    const loadedProdIds = data.res.map(resDict => {
-                                        return resDict.prod_serial.prod_id
-                                    });
-                                    this.setState({
-                                        loadedProdIds: loadedProdIds
-                                    });
                                 }
-                            });
-                    }
+                                const loadedProdIds = data.res.map(resDict => {
+                                    return resDict.prod_serial.prod_id
+                                });
+                                this.setState({
+                                    loadedProdIds: loadedProdIds
+                                });
+                            }
+                        });
+
+                    // if (searchId !== null) {
+                    //     console.log(searchColorStr);
+                    //     const decodedSearchColorStr = decodeURIComponent(searchColorStr);
+                    //     const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
+                    //     console.log(searchColorInts);
+                    //     this.setState({
+                    //         posTags: parsedSearchString.split(' '),
+                    //         selectedColor: searchColorInts
+                    //     }, () => {
+                    //         this.searchSimilarImages(searchId, searchColorInts);
+                    //     });
+                    // } else {
+                    //     ReactGA.event({
+                    //         category: "Text Search",
+                    //         action: 'text search',
+                    //         label: parsedSearchString,
+                    //     });
+                    //     if(parsedSearchString.length === 0){
+                    //         this.setState({
+                    //             loading: false,
+                    //             noResult: true
+                    //         });
+                    //         return
+                    //     }
+                    //     const inputArray = parsedSearchString.split(' ');
+                    //     const searchString = inputArray.join('+');
+                    //     const sex = this.state.sex ? this.state.sex : sexString;
+                    //
+                    //     fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+                    //         method: 'get'
+                    //     }).then(function(response) { return response.json(); })
+                    //         .then(data => {
+                    //             if (typeof data.res === "undefined") {
+                    //                 this.setState({
+                    //                     results: [],
+                    //                     loading: false,
+                    //                     noResult: true
+                    //                 });
+                    //             } else {
+                    //                 this.setState({
+                    //                     results: data.res,
+                    //                     loading: false,
+                    //                     posTags: data.tags
+                    //                 });
+                    //                 if (data.res.length === 0) {
+                    //                     this.setState({
+                    //                         noResult: true
+                    //                     });
+                    //                 }
+                    //                 const loadedProdIds = data.res.map(resDict => {
+                    //                     return resDict.prod_serial.prod_id
+                    //                 });
+                    //                 this.setState({
+                    //                     loadedProdIds: loadedProdIds
+                    //                 });
+                    //             }
+                    //         });
+                    // }
                 });
             });
         }
@@ -324,8 +370,6 @@ class TextSearch extends React.Component  {
                         if (loadedProdIds.length > 0) {
                             const searchStr = window.location.search.split('search=')[1].split('&')[0];
                             const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                            console.log(this.state.selectedColor);
-                            console.log(encodeURIComponent(this.state.selectedColor));
                             this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(this.state.selectedColor)}`);
                             this.setState({
                                 results: data.res,
