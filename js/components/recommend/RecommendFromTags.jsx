@@ -6,6 +6,7 @@ import Paper from 'material-ui/Paper';
 import {Route} from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReactGA from "react-ga";
+import InfiniteSpinner from "../loading/InfiniteSpinner";
 
 
 class RecommendFromTags extends React.Component  {
@@ -15,22 +16,30 @@ class RecommendFromTags extends React.Component  {
             email: this.props.email,
             sex: this.props.sex,
             lookFilter: this.props.lookFilter,
-            outfits: []
+            outfits: [],
+            loadedProdIds: [],
+            infiniteCount: 0,
+            infiniteLoading: false,
+            infiniteLoadingComplete: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.shuffle = this.shuffle.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+        this.getRecommendations = this.getRecommendations.bind(this);
     }
 
     componentDidMount() {
         this._ismounted = true;
-        // console.log(this.props.lookFilter);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+
         fetch(`${window.location.origin}/api/recommend_tags`, {
             method: 'post',
             body: JSON.stringify({
                 'email': this.state.email,
                 'sex': this.state.sex,
-                'req_looks': this.props.lookFilter
+                'req_looks': this.props.lookFilter,
+                'prev_prod_ids': this.state.loadedProdIds
             }),
             headers: {
                 Accept: 'application/json',
@@ -39,9 +48,16 @@ class RecommendFromTags extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
+            let loadedProdIds = [];
+            data.forEach(lookDict => {
+                lookDict.prod_suggestions.forEach(suggestion => {
+                    loadedProdIds.push(suggestion[0].prod_id)
+                })
+            });
             this.setState({
-                outfits: data
-            })
+                outfits: data,
+                loadedProdIds: loadedProdIds
+            });
         })
     }
 
@@ -53,16 +69,17 @@ class RecommendFromTags extends React.Component  {
                     outfits: []
                 }, () => {
                     window.scrollTo({
-                        top: 0,
-                        behavior: "smooth"
+                        top: 0
                     });
+                    window.scrollTo(0, 0);
                 });
                 fetch(`${window.location.origin}/api/recommend_tags`, {
                     method: 'post',
                     body: JSON.stringify({
                         'email': this.state.email,
                         'sex': this.state.sex,
-                        'req_looks': this.props.lookFilter
+                        'req_looks': this.props.lookFilter,
+                        'prev_prod_ids': this.state.loadedProdIds
                     }),
                     headers: {
                         Accept: 'application/json',
@@ -71,23 +88,90 @@ class RecommendFromTags extends React.Component  {
                 }).then(function(response) {
                     return response.json();
                 }).then(data => {
+                    const loadedProdIds = [];
+                    data.forEach(lookDict => {
+                        lookDict.prod_suggestions.forEach(suggestion => {
+                            loadedProdIds.push(suggestion[0].prod_id)
+                        })
+                    });
                     this.setState({
-                        outfits: data
+                        outfits: data,
+                        loadedProdIds: loadedProdIds,
+                        infiniteCount: 0
                     })
                 })
             }
         }
     }
 
+    componentWillUnmount() {
+        this._ismounted = false;
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.lookFilter === nextProps.lookFilter
             && this.state.outfits.length === nextState.outfits.length
+            && this.state.infiniteLoading === nextState.infiniteLoading
+            && this.state.infiniteLoadingComplete === nextState.infiniteLoadingComplete
         ) {
             return false;
         } else {
             return true;
         }
+    }
+
+    handleScroll(event) {
+        const docHeight = document.body.scrollHeight;
+        const scrollDistance = window.pageYOffset + document.body.clientHeight;
+
+        if (scrollDistance > (docHeight - docHeight * (0.4 ** (this.state.infiniteCount + 1)))) {
+            if(this.state.infiniteLoading === false) {
+                this.setState({
+                    infiniteLoading: true
+                });
+                this.getRecommendations();
+            }
+        }
+    }
+
+    getRecommendations() {
+        const reqBody = this.state.loadedProdIds === null ? {'sex': this.state.sex} : {
+            'sex': this.state.sex,
+            'prev_prod_ids': this.state.loadedProdIds,
+            'email': this.state.email,
+            'req_looks': this.props.lookFilter
+        };
+        fetch(`${window.location.origin}/api/recommend_tags`, {
+            method: 'post',
+            body: JSON.stringify(reqBody),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (data.length > 0) {
+                const loadedProdIds = [];
+                data.forEach(lookDict => {
+                    lookDict.prod_suggestions.forEach(suggestion => {
+                        loadedProdIds.push(suggestion[0].prod_id)
+                    })
+                });
+                this.setState({
+                    outfits: this.state.outfits.concat(data),
+                    infiniteCount: this.state.infiniteCount + 1,
+                    loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                    infiniteLoading: false
+                });
+            } else {
+                this.setState({
+                    infiniteLoadingComplete: true
+                });
+            }
+        });
     }
 
     showAddOutfit(imgHash) {
@@ -247,6 +331,39 @@ class RecommendFromTags extends React.Component  {
                 <MuiThemeProvider>
                     <div>
                         {tilesOrLoading}
+
+                        {this.state.infiniteLoading
+                        && !this.state.infiniteLoadingComplete
+                        && this.state.outfits.length > 0
+                        && (
+                            <div
+                                style={{
+                                    marginBottom: '100px',
+                                    marginTop: '100px',
+                                    paddingBottom: '50px'
+                                }}
+                            >
+                                <br />
+                                <InfiniteSpinner />
+                                <br />
+                            </div>
+                        )}
+                        {this.state.infiniteLoadingComplete && (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                <br />
+                                <br />
+                                <div className="infinite-spinner-done">
+
+                                </div><h4>All Results Loaded</h4>
+                                <br />
+                                <br />
+                            </div>
+                        )}
                     </div>
                 </MuiThemeProvider>
             </div>

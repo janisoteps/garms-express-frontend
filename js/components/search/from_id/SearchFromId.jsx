@@ -77,9 +77,9 @@ class SearchFromId extends React.Component  {
         if(queryString.length > 0) {
             const imgHash = window.location.search.split('id=')[1];
             this.setState({
-                imgHash: imgHash
+                imgHash: imgHash,
+                loading: true
             });
-
             ReactGA.event({
                 category: "Search Similar",
                 action: 'initial search',

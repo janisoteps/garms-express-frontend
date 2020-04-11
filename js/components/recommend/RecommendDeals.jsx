@@ -33,7 +33,11 @@ class RecommendDeals extends React.Component  {
             addOutfitShown: false,
             filterBrands: [],
             filterShops: [],
-            nothingFound: false
+            nothingFound: false,
+            loadedProdIds: [],
+            infiniteCount: 0,
+            infiniteLoading: false,
+            infiniteLoadingComplete: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
@@ -46,19 +50,23 @@ class RecommendDeals extends React.Component  {
         this.addBrandFilter = this.addBrandFilter.bind(this);
         this.addShopFilter = this.addShopFilter.bind(this);
         this.applyDealFilter = this.applyDealFilter.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+        this.getRecommendations = this.getRecommendations.bind(this);
     }
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
         this._ismounted = true;
-        // console.log(this.props.lookFilter);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+
         fetch(`${window.location.origin}/api/recommend_deals`, {
             method: 'post',
             body: JSON.stringify({
                 'sex': this.state.sex,
                 'cats': [],
                 'shops': [],
-                'brands': []
+                'brands': [],
+                'prev_prod_ids': this.state.loadedProdIds
             }),
             headers: {
                 Accept: 'application/json',
@@ -311,7 +319,8 @@ class RecommendDeals extends React.Component  {
                 'sex': this.state.sex,
                 'cats': this.state.cats,
                 'shops': this.state.shops,
-                'brands': this.state.brands
+                'brands': this.state.brands,
+                'prev_prod_ids': this.state.loadedProdIds
             }),
             headers: {
                 Accept: 'application/json',

@@ -193,9 +193,7 @@ class TextSearch extends React.Component  {
 
     handleScroll(event) {
         const docHeight = document.body.scrollHeight;
-        // console.log(`Doc height: ${docHeight}`);
         const scrollDistance = window.pageYOffset + document.body.clientHeight;
-        // console.log(`Scroll distance: ${scrollDistance}`);
 
         if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
             if(this.state.infiniteLoading === false) {
