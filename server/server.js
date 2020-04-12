@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-// const api_base_url = 'https://main-api.garms.io/api/';
-const api_base_url = 'http://127.0.0.1:5000/api/';
+const api_base_url = 'https://main-api.garms.io/api/';
+// const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -1017,7 +1017,7 @@ app.post('/api/recommend_deals', function (req, res) {
     const shops = req.body.shops;
     const brands = req.body.brands;
     const prev_prod_ids = req.body.prev_prod_ids;
-
+    console.log('recommend_deals');
     const options = {
         method: 'POST',
         url: api_base_url + 'recommend_deals',
