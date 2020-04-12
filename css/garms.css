@@ -427,9 +427,9 @@ body{
 .add-to-favorites{
     width: 46px;
     height: 46px;
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 42px 42px;
+    background-size: 40px 40px;
     border-radius: 23px;
     position: absolute;
     margin-top: -38px;
@@ -440,9 +440,9 @@ body{
 .add-to-favorites-mobile{
     width: 46px;
     height: 46px;
-    background: #FFFFFF url('../images/grade-24px.svg') center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') center;
     filter: invert(100%);
-    background-size: 42px 42px;
+    background-size: 40px 40px;
     border-radius: 23px;
     position: absolute;
     right: 60px;
@@ -452,9 +452,9 @@ body{
 .add-to-favorites-wardrobe{
     width: 36px;
     height: 36px;
-    background: #FFFFFF url('../images/grade-24px.svg') center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') center;
     filter: invert(100%);
-    background-size: 32px 32px;
+    background-size: 30px 30px;
     border-radius: 18px;
     position: absolute;
     margin-top: -40px;
@@ -667,7 +667,7 @@ body{
 .add-to-favorites-outfit-page{
     width: 27px;
     height: 27px;
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
     background-size: 23px 23px;
     border-radius: 13px;
@@ -862,9 +862,9 @@ body{
 
 .favorites-button{
     /*background: url('../images/hanger_small.png') no-repeat center;*/
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 40px 40px;
+    background-size: 32px 32px;
     border-radius: 20px;
     width: 40px;
     height: 40px;

@@ -76,9 +76,13 @@ class TextSearch extends React.Component  {
         this.showPriceFilter = this.showPriceFilter.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
         this.infiniteTextSearch = this.infiniteTextSearch.bind(this);
+        this.reactInDevMode = this.reactInDevMode.bind(this);
     }
 
     componentDidMount() {
+        if(this.reactInDevMode()) {
+            console.log('DEV MODE');
+        }
         ReactGA.pageview(window.location.pathname + window.location.search);
         window.addEventListener('scroll', this.handleScroll, { passive: true });
         this._ismounted = true;
@@ -116,10 +120,8 @@ class TextSearch extends React.Component  {
                     });
 
                     if (searchId !== null) {
-                        console.log(searchColorStr);
                         const decodedSearchColorStr = decodeURIComponent(searchColorStr);
                         const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
-                        console.log(searchColorInts);
                         this.setState({
                             posTags: parsedSearchString.split(' '),
                             selectedColor: searchColorInts
@@ -189,6 +191,10 @@ class TextSearch extends React.Component  {
     componentWillUnmount() {
         this._ismounted = false;
         window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    reactInDevMode(){
+        return '_self' in React.createElement('div');
     }
 
     handleScroll(event) {
@@ -965,9 +971,13 @@ class TextSearch extends React.Component  {
                                         img_hash,
                                         color_1
                                     ) => {
-                                        const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                        const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                        this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${img_hash}&clr=${encodeURIComponent(color_1)}`);
+                                        if (this.reactInDevMode()) {
+                                            this.searchSimilarImages(img_hash, color_1);
+                                        } else {
+                                            const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                                            const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${img_hash}&clr=${encodeURIComponent(color_1)}`);
+                                        }
                                     }}
                                     results={this.state.results}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
@@ -1022,9 +1032,13 @@ class TextSearch extends React.Component  {
                                         setColor={(selection) => {this.setColorPosTags(selection)}}
                                         selectedColor={this.state.selectedColor}
                                         searchSimilarImages={(imgHash, color1) => {
-                                            const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                            const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(color1)}`);
+                                            if (this.reactInDevMode()) {
+                                                this.searchSimilarImages(imgHash, color1);
+                                            } else {
+                                                const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                                                const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(color1)}`);
+                                            }
                                         }}
                                         results={this.state.results}
                                         filterBrands={this.state.filterBrands}
