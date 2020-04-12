@@ -823,7 +823,6 @@ app.post('/api/get_looks', function (req, res) {
     // console.log('Get Looks, options: ', options);
 
     function handleResponse(error, response, body){
-        console.log('GetLook response: ', body);
         if (!error && response.statusCode === 200) {
             res.send(body);
         }
@@ -961,6 +960,7 @@ app.post('/api/recommend_tags', function (req, res) {
     const email = req.body.email;
     const sex = req.body.sex;
     const req_looks = req.body.req_looks;
+    const prev_prod_ids = req.body.prev_prod_ids;
 
     const options = {
         method: 'POST',
@@ -968,7 +968,8 @@ app.post('/api/recommend_tags', function (req, res) {
         body: {
             email: email,
             sex: sex,
-            req_looks: req_looks
+            req_looks: req_looks,
+            prev_prod_ids: prev_prod_ids
         },
         json: true
     };
@@ -985,14 +986,18 @@ app.post('/api/recommend_tags', function (req, res) {
 
 app.post('/api/recommend_random', function (req, res) {
     let sex = req.body.sex;
-    // console.log(sex);
+    const prev_prod_ids = req.body.prev_prod_ids;
+
     if (!sex) {
         sex = ''
     }
     const options = {
         method: 'POST',
         url: api_base_url + 'recommend_random',
-        body: {sex: sex},
+        body: {
+            sex: sex,
+            prev_prod_ids: prev_prod_ids
+        },
         json: true
     };
 
@@ -1011,7 +1016,8 @@ app.post('/api/recommend_deals', function (req, res) {
     const cats = req.body.cats;
     const shops = req.body.shops;
     const brands = req.body.brands;
-
+    const prev_prod_ids = req.body.prev_prod_ids;
+    console.log('recommend_deals');
     const options = {
         method: 'POST',
         url: api_base_url + 'recommend_deals',
@@ -1019,7 +1025,8 @@ app.post('/api/recommend_deals', function (req, res) {
             sex: sex,
             cats: cats,
             shops: shops,
-            brands: brands
+            brands: brands,
+            prev_prod_ids: prev_prod_ids
         },
         json: true
     };

@@ -10,6 +10,7 @@ import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import DealFilters from "../search/results/DealFilters";
 import ReactGA from "react-ga";
+import InfiniteSpinner from "../loading/InfiniteSpinner";
 
 
 class RecommendDeals extends React.Component  {
@@ -33,7 +34,11 @@ class RecommendDeals extends React.Component  {
             addOutfitShown: false,
             filterBrands: [],
             filterShops: [],
-            nothingFound: false
+            nothingFound: false,
+            loadedProdIds: [],
+            infiniteCount: 0,
+            infiniteLoading: false,
+            infiniteLoadingComplete: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
@@ -46,19 +51,23 @@ class RecommendDeals extends React.Component  {
         this.addBrandFilter = this.addBrandFilter.bind(this);
         this.addShopFilter = this.addShopFilter.bind(this);
         this.applyDealFilter = this.applyDealFilter.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
+        this.getRecommendations = this.getRecommendations.bind(this);
     }
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
         this._ismounted = true;
-        // console.log(this.props.lookFilter);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+
         fetch(`${window.location.origin}/api/recommend_deals`, {
             method: 'post',
             body: JSON.stringify({
                 'sex': this.state.sex,
                 'cats': [],
                 'shops': [],
-                'brands': []
+                'brands': [],
+                'prev_prod_ids': this.state.loadedProdIds
             }),
             headers: {
                 Accept: 'application/json',
@@ -67,10 +76,68 @@ class RecommendDeals extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
+            const loadedProdIds = data.prod_suggestions.map(resDict => {
+                return resDict.prod_id
+            });
             this.setState({
-                outfits: data.prod_suggestions
+                outfits: data.prod_suggestions,
+                loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds)
             });
         })
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll(event) {
+        const docHeight = document.body.scrollHeight;
+        const scrollDistance = window.pageYOffset + document.body.clientHeight;
+
+        if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
+            if(this.state.infiniteLoading === false) {
+                this.setState({
+                    infiniteLoading: true
+                });
+                this.getRecommendations();
+            }
+        }
+    }
+
+    getRecommendations() {
+        fetch(`${window.location.origin}/api/recommend_deals`, {
+            method: 'post',
+            body: JSON.stringify({
+                'sex': this.state.sex,
+                'cats': this.state.cats,
+                'shops': this.state.shops,
+                'brands': this.state.brands,
+                'prev_prod_ids': this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (data.prod_suggestions.length > 0) {
+                const loadedProdIds = data.prod_suggestions.map(resDict => {
+                    return resDict.prod_id
+                });
+                this.setState({
+                    outfits: this.state.outfits.concat(data.prod_suggestions),
+                    infiniteCount: this.state.infiniteCount + 1,
+                    loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                    infiniteLoading: false
+                });
+            } else {
+                this.setState({
+                    infiniteLoadingComplete: true
+                });
+            }
+        });
     }
 
     showAddOutfit = (imgHash) => {
@@ -303,38 +370,47 @@ class RecommendDeals extends React.Component  {
     applyDealFilter() {
         this.setState({
             outfits: [],
-            nothingFound: false
+            nothingFound: false,
+            loadedProdIds: [],
+            infiniteLoadingComplete: false
+        }, () => {
+            fetch(`${window.location.origin}/api/recommend_deals`, {
+                method: 'post',
+                body: JSON.stringify({
+                    'sex': this.state.sex,
+                    'cats': this.state.cats,
+                    'shops': this.state.shops,
+                    'brands': this.state.brands,
+                    'prev_prod_ids': this.state.loadedProdIds
+                }),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(function(response) {
+                return response.json();
+            }).then(data => {
+                if (data.prod_suggestions.length === 0) {
+                    this.setState({
+                        nothingFound: true
+                    })
+                } else {
+                    const loadedProdIds = data.prod_suggestions.map(resDict => {
+                        return resDict.prod_id
+                    });
+                    this.setState({
+                        outfits: data.prod_suggestions,
+                        infiniteCount: 0,
+                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                        infiniteLoading: false
+                    })
+                }
+            });
         });
-        fetch(`${window.location.origin}/api/recommend_deals`, {
-            method: 'post',
-            body: JSON.stringify({
-                'sex': this.state.sex,
-                'cats': this.state.cats,
-                'shops': this.state.shops,
-                'brands': this.state.brands
-            }),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) {
-            return response.json();
-        }).then(data => {
-            if (data.prod_suggestions.length === 0) {
-                this.setState({
-                    nothingFound: true
-                })
-            } else {
-                this.setState({
-                    outfits: data.prod_suggestions
-                })
-            }
-        })
     }
 
     // ===========================================  MAIN RENDER FUNCTION  ==============================================
     render() {
-
         const outfitTiles = this.state.outfits.map(prodSuggestion => {
             const key = prodSuggestion.prod_id;
             const priceStyle = prodSuggestion.sale ? {
@@ -343,100 +419,102 @@ class RecommendDeals extends React.Component  {
             } : {
                 textDecoration: 'none'
             };
-            const imgHash = prodSuggestion.image_hash[0];
+            if (prodSuggestion.image_hash) {
+                const imgHash = prodSuggestion.image_hash[0];
 
-            return (
-                <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                    {(prodSuggestion.sale) && (
-                        <div style={{
-                            color: '#d6181e',
-                            display: 'inline-block',
-                            marginLeft: '5px',
-                            fontSize: '1.2rem'
-                        }}>
-                            <b>-{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%</b>
-                        </div>
-                    )}
+                return (
+                    <Paper zDepth={1} className="recommend-product-tile" key={key}>
+                        {(prodSuggestion.sale) && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block',
+                                marginLeft: '5px',
+                                fontSize: '1.2rem'
+                            }}>
+                                <b>-{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%</b>
+                            </div>
+                        )}
 
-                    <Route render={({history}) => (
-                        <img
-                            className="product-image" src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
-                            style={{
-                                marginBottom: '20px',
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => {
-                                ReactGA.event({
-                                    category: "Deal Recommender Action",
-                                    action: 'open outfit',
-                                    label: prodSuggestion.prod_id,
-                                });
-                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`);
-                            }}
-                        />
-                    )}/>
-
-                    <Tooltip title="Add To Favorites" >
-                        <div className="add-to-favorites-wardrobe" onClick={() => {
-                            ReactGA.event({
-                                category: "Deal Recommender Action",
-                                action: 'add outfit',
-                                label: imgHash,
-                            });
-                            this.showAddOutfit(imgHash);
-                        }} />
-                    </Tooltip>
-                    <Route render={({history}) => (
-                        <Tooltip title="Search Similar Items" >
-                            <div
-                                className="search-similar-recommend"
+                        <Route render={({history}) => (
+                            <img
+                                className="product-image" src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
+                                style={{
+                                    marginBottom: '20px',
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => {
                                     ReactGA.event({
                                         category: "Deal Recommender Action",
-                                        action: 'search similar',
-                                        label: imgHash,
+                                        action: 'open outfit',
+                                        label: prodSuggestion.prod_id,
                                     });
-                                    history.push(`/search-from-id?id=${imgHash}`);
+                                    history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`);
                                 }}
                             />
+                        )}/>
+
+                        <Tooltip title="Add To Favorites" >
+                            <div className="add-to-favorites-wardrobe" onClick={() => {
+                                ReactGA.event({
+                                    category: "Deal Recommender Action",
+                                    action: 'add outfit',
+                                    label: imgHash,
+                                });
+                                this.showAddOutfit(imgHash);
+                            }} />
                         </Tooltip>
-                    )}/>
+                        <Route render={({history}) => (
+                            <Tooltip title="Search Similar Items" >
+                                <div
+                                    className="search-similar-recommend"
+                                    onClick={() => {
+                                        ReactGA.event({
+                                            category: "Deal Recommender Action",
+                                            action: 'search similar',
+                                            label: imgHash,
+                                        });
+                                        history.push(`/search-from-id?id=${imgHash}`);
+                                    }}
+                                />
+                            </Tooltip>
+                        )}/>
 
-                    <div
-                        style={{
-                            marginRight: '1px',
-                            marginLeft: '1px',
-                            fontSize: '0.8rem',
-                            lineHeight: '1'
-                        }}
-                    >
-                        <b>{prodSuggestion.name}</b>
-                    </div>
-                    <div style={priceStyle}>
-                        £{prodSuggestion.price}
-                    </div>
-                    {(prodSuggestion.sale) && (
-                        <div style={{
-                            color: '#d6181e',
-                            display: 'inline-block',
-                            marginLeft: '5px'
-                        }}>
-                            £{prodSuggestion.saleprice}
+                        <div
+                            style={{
+                                marginRight: '1px',
+                                marginLeft: '1px',
+                                fontSize: '0.8rem',
+                                lineHeight: '1'
+                            }}
+                        >
+                            <b>{prodSuggestion.name}</b>
                         </div>
-                    )}
+                        <div style={priceStyle}>
+                            £{prodSuggestion.price}
+                        </div>
+                        {(prodSuggestion.sale) && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block',
+                                marginLeft: '5px'
+                            }}>
+                                £{prodSuggestion.saleprice}
+                            </div>
+                        )}
 
-                    <div><b>{prodSuggestion.brand}</b></div>
-                    <div
-                        style={{
-                            lineHeight: '1',
-                            fontSize: '0.8rem',
-                            marginBottom: '2px'
-                        }}
-                    >
-                        From {prodSuggestion.shop}
-                    </div>
-                </Paper>
-            )
+                        <div><b>{prodSuggestion.brand}</b></div>
+                        <div
+                            style={{
+                                lineHeight: '1',
+                                fontSize: '0.8rem',
+                                marginBottom: '2px'
+                            }}
+                        >
+                            From {prodSuggestion.shop}
+                        </div>
+                    </Paper>
+                )
+            }
         });
 
         const tilesOrLoading = (
@@ -575,6 +653,39 @@ class RecommendDeals extends React.Component  {
                         />
                         {this.state.changeSex && (
                             <ChangeSex/>
+                        )}
+
+                        {this.state.infiniteLoading
+                        && !this.state.infiniteLoadingComplete
+                        && this.state.outfits.length > 0
+                        && (
+                            <div
+                                style={{
+                                    marginBottom: '100px',
+                                    marginTop: '100px',
+                                    paddingBottom: '50px'
+                                }}
+                            >
+                                <br />
+                                <InfiniteSpinner />
+                                <br />
+                            </div>
+                        )}
+                        {this.state.infiniteLoadingComplete && (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                <br />
+                                <br />
+                                <div className="infinite-spinner-done">
+
+                                </div><h4>All Results Loaded</h4>
+                                <br />
+                                <br />
+                            </div>
                         )}
                     </div>
                 </MuiThemeProvider>
