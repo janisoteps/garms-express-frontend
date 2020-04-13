@@ -14,13 +14,14 @@ class ResultCard extends React.Component {
             isAuth: this.props.isAuth,
             showExplore: false,
             device: this.props.device,
-            imageLoaded: false
+            imageLoaded: false,
+            showTagList: false
         };
 
         this.updateImgProtocol = this.updateImgProtocol.bind(this);
         this.buyNow = this.buyNow.bind(this);
         this.expandDrawer = this.expandDrawer.bind(this);
-        this. setColorPosTags = this.setColorPosTags.bind(this);
+        this.setColorPosTags = this.setColorPosTags.bind(this);
         this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
         this.getUniqueArr = this.getUniqueArr.bind(this);
@@ -492,15 +493,16 @@ class ResultCard extends React.Component {
                             </Tooltip>
                         )}
                     </div>
-
-                    <CardTagList />
+                    {this.state.showTagList && (
+                        <CardTagList />
+                    )}
 
                     <div
                         className="product-name"
                         style={{
                             fontSize: '0.8rem',
                             lineHeight: '1',
-                            marginTop: '1px'
+                            marginTop: '2px'
                         }}
                     >
                         <b>{name}</b>

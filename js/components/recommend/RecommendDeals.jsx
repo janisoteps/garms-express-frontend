@@ -38,7 +38,8 @@ class RecommendDeals extends React.Component  {
             loadedProdIds: [],
             infiniteCount: 0,
             infiniteLoading: false,
-            infiniteLoadingComplete: false
+            infiniteLoadingComplete: false,
+            minDiscountRate: 0.5
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
@@ -67,7 +68,8 @@ class RecommendDeals extends React.Component  {
                 'cats': [],
                 'shops': [],
                 'brands': [],
-                'prev_prod_ids': this.state.loadedProdIds
+                'prev_prod_ids': this.state.loadedProdIds,
+                'min_discount_rate': this.state.minDiscountRate
             }),
             headers: {
                 Accept: 'application/json',
@@ -381,7 +383,8 @@ class RecommendDeals extends React.Component  {
                     'cats': this.state.cats,
                     'shops': this.state.shops,
                     'brands': this.state.brands,
-                    'prev_prod_ids': this.state.loadedProdIds
+                    'prev_prod_ids': this.state.loadedProdIds,
+                    'min_discount_rate': this.state.minDiscountRate
                 }),
                 headers: {
                     Accept: 'application/json',
