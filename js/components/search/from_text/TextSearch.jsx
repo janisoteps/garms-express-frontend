@@ -53,7 +53,7 @@ class TextSearch extends React.Component  {
             addOutfitShown: false,
             loadingContent: null,
             priceFilterShown: false,
-            loadedProdIds: null,
+            loadedProdIds: [],
             infiniteCount: 0,
             infiniteLoading: false,
             infiniteLoadingComplete: false,

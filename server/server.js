@@ -1017,6 +1017,8 @@ app.post('/api/recommend_deals', function (req, res) {
     const shops = req.body.shops;
     const brands = req.body.brands;
     const prev_prod_ids = req.body.prev_prod_ids;
+    const min_discount_rate = req.body.min_discount_rate;
+
     console.log('recommend_deals');
     const options = {
         method: 'POST',
@@ -1026,7 +1028,8 @@ app.post('/api/recommend_deals', function (req, res) {
             cats: cats,
             shops: shops,
             brands: brands,
-            prev_prod_ids: prev_prod_ids
+            prev_prod_ids: prev_prod_ids,
+            min_discount_rate: min_discount_rate
         },
         json: true
     };
