@@ -490,6 +490,22 @@ class RecommendDeals extends React.Component  {
                                 lineHeight: '1'
                             }}
                         >
+                            <div
+                                className="results-card-brand-tag"
+                                style={{
+                                    display: 'inline-block'
+                                }}
+                                onClick={() => {
+                                    ReactGA.event({
+                                        category: "Result Card Action",
+                                        action: 'set brand',
+                                        label: prodSuggestion.brand
+                                    });
+                                    this.addBrandFilter(prodSuggestion.brand, false);
+                                }}
+                            >
+                                {prodSuggestion.brand}
+                            </div>
                             <b>{prodSuggestion.name}</b>
                         </div>
                         <div style={priceStyle}>
@@ -504,17 +520,6 @@ class RecommendDeals extends React.Component  {
                                 £{prodSuggestion.saleprice}
                             </div>
                         )}
-
-                        <div><b>{prodSuggestion.brand}</b></div>
-                        <div
-                            style={{
-                                lineHeight: '1',
-                                fontSize: '0.8rem',
-                                marginBottom: '2px'
-                            }}
-                        >
-                            From {prodSuggestion.shop}
-                        </div>
                     </Paper>
                 )
             }

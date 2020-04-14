@@ -505,6 +505,22 @@ class ResultCard extends React.Component {
                             marginTop: '2px'
                         }}
                     >
+                        <div
+                            className="results-card-brand-tag"
+                            style={{
+                                display: 'inline-block'
+                            }}
+                            onClick={() => {
+                                ReactGA.event({
+                                    category: "Result Card Action",
+                                    action: 'set brand',
+                                    label: brand
+                                });
+                                this.props.addBrandFilter(brand, false);
+                            }}
+                        >
+                            {brand}
+                        </div>
                         <b>{name}</b>
                     </div>
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
