@@ -228,6 +228,7 @@ class RecommendRandom extends React.Component  {
                                 lineHeight: '1'
                             }}
                         >
+                            {/*<b>{prodSuggestion.brand} </b>*/}
                             <b>{prodSuggestion.name}</b>
                         </div>
                         <div style={priceStyle}>
@@ -241,15 +242,6 @@ class RecommendRandom extends React.Component  {
                                 £{prodSuggestion.saleprice}
                             </div>
                         )}
-
-                        <div
-                            style={{
-                                lineHeight: '1'
-                            }}
-                        >
-                            <b>{prodSuggestion.brand}</b>
-                        </div>
-                        From {prodSuggestion.shop}
                     </Paper>
                 )
             })

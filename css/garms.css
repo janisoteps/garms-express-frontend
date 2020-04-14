@@ -1516,13 +1516,14 @@ body{
 .results-card-brand-tag {
     top: 0;
     left: 0;
-    background-color: #b4a48a;
+    background-color: #000000;
     color: #FFFFFF;
     font-size: 0.8rem;
-    padding-right: 2px;
-    padding-left: 2px;
+    padding: 2px;
     cursor: pointer;
     display: inline-block;
+    margin-right: 3px;
+    border-radius: 2px;
 }
 
 .results-card-brand-tag:hover {

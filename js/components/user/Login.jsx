@@ -54,6 +54,21 @@ class Login extends React.Component {
         this.props.handleLogin(email, pwd);
     }
 
+    onEnterPress = (e) => {
+        if(e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault();
+            const email = this.state.email;
+            const pwd = this.state.pwd;
+
+            ReactGA.event({
+                category: "Log In",
+                action: "User attempted log-in",
+                label: email
+            });
+
+            this.props.handleLogin(email, pwd);
+        }
+    };
 
     render() {
         const loginForm = this.state.isAuth === true || this.state.isAuth === "true" ? (
@@ -103,6 +118,7 @@ class Login extends React.Component {
                     floatingLabelStyle={{
                        color: 'black'
                     }}
+                    onKeyDown={this.onEnterPress}
                 />
                 {this.props.failedLogin && (
                     <p style={{
