@@ -1,17 +1,18 @@
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { Route } from 'react-router-dom';
+// import { Route } from 'react-router-dom';
 import RecommendFromTags from '../recommend/RecommendFromTags';
 import RecommendRandom from '../recommend/RecommendRandom';
 import AddOutfit from '../wardrobe/AddOutfit';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import ReactGA from 'react-ga';
-import {isMobile} from "react-device-detect";
-import TextSearchBox from "../search/from_text/TextSearchBox";
+// import {isMobile} from "react-device-detect";
+// import TextSearchBox from "../search/from_text/TextSearchBox";
+import SearchOptions from "./SearchOptions";
 
 
-class SearchChoice extends React.Component {
+class Home extends React.Component {
     constructor(props) {
         super(props);
 
@@ -157,54 +158,9 @@ class SearchChoice extends React.Component {
                                     </div>
                                 ) : (
                                     <div>
-                                        <div
-                                            style={{
-                                                display: 'grid',
-                                                gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 2fr)',
-                                                gridTemplateRows: isMobile ? 'repeat(2, 1fr)' : '1fr',
-                                                gridColumnGap: '0px',
-                                                gridRowGap: '0px'
-                                            }}
-                                        >
-                                            <div
-                                                style={{
-                                                    gridArea: '1 / 1 / 2 / 2',
-                                                    paddingRight: isMobile ? '0px' : '50px'
-                                                }}
-                                            >
-                                                <Route render={({ history }) => (
-                                                    <div
-                                                        className="search-choice-button-image"
-                                                        onClick={() => {
-                                                            ReactGA.event({
-                                                                category: "Home Page",
-                                                                action: 'navigate',
-                                                                label: 'search from image'
-                                                            });
-                                                            history.push('/search-from-image');
-                                                        }}>
-                                                        <div className="search-choice-title">
-                                                            <div className="image-search-icon"></div>
-                                                            <div className="search-choice-text">Search by photo</div>
-                                                        </div>
-                                                    </div>
-                                                )} />
-                                            </div>
-                                            <div
-                                                style={{
-                                                    gridArea: isMobile ? '2 / 1 / 3 / 2' : '1 / 2 / 2 / 3',
-                                                    textAlign: isMobile ? 'center' : 'left',
-                                                    paddingLeft: isMobile ? '0px' : '100px'
-                                                }}
-                                            >
-                                                <Route render={({ history }) => (
-                                                    <TextSearchBox
-                                                        history={history}
-                                                        sex={this.state.sex}
-                                                    />
-                                                )} />
-                                            </div>
-                                        </div>
+                                        <SearchOptions
+                                            sex={this.state.sex}
+                                        />
 
                                         {(this.state.isAuth === "true" && this._ismounted) ? (
                                             <div
@@ -217,6 +173,7 @@ class SearchChoice extends React.Component {
                                                     sex={this.state.sex}
                                                     lookFilter={this.state.lookFilter}
                                                     showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                                    isAuth={this.props.isAuth}
                                                 />
                                             </div>
                                         ) : (
@@ -244,4 +201,4 @@ class SearchChoice extends React.Component {
     }
 }
 
-export default SearchChoice;
+export default Home;

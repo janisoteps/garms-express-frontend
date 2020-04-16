@@ -9,6 +9,7 @@
   "baseline-delete_forever-24px.svg": "b25b51d7821c35e968abbe1bb9a247e5.svg",
   "baseline-remove-24px.svg": "e1806b3f89bfea231494b8aac1253b66.svg",
   "baseline-add-24px.svg": "d7c721b343629dbd87a26fa0f97731e8.svg",
+  "percentage.png": "a9fce13081dc0d401110a5aa51ba200b.png",
   "done-black-48dp.svg": "be6342b0210036b9e7c961b252cc09aa.svg",
   "palette-24px.svg": "2269792780a1012a77e2939ce390aa53.svg",
   "baseline-remove_circle_outline-24px.svg": "b883097a798e6f810d3a42b07fbb788c.svg",
@@ -18,7 +19,6 @@
   "baseline-expand_less-24px.svg": "fb589496be8c74f734d9f71f3b577e2f.svg",
   "baseline-expand_more-24px.svg": "a74a1b90d53fcb02d7886f2ff978a7f4.svg",
   "baseline-wc-24px.svg": "1fa1175505e9f491a9661053ab41c66d.svg",
-  "percentage.png": "a9fce13081dc0d401110a5aa51ba200b.png",
   "baseline-account_circle-24px.svg": "86eed77ee89440e277ee42ae725d6157.svg",
   "baseline-home-24px.svg": "8e79f6ec4f6c77b3b74bdede7e2164ca.svg",
   "baseline_expand_less_black_36dp.png": "2c3943b56523d56917bc2eb3e959da60.png",
@@ -51,7 +51,7 @@
   "hanger_small.png": "147035719892507bc312bd616f49b184.png",
   "garms_logo.png": "9d2243d089dda8c786fa099b0b323e98.png",
   "manifest.json": "manifest.json",
+  ".DS_Store": ".DS_Store",
   "apple-touch-icon.png": "apple-touch-icon.png",
-  "logo.png": "logo.png",
-  ".DS_Store": ".DS_Store"
+  "logo.png": "logo.png"
 }

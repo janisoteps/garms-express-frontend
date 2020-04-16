@@ -4,7 +4,7 @@ import Register from '../user/register/Register'
 import RegisterFromResult from '../user/register/RegisterFromResult'
 import Login from '../user/Login'
 import Logout from '../user/Logout'
-import SearchChoice from './SearchChoice'
+import Home from './Home'
 import TextSearch from '../search/from_text/TextSearch'
 import Wardrobe from '../wardrobe/Wardrobe'
 import Profile from '../user/Profile'
@@ -170,7 +170,7 @@ class Main extends React.Component {
                     />
                     <Route path='/'
                            render={(props) =>
-                               <SearchChoice
+                               <Home
                                    {...props}
                                    changeSex={(sex) => {this.changeSex(sex);}}
                                    username={this.props.username}
@@ -183,7 +183,7 @@ class Main extends React.Component {
                     />
                     <Route path='/index.html'
                            render={(props) =>
-                               <SearchChoice
+                               <Home
                                    {...props}
                                    changeSex={(sex) => {this.changeSex(sex);}}
                                    username={this.props.username}

@@ -210,16 +210,6 @@ class AddOutfit extends React.Component  {
         return (
             <MuiThemeProvider>
                 <div>
-                    {/*<div*/}
-                    {/*    style={{*/}
-                    {/*        width: '400px',*/}
-                    {/*        height: '25vh',*/}
-                    {/*        marginLeft: 'calc((100vw - 400px) / 2)',*/}
-                    {/*        backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,1))',*/}
-                    {/*        position: 'fixed',*/}
-                    {/*        top: '0px'*/}
-                    {/*    }}*/}
-                    {/*/>*/}
                     <div
                         style={{
                             width: '320px',
@@ -230,16 +220,7 @@ class AddOutfit extends React.Component  {
                             top: '0'
                         }}
                     />
-                    {/*<div*/}
-                    {/*    style={{*/}
-                    {/*        width: '400px',*/}
-                    {/*        height: '25vh',*/}
-                    {/*        marginLeft: 'calc((100vw - 400px) / 2)',*/}
-                    {/*        backgroundImage: 'linear-gradient(to top, rgba(255,255,255,0.3), rgba(255,255,255,1))',*/}
-                    {/*        position: 'fixed',*/}
-                    {/*        top: '75vh'*/}
-                    {/*    }}*/}
-                    {/*/>*/}
+
                     <div
                         style={{
                             width: '320px',
