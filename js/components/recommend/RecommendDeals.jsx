@@ -39,7 +39,8 @@ class RecommendDeals extends React.Component  {
             infiniteCount: 0,
             infiniteLoading: false,
             infiniteLoadingComplete: false,
-            minDiscountRate: 0.5
+            discountRate: 0.4,
+            discountPickerShown: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
@@ -54,6 +55,10 @@ class RecommendDeals extends React.Component  {
         this.applyDealFilter = this.applyDealFilter.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
         this.getRecommendations = this.getRecommendations.bind(this);
+        this.showDiscountPicker = this.showDiscountPicker.bind(this);
+        this.setDiscountRate = this.setDiscountRate.bind(this);
+        this.addOutfitComplete = this.addOutfitComplete.bind(this);
+        this.changeOutfitShown = this.changeOutfitShown.bind(this);
     }
 
     componentDidMount() {
@@ -69,7 +74,7 @@ class RecommendDeals extends React.Component  {
                 'shops': [],
                 'brands': [],
                 'prev_prod_ids': this.state.loadedProdIds,
-                'min_discount_rate': this.state.minDiscountRate
+                'min_discount_rate': this.state.discountRate
             }),
             headers: {
                 Accept: 'application/json',
@@ -115,7 +120,8 @@ class RecommendDeals extends React.Component  {
                 'cats': this.state.cats,
                 'shops': this.state.shops,
                 'brands': this.state.brands,
-                'prev_prod_ids': this.state.loadedProdIds
+                'prev_prod_ids': this.state.loadedProdIds,
+                'min_discount_rate': this.state.discountRate
             }),
             headers: {
                 Accept: 'application/json',
@@ -309,6 +315,25 @@ class RecommendDeals extends React.Component  {
         }
     }
 
+    showDiscountPicker(show) {
+        this.setState({
+            discountPickerShown: show
+        });
+        if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'discount rate'
+            });
+            this.applyDealFilter();
+        }
+    }
+
+    setDiscountRate(rate) {
+        this.setState({
+            discountRate: rate
+        })
+    }
+
     addBrandFilter(brand, showPicker) {
         let currentFilterBrands = this.state.filterBrands;
         if (currentFilterBrands.indexOf(brand) !== -1) {
@@ -384,7 +409,7 @@ class RecommendDeals extends React.Component  {
                     'shops': this.state.shops,
                     'brands': this.state.brands,
                     'prev_prod_ids': this.state.loadedProdIds,
-                    'min_discount_rate': this.state.minDiscountRate
+                    'min_discount_rate': this.state.discountRate
                 }),
                 headers: {
                     Accept: 'application/json',
@@ -410,6 +435,19 @@ class RecommendDeals extends React.Component  {
                 }
             });
         });
+    }
+
+    addOutfitComplete = () => {
+        this.setState({
+            imgHash: null
+        });
+        this.changeOutfitShown(false);
+    };
+
+    changeOutfitShown(isShown){
+        this.setState({
+            addOutfitShown: isShown
+        })
     }
 
     // ===========================================  MAIN RENDER FUNCTION  ==============================================
@@ -456,16 +494,35 @@ class RecommendDeals extends React.Component  {
                             />
                         )}/>
 
-                        <Tooltip title="Add To Favorites" >
-                            <div className="add-to-favorites-wardrobe" onClick={() => {
-                                ReactGA.event({
-                                    category: "Deal Recommender Action",
-                                    action: 'add outfit',
-                                    label: imgHash,
-                                });
-                                this.showAddOutfit(imgHash);
-                            }} />
-                        </Tooltip>
+                        {(this.props.isAuth === "true") ? (
+                            <Tooltip title="Add To Favorites" >
+                                <div className="add-to-favorites-wardrobe" onClick={() => {
+                                    ReactGA.event({
+                                        category: "Recommend Deals",
+                                        action: 'add outfit',
+                                        label: imgHash,
+                                    });
+                                    this.showAddOutfit(imgHash);
+                                }} />
+                            </Tooltip>
+                        ) : (
+                            <Route render={({history}) => (
+                                <Tooltip title="Add To Favorites" >
+                                    <div
+                                        className="add-to-favorites-wardrobe"
+                                        onClick={() => {
+                                            ReactGA.event({
+                                                category: "Recommend Deals",
+                                                action: 'add outfit',
+                                                label: imgHash
+                                            });
+                                            history.push(`/register-from-result?id=${imgHash}`);
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}/>
+                        )}
+
                         <Route render={({history}) => (
                             <Tooltip title="Search Similar Items" >
                                 <div
@@ -490,11 +547,7 @@ class RecommendDeals extends React.Component  {
                                 lineHeight: '1'
                             }}
                         >
-                            <div
-                                className="results-card-brand-tag"
-                                style={{
-                                    display: 'inline-block'
-                                }}
+                            <b
                                 onClick={() => {
                                     ReactGA.event({
                                         category: "Result Card Action",
@@ -505,8 +558,15 @@ class RecommendDeals extends React.Component  {
                                 }}
                             >
                                 {prodSuggestion.brand}
-                            </div>
-                            <b>{prodSuggestion.name}</b>
+                            </b>
+                            <p
+                                style={{
+                                    marginBottom: '1px',
+                                    marginTop: '1px'
+                                }}
+                            >
+                                {prodSuggestion.name}
+                            </p>
                         </div>
                         <div style={priceStyle}>
                             £{prodSuggestion.price}
@@ -632,7 +692,7 @@ class RecommendDeals extends React.Component  {
                                     sex={this.state.sex}
                                     imgHash={this.state.imgHash}
                                     email={this.props.email}
-                                    addOutfitComplete={this.addOutfitComplete}
+                                    addOutfitComplete={() => {this.addOutfitComplete()}}
                                 />
                             </div>
                         )}
@@ -658,6 +718,10 @@ class RecommendDeals extends React.Component  {
                             shopPickerShown={this.state.shopPickerShown}
                             showShopPicker={(show) => {this.showShopPicker(show)}}
                             addShopFilter={(shop, showPicker) => {this.addShopFilter(shop, showPicker)}}
+                            discountRate={this.state.discountRate}
+                            showDiscountPicker={(show) => {this.showDiscountPicker(show)}}
+                            discountPickerShown={this.state.discountPickerShown}
+                            setDiscountRate={(rate) => {this.setDiscountRate(rate)}}
                         />
                         {this.state.changeSex && (
                             <ChangeSex/>

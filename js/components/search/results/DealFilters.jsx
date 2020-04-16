@@ -4,6 +4,7 @@ require('../../../../css/garms.css');
 import TagCloud from './TagCloud';
 import BrandFilter from './BrandFilter';
 import ShopFilter from './ShopFilter';
+import DiscountFilter from "./DiscountFilter";
 
 class DealFilters extends React.Component {
     constructor(props) {
@@ -37,6 +38,12 @@ class DealFilters extends React.Component {
                     shopPickerShown={this.props.shopPickerShown}
                     showShopPicker={(show) => {this.props.showShopPicker(show)}}
                     addShopFilter={(shop, showPicker) => {this.props.addShopFilter(shop, showPicker)}}
+                />
+                <DiscountFilter
+                    showDiscountPicker={(show) => {this.props.showDiscountPicker(show)}}
+                    discountPickerShown={this.props.discountPickerShown}
+                    setDiscountRate={(rate) => {this.props.setDiscountRate(rate)}}
+                    discountRate={this.props.discountRate}
                 />
             </div>
         )

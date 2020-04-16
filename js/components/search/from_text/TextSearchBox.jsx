@@ -35,9 +35,11 @@ class TextSearchBox extends React.Component {
 
     render() {
         return (
-            <div className="inner-text-search-box">
+            <div
+                // className="inner-text-search-box"
+            >
                 <TextField
-                    autoFocus="autofocus"
+                    // autoFocus="autofocus"
                     className="text-search-input"
                     // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
                     value={this.state.searchString.toUpperCase()}

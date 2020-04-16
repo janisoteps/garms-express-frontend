@@ -505,7 +505,7 @@ class ResultCard extends React.Component {
                             marginTop: '2px'
                         }}
                     >
-                        <div
+                        <b
                             className="results-card-brand-tag"
                             style={{
                                 display: 'inline-block'
@@ -520,8 +520,15 @@ class ResultCard extends React.Component {
                             }}
                         >
                             {brand}
-                        </div>
-                        <b>{name}</b>
+                        </b>
+                        <p
+                            style={{
+                                marginBottom: '1px',
+                                marginTop: '1px'
+                            }}
+                        >
+                            {name}
+                        </p>
                     </div>
                     <div className={sale ? 'product-price-sale' : 'product-price'}>
                         {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}

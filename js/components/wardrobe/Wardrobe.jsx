@@ -47,6 +47,7 @@ class Wardrobe extends React.Component  {
 
     componentDidMount() {
         ReactGA.pageview(window.location.pathname + window.location.search);
+        this._ismounted = true;
 
         if (isMobile) {
             this.setState({
@@ -89,37 +90,46 @@ class Wardrobe extends React.Component  {
                     return outfitDict.prod_id
                 });
 
-                this.getProducts(prodHashes, prodData => {
+                if (this._ismounted) {
+                    this.getProducts(prodHashes, prodData => {
 
-                    const prodHashInfoDict = {};
-                    prodData.forEach(prodDict => {
-                        prodHashInfoDict[prodDict[0]['prod_id']] = {
-                            imgUrl: prodDict[0]['image_urls'][0],
-                            brand: prodDict[0]['brand'],
-                            price: prodDict[0]['price'],
-                            currency: prodDict[0]['currency'],
-                            name: prodDict[0]['name'],
-                            url: prodDict[0]['prod_url'],
-                            sale: prodDict[0]['sale'],
-                            salePrice: prodDict[0]['saleprice'],
-                            shop: prodDict[0]['shop'],
-                            imgHash: prodDict[0]['image_hash'][0]
-                        };
-                    });
+                        const prodHashInfoDict = {};
+                        prodData.forEach(prodDict => {
+                            prodHashInfoDict[prodDict[0]['prod_id']] = {
+                                imgUrl: prodDict[0]['image_urls'][0],
+                                brand: prodDict[0]['brand'],
+                                price: prodDict[0]['price'],
+                                currency: prodDict[0]['currency'],
+                                name: prodDict[0]['name'],
+                                url: prodDict[0]['prod_url'],
+                                sale: prodDict[0]['sale'],
+                                salePrice: prodDict[0]['saleprice'],
+                                shop: prodDict[0]['shop'],
+                                imgHash: prodDict[0]['image_hash'][0]
+                            };
+                        });
 
-                    const outfitImgArr = outfitArr.map(outfitDict => {
-                        let resultOutfitDict = outfitDict;
-                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
-                        return resultOutfitDict
-                    });
+                        const outfitImgArr = outfitArr.map(outfitDict => {
+                            let resultOutfitDict = outfitDict;
+                            resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                            return resultOutfitDict
+                        });
 
-                    this.setState({
-                        outfits: outfitImgArr,
-                        looks: looksArr
+                        if (this._ismounted) {
+                            this.setState({
+                                outfits: outfitImgArr,
+                                looks: looksArr
+                            });
+                        }
                     });
-                });
+                }
+
             }
         });
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
     }
 
     handleInputChange(event) {
@@ -965,6 +975,7 @@ class Wardrobe extends React.Component  {
                                 sex={this.state.sex}
                                 lookFilter={this.state.lookFilter}
                                 showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                isAuth={this.props.isAuth}
                             />
                         </div>
                     )}
