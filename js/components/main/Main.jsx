@@ -179,6 +179,7 @@ class Main extends React.Component {
                                    handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
                                    email={this.props.email}
                                    isAuth={this.props.isAuth}
+                                   firstVisit={this.props.firstVisit}
                                />}
                     />
                     <Route path='/index.html'
@@ -192,6 +193,7 @@ class Main extends React.Component {
                                    handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
                                    email={this.props.email}
                                    isAuth={this.props.isAuth}
+                                   firstVisit={this.props.firstVisit}
                                />}
                     />
                 </Switch>

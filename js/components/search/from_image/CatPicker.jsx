@@ -294,8 +294,6 @@ class CatPicker extends React.Component {
     render () {
 
         let catList = higherCats.map((hCat, ind) => {
-            // console.log('Hcat: ', hCat, ' index: ', ind);
-            // console.log('categories: ', categories);
             let topKeyVar = Math.floor(10000000 + Math.random() * 90000000);
 
             let cats = categories[hCat].map((cat, index) => {

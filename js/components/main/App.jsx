@@ -50,34 +50,44 @@ class App extends React.Component {
 
         const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
         const showInstallPopupCookie = cookies.get('show_install_popup');
-        // console.log(`iOS: ${this.iOS()}`);
-        // console.log(`standaloneMode: ${isInStandaloneMode()}`);
-        // console.log(`showInstallPopupCookie: ${showInstallPopupCookie}`);
         if (this.iOS() && !isInStandaloneMode() && showInstallPopupCookie !== 'false') {
             this.setState({ showInstallPopup: true });
         }
-
         if (this.iOS() && isInStandaloneMode()) {
             this.setState({ showIosNav: true });
         }
 
         this._ismounted = true;
         const queryString = window.location.search;
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
 
         this.setState({
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
             username: cookies.get('username'),
-            firstLogin: cookies.get('first_login')
+            firstLogin: cookies.get('first_login'),
+            firstVisit: cookies.get('first_visit'),
+            nextYear: nextYear
         }, () => {
             if (!this.state.sex) {
                 let sex = null;
                 if (queryString.length > 0) {
                     sex = window.location.search.split('sex=')[1];
                     if (sex) {
-                        cookies.set('sex', sex, {path: '/'});
+                        cookies.set('sex', sex, {
+                            path: '/',
+                            expires: nextYear
+                        });
                     }
                 }
+            }
+            if (this.state.firstVisit === undefined) {
+                cookies.set('first_visit', true, {path: '/', expires: nextYear});
+                this.setState({
+                    firstVisit: true
+                })
             }
         });
         const href = window.location.href;
@@ -117,8 +127,7 @@ class App extends React.Component {
 
     closeShowInstallPopup() {
         const {cookies} = this.props;
-        cookies.set('show_install_popup', 'false', {path: '/'});
-
+        cookies.set('show_install_popup', 'false', {path: '/', expires: this.state.nextYear});
         this.setState({
             showInstallPopup: false
         })
@@ -163,7 +172,7 @@ class App extends React.Component {
         }).then(response => response.json())
             .then(data => {
                 if (data === true) {
-                    cookies.set('first_login', 0, {path: '/'});
+                    cookies.set('first_login', 0, {path: '/', expires: this.state.nextYear});
                     this.setState({
                         firstLogin: 0
                     }, () => {
@@ -178,7 +187,10 @@ class App extends React.Component {
         this.setState({
             sex: sex
         }, () => {
-            cookies.set('sex', sex, {path: '/'});
+            cookies.set('sex', sex, {
+                path: '/',
+                expires: this.state.nextYear
+            });
         });
     }
 
@@ -203,11 +215,11 @@ class App extends React.Component {
                         failedLogin: true
                     });
                 } else {
-                    cookies.set('isAuth', data['auth'], {path: '/'});
-                    cookies.set('sex', data['res']['sex'], {path: '/'});
-                    cookies.set('username', data['res']['username'], {path: '/'});
-                    cookies.set('email', data['res']['email'], {path: '/'});
-                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    cookies.set('isAuth', data['auth'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('sex', data['res']['sex'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('username', data['res']['username'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('email', data['res']['email'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/', expires: this.state.nextYear});
                     this.setState({
                         isAuth: data['auth'],
                         sex: data['res']['sex'],
@@ -240,11 +252,11 @@ class App extends React.Component {
                         failedLogin: true
                     })
                 } else {
-                    cookies.set('isAuth', data['auth'], {path: '/'});
-                    cookies.set('sex', data['res']['sex'], {path: '/'});
-                    cookies.set('username', data['res']['username'], {path: '/'});
-                    cookies.set('email', data['res']['email'], {path: '/'});
-                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    cookies.set('isAuth', data['auth'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('sex', data['res']['sex'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('username', data['res']['username'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('email', data['res']['email'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/', expires: this.state.nextYear});
                     this.setState({
                         isAuth: data['auth'],
                         sex: data['res']['sex'],
@@ -280,11 +292,11 @@ class App extends React.Component {
                         failedLogin: true
                     })
                 } else {
-                    cookies.set('isAuth', data['auth'], {path: '/'});
-                    cookies.set('sex', data['res']['sex'], {path: '/'});
-                    cookies.set('username', data['res']['username'], {path: '/'});
-                    cookies.set('email', data['res']['email'], {path: '/'});
-                    cookies.set('first_login', data['res']['first_login'], {path: '/'});
+                    cookies.set('isAuth', data['auth'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('sex', data['res']['sex'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('username', data['res']['username'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('email', data['res']['email'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('first_login', data['res']['first_login'], {path: '/', expires: this.state.nextYear});
                     this.setState({
                         isAuth: data['auth'],
                         sex: data['res']['sex'],
@@ -312,17 +324,19 @@ class App extends React.Component {
                 <div>
                     <Header isAuth={isUserAuth}/>
 
-                    {!this.state.sex && this.state.loginPage === false ? (
-                            <div style={{
-                                width: '100vw',
-                                textAlign: 'center',
-                                position: 'fixed',
-                                top: '50px',
-                                left: '0',
-                                paddingTop: '100px',
-                                backgroundColor: '#FFFFFF',
-                                height: 'calc(100vh - 50px)'
-                            }}>
+                    {!this.state.sex && this.state.loginPage === false && this.state.firstVisit === false ? (
+                            <div
+                                style={{
+                                    width: '100vw',
+                                    textAlign: 'center',
+                                    position: 'fixed',
+                                    top: '50px',
+                                    left: '0',
+                                    paddingTop: '100px',
+                                    backgroundColor: '#FFFFFF',
+                                    height: 'calc(100vh - 50px)'
+                                }}
+                            >
                                 <FlatButton
                                     label="HER"
                                     onClick={() => {this.changeSex('women')}}
@@ -375,6 +389,7 @@ class App extends React.Component {
                                 handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
                                 failedLogin={this.state.failedLogin}
                                 showIosNav={this.state.showIosNav}
+                                firstVisit={this.state.firstVisit}
                             />
                         </div>
                     )}
@@ -393,5 +408,4 @@ class App extends React.Component {
     }
 }
 
-// export default App;
 export default withRouter(withCookies(App));

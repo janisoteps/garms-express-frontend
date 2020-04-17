@@ -50,10 +50,12 @@ class RecommendRandom extends React.Component  {
                     loadedProdIds.push(suggestion[0].prod_id)
                 })
             });
-            this.setState({
-                outfits: data,
-                loadedProdIds: loadedProdIds
-            });
+            if (this._ismounted) {
+                this.setState({
+                    outfits: data,
+                    loadedProdIds: loadedProdIds
+                });
+            }
         })
     }
 
@@ -111,12 +113,14 @@ class RecommendRandom extends React.Component  {
                         loadedProdIds.push(suggestion[0].prod_id)
                     })
                 });
-                this.setState({
-                    outfits: this.state.outfits.concat(data),
-                    infiniteCount: this.state.infiniteCount + 1,
-                    loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
-                    infiniteLoading: false
-                });
+                if(this._ismounted) {
+                    this.setState({
+                        outfits: this.state.outfits.concat(data),
+                        infiniteCount: this.state.infiniteCount + 1,
+                        loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+                        infiniteLoading: false
+                    });
+                }
             } else {
                 this.setState({
                     infiniteLoadingComplete: true
@@ -127,14 +131,6 @@ class RecommendRandom extends React.Component  {
 
     showAddOutfit(imgHash) {
         this.props.showAddOutfit(imgHash);
-    }
-
-    updateImgProtocol(imgUrl) {
-        if (imgUrl.split('https').length > 1) {
-            return imgUrl
-        } else {
-            return imgUrl.replace('http', 'https')
-        }
     }
 
     render() {

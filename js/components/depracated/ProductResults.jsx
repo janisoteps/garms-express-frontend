@@ -303,7 +303,6 @@ class ProductResults extends React.Component  {
     };
 
     expandCatDrawer = (id, pickerId) => {
-        console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 catPickerExpanded: 0
@@ -317,8 +316,6 @@ class ProductResults extends React.Component  {
 
     addToFavs = (img_hash, id) => {
         let email = this.state.email;
-        console.log('Add faves email: ', email);
-        console.log('Add faves hash: ', img_hash);
         fetch(window.location.origin + '/api/addfav', {
             method: 'post',
             body: JSON.stringify({email: email, img_hash: img_hash}),
@@ -328,8 +325,6 @@ class ProductResults extends React.Component  {
             }
         }).then(function(response) { return response.json(); })
             .then(data => {
-                console.log(data);
-
                 this.setState({
                     faveDrawerExpanded: id
                 });

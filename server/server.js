@@ -1044,6 +1044,28 @@ app.post('/api/recommend_deals', function (req, res) {
 });
 
 
+app.post('/api/recommend_onboarding', function (req, res) {
+    const sex = req.body.sex;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'recommend_onboarding',
+        body: {
+            sex: sex
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 app.post('/api/add_loading_content', function (req, res) {
     const content_type = req.body.content_type;
     const content_text = req.body.content_text;

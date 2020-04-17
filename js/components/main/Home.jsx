@@ -10,6 +10,7 @@ import ReactGA from 'react-ga';
 // import {isMobile} from "react-device-detect";
 // import TextSearchBox from "../search/from_text/TextSearchBox";
 import SearchOptions from "./SearchOptions";
+import OnboardingOutfitPicker from "../intro/OnboardingOutfitPicker";
 
 
 class Home extends React.Component {
@@ -89,53 +90,57 @@ class Home extends React.Component {
                 <div>
                     <div className="search-choice">
 
-                        {!this.state.sex ? (
-                            <div style={{
-                                width: '100vw',
-                                textAlign: 'center',
-                                position: 'fixed',
-                                top: '50px',
-                                left: '0',
-                                paddingTop: '100px',
-                                backgroundColor: '#FFFFFF',
-                                height: 'calc(100vh - 50px)'
-                            }}>
-                                <FlatButton
-                                    label="HER"
-                                    onClick={() => {this.changeSex('women')}}
-                                    icon={<Loyalty/>}
-                                    style={{
-                                        width: '100%'
-                                    }}
-                                    labelStyle={{
-                                        fontSize: '1.3rem'
-                                    }}
-                                />
-                                <FlatButton
-                                    label="HIM"
-                                    onClick={() => {this.changeSex('men')}}
-                                    icon={<Loyalty/>}
-                                    style={{
-                                        width: '100%',
-                                        marginTop: '30px'
-                                    }}
-                                    labelStyle={{
-                                        fontSize: '1.3rem'
-                                    }}
-                                />
-                                <FlatButton
-                                    label="THEM"
-                                    onClick={() => {this.changeSex('both')}}
-                                    icon={<Loyalty/>}
-                                    labelStyle={{
-                                        fontSize: '1.3rem'
-                                    }}
-                                    style={{
-                                        width: '100%',
-                                        marginTop: '30px'
-                                    }}
-                                />
-                            </div>
+                        {this.props.firstVisit === 'true' ? (
+                            <OnboardingOutfitPicker
+                                sex={this.props.sex}
+                                changeSex={(sex) => {this.changeSex(sex)}}
+                            />
+                            // <div style={{
+                            //     width: '100vw',
+                            //     textAlign: 'center',
+                            //     position: 'fixed',
+                            //     top: '50px',
+                            //     left: '0',
+                            //     paddingTop: '100px',
+                            //     backgroundColor: '#FFFFFF',
+                            //     height: 'calc(100vh - 50px)'
+                            // }}>
+                            //     <FlatButton
+                            //         label="HER"
+                            //         onClick={() => {this.changeSex('women')}}
+                            //         icon={<Loyalty/>}
+                            //         style={{
+                            //             width: '100%'
+                            //         }}
+                            //         labelStyle={{
+                            //             fontSize: '1.3rem'
+                            //         }}
+                            //     />
+                            //     <FlatButton
+                            //         label="HIM"
+                            //         onClick={() => {this.changeSex('men')}}
+                            //         icon={<Loyalty/>}
+                            //         style={{
+                            //             width: '100%',
+                            //             marginTop: '30px'
+                            //         }}
+                            //         labelStyle={{
+                            //             fontSize: '1.3rem'
+                            //         }}
+                            //     />
+                            //     <FlatButton
+                            //         label="THEM"
+                            //         onClick={() => {this.changeSex('both')}}
+                            //         icon={<Loyalty/>}
+                            //         labelStyle={{
+                            //             fontSize: '1.3rem'
+                            //         }}
+                            //         style={{
+                            //             width: '100%',
+                            //             marginTop: '30px'
+                            //         }}
+                            //     />
+                            // </div>
                         ) : (
                             <div>
                                 {(this.state.imgHash !== null) ? (
