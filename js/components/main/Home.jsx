@@ -78,10 +78,10 @@ class Home extends React.Component {
             action: 'change sex',
             label: sex
         });
-        this.setState({
-            sex: sex
-        });
         this.props.changeSex(sex);
+        this.setState({
+            sex: this.props.sex
+        });
     }
 
     render () {
@@ -90,57 +90,13 @@ class Home extends React.Component {
                 <div>
                     <div className="search-choice">
 
-                        {this.props.firstVisit === 'true' ? (
+                        {this.props.isAuth !== "true" && (this.props.firstVisit === 'true' || this.props.firstVisit === true) ? (
                             <OnboardingOutfitPicker
                                 sex={this.props.sex}
                                 changeSex={(sex) => {this.changeSex(sex)}}
+                                setOnboardingFaves={(prodList) => {this.props.setOnboardingFaves(prodList)}}
+                                completeFirstVisit={() => {this.props.completeFirstVisit()}}
                             />
-                            // <div style={{
-                            //     width: '100vw',
-                            //     textAlign: 'center',
-                            //     position: 'fixed',
-                            //     top: '50px',
-                            //     left: '0',
-                            //     paddingTop: '100px',
-                            //     backgroundColor: '#FFFFFF',
-                            //     height: 'calc(100vh - 50px)'
-                            // }}>
-                            //     <FlatButton
-                            //         label="HER"
-                            //         onClick={() => {this.changeSex('women')}}
-                            //         icon={<Loyalty/>}
-                            //         style={{
-                            //             width: '100%'
-                            //         }}
-                            //         labelStyle={{
-                            //             fontSize: '1.3rem'
-                            //         }}
-                            //     />
-                            //     <FlatButton
-                            //         label="HIM"
-                            //         onClick={() => {this.changeSex('men')}}
-                            //         icon={<Loyalty/>}
-                            //         style={{
-                            //             width: '100%',
-                            //             marginTop: '30px'
-                            //         }}
-                            //         labelStyle={{
-                            //             fontSize: '1.3rem'
-                            //         }}
-                            //     />
-                            //     <FlatButton
-                            //         label="THEM"
-                            //         onClick={() => {this.changeSex('both')}}
-                            //         icon={<Loyalty/>}
-                            //         labelStyle={{
-                            //             fontSize: '1.3rem'
-                            //         }}
-                            //         style={{
-                            //             width: '100%',
-                            //             marginTop: '30px'
-                            //         }}
-                            //     />
-                            // </div>
                         ) : (
                             <div>
                                 {(this.state.imgHash !== null) ? (
@@ -175,7 +131,7 @@ class Home extends React.Component {
                                             >
                                                 <RecommendFromTags
                                                     email={this.state.email}
-                                                    sex={this.state.sex}
+                                                    sex={this.props.sex}
                                                     lookFilter={this.state.lookFilter}
                                                     showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
                                                     isAuth={this.props.isAuth}
@@ -189,8 +145,9 @@ class Home extends React.Component {
                                             >
                                                 {this._ismounted && (
                                                     <RecommendRandom
-                                                        sex={this.state.sex}
+                                                        sex={this.props.sex}
                                                         showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                                                        onboardingFaves={this.props.onboardingFaves}
                                                     />
                                                 )}
                                             </div>

@@ -40,7 +40,7 @@ class Logout extends React.Component {
         });
         cookies.set('isAuth', false, {path: '/'});
         cookies.set('email', '', {path: '/'});
-        cookies.set('sex', '', {path: '/'});
+        cookies.set('sex', 'women', {path: '/'});
         cookies.set('username', '', {path: '/'});
         cookies.set('first_login', '0', {path: '/'});
         document.location.href="/";

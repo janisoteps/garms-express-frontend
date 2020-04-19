@@ -41,12 +41,21 @@ class Main extends React.Component {
         return (
             <main>
                 <Switch>
-                    <Route path='/register' component={Register} />
+                    <Route path='/register' render={(props) =>
+                        <Register
+                            {...props}
+                            sex={this.props.sex}
+                            changeSex={(sex) => {this.changeSex(sex)}}
+                            handleResultLogin={(email, password, imgHash) => {this.props.handleResultLogin(email, password, imgHash)}}
+                            onboardingFaves={this.props.onboardingFaves}
+                        />
+                    } />
                     <Route path='/register-from-result' render={(props) =>
                         <RegisterFromResult
                             {...props}
                             handleResultLogin={(email, password, imgHash) => {this.props.handleResultLogin(email, password, imgHash)}}
                             sex={this.props.sex}
+                            changeSex={(sex) => {this.changeSex(sex)}}
                             failedLogin={this.props.failedLogin}
                         />
                     } />
@@ -57,7 +66,12 @@ class Main extends React.Component {
                             failedLogin={this.props.failedLogin}
                         />
                     }/>
-                    <Route path='/logout' component={Logout} />
+                    <Route path='/logout' render={(props) =>
+                        <Logout
+                            {...props}
+                            sex={this.props.sex}
+                        />
+                    }/>
                     <Route path='/password-reset' render={(props) =>
                         <PasswordReset
                             {...props}
@@ -180,6 +194,9 @@ class Main extends React.Component {
                                    email={this.props.email}
                                    isAuth={this.props.isAuth}
                                    firstVisit={this.props.firstVisit}
+                                   setOnboardingFaves={(prodList) => {this.props.setOnboardingFaves(prodList)}}
+                                   onboardingFaves={this.props.onboardingFaves}
+                                   completeFirstVisit={() => {this.props.completeFirstVisit()}}
                                />}
                     />
                     <Route path='/index.html'
@@ -194,6 +211,9 @@ class Main extends React.Component {
                                    email={this.props.email}
                                    isAuth={this.props.isAuth}
                                    firstVisit={this.props.firstVisit}
+                                   setOnboardingFaves={(prodList) => {this.props.setOnboardingFaves(prodList)}}
+                                   onboardingFaves={this.props.onboardingFaves}
+                                   completeFirstVisit={() => {this.props.completeFirstVisit()}}
                                />}
                     />
                 </Switch>

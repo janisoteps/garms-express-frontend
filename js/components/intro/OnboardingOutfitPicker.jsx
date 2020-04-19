@@ -1,5 +1,6 @@
 import React from "react";
 import InfiniteSpinner from "../loading/InfiniteSpinner";
+import {Route} from "react-router-dom";
 
 
 class OnboardingOutfitPicker extends React.Component {
@@ -310,27 +311,41 @@ class OnboardingOutfitPicker extends React.Component {
                             marginBottom: '50px'
                         }}
                     >
-                        <div
-                            className='onboarding-sex-button'
-                            onClick={() => {
-                                this.setState({
-                                    completed: false,
-                                    currentStep: 1,
-                                    chosenOutfits: []
-                                })
-                                this.loadNewOutfits();
-                            }}
-                        >
-                            RE-DO
-                        </div>
-                        <div
-                            className='onboarding-sex-button'
-                            onClick={() => {
-
-                            }}
-                        >
-                            CONFIRM
-                        </div>
+                        {this.props.isAuth !== "true" ? (
+                            <Route render={({history}) => (
+                                <div
+                                    className='onboarding-add-to-wardrobe'
+                                    onClick={() => {
+                                        this.props.setOnboardingFaves(this.state.chosenOutfits);
+                                        history.push('register?likes=1');
+                                    }}
+                                >
+                                    ADD TO WARDROBE
+                                </div>
+                            )}/>
+                        ) : (
+                            <Route render={({history}) => (
+                                <div
+                                    className='onboarding-add-to-wardrobe'
+                                    onClick={() => {
+                                        this.props.setOnboardingFaves(this.state.chosenOutfits);
+                                        history.push('/');
+                                    }}
+                                >
+                                    SAVE
+                                </div>
+                            )}/>
+                        )}
+                    </div>
+                    <div
+                        style={{
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            this.props.setOnboardingFaves(this.state.chosenOutfits);
+                        }}
+                    >
+                        Skip >>
                     </div>
                 </div>
             )
@@ -344,14 +359,16 @@ class OnboardingOutfitPicker extends React.Component {
                         paddingTop: '50px'
                     }}
                 >
-                    <i>Let's find out a little bit about your preferences. Choose your favorite outfit.</i>
+                    {this.state.completed !== true && (
+                        <i>Help us find more of what you like. Choose your fave…</i>
+                    )}
                     {this.state.completed === true ? (
                         <div
                             style={{
                                 paddingTop: '20px'
                             }}
                         >
-                            <StepsProgress />
+                            {/*<StepsProgress />*/}
                             <YourPicks />
                         </div>
                     ) : (
@@ -409,6 +426,21 @@ class OnboardingOutfitPicker extends React.Component {
                         <InfiniteSpinner />
                         <br />
                         <br />
+                    </div>
+                )}
+
+                {this.state.completed !== true && (
+                    <div
+                        style={{
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            this.props.changeSex(this.props.sex);
+                            this.props.completeFirstVisit();
+                        }}
+                    >
+                        <br />
+                        Skip >>
                     </div>
                 )}
             </div>

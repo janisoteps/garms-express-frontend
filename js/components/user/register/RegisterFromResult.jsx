@@ -118,7 +118,7 @@ export default class RegisterFromResult extends React.Component {
             let email = this.state.email;
             let pwd = this.state.pwd;
             let username = this.state.username;
-            let sex = this.state.sex;
+            let sex = this.props.sex;
 
             fetch(window.location.origin + '/api/register', {
                 method: 'post',
@@ -272,8 +272,6 @@ export default class RegisterFromResult extends React.Component {
                 )}
                 {(this.state.navSelection === 'register') && (
                     <div className="register-form">
-                        {/*<h3>Welcome to Garms app!</h3>*/}
-                        {/*<h5>Register to add outfits to your wardrobe</h5>*/}
                         <br />
                         <TextField
                             hintText="Your name"
@@ -290,35 +288,46 @@ export default class RegisterFromResult extends React.Component {
                                 color: 'black'
                             }}
                         />
-                        <br></br>
-                        <br></br>
-                        <RadioButtonGroup
-                            name="sex"
-                            defaultSelected={this.state.sex}
-                            onChange={this.handleChange.bind(this)}
+                        <div
+                            style={{
+                                width: '300px',
+                                marginTop: '50px',
+                                marginBottom: '5px'
+                            }}
                         >
-                            <RadioButton
-                                value="women"
-                                label="Her"
-                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                                uncheckedIcon={<Loyalty/>}
-                                labelStyle={{textAlign: 'left'}}
-                            />
-                            <RadioButton
-                                value="men"
-                                label="Him"
-                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                                uncheckedIcon={<Loyalty/>}
-                                labelStyle={{textAlign: 'left'}}
-                            />
-                            <RadioButton
-                                value="both"
-                                label="Them"
-                                checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                                uncheckedIcon={<Loyalty/>}
-                                labelStyle={{textAlign: 'left'}}
-                            />
-                        </RadioButtonGroup>
+                            <div
+                                className='onboarding-sex-button'
+                                style={{
+                                    backgroundColor: this.props.sex === 'women' && '#000000',
+                                    color: this.props.sex === 'women' && '#FFFFFF'
+                                }}
+                                onClick={() => {
+                                    this.setState({
+                                        currentStep: 1,
+                                        chosenOutfits: []
+                                    });
+                                    this.props.changeSex('women');
+                                }}
+                            >
+                                HER
+                            </div>
+                            <div
+                                className='onboarding-sex-button'
+                                style={{
+                                    backgroundColor: this.props.sex === 'men' && '#000000',
+                                    color: this.props.sex === 'men' && '#FFFFFF'
+                                }}
+                                onClick={() => {
+                                    this.setState({
+                                        currentStep: 1,
+                                        chosenOutfits: []
+                                    });
+                                    this.props.changeSex('men');
+                                }}
+                            >
+                                HIM
+                            </div>
+                        </div>
                         <TextField
                             name="email"
                             hintText="Your e-mail"
@@ -357,7 +366,8 @@ export default class RegisterFromResult extends React.Component {
                         <div
                             style={{
                                 width: '100%',
-                                fontSize: '0.9rem'
+                                fontSize: '0.9rem',
+                                textAlign: 'left'
                             }}
                         >
                             <Switch
@@ -367,24 +377,24 @@ export default class RegisterFromResult extends React.Component {
                                 name="dataProtectionCheck"
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                             />
-                            <Route render={({history}) => (
-                                <b
-                                    onClick={() => {
-                                        history.push(`/data-protection`);
-                                    }}
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    Data Protection Policy
-                                </b>
-                            )}/>
+                            <b
+                                onClick={() => {
+                                    const win = window.open('https://garms.io/data-protection', '_blank');
+                                    win.focus();
+                                }}
+                                style={{
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Data Protection Policy
+                            </b>
                         </div>
 
                         <div
                             style={{
                                 width: '100%',
-                                fontSize: '0.9rem'
+                                fontSize: '0.9rem',
+                                textAlign: 'left'
                             }}
                         >
                             <Switch
@@ -394,18 +404,17 @@ export default class RegisterFromResult extends React.Component {
                                 name="termsOfUseCheck"
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                             />
-                            <Route render={({history}) => (
-                                <b
-                                    onClick={() => {
-                                        history.push(`/terms-conditions`);
-                                    }}
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    Terms and Conditions of Use
-                                </b>
-                            )}/>
+                            <b
+                                onClick={() => {
+                                    const win = window.open('https://garms.io/terms-conditions', '_blank');
+                                    win.focus();
+                                }}
+                                style={{
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Terms and Conditions of Use
+                            </b>
                         </div>
                         <br />
                         <RaisedButton

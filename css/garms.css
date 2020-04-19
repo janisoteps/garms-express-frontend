@@ -479,7 +479,7 @@ body{
 .add-to-favorites-intro{
     width: 100px;
     height: 100px;
-    background: #FFFFFF url('../images/grade-24px.svg') no-repeat center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
     background-size: 100px 100px;
     border-radius: 50px;
@@ -673,7 +673,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -125px;
+    margin-top: -95px;
     right: 47px;
     cursor: pointer;
 }
@@ -1044,7 +1044,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -125px;
+    margin-top: -95px;
     right: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
@@ -1073,7 +1073,7 @@ body{
     position: absolute;
     right: 90px;
     cursor: pointer;
-    margin-top: -125px;
+    margin-top: -95px;
     filter: invert(1);
 }
 
@@ -1581,6 +1581,23 @@ body{
 .onboarding-sex-button:hover {
     background-color: black;
     color: white;
+}
+
+.onboarding-add-to-wardrobe {
+    width: 100%;
+    display: inline-block;
+    height: 40px;
+    font-size: 1.3rem;
+    text-align: center;
+    cursor: pointer;
+    padding: 4px;
+    background-color: black;
+    color: white;
+}
+
+.onboarding-add-to-wardrobe:hover {
+    background-color: white;
+    color: black;
 }
 
 .onboarding-product-card{

@@ -860,6 +860,34 @@ app.post('/api/add_outfit', function (req, res) {
 });
 
 
+app.post('/api/add_multiple_outfits', function (req, res) {
+    const email = req.body.email;
+    const look_name = req.body.look_name;
+    const prod_ids = req.body.prod_ids;
+    const sex = req.body.sex;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'add_multiple_outfits',
+        body: JSON.stringify({
+            email: email,
+            look_name: look_name,
+            prod_ids: prod_ids,
+            sex: sex
+        }),
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 app.post('/api/remove_outfit', function (req, res) {
     let email = req.body.email;
     let look_name = req.body.look_name;
@@ -997,6 +1025,32 @@ app.post('/api/recommend_random', function (req, res) {
         body: {
             sex: sex,
             prev_prod_ids: prev_prod_ids
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
+app.post('/api/recommend_from_onboarding', function (req, res) {
+    const sex = req.body.sex;
+    const prev_prod_ids = req.body.prev_prod_ids;
+    const fave_outfits = req.body.fave_outfits;
+
+    const options = {
+        method: 'POST',
+        url: api_base_url + 'recommend_from_onboarding',
+        body: {
+            sex: sex,
+            prev_prod_ids: prev_prod_ids,
+            fave_outfits: fave_outfits
         },
         json: true
     };

@@ -32,7 +32,8 @@ class App extends React.Component {
             failedLogin: false,
             loginPage: false,
             showInstallPopup: false,
-            showIosNav: false
+            showIosNav: false,
+            onboardingFaves: []
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -43,6 +44,8 @@ class App extends React.Component {
         this.handleResultLogin = this.handleResultLogin.bind(this);
         this.iOS = this.iOS.bind(this);
         this.closeShowInstallPopup = this.closeShowInstallPopup.bind(this);
+        this.setOnboardingFaves = this.setOnboardingFaves.bind(this);
+        this.completeFirstVisit = this.completeFirstVisit.bind(this);
     }
 
     componentDidMount() {
@@ -69,9 +72,10 @@ class App extends React.Component {
             username: cookies.get('username'),
             firstLogin: cookies.get('first_login'),
             firstVisit: cookies.get('first_visit'),
+            onboardingFaves: cookies.get('onboarding_faves') ? cookies.get('onboarding_faves') : [],
             nextYear: nextYear
         }, () => {
-            if (!this.state.sex) {
+            if (!this.state.sex || this.state.sex === '') {
                 let sex = null;
                 if (queryString.length > 0) {
                     sex = window.location.search.split('sex=')[1];
@@ -80,7 +84,19 @@ class App extends React.Component {
                             path: '/',
                             expires: nextYear
                         });
+                        this.setState({
+                            sex: sex
+                        })
                     }
+                } else {
+                    this.setState({
+                        sex: 'women'
+                    }, () => {
+                        cookies.set('sex', 'women', {
+                            path: '/',
+                            expires: nextYear
+                        });
+                    })
                 }
             }
             if (this.state.firstVisit === undefined) {
@@ -316,6 +332,39 @@ class App extends React.Component {
         });
     };
 
+    setOnboardingFaves(prodList) {
+        const {cookies} = this.props;
+        this.setState({
+            onboardingFaves: prodList,
+            firstVisit: false
+        });
+        const prodCatList = prodList.map(itemDict => {
+            return {
+                kind_cats: itemDict.kind_cats,
+                prod_id: itemDict.prod_id
+            }
+        });
+        cookies.set('onboarding_faves', JSON.stringify(prodCatList), {
+            path: '/',
+            expires: this.state.nextYear
+        });
+        cookies.set('first_visit', false, {
+            path: '/',
+            expires: this.state.nextYear
+        });
+    }
+
+    completeFirstVisit() {
+        const {cookies} = this.props;
+        this.setState({
+            firstVisit: false
+        });
+        cookies.set('first_visit', false, {
+            path: '/',
+            expires: this.state.nextYear
+        });
+    }
+
     render() {
         let isUserAuth = this.state.isAuth;
 
@@ -390,6 +439,9 @@ class App extends React.Component {
                                 failedLogin={this.state.failedLogin}
                                 showIosNav={this.state.showIosNav}
                                 firstVisit={this.state.firstVisit}
+                                setOnboardingFaves={(prodList) => {this.setOnboardingFaves(prodList)}}
+                                onboardingFaves={this.state.onboardingFaves}
+                                completeFirstVisit={() => {this.completeFirstVisit()}}
                             />
                         </div>
                     )}
