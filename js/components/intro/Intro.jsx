@@ -369,21 +369,6 @@ class Intro extends React.Component {
                                     top: "calc(15vh)"
                                 }}
                             />
-                            {/*<img*/}
-                            {/*    src={require('./../../../images/hanger_small.png')}*/}
-                            {/*    style={{*/}
-                            {/*        width: '100px',*/}
-                            {/*        height: '100px',*/}
-                            {/*        display: 'inline-block',*/}
-                            {/*        marginTop: "50px",*/}
-                            {/*        textAlign: 'center',*/}
-                            {/*        cursor: 'pointer',*/}
-                            {/*        // boxShadow: "0px 0px 50px 10px rgba(0,0,0,1)",*/}
-                            {/*        position: "absolute",*/}
-                            {/*        left: "calc(50vw - 50px)",*/}
-                            {/*        top: "calc(15vh)"*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                             <h5>Add item to wardrobe</h5>
                             <h5>Organise your wardrobe in looks, for example <i>summer</i> or <i>office</i></h5>
                             <br/>

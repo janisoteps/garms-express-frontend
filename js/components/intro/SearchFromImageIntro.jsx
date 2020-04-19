@@ -32,7 +32,6 @@ class SearchFromImageIntro extends React.Component  {
     }
 
     scrollTo = (px) => {
-        // console.log(`Scrolling by ${px}`);
         if (px === 0) {
             this.completeFirstLogin();
         }

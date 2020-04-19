@@ -43,7 +43,6 @@ class ExplorerFilters extends React.Component  {
     };
 
     selectLetter = (letter) => {
-        console.log('Letter set to: ', letter);
         this.setState({
             letter: letter
         });

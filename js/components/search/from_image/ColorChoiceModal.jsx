@@ -20,7 +20,6 @@ class ColorChoiceModal extends React.Component{
     }
 
     setColorCat(selection){
-        // console.log('selection: ', selection);
         this.props.setColorPosTags(selection);
     }
 

@@ -295,10 +295,6 @@ class Explorer extends React.Component  {
     // Loads products based on category in argument
     // If no category is passed loads the top categories
     loadProducts = (textCategory) => {
-        // console.log('Prod load cat state: ', this.state.mainCatTop);
-        // console.log('Prod load cat arg: ', textCategory);
-        // let sex = this.props.sex;
-
         if(textCategory !== undefined) {
             this.setState({
                 catProducts: categories[textCategory]
@@ -312,7 +308,6 @@ class Explorer extends React.Component  {
 
     // Sets top category, allows rendering of subcats
     setHigherCat = (cat) => {
-        // console.log('New higher cat: ', cat);
         let textCategory = '';
         try {
             textCategory = hCatReverseDict[cat];
@@ -323,7 +318,6 @@ class Explorer extends React.Component  {
         if (textCategory === undefined){
             textCategory = cat;
         }
-        // console.log('Higher cat set to: ', textCategory);
 
         this.setState({
             mainCatTop: textCategory,
@@ -390,7 +384,6 @@ class Explorer extends React.Component  {
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
             this.setState({
                 results: data.res,
                 loading: false

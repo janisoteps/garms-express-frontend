@@ -31,7 +31,6 @@
   "baseline_palette_white_48dp.png": "cb2f382cb2c7b8f77ce864b7ebd6d972.png",
   "icons8-color-dropper-96.png": "1d21d2f6f0bd3662c8056fb9cad3636f.png",
   "more_horiz-24px.svg": "d644ed957e2662b1d22adb890310e64f.svg",
-  "grade-24px.svg": "2fde83834b737511fdf3a51cbd8612cb.svg",
   "baseline-keyboard-24px.svg": "e3187a98e29dfb0aff64310c5b62171e.svg",
   "baseline-add_a_photo-24px.svg": "bdb001671e710ff9c8bbd32d11d3f102.svg",
   "image-explore.jpg": "c1322f3257ef5ab1ab4289b135d8e7d6.jpg",
@@ -50,8 +49,8 @@
   "baseline_keyboard_arrow_left_black_48dp.png": "5dcf597dd1ac44f16b96ed62cbbd1124.png",
   "hanger_small.png": "147035719892507bc312bd616f49b184.png",
   "garms_logo.png": "9d2243d089dda8c786fa099b0b323e98.png",
-  "manifest.json": "manifest.json",
   ".DS_Store": ".DS_Store",
   "apple-touch-icon.png": "apple-touch-icon.png",
-  "logo.png": "logo.png"
+  "logo.png": "logo.png",
+  "manifest.json": "manifest.json"
 }

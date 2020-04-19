@@ -3,13 +3,14 @@ import React from "react";
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
-import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import FlatButton from 'material-ui/FlatButton';
+// import Loyalty from 'material-ui/svg-icons/action/loyalty';
+// import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+// import FlatButton from 'material-ui/FlatButton';
 import {Route} from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 import ReactGA from 'react-ga';
 import Switch from '@material-ui/core/Switch';
+import InfiniteSpinner from "../../loading/InfiniteSpinner";
 
 
 export default class Register extends React.Component {
@@ -20,15 +21,19 @@ export default class Register extends React.Component {
             email: '',
             pwd: '',
             username: '',
-            sex: 'women',
+            sex: this.props.sex,
             regComplete: false,
             dataProtectionCheck: false,
-            termsOfUseCheck: false
+            termsOfUseCheck: false,
+            withOnboardingFaves: false,
+            registerInProcess: false
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSwitchChange = this.handleSwitchChange.bind(this);
+        this.addOnboardingFaves = this.addOnboardingFaves.bind(this);
+        this.addOutfitsToLook = this.addOutfitsToLook.bind(this);
     }
 
     componentDidMount() {
@@ -37,6 +42,16 @@ export default class Register extends React.Component {
             category: "Register",
             action: "start",
         });
+
+        const queryString = window.location.search;
+        if(queryString.length > 0) {
+            const isLikes = window.location.search.split('likes=')[1];
+            if (isLikes === '1') {
+                this.setState({
+                    withOnboardingFaves: true
+                });
+            }
+        }
     }
 
     handleChange(event) {
@@ -61,6 +76,10 @@ export default class Register extends React.Component {
             let username = this.state.username;
             let sex = this.state.sex;
 
+            this.setState({
+                registerInProcess: true
+            });
+
             fetch(window.location.origin + '/api/register', {
                 method: 'post',
                 body: JSON.stringify({
@@ -76,14 +95,19 @@ export default class Register extends React.Component {
             }).then(function(response) { return response.json(); })
                 .then(data => {
                     if (data['status'] === true) {
-                        this.setState({
-                            regComplete: true
-                        });
                         ReactGA.event({
                             category: "Register",
                             action: "complete",
                             label: email
                         });
+                        if(this.state.withOnboardingFaves === true) {
+                            this.addOnboardingFaves(email);
+                        } else {
+                            this.setState({
+                                regComplete: true,
+                                registerInProcess: false
+                            });
+                        }
                     } else {
                         alert(`Registration failed: ${data['response']}`);
                     }
@@ -92,6 +116,54 @@ export default class Register extends React.Component {
             alert('Please accept "Terms and Conditions" and "Data Protection Policy"')
         }
     }
+
+    addOnboardingFaves(email) {
+        const lookName = 'likes';
+        fetch(`${window.location.origin}/api/add_look`, {
+            method: 'post',
+            body: JSON.stringify({email: email, look_name: lookName}),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) { return response.json(); })
+            .then(data => {
+                const looksArr = data.looks.sort(function(a, b){
+                    if(a.look_name < b.look_name) { return -1; }
+                    if(a.look_name > b.look_name) { return 1; }
+                    return 0;
+                });
+                if (looksArr.length > 0) {
+                    const prodIds = this.props.onboardingFaves.map(outfitDict => {
+                        return outfitDict.prod_id
+                    });
+                    this.addOutfitsToLook(lookName, prodIds);
+                }
+            });
+    }
+
+    addOutfitsToLook = (lookName, prodIds) => {
+        fetch(`${window.location.origin}/api/add_multiple_outfits`, {
+            method: 'post',
+            body: JSON.stringify({
+                'email': this.state.email,
+                'look_name': lookName,
+                'prod_ids': prodIds,
+                'sex': this.props.sex
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if(data === 'Invalid look') {
+                alert('Invalid look')
+            }
+            this.props.handleResultLogin(this.state.email, this.state.pwd, null);
+        });
+    };
 
     render() {
         const regForm = (
@@ -112,35 +184,48 @@ export default class Register extends React.Component {
                         color: 'black'
                     }}
                 />
-                <br></br>
-                <br></br>
-                <RadioButtonGroup
-                    name="sex"
-                    defaultSelected="women"
-                    onChange={this.handleChange.bind(this)}
+
+                <div
+                    style={{
+                        width: '300px',
+                        marginTop: '50px',
+                        marginBottom: '5px'
+                    }}
                 >
-                    <RadioButton
-                        value="women"
-                        label="Her"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                    <RadioButton
-                        value="men"
-                        label="Him"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                    <RadioButton
-                        value="both"
-                        label="Them"
-                        checkedIcon={<Loyalty style={{color: '#9276b5'}}/>}
-                        uncheckedIcon={<Loyalty/>}
-                        labelStyle={{textAlign: 'left'}}
-                    />
-                </RadioButtonGroup>
+                    <div
+                        className='onboarding-sex-button'
+                        style={{
+                            backgroundColor: this.props.sex === 'women' && '#000000',
+                            color: this.props.sex === 'women' && '#FFFFFF'
+                        }}
+                        onClick={() => {
+                            this.setState({
+                                currentStep: 1,
+                                chosenOutfits: []
+                            });
+                            this.props.changeSex('women');
+                        }}
+                    >
+                        HER
+                    </div>
+                    <div
+                        className='onboarding-sex-button'
+                        style={{
+                            backgroundColor: this.props.sex === 'men' && '#000000',
+                            color: this.props.sex === 'men' && '#FFFFFF'
+                        }}
+                        onClick={() => {
+                            this.setState({
+                                currentStep: 1,
+                                chosenOutfits: []
+                            });
+                            this.props.changeSex('men');
+                        }}
+                    >
+                        HIM
+                    </div>
+                </div>
+
                 <TextField
                     name="email"
                     hintText="Your e-mail"
@@ -179,7 +264,8 @@ export default class Register extends React.Component {
                 <div
                     style={{
                         width: '100%',
-                        fontSize: '0.9rem'
+                        fontSize: '0.9rem',
+                        textAlign: 'left'
                     }}
                 >
                     <Switch
@@ -189,24 +275,24 @@ export default class Register extends React.Component {
                         name="dataProtectionCheck"
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                     />
-                    <Route render={({history}) => (
-                        <b
-                            onClick={() => {
-                                history.push(`/data-protection`);
-                            }}
-                            style={{
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Data Protection Policy
-                        </b>
-                    )}/>
+                    <b
+                        onClick={() => {
+                            const win = window.open('https://garms.io/data-protection', '_blank');
+                            win.focus();
+                        }}
+                        style={{
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Data Protection Policy
+                    </b>
                 </div>
 
                 <div
                     style={{
                         width: '100%',
-                        fontSize: '0.9rem'
+                        fontSize: '0.9rem',
+                        textAlign: 'left'
                     }}
                 >
                     <Switch
@@ -216,18 +302,17 @@ export default class Register extends React.Component {
                         name="termsOfUseCheck"
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                     />
-                    <Route render={({history}) => (
-                        <b
-                            onClick={() => {
-                                history.push(`/terms-conditions`);
-                            }}
-                            style={{
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Terms and Conditions of Use
-                        </b>
-                    )}/>
+                    <b
+                        onClick={() => {
+                            const win = window.open('https://garms.io/terms-conditions', '_blank');
+                            win.focus();
+                        }}
+                        style={{
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Terms and Conditions of Use
+                    </b>
                 </div>
 
                 <br />
@@ -250,13 +335,17 @@ export default class Register extends React.Component {
                 <p>Registration successful!</p>
 
                 <Route render={({history}) => (
-                    <FlatButton
+                    <RaisedButton
                         label="Log In"
+                        primary={true}
                         onClick={() => {
                             history.push('/login')
                         }}
                         buttonStyle={{
                             backgroundColor: 'black'
+                        }}
+                        style={{
+                            marginTop: '20px'
                         }}
                     />
                 )}/>
@@ -267,7 +356,19 @@ export default class Register extends React.Component {
         return (
             <MuiThemeProvider>
                 <div>
-                    {this.state.regComplete ? (regSuccess) : (regForm)}
+                    {this.state.registerInProcess === true ? (
+                        <div>
+                            <br />
+                            <br />
+                            <InfiniteSpinner />
+                            <br />
+                            <br />
+                        </div>
+                    ) : (
+                        <div>
+                            {this.state.regComplete ? (regSuccess) : (regForm)}
+                        </div>
+                    )}
                 </div>
             </MuiThemeProvider>
         );

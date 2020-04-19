@@ -9,6 +9,7 @@ import RecommendFromTags from './../recommend/RecommendFromTags';
 import {Route} from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import ReactGA from "react-ga";
+import WardrobeCard from "./WardrobeCard";
 
 
 class Wardrobe extends React.Component  {
@@ -59,9 +60,11 @@ class Wardrobe extends React.Component  {
         const queryString = window.location.search;
         if(queryString.length > 0) {
             const imgHash = window.location.search.split('id=')[1];
-            this.setState({
-                imgHash: imgHash
-            });
+            if (imgHash) {
+                this.setState({
+                    imgHash: imgHash
+                });
+            }
         }
 
         // Load looks
@@ -554,123 +557,15 @@ class Wardrobe extends React.Component  {
 
         let outfitTiles = this.state.outfits.map(outfitDict => {
             const key = `${outfitDict.prod_id}-${outfitDict.outfit_date}`;
-            const priceStyle = outfitDict.info.sale ? {
-                textDecoration: 'line-through',
-                display: 'inline-block',
-                fontSize: '0.9rem'
-            } : {
-                textDecoration: 'none',
-                fontSize: '0.9rem'
-            };
+
             if (this.state.lookFilter === null || this.state.lookFilter === outfitDict.look_name) {
                 return (
-                    <Paper zDepth={1} className="profile-product-tile" key={key}>
-                        <div
-                            className="product-name"
-                            style={{
-                                marginLeft: '1px',
-                                marginRight: '1px',
-                                fontSize: '1rem',
-                                lineHeight: '1'
-                            }}
-                        >
-                            {outfitDict.look_name.toUpperCase()}
-                        </div>
-
-                        <Route render={({history}) => (
-                            <img
-                                className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
-                                style={{
-                                    marginBottom: '10px',
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    history.push(`/outfit-page?id=${outfitDict.prod_id}&sex=${this.state.sex}`)
-                                }}
-                            />
-                        )}/>
-
-                        <Route render={({history}) => (
-                            <div
-                                className="product-name"
-                                style={{
-                                    marginTop: '3px',
-                                    fontSize: '0.8rem',
-                                    lineHeight: '1'
-                                }}
-                                onClick={() => {
-                                    history.push(`/outfit-page?id=${outfitDict.prod_id}`)
-                                }}
-                            >
-                                <b>{outfitDict.info.name}</b>
-                            </div>
-                        )}
-                        />
-                        <div style={priceStyle}>£{outfitDict.info.price}</div>
-                        {(outfitDict.info.sale) && (
-                            <div
-                                style={{
-                                    color: '#d6181e',
-                                    display: 'inline-block',
-                                    marginLeft: '5px',
-                                    fontSize: '1rem',
-                                    lineHeight: '1'
-                                }}
-                            >
-                                £{outfitDict.info.salePrice}
-                            </div>
-                        )}
-
-                        <a
-                            href={outfitDict.info.url}
-                            target="_blank"
-                        >
-                            <div
-                                style={{
-                                    lineHeight: '1',
-                                    fontSize: '1rem'
-                                }}
-                            >
-                                <b>{outfitDict.info.brand}</b>
-                            </div>
-                            from {outfitDict.info.shop}
-                        </a>
-                        <Route render={({history}) => (
-                            <Tooltip title="Search Similar Items" >
-                                <div
-                                    className="search-similar-wardrobe"
-                                    onClick={() => {
-                                        history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
-                                    }}
-                                />
-                            </Tooltip>
-                        )}/>
-                        <Tooltip title="Delete From Favorites" >
-                            <div
-                                className="product-delete-wardrobe"
-                                onClick={() => {
-                                    this.removeOutfit(outfitDict.look_name, outfitDict.prod_id, outfitDict.outfit_date)
-                                }}
-                            />
-                        </Tooltip>
-                        <Tooltip title="Buy Now" >
-                            <a
-                                href={outfitDict.info.url}
-                                target="_blank"
-                                onClick={() => {
-                                    ReactGA.event({
-                                        category: "Wardrobe",
-                                        action: 'buy now',
-                                        label: outfitDict.info.url,
-                                    });
-                                }}
-                            >
-                                <div
-                                    className="product-buy-wardrobe"
-                                />
-                            </a>
-                        </Tooltip>
-                    </Paper>
+                    <WardrobeCard
+                        key={key}
+                        sex={this.state.sex}
+                        outfitData={outfitDict}
+                        removeOutfit={(look_name, prod_id, outfit_date) => {this.removeOutfit(look_name, prod_id, outfit_date)}}
+                    />
                 )
             }
         });
