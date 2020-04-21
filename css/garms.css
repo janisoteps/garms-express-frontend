@@ -323,6 +323,14 @@ body{
     top: 50px;
 }
 
+.preview-container-new{
+    width: 100vw;
+    text-align: center;
+    position: absolute;
+    top: 50px;
+    margin-top: 10px;
+}
+
 /*.image-preview{*/
     /*!*width: 100vw;*!*/
     /*height: calc(100vh - 175px);*/
@@ -1606,6 +1614,10 @@ body{
 
 .onboarding-product-card:hover {
     box-shadow: rgb(200, 0, 0) 0px 0px 5px;
+}
+
+.image-search-continue:hover {
+    background-color: #eaeaea;
 }
 
 .outfit-details-desktop-side-images { grid-area: side-images; }

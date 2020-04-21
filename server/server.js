@@ -495,6 +495,42 @@ app.post('/api/text_search_infinite', function (req, res) {
 });
 
 
+app.post('/api/image_search_infinite', function (req, res) {
+    const sex = req.body.sex;
+    const pos_tags = req.body.pos_tags;
+    const neg_tags = req.body.neg_tags;
+    const color_1 = req.body.color_1;
+    const vgg16_encoding = req.body.vgg16_encoding;
+    const prev_prod_ids = req.body.prev_prod_ids;
+    const max_price = req.body.max_price;
+    const brands = req.body.brands;
+
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'image_search_infinite',
+        body: {
+            sex: sex,
+            pos_tags: pos_tags,
+            neg_tags: neg_tags,
+            color_1: color_1,
+            vgg16_encoding: vgg16_encoding,
+            prev_prod_ids: prev_prod_ids,
+            max_price: max_price,
+            brands: brands
+        },
+        json: true
+    };
+
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            res.send(body);
+        }
+    }
+
+    request(options, handleResponse);
+});
+
+
 // Get product category, color and siamese encoding
 app.post('/api/img_features', upload.single('image'), function (req, res) {
 
@@ -521,6 +557,29 @@ app.post('/api/img_features', upload.single('image'), function (req, res) {
     };
 
     // console.log('Img features, options: ', options);
+    request(options, handleResponse);
+});
+
+
+app.post('/api/img_features_light', upload.single('image'), function (req, res) {
+    let image = req.file.path;
+    console.log('Image size: ', req.file.size);
+
+    let formData = {
+        image: fs.createReadStream(image),
+    };
+    function handleResponse(error, response, body){
+        if (!error && response.statusCode === 200) {
+            let response_data = JSON.parse(body);
+
+            res.send(response_data);
+        }
+    }
+    let options = {
+        method: 'POST',
+        url: api_base_url + 'img_features_light',
+        formData:    formData
+    };
     request(options, handleResponse);
 });
 

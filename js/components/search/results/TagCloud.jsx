@@ -513,7 +513,8 @@ class TagCloud extends React.Component {
             this.setState({
                 searchString: ''
             });
-            this.props.addBrandFilter(this.state.searchString, false);
+            // this.props.addBrandFilter(this.state.searchString, false);
+            this.props.addTagFilter(this.state.searchString, null, false)
         }
     };
 

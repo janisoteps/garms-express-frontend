@@ -40,7 +40,7 @@ class SearchOptions extends React.Component {
                                     action: 'navigate',
                                     label: 'search from image'
                                 });
-                                history.push('/search-from-image');
+                                history.push('/image-search');
                             }}>
                             <div className="search-choice-title">
                                 <div className="image-search-icon"></div>
