@@ -667,6 +667,7 @@ app.post('/api/search_similar_infinite', function (req, res) {
     const max_price = req.body.max_price;
     const brands = req.body.brands;
     const prev_prod_ids = req.body.prev_prod_ids;
+    const initial_req = req.body.initial_req;
 
     let options = {
         method: 'POST',
@@ -680,7 +681,8 @@ app.post('/api/search_similar_infinite', function (req, res) {
             no_shop: no_shop,
             max_price: max_price,
             brands: brands,
-            prev_prod_ids: prev_prod_ids
+            prev_prod_ids: prev_prod_ids,
+            initial_req: initial_req
         }),
         json: true
     };

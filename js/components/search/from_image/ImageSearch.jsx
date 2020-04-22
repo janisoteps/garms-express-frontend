@@ -798,7 +798,7 @@ class ImageSearch extends React.Component {
                                 img_hash,
                                 color_1
                             ) => {
-                                this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}`);
+                                this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}`);
                             }}
                             results={this.state.results}
                             setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}

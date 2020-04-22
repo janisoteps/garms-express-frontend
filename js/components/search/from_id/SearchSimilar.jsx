@@ -24,6 +24,7 @@ class SearchSimilar extends React.Component  {
             email: this.props.email,
             results: [],
             selectedColor: [],
+            searchTags: [],
             posTags: [],
             negTags: [],
             noResult: false,
@@ -66,6 +67,8 @@ class SearchSimilar extends React.Component  {
             const sexString = window.location.search.split('sex=')[1].split('&')[0];
             const searchColorStr = window.location.search.split('clr=')[1]
                 ? window.location.search.split('clr=')[1].split('&')[0] : null;
+            const searchCatString = window.location.search.split('cats=')[1]
+                ? window.location.search.split('cats=')[1].split('&')[0] : null;
 
             if (searchColorStr === null) {
                 this.setState({
@@ -76,11 +79,13 @@ class SearchSimilar extends React.Component  {
                 const searchColorArr = decodedSearchColorStr.split(',').map(colorStr => {
                     return parseInt(colorStr)
                 });
+                const decodedSearchCatArr = decodeURIComponent(searchCatString).split(',');
                 this.setState({
                     imgHash: imgHash,
                     loading: true,
                     searchSex: sexString,
-                    selectedColor: searchColorArr
+                    selectedColor: searchColorArr,
+                    searchTags: decodedSearchCatArr
                 }, () => {
                     ReactGA.event({
                         category: "Search Similar",
@@ -119,7 +124,11 @@ class SearchSimilar extends React.Component  {
         const scrollDistance = window.pageYOffset + document.body.clientHeight;
 
         if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
-            if(this.state.infiniteLoading === false && this.state.infiniteLoadingComplete === false) {
+            if(
+                this.state.infiniteLoading === false
+                && this.state.infiniteLoadingComplete === false
+                && this.state.loading === false
+            ) {
                 if (this.state.infiniteCount < 10) {
                     this.setState({
                         infiniteLoading: true
@@ -157,7 +166,12 @@ class SearchSimilar extends React.Component  {
             this.setState({
                 loadingContent: data
             }, () => {
-                console.log(this.state.imgHash);
+                if(this.state.infiniteLoading === false) {
+                    window.scrollTo({
+                        top: 0
+                    });
+                    window.scrollTo(0, 0);
+                }
                 fetch(window.location.origin + '/api/search_similar_infinite', {
                     method: 'post',
                     body: JSON.stringify({
@@ -169,7 +183,8 @@ class SearchSimilar extends React.Component  {
                         no_shop: null,
                         max_price: this.state.rangeVal < 500 ? this.state.rangeVal : 1000000,
                         brands: this.state.filterBrands,
-                        prev_prod_ids: this.state.loadedProdIds
+                        prev_prod_ids: this.state.loadedProdIds,
+                        initial_req: false
                     }),
                     headers: {
                         Accept: 'application/json',
@@ -237,14 +252,15 @@ class SearchSimilar extends React.Component  {
                     method: 'post',
                     body: JSON.stringify({
                         img_hash: imgHash,
-                        tags_positive: this.state.posTags,
-                        tags_negative: this.state.negTags,
+                        tags_positive: this.state.searchTags,
+                        tags_negative: [],
                         color_1: colorRgb,
                         sex: this.state.searchSex,
                         no_shop: null,
                         max_price: this.state.rangeVal < 500 ? this.state.rangeVal : 1000000,
                         brands: this.state.filterBrands,
-                        prev_prod_ids: this.state.loadedProdIds
+                        prev_prod_ids: this.state.loadedProdIds,
+                        initial_req: true
                     }),
                     headers: {
                         Accept: 'application/json',
@@ -254,11 +270,11 @@ class SearchSimilar extends React.Component  {
                     return response.json();
                 }).then(data => {
                     if (this._ismounted) {
-                        const img_data = data.res[0].image_data;
-                        let posTags = img_data.all_cats;
-                        if(posTags.includes('dress') && posTags.includes('dresses')) {
-                            posTags = posTags.filter(item => {return item !== 'dresses'});
-                        }
+                        // const img_data = data.res[0].image_data;
+                        // let posTags = img_data.all_cats;
+                        // if(posTags.includes('dress') && posTags.includes('dresses')) {
+                        //     posTags = posTags.filter(item => {return item !== 'dresses'});
+                        // }
                         const loadedProdIds = data.res.map(resDict => {
                             return resDict.prod_serial.prod_id
                         });
@@ -267,11 +283,11 @@ class SearchSimilar extends React.Component  {
                             this.setState({
                                 results: data.res,
                                 loading: false,
-                                loadedProdIds: loadedProdIds,
+                                loadedProdIds: [],
                                 infiniteCount: 0,
                                 infiniteLoading: false,
                                 infiniteLoadingComplete: false,
-                                posTags: this.state.posTags.length > 0 ? this.state.posTags : posTags
+                                posTags: data.cats
                             }, () => {
                                 window.scrollTo({
                                     top: 0
@@ -593,7 +609,7 @@ class SearchSimilar extends React.Component  {
                                             imgHash: img_hash,
                                             results: []
                                         }, () => {
-                                            this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}`);
+                                            this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                             this.searchSimilarImages(img_hash, color_1);
                                         })
                                     } else {
@@ -601,7 +617,7 @@ class SearchSimilar extends React.Component  {
                                             loadedProdIds: [],
                                             imgHash: img_hash
                                         }, () => {
-                                            this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}`);
+                                            this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                         })
                                     }
                                 }}
@@ -633,7 +649,9 @@ class SearchSimilar extends React.Component  {
                             selectedColor={this.state.selectedColor}
                             searchSimilarImages={(imgHash, color1) => {
                                 if (this.reactInDevMode()) {
-                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
+                                    // this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
+                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}
+                                            &clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                     // this.searchSimilarImages(imgHash, color1);
                                     this.setState({
                                         loadedProdIds: [],
@@ -642,7 +660,9 @@ class SearchSimilar extends React.Component  {
                                         this.searchSimilar()
                                     })
                                 } else {
-                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
+                                    // this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
+                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}
+                                            &clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                 }
                             }}
                             results={this.state.results}

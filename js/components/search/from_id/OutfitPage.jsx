@@ -66,6 +66,10 @@ class OutfitPage extends React.Component  {
         this.updateDimensions();
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
     filterUnique = (value, index, self) => {
         return self.indexOf(value) === index;
     };
