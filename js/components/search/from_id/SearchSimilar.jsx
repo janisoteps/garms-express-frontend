@@ -70,31 +70,25 @@ class SearchSimilar extends React.Component  {
             const searchCatString = window.location.search.split('cats=')[1]
                 ? window.location.search.split('cats=')[1].split('&')[0] : null;
 
-            if (searchColorStr === null) {
-                this.setState({
-                    noResult: true
-                })
-            } else {
-                const decodedSearchColorStr = decodeURIComponent(searchColorStr);
-                const searchColorArr = decodedSearchColorStr.split(',').map(colorStr => {
-                    return parseInt(colorStr)
+            const decodedSearchColorStr = searchColorStr ? decodeURIComponent(searchColorStr) : null;
+            const searchColorArr = decodedSearchColorStr ? decodedSearchColorStr.split(',').map(colorStr => {
+                return parseInt(colorStr)
+            }) : [];
+            const decodedSearchCatArr = decodeURIComponent(searchCatString).split(',');
+            this.setState({
+                imgHash: imgHash,
+                loading: true,
+                searchSex: sexString,
+                selectedColor: searchColorArr,
+                searchTags: decodedSearchCatArr
+            }, () => {
+                ReactGA.event({
+                    category: "Search Similar",
+                    action: 'initial search',
+                    label: imgHash,
                 });
-                const decodedSearchCatArr = decodeURIComponent(searchCatString).split(',');
-                this.setState({
-                    imgHash: imgHash,
-                    loading: true,
-                    searchSex: sexString,
-                    selectedColor: searchColorArr,
-                    searchTags: decodedSearchCatArr
-                }, () => {
-                    ReactGA.event({
-                        category: "Search Similar",
-                        action: 'initial search',
-                        label: imgHash,
-                    });
-                    this.searchSimilarImages(imgHash, searchColorArr);
-                });
-            }
+                this.searchSimilarImages(imgHash, searchColorArr);
+            });
         } else {
             this.setState({
                 noResult: true
@@ -283,11 +277,12 @@ class SearchSimilar extends React.Component  {
                             this.setState({
                                 results: data.res,
                                 loading: false,
-                                loadedProdIds: [],
+                                loadedProdIds: loadedProdIds,
                                 infiniteCount: 0,
                                 infiniteLoading: false,
                                 infiniteLoadingComplete: false,
-                                posTags: data.cats
+                                posTags: data.cats,
+                                selectedColor: data.color
                             }, () => {
                                 window.scrollTo({
                                     top: 0

@@ -34,7 +34,6 @@ class RecommendCard extends React.Component {
         };
         const imgHash = prodSuggestion.image_hash[0];
 
-
         return (
             <Paper zDepth={1} className="recommend-product-tile" key={key}>
                 {this.props.lookName !== 'all' && (<div>
@@ -98,7 +97,8 @@ class RecommendCard extends React.Component {
                                     action: 'search similar',
                                     label: imgHash
                                 });
-                                history.push(`/search-from-id?id=${imgHash}`);
+                                // history.push(`/search-from-id?id=${imgHash}`);
+                                history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}`)
                             }}
                         />
                     </Tooltip>
