@@ -4,9 +4,6 @@ require('../../../../css/garms.css');
 class ColorSelector extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            selectedColor: null
-        };
     }
 
     render() {
@@ -14,6 +11,7 @@ class ColorSelector extends React.Component {
             const inverseRgb = colorDict.rgb.map(color => {
                 return 255 - color
             })
+            const selectedColorHex = this.props.selectedColor ? this.props.selectedColor.hex : null;
             return (
                 <div
                     style={{
@@ -21,7 +19,7 @@ class ColorSelector extends React.Component {
                         height: '100%',
                         backgroundColor: colorDict.hex,
                         borderRadius: '3px',
-                        border: this.state.selectedColor === colorDict ? `3px solid rgba(${inverseRgb[0]}, ${inverseRgb[1]}, ${inverseRgb[2]}, 1)` : '',
+                        border: selectedColorHex === colorDict.hex ? `3px solid rgba(${inverseRgb[0]}, ${inverseRgb[1]}, ${inverseRgb[2]}, 1)` : '',
                     }}
                 >
 
@@ -42,11 +40,7 @@ class ColorSelector extends React.Component {
                         paddingBottom: '5px'
                     }}
                     onClick={() => {
-                        this.setState({
-                            selectedColor: imgColor
-                        }, () => {
-                            this.props.setSelectedColor(imgColor);
-                        })
+                        this.props.setSelectedColor(imgColor);
                     }}
                 >
                     {colorTile(imgColor)}
@@ -65,7 +59,7 @@ class ColorSelector extends React.Component {
                 }}
             >
                 {colorTiles}
-                {this.state.selectedColor === null ? (
+                {this.props.selectedColor === null ? (
                     <div
                         style={{
                             width: '100%',

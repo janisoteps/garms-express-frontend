@@ -60,6 +60,7 @@ class ImageSearch extends React.Component {
         this.setColorPosTags = this.setColorPosTags.bind(this);
         this.searchFromImage = this.searchFromImage.bind(this);
         this.addOwnCat = this.addOwnCat.bind(this);
+        this.showHideTagPicker = this.showHideTagPicker.bind(this);
     }
 
     componentDidMount() {
@@ -538,6 +539,20 @@ class ImageSearch extends React.Component {
         }
     }
 
+    setPosTags(imgCat) {
+        if (this.state.posTags.includes(imgCat)) {
+            this.setState({
+                posTags: this.state.posTags.filter(cat => {
+                    return cat !== imgCat
+                })
+            })
+        } else {
+            this.setState({
+                posTags: this.state.posTags.concat([imgCat])
+            })
+        }
+    }
+
     changeOutfitShown(isShown){
         this.setState({
             addOutfitShown: isShown
@@ -661,6 +676,12 @@ class ImageSearch extends React.Component {
         }
     }
 
+    showHideTagPicker(show) {
+        this.setState({
+            tagPickerShown: show
+        });
+    }
+
     showBrandPicker(show) {
         this.setState({
             brandPickerShown: show
@@ -744,14 +765,22 @@ class ImageSearch extends React.Component {
                             setSelectedColor={(color) => {this.setSelectedColor(color)}}
                             completeColorChoosing={() => {this.completeColorChoosing()}}
                             imgFeaturesLoading={this.state.imgFeaturesLoading}
+                            selectedColor={this.state.selectedColor}
                         />
                     </div>
                 )}
                 {this.state.colorChoosingComplete === true && (
                     <CatSelector
                         imgCats={this.state.imgCats}
+                        posTags={this.state.posTags}
                         completeCatChoosing={(cats) => {this.completeCatChoosing(cats)}}
-                        addOwnCat={(cat) => {this.addOwnCat(cat)}}
+                        addOwnCat={(cat) => {
+                            this.addOwnCat(cat);
+                            this.showHideTagPicker(false);
+                        }}
+                        tagPickerShown={this.state.tagPickerShown}
+                        setPosTags={(tag) => {this.setPosTags(tag)}}
+                        showHideTagPicker={(show) => {this.showHideTagPicker(show)}}
                     />
                 )}
             </div>

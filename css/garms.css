@@ -242,7 +242,7 @@ body{
 }
 
 .search-choice-deals:hover {
-    opacity: 80%;
+    opacity: 0.6;
 }
 
 .search-glass-icon{
