@@ -533,7 +533,8 @@ class RecommendDeals extends React.Component  {
                                             action: 'search similar',
                                             label: imgHash,
                                         });
-                                        history.push(`/search-from-id?id=${imgHash}`);
+                                        // history.push(`/search-from-id?id=${imgHash}`);
+                                        history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}`)
                                     }}
                                 />
                             </Tooltip>

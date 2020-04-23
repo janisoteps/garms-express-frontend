@@ -59,6 +59,7 @@ class ImageSearch extends React.Component {
         this.handleScroll = this.handleScroll.bind(this);
         this.setColorPosTags = this.setColorPosTags.bind(this);
         this.searchFromImage = this.searchFromImage.bind(this);
+        this.addOwnCat = this.addOwnCat.bind(this);
     }
 
     componentDidMount() {
@@ -691,6 +692,15 @@ class ImageSearch extends React.Component {
         }
     }
 
+    addOwnCat(cat) {
+        let cats = this.state.imgCats;
+        cats.push(cat);
+
+        this.setState({
+            imgCats: cats
+        })
+    }
+
 
     // ================================================ MAIN RENDER =================================================
 
@@ -741,6 +751,7 @@ class ImageSearch extends React.Component {
                     <CatSelector
                         imgCats={this.state.imgCats}
                         completeCatChoosing={(cats) => {this.completeCatChoosing(cats)}}
+                        addOwnCat={(cat) => {this.addOwnCat(cat)}}
                     />
                 )}
             </div>

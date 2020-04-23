@@ -971,13 +971,14 @@ class TextSearch extends React.Component  {
                                         img_hash,
                                         color_1
                                     ) => {
-                                        if (this.reactInDevMode()) {
-                                            this.searchSimilarImages(img_hash, color_1);
-                                        } else {
-                                            const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                            const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${img_hash}&clr=${encodeURIComponent(color_1)}`);
-                                        }
+                                        // if (this.reactInDevMode()) {
+                                        //     this.searchSimilarImages(img_hash, color_1);
+                                        // } else {
+                                        //     const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                                        //     const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                                        //     this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${img_hash}&clr=${encodeURIComponent(color_1)}`);
+                                        // }
+                                        this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}`);
                                     }}
                                     results={this.state.results}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}

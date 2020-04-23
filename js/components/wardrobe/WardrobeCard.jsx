@@ -100,7 +100,8 @@ class WardrobeCard extends React.Component {
                         <div
                             className="search-similar-wardrobe"
                             onClick={() => {
-                                history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                // history.push(`/search-from-id?id=${outfitDict.info.imgHash}`)
+                                history.push(`search-similar?id=${outfitDict.info.imgHash}&sex=${this.props.sex}`)
                             }}
                         />
                     </Tooltip>

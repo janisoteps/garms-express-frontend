@@ -14,7 +14,6 @@ import InfiniteSpinner from "../../loading/InfiniteSpinner";
 
 //Component to search for products using text input
 class SearchSimilar extends React.Component  {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -139,7 +138,6 @@ class SearchSimilar extends React.Component  {
     }
 
     searchSimilar(){
-        console.log('searchSimilar')
         this.setState({
             loading: this.state.infiniteLoading === false
         });
@@ -191,22 +189,24 @@ class SearchSimilar extends React.Component  {
                         const loadedProdIds = data.res.map(resDict => {
                             return resDict.prod_serial.prod_id
                         });
-                        console.log(`loadedProdIds len: ${loadedProdIds.length}`)
                         if (loadedProdIds.length > 0) {
-                            const img_data = data.res[0].image_data;
-                            let posTags = img_data.all_cats;
-                            if(posTags.includes('dress') && posTags.includes('dresses')) {
-                                posTags = posTags.filter(item => {return item !== 'dresses'});
+                            const currentImgHash = window.location.search.split('id=')[1].split('&')[0];
+                            if (currentImgHash === data.img_hash) {
+                                const img_data = data.res[0].image_data;
+                                let posTags = img_data.all_cats;
+                                if(posTags.includes('dress') && posTags.includes('dresses')) {
+                                    posTags = posTags.filter(item => {return item !== 'dresses'});
+                                }
+                                this.setState({
+                                    results: this.state.infiniteLoading === true ? this.state.results.concat(data.res) : data.res,
+                                    loading: false,
+                                    loadedProdIds: this.state.infiniteLoading === true
+                                        ? this.state.loadedProdIds.concat(loadedProdIds) : loadedProdIds,
+                                    infiniteCount: this.state.infiniteLoading === true ? this.state.infiniteCount + 1 : 0,
+                                    infiniteLoading: false,
+                                    posTags: this.state.posTags.length > 0 ? this.state.posTags : posTags
+                                });
                             }
-                            this.setState({
-                                results: this.state.infiniteLoading === true ? this.state.results.concat(data.res) : data.res,
-                                loading: false,
-                                loadedProdIds: this.state.infiniteLoading === true
-                                    ? this.state.loadedProdIds.concat(loadedProdIds) : loadedProdIds,
-                                infiniteCount: this.state.infiniteLoading === true ? this.state.infiniteCount + 1 : 0,
-                                infiniteLoading: false,
-                                posTags: this.state.posTags.length > 0 ? this.state.posTags : posTags
-                            });
                         } else {
                             this.setState({
                                 infiniteLoadingComplete: true,
@@ -220,7 +220,6 @@ class SearchSimilar extends React.Component  {
     }
 
     searchSimilarImages(imgHash, colorRgb){
-        console.log('searchSimilarImages')
         this.setState({
             loading: true
         });
@@ -272,7 +271,6 @@ class SearchSimilar extends React.Component  {
                         const loadedProdIds = data.res.map(resDict => {
                             return resDict.prod_serial.prod_id
                         });
-                        console.log(`loadedProdIds len: ${loadedProdIds.length}`)
                         if (loadedProdIds.length > 0) {
                             this.setState({
                                 results: data.res,
@@ -291,6 +289,7 @@ class SearchSimilar extends React.Component  {
                             });
                         } else {
                             this.setState({
+                                loading: false,
                                 infiniteLoadingComplete: true,
                                 infiniteLoading: false,
                             })
@@ -597,8 +596,6 @@ class SearchSimilar extends React.Component  {
                                     color_1
                                 ) => {
                                     if (this.reactInDevMode()) {
-                                        console.log('DEV MODE')
-                                        // this.searchSimilarImages(img_hash, color_1);
                                         this.setState({
                                             loadedProdIds: [],
                                             imgHash: img_hash,

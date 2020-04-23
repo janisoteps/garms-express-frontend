@@ -144,7 +144,6 @@ const pattern_cats = [
     'heart',
     'jacquard',
     'knot',
-    'lace',
     'lattice',
     'leopard',
     'light',

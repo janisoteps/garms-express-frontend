@@ -1,26 +1,36 @@
 import React from "react";
+import TagPicker from "./TagPicker";
 require('../../../../css/garms.css');
 
 class CatSelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCats: []
+            selectedCats: [],
+            showTagPicker: false
         };
+        this.hideTagPicker = this.hideTagPicker.bind(this);
+    }
+
+    hideTagPicker() {
+        this.setState({
+            showTagPicker: false
+        });
     }
 
     render() {
         const catTiles = this.props.imgCats.map(imgCat => {
             return (
                 <div
-                    key={imgCat}
+                    key={`${imgCat}-${Math.random()}`}
                     style={{
                         display: 'inline-block',
                         margin: '5px',
                         padding: '5px',
-                        border: this.state.selectedCats.includes(imgCat) ? '3px solid #000' : '',
+                        border: this.state.selectedCats.includes(imgCat) ? '2px solid #000' : '',
                         borderRadius: '3px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        backgroundColor: '#ece8ee'
                     }}
                     onClick={() => {
                         if (this.state.selectedCats.includes(imgCat)) {
@@ -53,6 +63,23 @@ class CatSelector extends React.Component {
             >
                 <div>
                     {catTiles}
+                    <div
+                        style={{
+                            display: 'inline-block',
+                            margin: '5px',
+                            padding: '5px',
+                            borderRadius: '3px',
+                            cursor: 'pointer',
+                            backgroundColor: '#ece8ee'
+                        }}
+                        onClick={() => {
+                            this.setState({
+                                showTagPicker: true
+                            })
+                        }}
+                    >
+                        other...
+                    </div>
                 </div>
                 {this.state.selectedCats.length === 0 ? (
                     <div
@@ -77,6 +104,15 @@ class CatSelector extends React.Component {
                     >
                         CONTINUE
                     </div>
+                )}
+
+                {this.state.showTagPicker === true && (
+                    <TagPicker
+                        addOwnCat={(cat) => {
+                            this.props.addOwnCat(cat);
+                            this.hideTagPicker();
+                        }}
+                    />
                 )}
             </div>
         )
