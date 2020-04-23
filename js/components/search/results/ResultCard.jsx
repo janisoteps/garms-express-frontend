@@ -506,10 +506,6 @@ class ResultCard extends React.Component {
                         }}
                     >
                         <b
-                            className="results-card-brand-tag"
-                            style={{
-                                display: 'inline-block'
-                            }}
                             onClick={() => {
                                 ReactGA.event({
                                     category: "Result Card Action",

@@ -66,6 +66,10 @@ class OutfitPage extends React.Component  {
         this.updateDimensions();
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
     filterUnique = (value, index, self) => {
         return self.indexOf(value) === index;
     };
@@ -447,7 +451,8 @@ class OutfitPage extends React.Component  {
                                     action: 'search similar',
                                     label: this.state.shownImgHash
                                 });
-                                history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                                // history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                                history.push(`search-similar?id=${this.state.shownImgHash}&sex=${this.state.prodData.sex}`)
                             }}
                         >
                             <div
@@ -678,7 +683,8 @@ class OutfitPage extends React.Component  {
                                         action: 'search similar',
                                         label: this.state.shownImgHash
                                     });
-                                    history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                                    // history.push(`/search-from-id?id=${this.state.shownImgHash}`)
+                                    history.push(`search-similar?id=${this.state.shownImgHash}&sex=${this.state.prodData.sex}`)
                                 }}
                             >
                                 <div

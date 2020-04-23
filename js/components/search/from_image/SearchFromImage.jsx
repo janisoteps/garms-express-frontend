@@ -747,8 +747,7 @@ class SearchFromImage extends React.Component  {
                             </Dropzone>
                         </div>
                     </section>
-                )
-                }
+                )}
             </div>
         ) : (
             <div style={{

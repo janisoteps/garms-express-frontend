@@ -55,6 +55,7 @@
     "multer": "^1.3.1",
     "multer-s3": "^2.9.0",
     "node-fetch": "^2.1.2",
+    "node-vibrant": "^3.1.5",
     "nodemon": "^1.17.5",
     "path": "^0.12.7",
     "pica": "^4.1.1",
