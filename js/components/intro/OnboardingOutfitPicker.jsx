@@ -339,7 +339,8 @@ class OnboardingOutfitPicker extends React.Component {
                     </div>
                     <div
                         style={{
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            marginBottom: '40px'
                         }}
                         onClick={() => {
                             this.props.setOnboardingFaves(this.state.chosenOutfits);
@@ -377,7 +378,7 @@ class OnboardingOutfitPicker extends React.Component {
                                 style={{
                                     width: '300px',
                                     marginLeft: 'calc(50vw - 150px)',
-                                    marginTop: '50px',
+                                    marginTop: '10px',
                                     marginBottom: '5px'
                                 }}
                             >
@@ -414,32 +415,31 @@ class OnboardingOutfitPicker extends React.Component {
                                     HIM
                                 </div>
                             </div>
-                            <StepsProgress />
                             <OutfitSuggestions />
+                            {this.state.outfits.length === 0 && (
+                                <div>
+                                    <br />
+                                    <InfiniteSpinner />
+                                    <br />
+                                    <br />
+                                </div>
+                            )}
+                            <StepsProgress />
                         </div>
                     )}
                 </div>
-                {this.state.outfits.length === 0 && (
-                    <div>
-                        <br />
-                        <br />
-                        <InfiniteSpinner />
-                        <br />
-                        <br />
-                    </div>
-                )}
 
                 {this.state.completed !== true && (
                     <div
                         style={{
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            marginBottom: '40px'
                         }}
                         onClick={() => {
                             this.props.changeSex(this.props.sex);
                             this.props.completeFirstVisit();
                         }}
                     >
-                        <br />
                         Skip >>
                     </div>
                 )}

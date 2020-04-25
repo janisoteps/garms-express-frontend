@@ -35,7 +35,7 @@ class CatSelector extends React.Component {
                 style={{
                     width: '100%',
                     position: 'fixed',
-                    bottom: '0',
+                    bottom: this.props.showIosNav === true ? '40px' : '0',
                     backgroundColor: '#FFFFFF',
                     paddingTop: '5px'
                 }}
@@ -79,7 +79,13 @@ class CatSelector extends React.Component {
                         }}
                         onClick={() => {this.props.completeCatChoosing(this.props.posTags)}}
                     >
-                        CONTINUE
+                        <div
+                            style={{
+                                backgroundColor: '#b2cca2'
+                            }}
+                        >
+                            CONTINUE
+                        </div>
                     </div>
                 )}
 

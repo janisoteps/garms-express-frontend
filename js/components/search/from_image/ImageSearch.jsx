@@ -766,6 +766,7 @@ class ImageSearch extends React.Component {
                             completeColorChoosing={() => {this.completeColorChoosing()}}
                             imgFeaturesLoading={this.state.imgFeaturesLoading}
                             selectedColor={this.state.selectedColor}
+                            showIosNav={this.props.showIosNav}
                         />
                     </div>
                 )}
@@ -781,6 +782,7 @@ class ImageSearch extends React.Component {
                         tagPickerShown={this.state.tagPickerShown}
                         setPosTags={(tag) => {this.setPosTags(tag)}}
                         showHideTagPicker={(show) => {this.showHideTagPicker(show)}}
+                        showIosNav={this.props.showIosNav}
                     />
                 )}
             </div>
