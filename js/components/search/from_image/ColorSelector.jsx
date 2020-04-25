@@ -53,7 +53,7 @@ class ColorSelector extends React.Component {
                 style={{
                     width: '100%',
                     position: 'fixed',
-                    bottom: '0',
+                    bottom: this.props.showIosNav === true ? '40px' : '0',
                     backgroundColor: '#FFFFFF',
                     paddingTop: '5px'
                 }}
@@ -85,7 +85,11 @@ class ColorSelector extends React.Component {
                                 Loading...
                             </div>
                         ):(
-                            <div>
+                            <div
+                                style={{
+                                    backgroundColor: '#b2cca2'
+                                }}
+                            >
                                 CONTINUE
                             </div>
                         )}

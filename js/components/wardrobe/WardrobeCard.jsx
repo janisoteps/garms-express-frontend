@@ -65,7 +65,9 @@ class WardrobeCard extends React.Component {
                         style={{
                             marginTop: '3px',
                             fontSize: '0.8rem',
-                            lineHeight: '1'
+                            lineHeight: '1',
+                            maxHeight: '36px',
+                            overflowY: 'hidden'
                         }}
                         onClick={() => {
                             history.push(`/outfit-page?id=${outfitDict.prod_id}`)

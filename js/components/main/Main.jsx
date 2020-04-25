@@ -149,6 +149,7 @@ class Main extends React.Component {
                                changeSex={(sex) => {this.changeSex(sex);}}
                                firstLogin={this.props.firstLogin}
                                completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                               showIosNav={this.props.showIosNav}
                            />
                     } />
                     <Route path='/search-from-id'

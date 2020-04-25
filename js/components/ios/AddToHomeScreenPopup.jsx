@@ -14,7 +14,7 @@ class AddToHomeScreenPopup extends React.Component {
             <div
                 style={{
                     position: 'fixed',
-                    bottom: '10',
+                    bottom: '45px',
                     left: '0',
                     backgroundColor: '#f8f8f8',
                     width: '96%',

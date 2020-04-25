@@ -9,8 +9,8 @@ import {withRouter, Route} from 'react-router-dom';
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
 import ReactGA from 'react-ga';
-import AddToHomeScreenPopup from "./AddToHomeScreenPopup";
-import StandaloneIOSNav from "./StandaloneIOSNav";
+import AddToHomeScreenPopup from "../ios/AddToHomeScreenPopup";
+import StandaloneIOSNav from "../ios/StandaloneIOSNav";
 ReactGA.initialize('UA-161747441-1');
 
 
@@ -51,15 +51,6 @@ class App extends React.Component {
     componentDidMount() {
         const {cookies} = this.props;
 
-        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-        const showInstallPopupCookie = cookies.get('show_install_popup');
-        if (this.iOS() && !isInStandaloneMode() && showInstallPopupCookie !== 'false') {
-            this.setState({ showInstallPopup: true });
-        }
-        if (this.iOS() && isInStandaloneMode()) {
-            this.setState({ showIosNav: true });
-        }
-
         this._ismounted = true;
         const queryString = window.location.search;
         const current = new Date();
@@ -75,6 +66,21 @@ class App extends React.Component {
             onboardingFaves: cookies.get('onboarding_faves') ? cookies.get('onboarding_faves') : [],
             nextYear: nextYear
         }, () => {
+            const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+            const showInstallPopupCookie = cookies.get('show_install_popup');
+            if (
+                this.iOS()
+                && !isInStandaloneMode()
+                && showInstallPopupCookie !== 'false'
+                && showInstallPopupCookie !== false
+                && this.state.firstVisit !== true
+                && this.state.firstVisit !== 'true'
+            ) {
+                this.setState({ showInstallPopup: true });
+            }
+            if (this.iOS() && isInStandaloneMode()) {
+                this.setState({ showIosNav: true });
+            }
             if (!this.state.sex || this.state.sex === '') {
                 let sex = null;
                 if (queryString.length > 0) {
