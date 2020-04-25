@@ -60,6 +60,7 @@ class App extends React.Component {
         this.setState({
             isAuth: cookies.get('isAuth'),
             sex: cookies.get('sex'),
+            userHash: cookies.get('user_hash'),
             username: cookies.get('username'),
             firstLogin: cookies.get('first_login'),
             firstVisit: cookies.get('first_visit'),
@@ -123,7 +124,7 @@ class App extends React.Component {
             })
         }
         ReactGA.set({
-            userId: cookies.get('email'),
+            userId: cookies.get('user_hash'),
             // any data that is relevant to the user session
             // that you would like to track with google analytics
         });
@@ -242,17 +243,18 @@ class App extends React.Component {
                     cookies.set('username', data['res']['username'], {path: '/', expires: this.state.nextYear});
                     cookies.set('email', data['res']['email'], {path: '/', expires: this.state.nextYear});
                     cookies.set('first_login', data['res']['first_login'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('user_hash', data['res']['user_hash'], {path: '/', expires: this.state.nextYear})
                     this.setState({
                         isAuth: data['auth'],
                         sex: data['res']['sex'],
                         username: data['res']['username'],
                         email: data['res']['email'],
                         pwd: '',
-                        firstLogin: data['res']['first_login']
+                        firstLogin: data['res']['first_login'],
+                        userHash: data['res']['user_hash']
                     });
                     window.location.reload();
                 }
-
             });
     };
 
@@ -279,19 +281,27 @@ class App extends React.Component {
                     cookies.set('username', data['res']['username'], {path: '/', expires: this.state.nextYear});
                     cookies.set('email', data['res']['email'], {path: '/', expires: this.state.nextYear});
                     cookies.set('first_login', data['res']['first_login'], {path: '/', expires: this.state.nextYear});
+                    cookies.set('user_hash', data['res']['user_hash'], {path: '/', expires: this.state.nextYear})
                     this.setState({
                         isAuth: data['auth'],
                         sex: data['res']['sex'],
                         username: data['res']['username'],
                         email: data['res']['email'],
                         pwd: '',
-                        firstLogin: data['res']['first_login']
-                    });
-                    window.location.pathname = '/';
-                    ReactGA.event({
-                        category: "Log In",
-                        action: "User logged in",
-                        label: email
+                        firstLogin: data['res']['first_login'],
+                        userHash: data['res']['user_hash']
+                    }, () => {
+                        ReactGA.event({
+                            category: "Log In",
+                            action: "User logged in",
+                            label: data['res']['user_hash']
+                        });
+                        ReactGA.set({
+                            userId: data['res']['user_hash']
+                            // any data that is relevant to the user session
+                            // that you would like to track with google analytics
+                        });
+                        window.location.pathname = '/';
                     });
                 }
             });
