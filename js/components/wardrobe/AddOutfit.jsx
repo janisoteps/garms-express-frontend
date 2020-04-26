@@ -85,8 +85,8 @@ class AddOutfit extends React.Component  {
         }).then(data => {
             if (data.looks !== null) {
                 const looksArr = data.looks.sort(function(a, b){
-                    if(a.look_name < b.look_name) { return -1; }
-                    if(a.look_name > b.look_name) { return 1; }
+                    if(a.look_name.toLowerCase() < b.look_name.toLowerCase()) { return -1; }
+                    if(a.look_name.toLowerCase() > b.look_name.toLowerCase()) { return 1; }
                     return 0;
                 });
 
