@@ -12,6 +12,8 @@ import ReactGA from 'react-ga';
 import AddToHomeScreenPopup from "../ios/AddToHomeScreenPopup";
 import StandaloneIOSNav from "../ios/StandaloneIOSNav";
 ReactGA.initialize('UA-161747441-1');
+import NewVersionPopup from '../info/NewVersionPopup';
+import CookiePopup from "../info/CookiePopup";
 
 
 class App extends React.Component {
@@ -33,7 +35,10 @@ class App extends React.Component {
             loginPage: false,
             showInstallPopup: false,
             showIosNav: false,
-            onboardingFaves: []
+            onboardingFaves: [],
+            isStandalone: null,
+            newContentAvailable: false,
+            showCookiePopup: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -46,6 +51,8 @@ class App extends React.Component {
         this.closeShowInstallPopup = this.closeShowInstallPopup.bind(this);
         this.setOnboardingFaves = this.setOnboardingFaves.bind(this);
         this.completeFirstVisit = this.completeFirstVisit.bind(this);
+        this.registerNewContentListener = this.registerNewContentListener.bind(this);
+        this.closeCookiePopup = this.closeCookiePopup.bind(this);
     }
 
     componentDidMount() {
@@ -65,7 +72,8 @@ class App extends React.Component {
             firstLogin: cookies.get('first_login'),
             firstVisit: cookies.get('first_visit'),
             onboardingFaves: cookies.get('onboarding_faves') ? cookies.get('onboarding_faves') : [],
-            nextYear: nextYear
+            nextYear: nextYear,
+            showCookiePopup: cookies.get('show_cookies')
         }, () => {
             const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
             const showInstallPopupCookie = cookies.get('show_install_popup');
@@ -112,6 +120,11 @@ class App extends React.Component {
                     firstVisit: true
                 })
             }
+            if (this.state.showCookiePopup === undefined) {
+                this.setState({
+                    showCookiePopup: true
+                })
+            }
         });
         const href = window.location.href;
         if (href.includes('login')
@@ -128,6 +141,28 @@ class App extends React.Component {
             // any data that is relevant to the user session
             // that you would like to track with google analytics
         });
+
+        if (window.pwaContent) {
+            this.registerNewContentListener()
+        } else {
+            setTimeout(() => {
+                if (window.pwaContent) {
+                    this.registerNewContentListener()
+                } else {
+                    setTimeout(() => {
+                        if (window.pwaContent) {
+                            this.registerNewContentListener()
+                        } else {
+                            setTimeout(() => {
+                                if (window.pwaContent) {
+                                    this.registerNewContentListener()
+                                }
+                            }, 5000)
+                        }
+                    }, 2000)
+                }
+            }, 2000)
+        }
     }
 
     componentWillUnmount() {
@@ -148,12 +183,31 @@ class App extends React.Component {
         }
     }
 
+    registerNewContentListener() {
+        window.pwaContent.registerListener((val) => {
+            this.setState({
+                newContentAvailable: true
+            })
+        });
+    }
+
     closeShowInstallPopup() {
         const {cookies} = this.props;
         cookies.set('show_install_popup', 'false', {path: '/', expires: this.state.nextYear});
         this.setState({
             showInstallPopup: false
         })
+    }
+
+    closeCookiePopup() {
+        const {cookies} = this.props;
+        this.setState({
+            showCookiePopup: false
+        })
+        cookies.set('show_cookies', false, {
+            path: '/',
+            expires: this.state.nextYear
+        });
     }
 
     iOS() {
@@ -469,6 +523,15 @@ class App extends React.Component {
                     )}
                     {this.state.showIosNav === true && (
                         <StandaloneIOSNav />
+                    )}
+                    {this.state.newContentAvailable === true && (
+                        <NewVersionPopup />
+                    )}
+
+                    {(this.state.showCookiePopup === true || this.state.showCookiePopup === 'true') && (
+                        <CookiePopup
+                            closeCookiePopup={() => this.closeCookiePopup()}
+                        />
                     )}
                 </div>
             </MuiThemeProvider>

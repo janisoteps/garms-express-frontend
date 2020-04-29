@@ -15,6 +15,20 @@ export default function register () { // Register the service worker
             navigator.serviceWorker
                 .register(swUrl)
                 .then(registration => {
+                    window.pwaContent = {
+                        newContentInternal: false,
+                        aListener: function(val) {},
+                        set newContent(val) {
+                            this.newContentInternal = val;
+                            this.aListener(val);
+                        },
+                        get newContent() {
+                            return this.newContentInternal;
+                        },
+                        registerListener: function(listener) {
+                            this.aListener = listener;
+                        }
+                    }
                     registration.onupdatefound = () => {
                         const installingWorker = registration.installing;
                         installingWorker.onstatechange = () => {
@@ -24,6 +38,7 @@ export default function register () { // Register the service worker
                                     // the fresh content will have been added to the cache.
                                     // It's the perfect time to display a "New content is
                                     // available; please refresh." message in your web app.
+                                    window.pwaContent.newContent = true;
                                     console.log('New content is available; please refresh.');
                                 } else {
                                     // At this point, everything has been precached.
@@ -39,6 +54,7 @@ export default function register () { // Register the service worker
                     console.error('Error during service worker registration:', error);
                 });
         });
+    } else {
     }
 }
 
