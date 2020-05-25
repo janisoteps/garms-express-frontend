@@ -167,7 +167,7 @@ class TextSearch extends React.Component  {
                                         });
                                     }
                                     const loadedProdIds = data.res.map(resDict => {
-                                        return resDict.prod_serial.prod_id
+                                        return resDict.image_data.prod_id
                                     });
                                     this.setState({
                                         loadedProdIds: loadedProdIds
@@ -323,7 +323,7 @@ class TextSearch extends React.Component  {
                 }).then(data => {
                     if (this._ismounted) {
                         const loadedProdIds = data.res.map(resDict => {
-                            return resDict.prod_serial.prod_id
+                            return resDict.image_data.prod_id
                         });
                         if (loadedProdIds.length > 0) {
                             this.setState({
@@ -390,7 +390,7 @@ class TextSearch extends React.Component  {
         }).then(data => {
             if (this._ismounted) {
                 const loadedProdIds = data.res.map(resDict => {
-                    return resDict.prod_serial.prod_id
+                    return resDict.image_data.prod_id
                 });
                 if (this.state.searchSimilarInfinite) {
                     if (loadedProdIds.length > 0) {
@@ -610,7 +610,7 @@ class TextSearch extends React.Component  {
         }).then(data => {
             if (this._ismounted) {
                 const loadedProdIds = data.res.map(resDict => {
-                    return resDict.prod_serial.prod_id
+                    return resDict.image_data.prod_id
                 });
                 if (loadedProdIds.length > 0) {
                     this.setState({

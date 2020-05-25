@@ -75,7 +75,6 @@ class ResultsFromSearch extends React.Component  {
 
     // Expands color picker drawer
     expandDrawer = (id, pickerId) => {
-        // console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 pickerExpanded: 0
@@ -88,7 +87,6 @@ class ResultsFromSearch extends React.Component  {
     };
 
     expandCatDrawer = (id, pickerId) => {
-        // console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 catPickerExpanded: 0
@@ -215,7 +213,7 @@ class ResultsFromSearch extends React.Component  {
         const desktopTiles = this.props.results.map(productData => {
             return (
                 <ResultCard
-                    key={productData['prod_serial'].prod_id + Math.floor(Math.random() * 1000)}
+                    key={productData['image_data'].prod_id + Math.floor(Math.random() * 1000)}
                     productData={productData}
                     setColorPosTags={selection => {this.setColorPosTags(selection)}}
                     searchSimilarImages={(imgHash, color_1) => {this.searchSimilarImages(imgHash, color_1)}}
@@ -231,7 +229,7 @@ class ResultsFromSearch extends React.Component  {
         const mobileTiles = this.props.results.map(productData => {
             return(
                 <ResultCard
-                    key={productData['prod_serial'].prod_id + Math.floor(Math.random() * 1000)}
+                    key={productData['image_data'].prod_id + Math.floor(Math.random() * 1000)}
                     productData={productData}
                     setColorPosTags={selection => {this.setColorPosTags(selection)}}
                     searchSimilarImages={(imgHash, color_1) => {this.searchSimilarImages(imgHash, color_1)}}
