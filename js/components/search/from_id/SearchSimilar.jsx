@@ -54,6 +54,7 @@ class SearchSimilar extends React.Component  {
         this.showPriceFilter = this.showPriceFilter.bind(this);
         this.reactInDevMode = this.reactInDevMode.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
+        this.filterUnique = this.filterUnique.bind(this);
     }
 
     componentDidMount() {
@@ -73,7 +74,7 @@ class SearchSimilar extends React.Component  {
             const searchColorArr = decodedSearchColorStr ? decodedSearchColorStr.split(',').map(colorStr => {
                 return parseInt(colorStr)
             }) : [];
-            const decodedSearchCatArr = decodeURIComponent(searchCatString).split(',');
+            const decodedSearchCatArr = searchCatString ? decodeURIComponent(searchCatString).split(',') : null;
             this.setState({
                 imgHash: imgHash,
                 loading: true,
@@ -107,6 +108,10 @@ class SearchSimilar extends React.Component  {
         this._ismounted = false;
         window.removeEventListener('scroll', this.handleScroll);
     }
+
+    filterUnique = (value, index, self) => {
+        return self.indexOf(value) === index;
+    };
 
     reactInDevMode(){
         return '_self' in React.createElement('div');
@@ -187,7 +192,7 @@ class SearchSimilar extends React.Component  {
                 }).then(data => {
                     if (this._ismounted) {
                         const loadedProdIds = data.res.map(resDict => {
-                            return resDict.prod_serial.prod_id
+                            return resDict.image_data.prod_id
                         });
                         if (loadedProdIds.length > 0) {
                             const currentImgHash = window.location.search.split('id=')[1].split('&')[0];
@@ -269,7 +274,7 @@ class SearchSimilar extends React.Component  {
                         //     posTags = posTags.filter(item => {return item !== 'dresses'});
                         // }
                         const loadedProdIds = data.res.map(resDict => {
-                            return resDict.prod_serial.prod_id
+                            return resDict.image_data.prod_id
                         });
                         if (loadedProdIds.length > 0) {
                             this.setState({
@@ -280,7 +285,8 @@ class SearchSimilar extends React.Component  {
                                 infiniteLoading: false,
                                 infiniteLoadingComplete: false,
                                 posTags: data.cats,
-                                selectedColor: data.color
+                                selectedColor: data.color,
+                                searchTags: this.state.searchTags ? this.state.searchTags : data.res[0].image_data.kind_cats.filter( this.filterUnique )
                             }, () => {
                                 window.scrollTo({
                                     top: 0
@@ -379,7 +385,8 @@ class SearchSimilar extends React.Component  {
             }
         }
         this.setState({
-            loadedProdIds: []
+            loadedProdIds: [],
+            infiniteLoadingComplete: false,
         }, () => {
             this.searchSimilar()
         })
@@ -411,7 +418,8 @@ class SearchSimilar extends React.Component  {
         });
         if (show === false) {
             this.setState({
-                loadedProdIds: []
+                loadedProdIds: [],
+                infiniteLoadingComplete: false
             }, () => {
                 this.searchSimilar()
             })
@@ -441,7 +449,8 @@ class SearchSimilar extends React.Component  {
             }, () => {
                 if (showPicker === false) {
                     this.setState({
-                        loadedProdIds: []
+                        loadedProdIds: [],
+                        infiniteLoadingComplete: false
                     }, () => {
                         this.searchSimilar()
                     })
@@ -456,7 +465,8 @@ class SearchSimilar extends React.Component  {
         });
         if (show === false) {
             this.setState({
-                loadedProdIds: []
+                loadedProdIds: [],
+                infiniteLoadingComplete: false
             }, () => {
                 this.searchSimilar()
             })
@@ -487,7 +497,8 @@ class SearchSimilar extends React.Component  {
                 }, () => {
                     if (showPicker === false) {
                         this.setState({
-                            loadedProdIds: []
+                            loadedProdIds: [],
+                            infiniteLoadingComplete: false
                         }, () => {
                             this.searchSimilar()
                         })
@@ -517,7 +528,8 @@ class SearchSimilar extends React.Component  {
                 }, () => {
                     if (showPicker === false) {
                         this.setState({
-                            loadedProdIds: []
+                            loadedProdIds: [],
+                            infiniteLoadingComplete: false
                         }, () => {
                             this.searchSimilar()
                         })
@@ -544,7 +556,8 @@ class SearchSimilar extends React.Component  {
                 value: this.state.rangeVal
             });
             this.setState({
-                loadedProdIds: []
+                loadedProdIds: [],
+                infiniteLoadingComplete: false
             }, () => {
                 this.searchSimilar()
             })

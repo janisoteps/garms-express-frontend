@@ -44,7 +44,6 @@ class ResultCard extends React.Component {
     }
 
     expandDrawer = (id, pickerId) => {
-        // console.log(id, ' vs ', pickerId);
         if (id === pickerId){
             this.setState({
                 pickerExpanded: 0
@@ -87,19 +86,19 @@ class ResultCard extends React.Component {
     // ================================ MAIN RENDER FUNCTION ====================================
     render() {
         const productData = this.props.productData;
-        const productInfo = productData['prod_serial'];
+        // const productInfo = productData['prod_serial'];
         const imageData = productData['image_data'];
-        const prod_hash = productInfo.prod_id;
+        const prod_hash = imageData.prod_id;
         const key = prod_hash + Math.floor(Math.random() * 1000);
-        const shop = productInfo.shop;
-        const brand = productInfo.brand;
+        const shop = imageData.shop;
+        const brand = imageData.brand;
         const img_url = imageData.img_url;
         const name = imageData.name;
-        const prod_url = productInfo.prod_url;
+        const prod_url = imageData.prod_url;
         const currency = '£';
-        const price = productInfo.price.toFixed(2);
-        const sale = productInfo.sale;
-        const saleprice = productInfo.saleprice;
+        const price = imageData.price.toFixed(2);
+        const sale = imageData.sale;
+        const saleprice = imageData.saleprice;
         const fst_img_hash = imageData.img_hash;
         const fst_img_color = imageData.color_1;
 
@@ -137,7 +136,7 @@ class ResultCard extends React.Component {
                                         action: 'open outfit',
                                         label: prod_hash
                                     });
-                                    history.push(`/outfit-page?id=${prod_hash}&sex=${productInfo.sex}`)
+                                    history.push(`/outfit-page?id=${prod_hash}&sex=${imageData.sex}`)
                                 }}
                             />
                         </div>
@@ -403,7 +402,7 @@ class ResultCard extends React.Component {
         };
 
         const CardTagList = () => {
-            const prodTagList = productInfo['all_cats'].filter(this.getUniqueArr).map(cat => {
+            const prodTagList = imageData['all_cats'].filter(this.getUniqueArr).map(cat => {
                 return (
                     <div
                         className="results-card-cat-tag"
