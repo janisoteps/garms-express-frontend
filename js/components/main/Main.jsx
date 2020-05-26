@@ -8,7 +8,7 @@ import Home from './Home';
 import TextSearch from '../search/from_text/TextSearch';
 import Wardrobe from '../wardrobe/Wardrobe';
 import Profile from '../user/Profile';
-import SearchFromImage from '../search/from_image/SearchFromImage';
+// import SearchFromImage from '../search/from_image/SearchFromImage';
 import ImageSearch from "../search/from_image/ImageSearch";
 import SearchFromId from '../search/from_id/SearchFromId';
 import SearchSimilar from '../search/from_id/SearchSimilar';
@@ -127,18 +127,18 @@ class Main extends React.Component {
                                changeSex={(sex) => {this.changeSex(sex);}}
                            />}
                     />
-                    <Route path='/search-from-image'
-                           render={(props) => <SearchFromImage
-                               {...props}
-                               username={this.props.username}
-                               sex={this.props.sex}
-                               isAuth={this.props.isAuth}
-                               email={this.props.email}
-                               changeSex={(sex) => {this.changeSex(sex);}}
-                               firstLogin={this.props.firstLogin}
-                               completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
-                           />}
-                    />
+                    {/*<Route path='/search-from-image'*/}
+                    {/*       render={(props) => <SearchFromImage*/}
+                    {/*           {...props}*/}
+                    {/*           username={this.props.username}*/}
+                    {/*           sex={this.props.sex}*/}
+                    {/*           isAuth={this.props.isAuth}*/}
+                    {/*           email={this.props.email}*/}
+                    {/*           changeSex={(sex) => {this.changeSex(sex);}}*/}
+                    {/*           firstLogin={this.props.firstLogin}*/}
+                    {/*           completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}*/}
+                    {/*       />}*/}
+                    {/*/>*/}
                     <Route path='/image-search' render={(props) =>
                         <ImageSearch
                                {...props}

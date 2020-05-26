@@ -60,7 +60,7 @@ class TextSearch extends React.Component  {
             searchSimilarInfinite: false
         };
 
-        this.searchSimilarImages = this.searchSimilarImages.bind(this);
+        // this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
@@ -77,6 +77,8 @@ class TextSearch extends React.Component  {
         this.handleScroll = this.handleScroll.bind(this);
         this.infiniteTextSearch = this.infiniteTextSearch.bind(this);
         this.reactInDevMode = this.reactInDevMode.bind(this);
+        this.textColorSearch = this.textColorSearch.bind(this);
+        this.textSearch = this.textSearch.bind(this);
     }
 
     componentDidMount() {
@@ -92,8 +94,8 @@ class TextSearch extends React.Component  {
             const searchStr = window.location.search.split('search=')[1].split('&')[0];
             const sexString = window.location.search.split('sex=')[1].split('&')[0];
             const parsedSearchString = decodeURIComponent(searchStr);
-            const searchId = window.location.search.split('id=')[1]
-                ? window.location.search.split('id=')[1].split('&')[0] : null;
+            // const searchId = window.location.search.split('id=')[1]
+            //     ? window.location.search.split('id=')[1].split('&')[0] : null;
             const searchColorStr = window.location.search.split('clr=')[1]
                 ? window.location.search.split('clr=')[1].split('&')[0] : null;
 
@@ -119,61 +121,17 @@ class TextSearch extends React.Component  {
                         moreSuggestions: []
                     });
 
-                    if (searchId !== null) {
+                    if (searchColorStr !== null) {
                         const decodedSearchColorStr = decodeURIComponent(searchColorStr);
                         const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
                         this.setState({
                             posTags: parsedSearchString.split(' '),
                             selectedColor: searchColorInts
                         }, () => {
-                            this.searchSimilarImages(searchId, searchColorInts);
+                            this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
                         });
                     } else {
-                        ReactGA.event({
-                            category: "Text Search",
-                            action: 'text search',
-                            label: parsedSearchString,
-                        });
-                        if(parsedSearchString.length === 0){
-                            this.setState({
-                                loading: false,
-                                noResult: true
-                            });
-                            return
-                        }
-                        const inputArray = parsedSearchString.split(' ');
-                        const searchString = inputArray.join('+');
-                        const sex = this.state.sex ? this.state.sex : sexString;
-
-                        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
-                            method: 'get'
-                        }).then(function(response) { return response.json(); })
-                            .then(data => {
-                                if (typeof data.res === "undefined") {
-                                    this.setState({
-                                        results: [],
-                                        loading: false,
-                                        noResult: true
-                                    });
-                                } else {
-                                    this.setState({
-                                        results: data.res,
-                                        loading: false,
-                                        posTags: data.tags
-                                    });
-                                    if (data.res.length === 0) {
-                                        this.setState({
-                                            noResult: true
-                                        });
-                                    }
-                                    const loadedProdIds = data.res.map(resDict => {
-                                        return resDict.image_data.prod_id
-                                    });
-                                    this.setState({
-                                        loadedProdIds: loadedProdIds
-                                    });
-                                }
-                            });
+                        this.textSearch(parsedSearchString, sexString);
                     }
                 });
             });
@@ -349,6 +307,92 @@ class TextSearch extends React.Component  {
             });
         });
     }
+
+
+    textSearch(parsedSearchString, sexString) {
+        ReactGA.event({
+            category: "Text Search",
+            action: 'text search',
+            label: parsedSearchString,
+        });
+        if(parsedSearchString.length === 0){
+            this.setState({
+                loading: false,
+                noResult: true
+            });
+            return
+        }
+        const inputArray = parsedSearchString.split(' ');
+        const searchString = inputArray.join('+');
+        const sex = this.state.sex ? this.state.sex : sexString;
+
+        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+            method: 'get'
+        }).then(function(response) { return response.json(); })
+            .then(data => {
+                if (typeof data.res === "undefined") {
+                    this.setState({
+                        results: [],
+                        loading: false,
+                        noResult: true
+                    });
+                } else {
+                    this.setState({
+                        results: data.res,
+                        loading: false,
+                        posTags: data.tags
+                    });
+                    if (data.res.length === 0) {
+                        this.setState({
+                            noResult: true
+                        });
+                    }
+                    const loadedProdIds = data.res.map(resDict => {
+                        return resDict.image_data.prod_id
+                    });
+                    this.setState({
+                        loadedProdIds: loadedProdIds
+                    });
+                }
+            });
+    }
+
+    textColorSearch(searchWords, searchColor, sexString) {
+        const sex = this.state.sex ? this.state.sex : sexString;
+
+        fetch(window.location.origin + '/api/text_color_search', {
+            method: 'post',
+            body: JSON.stringify({
+                search_words: searchWords,
+                color: searchColor,
+                sex: sex,
+                prev_prod_ids: this.state.loadedProdIds
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        }).then(function(response) {
+            return response.json();
+        }).then(data => {
+            if (this._ismounted) {
+                const loadedProdIds = data.res.map(resDict => {
+                    return resDict.image_data.prod_id
+                });
+                this.setState({
+                    results: data.res,
+                    loading: false,
+                    loadedProdIds: loadedProdIds
+                });
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+                window.scrollTo(0, 0);
+            }
+        });
+    }
+
 
     searchSimilarImagesInfinite(imgHash, colorRgb1){
         ReactGA.event({
