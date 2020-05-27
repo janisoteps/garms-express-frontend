@@ -35,7 +35,8 @@ class TextSearchBox extends React.Component {
 
     doTextSearch() {
         const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
-        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.props.sex}&clr=${encodeURIComponent(this.props.selectedColor)}`);
+        const colorString = this.props.selectedColor ? encodeURIComponent(this.props.selectedColor) : '';
+        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.props.sex}&clr=${colorString}`);
     }
 
     render() {
@@ -69,8 +70,11 @@ class TextSearchBox extends React.Component {
                     }}
                     autoComplete="off"
                     onFocus={() => {
-                        this.props.showColorPicker();
+                        this.props.showColorPicker(true);
                     }}
+                    // onBlur={() => {
+                    //     this.props.showColorPicker(false);
+                    // }}
                     ref={(input) => { this.textInput = input; }}
                 />
                 <div className="text-search-button" onClick={() => {this.doTextSearch()}}>

@@ -27,9 +27,9 @@ class SearchOptions extends React.Component {
         this.textSearchBox.current.focusOnInput();
     };
 
-    showColorPicker = () => {
+    showColorPicker = (isShown) => {
         this.setState({
-            showColorPicker: true
+            showColorPicker: isShown
         })
     };
 
@@ -176,7 +176,7 @@ class SearchOptions extends React.Component {
                         <TextSearchBox
                             history={history}
                             sex={this.state.sex}
-                            showColorPicker={() => {this.showColorPicker()}}
+                            showColorPicker={(isShown) => {this.showColorPicker(isShown)}}
                             selectedColor={this.state.selectedColor}
                             ref={this.textSearchBox}
                         />

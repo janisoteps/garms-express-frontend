@@ -654,10 +654,7 @@ class SearchSimilar extends React.Component  {
                             selectedColor={this.state.selectedColor}
                             searchSimilarImages={(imgHash, color1) => {
                                 if (this.reactInDevMode()) {
-                                    // this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
-                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}
-                                            &clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
-                                    // this.searchSimilarImages(imgHash, color1);
+                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                     this.setState({
                                         loadedProdIds: [],
                                         results: []
@@ -665,9 +662,7 @@ class SearchSimilar extends React.Component  {
                                         this.searchSimilar()
                                     })
                                 } else {
-                                    // this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}`);
-                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}
-                                            &clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
+                                    this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${encodeURIComponent(color1)}&cats=${encodeURIComponent(this.state.searchTags)}`);
                                 }
                             }}
                             results={this.state.results}

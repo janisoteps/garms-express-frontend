@@ -13,8 +13,8 @@ const sha1 = require('sha1');
 const aws = require('aws-sdk');
 
 
-// const api_base_url = 'https://main-api.garms.io/api/';
-const api_base_url = 'http://127.0.0.1:5000/api/';
+const api_base_url = 'https://main-api.garms.io/api/';
+// const api_base_url = 'http://127.0.0.1:5000/api/';
 const BUCKET_NAME = 'garms-userimages';
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
@@ -500,6 +500,8 @@ app.post('/api/text_color_search', function (req, res) {
     const search_words = req.body.search_words;
     const prev_prod_ids = req.body.prev_prod_ids;
     const color = req.body.color;
+    const max_price = req.body.max_price;
+    const brands = req.body.brands;
 
     let options = {
         method: 'POST',
@@ -508,7 +510,9 @@ app.post('/api/text_color_search', function (req, res) {
             sex: sex,
             search_words: search_words,
             prev_prod_ids: prev_prod_ids,
-            color: color
+            color: color,
+            max_price: max_price,
+            brands: brands
         },
         json: true
     };
