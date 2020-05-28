@@ -20,7 +20,7 @@ class SearchOptions extends React.Component {
     }
 
     handleColorChange = (color) => {
-        console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
+        // console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
         this.setState({
             selectedColor: [color.rgb['r'], color.rgb['g'], color.rgb['b']]
         })

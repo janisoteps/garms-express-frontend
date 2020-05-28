@@ -123,22 +123,39 @@ class TextSearch extends React.Component  {
                         moreSuggestions: []
                     });
 
-                    if (searchColorStr !== null) {
-                        const decodedSearchColorStr = decodeURIComponent(searchColorStr);
-                        const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
-                        const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
-                        const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
-                        this.setState({
-                            posTags: parsedSearchString.split(' '),
-                            selectedColor: searchColorInts,
-                            filterBrands: decodedBrandArr,
-                            rangeVal: decodedPrice
-                        }, () => {
-                            this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
-                        });
-                    } else {
-                        this.textSearch(parsedSearchString, sexString);
-                    }
+                    const decodedSearchColorStr = searchColorStr ? decodeURIComponent(searchColorStr): null;
+                    const searchColorInts = decodedSearchColorStr
+                        ? decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)}) : null;
+                    const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
+                    const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
+                    this.setState({
+                        posTags: parsedSearchString.split(' '),
+                        selectedColor: searchColorInts ? searchColorInts : [],
+                        filterBrands: decodedBrandArr,
+                        rangeVal: decodedPrice
+                    }, () => {
+                        this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
+                    });
+                    //
+                    // if (searchColorStr !== null) {
+                    //
+                    // } else {
+                    //
+                    //     // const decodedSearchColorStr = decodeURIComponent(searchColorStr);
+                    //     // const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
+                    //     const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
+                    //     const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
+                    //     this.setState({
+                    //         posTags: parsedSearchString.split(' '),
+                    //         selectedColor: searchColorInts,
+                    //         filterBrands: decodedBrandArr,
+                    //         rangeVal: decodedPrice
+                    //     }, () => {
+                    //         this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
+                    //     });
+                    //
+                    //     this.textSearch(parsedSearchString, sexString);
+                    // }
                 });
             });
         }
