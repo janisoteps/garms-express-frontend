@@ -135,9 +135,9 @@ class PasswordReset extends React.Component  {
                     result: 'negative'
                 })
             } else {
-                console.log(data);
+                // console.log(data);
                 const token = data['token'];
-                console.log(token);
+                // console.log(token);
 
                 fetch(window.location.origin + '/api/pw_reset', {
                     method: 'post',

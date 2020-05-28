@@ -1,14 +1,9 @@
 import React from "react";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import { Route } from 'react-router-dom';
 import RecommendFromTags from '../recommend/RecommendFromTags';
 import RecommendRandom from '../recommend/RecommendRandom';
 import AddOutfit from '../wardrobe/AddOutfit';
-import FlatButton from "material-ui/FlatButton";
-import Loyalty from "material-ui/svg-icons/action/loyalty";
 import ReactGA from 'react-ga';
-// import {isMobile} from "react-device-detect";
-// import TextSearchBox from "../search/from_text/TextSearchBox";
 import SearchOptions from "./SearchOptions";
 import OnboardingOutfitPicker from "../intro/OnboardingOutfitPicker";
 
@@ -18,17 +13,25 @@ class Home extends React.Component {
         super(props);
 
         this.state = {
+            home: 'home',
             firstLogin: this.props.firstLogin,
             lookFilter: null,
             imgHash: null,
             email: this.props.email,
             sex: this.props.sex,
-            isAuth: this.props.isAuth
+            isAuth: this.props.isAuth,
+            showColorPicker: false,
+            selectedColor: null,
+            searchString: ''
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.changeSex = this.changeSex.bind(this);
+        this.handleTextInputChange = this.handleTextInputChange.bind(this);
+        this.handleColorChange = this.handleColorChange.bind(this);
+        this.showColorPicker = this.showColorPicker.bind(this);
+        this.searchOptions = React.createRef();
     }
 
     componentWillMount() {
@@ -57,6 +60,33 @@ class Home extends React.Component {
                 });
             }
         }
+    }
+
+    handleColorChange = (color) => {
+        this.setState({
+            selectedColor: [color.rgb['r'], color.rgb['g'], color.rgb['b']]
+        }, () => {
+            this.searchOptions.current.focusOnTextBox();
+        })
+
+    };
+
+    showColorPicker = (isShown) => {
+        this.setState({
+            showColorPicker: isShown
+        }, () => {
+            this.searchOptions.current.focusOnTextBox();
+        })
+    };
+
+    handleTextInputChange(event) {
+        const value =  event.target.value;
+        const name = event.target.name;
+        this.setState({
+            [name]: value
+        }, () => {
+            this.searchOptions.current.focusOnTextBox();
+        });
     }
 
     showAddOutfit = (imgHash) => {
@@ -121,6 +151,13 @@ class Home extends React.Component {
                                     <div>
                                         <SearchOptions
                                             sex={this.state.sex}
+                                            handleColorChange={(color) => {this.handleColorChange(color)}}
+                                            showColorPicker={(isShown) => {this.showColorPicker(isShown)}}
+                                            handleTextInputChange={(event) => {this.handleTextInputChange(event)}}
+                                            selectedColor={this.state.selectedColor}
+                                            colorPickerShown={this.state.showColorPicker}
+                                            ref={this.searchOptions}
+                                            searchString={this.state.searchString}
                                         />
 
                                         {(this.state.isAuth === "true" && this._ismounted) ? (

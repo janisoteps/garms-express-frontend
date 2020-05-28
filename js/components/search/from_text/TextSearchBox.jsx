@@ -8,22 +8,12 @@ class TextSearchBox extends React.Component {
         this.state = {
             searchString: ''
         };
-
-        this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.doTextSearch = this.doTextSearch.bind(this);
         this.focusOnInput = this.focusOnInput.bind(this);
     }
 
     focusOnInput() {
         this.textInput.focus();
-    }
-
-    handleTextInputChange(event) {
-        const value =  event.target.value;
-        const name = event.target.name;
-        this.setState({
-            [name]: value
-        });
     }
 
     onEnterPress = (e) => {
@@ -34,7 +24,7 @@ class TextSearchBox extends React.Component {
     };
 
     doTextSearch() {
-        const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
+        const searchStringURI = encodeURIComponent(this.props.searchString.toLowerCase());
         const colorString = this.props.selectedColor ? encodeURIComponent(this.props.selectedColor) : '';
         this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.props.sex}&clr=${colorString}`);
     }
@@ -48,7 +38,7 @@ class TextSearchBox extends React.Component {
                     // autoFocus="autofocus"
                     className="text-search-input"
                     // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
-                    value={this.state.searchString.toUpperCase()}
+                    value={this.props.searchString.toUpperCase()}
                     inputStyle={{
                         fontWeight: '900',
                         fontSize: '1.2rem'
@@ -60,7 +50,7 @@ class TextSearchBox extends React.Component {
                         fontWeight: '400',
                     }}
                     name="searchString"
-                    onChange={this.handleTextInputChange.bind(this)}
+                    onChange={this.props.handleTextInputChange.bind(this)}
                     onKeyDown={this.onEnterPress}
                     underlineFocusStyle={{
                         borderBottom: '2px solid rgb(0, 0, 0)'
@@ -70,7 +60,9 @@ class TextSearchBox extends React.Component {
                     }}
                     autoComplete="off"
                     onFocus={() => {
-                        this.props.showColorPicker(true);
+                        if (this.props.colorPickerShown === false) {
+                            this.props.showColorPicker(true);
+                        }
                     }}
                     // onBlur={() => {
                     //     this.props.showColorPicker(false);
@@ -79,7 +71,6 @@ class TextSearchBox extends React.Component {
                 />
                 <div className="text-search-button" onClick={() => {this.doTextSearch()}}>
                     <div className="search-icon" />
-                    {/*<div className="search-text"> search</div>*/}
                 </div>
             </div>
         )
