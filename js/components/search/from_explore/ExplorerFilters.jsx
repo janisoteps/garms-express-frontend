@@ -49,7 +49,7 @@ class ExplorerFilters extends React.Component  {
     };
 
     selectBrand = (brand) => {
-        console.log('Brand set to: ', brand);
+        // console.log('Brand set to: ', brand);
         let brands = this.state.brands;
         if(brands[0] === 'All'){
             brands = []

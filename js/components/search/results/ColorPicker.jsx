@@ -20,29 +20,18 @@ class ColorPicker extends React.Component {
     }
 
     handleChangeComplete = (color) => {
-        // console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
-        if ((color.rgb['r'] + color.rgb['g'] + color.rgb['b']) === 0) {
-            this.props.setColor({
-                // 'index': this.state.pickerIndex,
-                'color_rgb': [color.rgb['r'] + 1, color.rgb['g'] + 1, color.rgb['b'] +1]}
-                );
+        this.props.setColor({
+            // 'index': this.state.pickerIndex,
+            'color_rgb': [color.rgb['r'] + 1, color.rgb['g'] + 1, color.rgb['b'] +1]}
+        );
+        this.setState({
+            showColorPicker: false,
+            pickerIndex: null
+        }, () => {
             this.searchSimilarImages(
                 this.props.results[0]['image_data']['img_hash'],
                 [color.rgb['r'] + 1, color.rgb['g'] + 1, color.rgb['b'] + 1]
             );
-        } else {
-            this.props.setColor({
-                'color_rgb': [color.rgb['r'], color.rgb['g'], color.rgb['b']]}
-            );
-            this.searchSimilarImages(
-                this.props.results[0]['image_data']['img_hash'],
-                [color.rgb['r'], color.rgb['g'], color.rgb['b']]
-            );
-        }
-
-        this.setState({
-            showColorPicker: false,
-            pickerIndex: null
         });
     };
 

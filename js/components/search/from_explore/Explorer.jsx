@@ -414,14 +414,14 @@ class Explorer extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        console.log('search string: ', searchString);
+        // console.log('search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -456,14 +456,14 @@ class Explorer extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        console.log('search string: ', searchString);
+        // console.log('search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            console.log(data);
+            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -487,7 +487,7 @@ class Explorer extends React.Component  {
     expandSexSelector(){
         let currentWidth = this.state.sexPickerWidth;
 
-        console.log('Expanding sex selector ', currentWidth);
+        // console.log('Expanding sex selector ', currentWidth);
         if(currentWidth === '56px'){
             this.setState({
                 sexPickerWidth: '270px'
@@ -639,7 +639,7 @@ class Explorer extends React.Component  {
                 borderStyle: this.state.sex === '' && 'solid'
             };
 
-            console.log('Image search sex: ', this.state.sex);
+            // console.log('Image search sex: ', this.state.sex);
 
             return(
                 <div>
@@ -655,7 +655,7 @@ class Explorer extends React.Component  {
         };
 
         let CatSelector = () => {
-            console.log('Clicked cat selector');
+            // console.log('Clicked cat selector');
             return(
                 <div className="cat-selector" onClick={this.showCatPicker}></div>
             )

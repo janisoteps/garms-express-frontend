@@ -10,29 +10,16 @@ class SearchOptions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sex: this.props.sex,
-            showColorPicker: false,
-            selectedColor: null
+            sex: this.props.sex
         };
 
-        this.showColorPicker = this.showColorPicker.bind(this);
+        this.focusOnTextBox = this.focusOnTextBox.bind(this);
         this.textSearchBox = React.createRef();
     }
 
-    handleColorChange = (color) => {
-        // console.log('Picker RGB array: ', [color.rgb['r'], color.rgb['g'], color.rgb['b']]);
-        this.setState({
-            selectedColor: [color.rgb['r'], color.rgb['g'], color.rgb['b']]
-        })
+    focusOnTextBox = () => {
         this.textSearchBox.current.focusOnInput();
-    };
-
-    showColorPicker = (isShown) => {
-        this.setState({
-            showColorPicker: isShown
-        })
-    };
-
+    }
     render() {
         const SelectedColorBubble = () => {
             return (
@@ -46,12 +33,12 @@ class SearchOptions extends React.Component {
                         marginTop: '-10px'
                     }}
                 >
-                    {this.state.selectedColor !== null && (
+                    {this.props.selectedColor !== null && (
                         <div
                             style={{
                                 width: '200px',
                                 height: '20px',
-                                backgroundColor: `rgba(${this.state.selectedColor[0]}, ${this.state.selectedColor[1]}, ${this.state.selectedColor[2]}, 1)`,
+                                backgroundColor: `rgba(${this.props.selectedColor[0]}, ${this.props.selectedColor[1]}, ${this.props.selectedColor[2]}, 1)`,
                                 marginLeft: 'calc(50vw - 100px)',
                                 borderWidth: '5px',
                                 border: 'solid white',
@@ -68,7 +55,7 @@ class SearchOptions extends React.Component {
             if (isMobile) {
                 return (
                     <SwatchesPicker
-                        onChange={ this.handleColorChange }
+                        onChange={ this.props.handleColorChange }
                         width={'100%'}
                         height={'calc(100vh - 250px)'}
                     />
@@ -76,7 +63,7 @@ class SearchOptions extends React.Component {
             } else {
                 return (
                     <SwatchesPicker
-                        onChange={ this.handleColorChange }
+                        onChange={ this.props.handleColorChange }
                         width={'100%'}
                         height={'calc(((1100 / 100vw) * 250)px)'}
                     />
@@ -92,7 +79,6 @@ class SearchOptions extends React.Component {
                             position: 'absolute',
                             height: '500px',
                             width: '100%',
-                            // backgroundColor: 'white',
                             top: '250px',
                             zIndex: '10',
                             left: '0',
@@ -100,7 +86,7 @@ class SearchOptions extends React.Component {
                         }}
                     >
                         <SWPicker/>
-                        {this.state.selectedColor !== null && (
+                        {this.props.selectedColor !== null && (
                             <SelectedColorBubble />
                         )}
                     </div>
@@ -112,7 +98,6 @@ class SearchOptions extends React.Component {
                             position: 'absolute',
                             height: '300px',
                             width: '100%',
-                            // backgroundColor: 'white',
                             top: '150px',
                             zIndex: '10',
                             left: '0',
@@ -120,7 +105,7 @@ class SearchOptions extends React.Component {
                         }}
                     >
                         <SWPicker/>
-                        {this.state.selectedColor !== null && (
+                        {this.props.selectedColor !== null && (
                             <SelectedColorBubble />
                         )}
                     </div>
@@ -142,7 +127,6 @@ class SearchOptions extends React.Component {
                 <div
                     style={{
                         gridArea: '1 / 1 / 2 / 2',
-                        // paddingRight: isMobile ? '0px' : '50px',
                         boxShadow: isMobile ? '0px 2px 5px -5px #333' : '2px 0 5px -5px #333'
                     }}
                 >
@@ -168,7 +152,6 @@ class SearchOptions extends React.Component {
                     style={{
                         gridArea: isMobile ? '2 / 1 / 3 / 2' : '1 / 2 / 2 / 3',
                         textAlign: isMobile ? 'center' : 'center',
-                        // paddingLeft: isMobile ? '0px' : '10%',
                         boxShadow: isMobile ? '0px 2px 5px -5px #333' : '2px 0 5px -5px #333'
                     }}
                 >
@@ -176,12 +159,15 @@ class SearchOptions extends React.Component {
                         <TextSearchBox
                             history={history}
                             sex={this.state.sex}
-                            showColorPicker={(isShown) => {this.showColorPicker(isShown)}}
-                            selectedColor={this.state.selectedColor}
+                            showColorPicker={(isShown) => {this.props.showColorPicker(isShown)}}
+                            handleTextInputChange={(event) => {this.props.handleTextInputChange(event)}}
+                            selectedColor={this.props.selectedColor}
                             ref={this.textSearchBox}
+                            colorPickerShown={this.props.colorPickerShown}
+                            searchString={this.props.searchString}
                         />
                     )} />
-                    {this.state.showColorPicker === true && (
+                    {this.props.colorPickerShown === true && (
                         <ColorPicker />
                     )}
                 </div>
