@@ -60,7 +60,7 @@ class TextSearch extends React.Component  {
             searchSimilarInfinite: false
         };
 
-        this.searchSimilarImages = this.searchSimilarImages.bind(this);
+        // this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
@@ -77,6 +77,8 @@ class TextSearch extends React.Component  {
         this.handleScroll = this.handleScroll.bind(this);
         this.infiniteTextSearch = this.infiniteTextSearch.bind(this);
         this.reactInDevMode = this.reactInDevMode.bind(this);
+        this.textColorSearch = this.textColorSearch.bind(this);
+        this.textSearch = this.textSearch.bind(this);
     }
 
     componentDidMount() {
@@ -92,10 +94,12 @@ class TextSearch extends React.Component  {
             const searchStr = window.location.search.split('search=')[1].split('&')[0];
             const sexString = window.location.search.split('sex=')[1].split('&')[0];
             const parsedSearchString = decodeURIComponent(searchStr);
-            const searchId = window.location.search.split('id=')[1]
-                ? window.location.search.split('id=')[1].split('&')[0] : null;
             const searchColorStr = window.location.search.split('clr=')[1]
                 ? window.location.search.split('clr=')[1].split('&')[0] : null;
+            const brandString = window.location.search.split('brands=')[1]
+                ? window.location.search.split('brands=')[1].split('&')[0] : null;
+            const priceString = window.location.search.split('price=')[1]
+                ? window.location.search.split('price=')[1].split('&')[0] : null;
 
             this.setState({
                 loading: true
@@ -119,62 +123,39 @@ class TextSearch extends React.Component  {
                         moreSuggestions: []
                     });
 
-                    if (searchId !== null) {
-                        const decodedSearchColorStr = decodeURIComponent(searchColorStr);
-                        const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
-                        this.setState({
-                            posTags: parsedSearchString.split(' '),
-                            selectedColor: searchColorInts
-                        }, () => {
-                            this.searchSimilarImages(searchId, searchColorInts);
-                        });
-                    } else {
-                        ReactGA.event({
-                            category: "Text Search",
-                            action: 'text search',
-                            label: parsedSearchString,
-                        });
-                        if(parsedSearchString.length === 0){
-                            this.setState({
-                                loading: false,
-                                noResult: true
-                            });
-                            return
-                        }
-                        const inputArray = parsedSearchString.split(' ');
-                        const searchString = inputArray.join('+');
-                        const sex = this.state.sex ? this.state.sex : sexString;
-
-                        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
-                            method: 'get'
-                        }).then(function(response) { return response.json(); })
-                            .then(data => {
-                                if (typeof data.res === "undefined") {
-                                    this.setState({
-                                        results: [],
-                                        loading: false,
-                                        noResult: true
-                                    });
-                                } else {
-                                    this.setState({
-                                        results: data.res,
-                                        loading: false,
-                                        posTags: data.tags
-                                    });
-                                    if (data.res.length === 0) {
-                                        this.setState({
-                                            noResult: true
-                                        });
-                                    }
-                                    const loadedProdIds = data.res.map(resDict => {
-                                        return resDict.image_data.prod_id
-                                    });
-                                    this.setState({
-                                        loadedProdIds: loadedProdIds
-                                    });
-                                }
-                            });
-                    }
+                    const decodedSearchColorStr = searchColorStr ? decodeURIComponent(searchColorStr): null;
+                    const searchColorInts = decodedSearchColorStr
+                        ? decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)}) : null;
+                    const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
+                    const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
+                    this.setState({
+                        posTags: parsedSearchString.split(' '),
+                        selectedColor: searchColorInts ? searchColorInts : [],
+                        filterBrands: decodedBrandArr,
+                        rangeVal: decodedPrice
+                    }, () => {
+                        this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
+                    });
+                    //
+                    // if (searchColorStr !== null) {
+                    //
+                    // } else {
+                    //
+                    //     // const decodedSearchColorStr = decodeURIComponent(searchColorStr);
+                    //     // const searchColorInts = decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)});
+                    //     const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
+                    //     const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
+                    //     this.setState({
+                    //         posTags: parsedSearchString.split(' '),
+                    //         selectedColor: searchColorInts,
+                    //         filterBrands: decodedBrandArr,
+                    //         rangeVal: decodedPrice
+                    //     }, () => {
+                    //         this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
+                    //     });
+                    //
+                    //     this.textSearch(parsedSearchString, sexString);
+                    // }
                 });
             });
         }
@@ -207,14 +188,7 @@ class TextSearch extends React.Component  {
                     this.setState({
                         infiniteLoading: true
                     });
-                    if (this.state.searchSimilarInfinite) {
-                        this.searchSimilarImagesInfinite(
-                            this.state.results[0]['image_data']['img_hash'],
-                            this.state.selectedColor
-                        );
-                    } else {
-                        this.infiniteTextSearch();
-                    }
+                    this.infiniteTextSearch();
                 } else {
                     this.setState({
                         infiniteLoadingComplete: true
@@ -266,120 +240,159 @@ class TextSearch extends React.Component  {
         }
     };
 
-    searchSimilarImages(imgHash, colorRgb1){
-        this.setState({
-            loading: true
-        });
+    // searchSimilarImages(imgHash, colorRgb1){
+    //     this.setState({
+    //         loading: true
+    //     });
+    //     ReactGA.event({
+    //         category: "Text Search",
+    //         action: 'search similar',
+    //         label: imgHash
+    //     });
+    //     fetch(`${window.location.origin}/api/get_random_loading_content`, {
+    //         method: 'get',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         this.setState({
+    //             loadingContent: data
+    //         }, () => {
+    //             this.setState({
+    //                 loading: true
+    //             });
+    //
+    //             const posTags = this.state.posTags;
+    //             const negTags = this.state.negTags;
+    //             const sex = this.state.sex;
+    //             const noShop = this.state.noShop;
+    //             const filterBrands = this.state.filterBrands;
+    //             let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+    //             if (color_1.length === 0) {
+    //                 color_1 = this.state.results[0]['image_data']['color_1'];
+    //             }
+    //             let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+    //
+    //             fetch(window.location.origin + '/api/search_similar', {
+    //                 method: 'post',
+    //                 body: JSON.stringify({
+    //                     img_hash: imgHash,
+    //                     tags_positive: posTags,
+    //                     tags_negative: negTags,
+    //                     color_1: color_1,
+    //                     sex: sex,
+    //                     no_shop: noShop,
+    //                     max_price: maxPrice,
+    //                     brands: filterBrands
+    //                 }),
+    //                 headers: {
+    //                     Accept: 'application/json',
+    //                     'Content-Type': 'application/json',
+    //                 }
+    //             }).then(function(response) {
+    //                 return response.json();
+    //             }).then(data => {
+    //                 if (this._ismounted) {
+    //                     const loadedProdIds = data.res.map(resDict => {
+    //                         return resDict.image_data.prod_id
+    //                     });
+    //                     if (loadedProdIds.length > 0) {
+    //                         this.setState({
+    //                             results: data.res,
+    //                             loading: false,
+    //                             infiniteLoading: false,
+    //                             searchSimilarInfinite: true,
+    //                             loadedProdIds: loadedProdIds,
+    //                             infiniteCount: 0
+    //                         });
+    //                         window.scrollTo({
+    //                             top: 0,
+    //                             behavior: "smooth"
+    //                         });
+    //                         window.scrollTo(0, 0);
+    //                     } else {
+    //                         this.setState({
+    //                             infiniteLoadingComplete: true
+    //                         })
+    //                     }
+    //                 }
+    //             });
+    //         });
+    //     });
+    // }
+
+
+    textSearch(parsedSearchString, sexString) {
         ReactGA.event({
             category: "Text Search",
-            action: 'search similar',
-            label: imgHash
+            action: 'text search',
+            label: parsedSearchString,
         });
-        fetch(`${window.location.origin}/api/get_random_loading_content`, {
-            method: 'get',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) {
-            return response.json();
-        }).then(data => {
+        if(parsedSearchString.length === 0){
             this.setState({
-                loadingContent: data
-            }, () => {
-                this.setState({
-                    loading: true
-                });
-
-                const posTags = this.state.posTags;
-                const negTags = this.state.negTags;
-                const sex = this.state.sex;
-                const noShop = this.state.noShop;
-                const filterBrands = this.state.filterBrands;
-                let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
-                if (color_1.length === 0) {
-                    color_1 = this.state.results[0]['image_data']['color_1'];
-                }
-                let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
-
-                fetch(window.location.origin + '/api/search_similar', {
-                    method: 'post',
-                    body: JSON.stringify({
-                        img_hash: imgHash,
-                        tags_positive: posTags,
-                        tags_negative: negTags,
-                        color_1: color_1,
-                        sex: sex,
-                        no_shop: noShop,
-                        max_price: maxPrice,
-                        brands: filterBrands
-                    }),
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    }
-                }).then(function(response) {
-                    return response.json();
-                }).then(data => {
-                    if (this._ismounted) {
-                        const loadedProdIds = data.res.map(resDict => {
-                            return resDict.image_data.prod_id
-                        });
-                        if (loadedProdIds.length > 0) {
-                            this.setState({
-                                results: data.res,
-                                loading: false,
-                                infiniteLoading: false,
-                                searchSimilarInfinite: true,
-                                loadedProdIds: loadedProdIds,
-                                infiniteCount: 0
-                            });
-                            window.scrollTo({
-                                top: 0,
-                                behavior: "smooth"
-                            });
-                            window.scrollTo(0, 0);
-                        } else {
-                            this.setState({
-                                infiniteLoadingComplete: true
-                            })
-                        }
-                    }
-                });
+                loading: false,
+                noResult: true
             });
-        });
+            return
+        }
+        const inputArray = parsedSearchString.split(' ');
+        const searchString = inputArray.join('+');
+        const sex = this.state.sex ? this.state.sex : sexString;
+
+        fetch(window.location.origin + '/api/text_search?search_string=' + searchString + '&sex=' + sex, {
+            method: 'get'
+        }).then(function(response) { return response.json(); })
+            .then(data => {
+                if (typeof data.res === "undefined") {
+                    this.setState({
+                        results: [],
+                        loading: false,
+                        noResult: true
+                    });
+                } else {
+                    this.setState({
+                        results: data.res,
+                        loading: false,
+                        posTags: data.tags
+                    });
+                    if (data.res.length === 0) {
+                        this.setState({
+                            noResult: true
+                        });
+                    }
+                    const loadedProdIds = data.res.map(resDict => {
+                        return resDict.image_data.prod_id
+                    });
+                    this.setState({
+                        loadedProdIds: loadedProdIds
+                    });
+                }
+            });
     }
 
-    searchSimilarImagesInfinite(imgHash, colorRgb1){
-        ReactGA.event({
-            category: "Text Search",
-            action: 'search similar',
-            label: imgHash
-        });
-
-        const posTags = this.state.posTags;
-        const negTags = this.state.negTags;
-        const sex = this.state.sex;
-        const noShop = this.state.noShop;
+    textColorSearch(searchWords, searchColor, sexString) {
+        const sex = this.state.sex ? this.state.sex : sexString;
         const filterBrands = this.state.filterBrands;
-        let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
-        if (color_1.length === 0) {
-            color_1 = this.state.results[0]['image_data']['color_1'];
-        }
-        let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+        const maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
 
-        fetch(window.location.origin + '/api/search_similar_infinite', {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+        window.scrollTo(0, 0);
+
+        fetch(window.location.origin + '/api/text_color_search', {
             method: 'post',
             body: JSON.stringify({
-                img_hash: imgHash,
-                tags_positive: posTags,
-                tags_negative: negTags,
-                color_1: color_1,
+                search_words: searchWords,
+                color: searchColor,
                 sex: sex,
-                no_shop: noShop,
+                prev_prod_ids: this.state.loadedProdIds,
                 max_price: maxPrice,
-                brands: filterBrands,
-                prev_prod_ids: this.state.loadedProdIds
+                brands: filterBrands
             }),
             headers: {
                 Accept: 'application/json',
@@ -392,130 +405,95 @@ class TextSearch extends React.Component  {
                 const loadedProdIds = data.res.map(resDict => {
                     return resDict.image_data.prod_id
                 });
-                if (this.state.searchSimilarInfinite) {
-                    if (loadedProdIds.length > 0) {
-                        this.setState({
-                            loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
-                            results: this.state.results.concat(data.res),
-                            infiniteCount: this.state.infiniteCount + 1,
-                            infiniteLoading: false
-                        });
-                    } else {
-                        this.setState({
-                            infiniteLoadingComplete: true
-                        })
-                    }
-                } else {
-                    if (loadedProdIds.length > 0) {
-                        this.setState({
-                            results: data.res,
-                            loading: false,
-                            infiniteLoading: false,
-                            searchSimilarInfinite: true,
-                            loadedProdIds: loadedProdIds,
-                            infiniteCount: this.state.infiniteCount + 1
-                        });
-                        window.scrollTo({
-                            top: 0,
-                            behavior: "smooth"
-                        });
-                        window.scrollTo(0, 0);
-                    } else {
-                        this.setState({
-                            infiniteLoadingComplete: true
-                        })
-                    }
-                }
+                this.setState({
+                    results: data.res,
+                    loading: false,
+                    loadedProdIds: loadedProdIds,
+                    infiniteLoadingComplete: false
+                });
             }
         });
     }
 
-    // Set main color and category state based on selection from modal
-    setColorPosTags(selection){
-        if(selection['cat']) {
-            ReactGA.event({
-                category: "Tag Filter",
-                action: 'positive',
-                label: selection['cat'],
-            });
-            let selectedCat = selection['cat'];
-            let tags = this.state.posTags;
-            if (tags.includes(selectedCat)){
-                let filteredTags = tags.filter(function(e) { return e !== selectedCat });
-                this.setState({
-                    posTags: filteredTags
-                });
-            } else {
-                tags = tags.concat(selectedCat);
-                this.setState({
-                    posTags: tags
-                });
-            }
-            this.setState({
-                mainCat: selectedCat
-            });
-        } else {
-            ReactGA.event({
-                category: "Color Filter",
-                action: 'apply',
-                label: `${selection['color_rgb']}`,
-            });
-            let colorRgb = selection['color_rgb'];
-            this.setState({
-                selectedColor: colorRgb
-            });
-        }
-    }
-
-    setTags(tag, type, flag){
-        let posTags = this.state.posTags;
-        let negTags = this.state.negTags;
-        if (flag === 'remove') {
-            if (type === 'positive') {
-                posTags = posTags.filter(function(e) { return e !== tag });
-                this.setState({
-                    posTags: posTags
-                });
-            } else if (type === 'negative') {
-                negTags = negTags.filter(function(e) { return e !== tag });
-                this.setState({
-                    negTags: negTags
-                });
-            }
-        } else if (flag === 'add') {
-            if (type === 'positive') {
-                if (negTags.includes(tag)) {
-                    negTags = negTags.filter(function(e) { return e !== tag });
-                    this.setState({
-                        negTags: negTags
-                    });
-                }
-                if (!posTags.includes(tag)) {
-                    posTags.push(tag);
-                    this.setState({
-                        posTags: posTags
-                    });
-                }
-            } else if (type === 'negative') {
-                if (posTags.includes(tag)) {
-                    posTags = posTags.filter(function(e) { return e !== tag });
-                    this.setState({
-                        posTags: posTags
-                    });
-                }
-                if (!negTags.includes(tag)) {
-                    negTags.push(tag);
-                    this.setState({
-                        negTags: negTags
-                    });
-                }
-            }
-        }
-        this.searchSimilarImages(
-            this.state.results[0]['image_data']['img_hash'],
-            this.state.selectedColor
-        )
-    }
+    // searchSimilarImagesInfinite(imgHash, colorRgb1){
+    //     ReactGA.event({
+    //         category: "Text Search",
+    //         action: 'search similar',
+    //         label: imgHash
+    //     });
+    //
+    //     const posTags = this.state.posTags;
+    //     const negTags = this.state.negTags;
+    //     const sex = this.state.sex;
+    //     const noShop = this.state.noShop;
+    //     const filterBrands = this.state.filterBrands;
+    //     let color_1 = colorRgb1 ? colorRgb1 : this.state.selectedColor;
+    //     if (color_1.length === 0) {
+    //         color_1 = this.state.results[0]['image_data']['color_1'];
+    //     }
+    //     let maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+    //
+    //     fetch(window.location.origin + '/api/search_similar_infinite', {
+    //         method: 'post',
+    //         body: JSON.stringify({
+    //             img_hash: imgHash,
+    //             tags_positive: posTags,
+    //             tags_negative: negTags,
+    //             color_1: color_1,
+    //             sex: sex,
+    //             no_shop: noShop,
+    //             max_price: maxPrice,
+    //             brands: filterBrands,
+    //             prev_prod_ids: this.state.loadedProdIds
+    //         }),
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     }).then(function(response) {
+    //         return response.json();
+    //     }).then(data => {
+    //         if (this._ismounted) {
+    //             const loadedProdIds = data.res.map(resDict => {
+    //                 return resDict.image_data.prod_id
+    //             });
+    //             if (this.state.searchSimilarInfinite) {
+    //                 if (loadedProdIds.length > 0) {
+    //                     this.setState({
+    //                         loadedProdIds: this.state.loadedProdIds.concat(loadedProdIds),
+    //                         results: this.state.results.concat(data.res),
+    //                         infiniteCount: this.state.infiniteCount + 1,
+    //                         infiniteLoading: false
+    //                     });
+    //                 } else {
+    //                     this.setState({
+    //                         infiniteLoadingComplete: true
+    //                     })
+    //                 }
+    //             } else {
+    //                 if (loadedProdIds.length > 0) {
+    //                     this.setState({
+    //                         results: data.res,
+    //                         loading: false,
+    //                         infiniteLoading: false,
+    //                         searchSimilarInfinite: true,
+    //                         loadedProdIds: loadedProdIds,
+    //                         infiniteCount: this.state.infiniteCount + 1
+    //                     });
+    //                     window.scrollTo({
+    //                         top: 0,
+    //                         behavior: "smooth"
+    //                     });
+    //                     window.scrollTo(0, 0);
+    //                 } else {
+    //                     this.setState({
+    //                         infiniteLoadingComplete: true
+    //                     })
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
 
     // Send request to server based on input string and set the response in state
     textImageSearch(input){
@@ -583,23 +561,28 @@ class TextSearch extends React.Component  {
     }
 
     infiniteTextSearch() {
-        const searchStr = window.location.search.split('search=')[1].split('&')[0];
         const sexString = window.location.search.split('sex=')[1];
-        const parsedSearchString = decodeURIComponent(searchStr);
         const sex = this.state.sex ? this.state.sex : sexString;
+        const filterBrands = this.state.filterBrands;
+        const maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
+        const searchWords = this.state.posTags;
+        const searchColor = this.state.selectedColor;
 
         ReactGA.event({
             category: "Text Search",
             action: 'infinite scroll',
-            label: parsedSearchString,
+            label: searchWords.join(' '),
         });
 
-        fetch(window.location.origin + '/api/text_search_infinite', {
+        fetch(window.location.origin + '/api/text_color_search', {
             method: 'post',
             body: JSON.stringify({
+                search_words: searchWords,
+                color: searchColor,
                 sex: sex,
-                search_string: parsedSearchString,
-                prev_prod_ids: this.state.loadedProdIds
+                prev_prod_ids: this.state.loadedProdIds,
+                max_price: maxPrice,
+                brands: filterBrands
             }),
             headers: {
                 Accept: 'application/json',
@@ -641,10 +624,18 @@ class TextSearch extends React.Component  {
             brandPickerShown: show
         });
         if (show === false) {
-            this.searchSimilarImages(
-                this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColor
-            );
+            this.setState({
+                loading: true
+            }, () => {
+                const searchStr = encodeURIComponent(this.state.posTags.join(' '))
+                const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                if (this.reactInDevMode()) {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                } else {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                }
+            })
         }
     }
 
@@ -670,11 +661,110 @@ class TextSearch extends React.Component  {
                 brandPickerShown: showPicker
             }, () => {
                 if (showPicker === false) {
-                    this.searchSimilarImages(
-                        this.state.results[0]['image_data']['img_hash'],
-                        this.state.selectedColor
-                    );
+                    this.setState({
+                        loading: true
+                    }, () => {
+                        const searchStr = encodeURIComponent(this.state.posTags.join(' '))
+                        const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                        if (this.reactInDevMode()) {
+                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                            this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                        } else {
+                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                        }
+                    })
                 }
+            });
+        }
+    }
+
+    setTags(tag, type, flag){
+        let posTags = this.state.posTags;
+        let negTags = this.state.negTags;
+        if (flag === 'remove') {
+            if (type === 'positive') {
+                posTags = posTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    posTags: posTags
+                });
+            } else if (type === 'negative') {
+                negTags = negTags.filter(function(e) { return e !== tag });
+                this.setState({
+                    negTags: negTags
+                });
+            }
+        } else if (flag === 'add') {
+            if (type === 'positive') {
+                if (negTags.includes(tag)) {
+                    negTags = negTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+                if (!posTags.includes(tag)) {
+                    posTags.push(tag);
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+            } else if (type === 'negative') {
+                if (posTags.includes(tag)) {
+                    posTags = posTags.filter(function(e) { return e !== tag });
+                    this.setState({
+                        posTags: posTags
+                    });
+                }
+                if (!negTags.includes(tag)) {
+                    negTags.push(tag);
+                    this.setState({
+                        negTags: negTags
+                    });
+                }
+            }
+        }
+        const searchStr = encodeURIComponent(this.state.posTags.join(' '));
+        const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+        if (this.reactInDevMode()) {
+            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+            this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+        } else {
+            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+        }
+    }
+
+    // Set main color and category state based on selection from modal
+    setColorPosTags(selection){
+        if(selection['cat']) {
+            ReactGA.event({
+                category: "Tag Filter",
+                action: 'positive',
+                label: selection['cat'],
+            });
+            let selectedCat = selection['cat'];
+            let tags = this.state.posTags;
+            if (tags.includes(selectedCat)){
+                let filteredTags = tags.filter(function(e) { return e !== selectedCat });
+                this.setState({
+                    posTags: filteredTags
+                });
+            } else {
+                tags = tags.concat(selectedCat);
+                this.setState({
+                    posTags: tags
+                });
+            }
+            this.setState({
+                mainCat: selectedCat
+            });
+        } else {
+            ReactGA.event({
+                category: "Color Filter",
+                action: 'apply',
+                label: `${selection['color_rgb']}`,
+            });
+            let colorRgb = selection['color_rgb'];
+            this.setState({
+                selectedColor: colorRgb
             });
         }
     }
@@ -684,10 +774,18 @@ class TextSearch extends React.Component  {
             tagPickerShown: show
         });
         if (show === false) {
-            this.searchSimilarImages(
-                this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColor
-            );
+            this.setState({
+                loading: true
+            }, () => {
+                const searchStr = encodeURIComponent(this.state.posTags.join(' '));
+                const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                if (this.reactInDevMode()) {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                } else {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                }
+            });
         }
     }
 
@@ -711,13 +809,21 @@ class TextSearch extends React.Component  {
                 currentFilterTags.push(posTag);
                 this.setState({
                     posTags: currentFilterTags,
-                    tagPickerShown: showPicker
+                    tagPickerShown: showPicker,
                 }, () => {
                     if (showPicker === false) {
-                        this.searchSimilarImages(
-                            this.state.results[0]['image_data']['img_hash'],
-                            this.state.selectedColor
-                        );
+                        this.setState({
+                            loading: true
+                        }, () => {
+                            const searchStr = encodeURIComponent(currentFilterTags.join(' '));
+                            const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                            if (this.reactInDevMode()) {
+                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                            } else {
+                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                            }
+                        });
                     }
                 });
             }
@@ -743,10 +849,18 @@ class TextSearch extends React.Component  {
                     tagPickerShown: showPicker
                 }, () => {
                     if (showPicker === false) {
-                        this.searchSimilarImages(
-                            this.state.results[0]['image_data']['img_hash'],
-                            this.state.selectedColor
-                        );
+                        this.setState({
+                            loading: true
+                        }, () => {
+                            const searchStr = encodeURIComponent(this.state.posTags.join(' '))
+                            const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                            if (this.reactInDevMode()) {
+                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                            } else {
+                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                            }
+                        });
                     }
                 });
             }
@@ -776,10 +890,18 @@ class TextSearch extends React.Component  {
                 action: 'apply',
                 value: this.state.rangeVal
             });
-            this.searchSimilarImages(
-                this.state.results[0]['image_data']['img_hash'],
-                this.state.selectedColor
-            );
+            this.setState({
+                loading: true
+            }, () => {
+                const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                if (this.reactInDevMode()) {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                } else {
+                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                }
+            });
         }
     }
 
@@ -971,13 +1093,6 @@ class TextSearch extends React.Component  {
                                         img_hash,
                                         color_1
                                     ) => {
-                                        // if (this.reactInDevMode()) {
-                                        //     this.searchSimilarImages(img_hash, color_1);
-                                        // } else {
-                                        //     const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                        //     const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                        //     this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${img_hash}&clr=${encodeURIComponent(color_1)}`);
-                                        // }
                                         this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}`);
                                     }}
                                     results={this.state.results}
@@ -1032,13 +1147,22 @@ class TextSearch extends React.Component  {
                                         tagPickerShown={this.state.tagPickerShown}
                                         setColor={(selection) => {this.setColorPosTags(selection)}}
                                         selectedColor={this.state.selectedColor}
-                                        searchSimilarImages={(imgHash, color1) => {
+                                        searchSimilarImages={(imgHash, color) => {
                                             if (this.reactInDevMode()) {
-                                                this.searchSimilarImages(imgHash, color1);
+                                                this.setState({
+                                                    loading: true
+                                                });
+                                                const sexString = window.location.search.split('sex=')[1].split('&')[0];
+                                                const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&clr=${encodeURIComponent(color)}`);
+                                                this.textColorSearch(this.state.posTags, color, sexString);
                                             } else {
+                                                this.setState({
+                                                    loading: true
+                                                });
                                                 const searchStr = window.location.search.split('search=')[1].split('&')[0];
                                                 const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&id=${imgHash}&clr=${encodeURIComponent(color1)}`);
+                                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&clr=${encodeURIComponent(color)}`);
                                             }
                                         }}
                                         results={this.state.results}

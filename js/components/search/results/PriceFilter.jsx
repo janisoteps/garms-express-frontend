@@ -148,7 +148,7 @@ class PriceFilter extends React.Component {
                                             color: '#FFFFFF',
                                             backgroundColor: '#000000',
                                             borderRadius: '3px',
-                                            paddingTop: '2px'
+                                            paddingTop: '5px'
                                         }}
                                     >
                                         OK

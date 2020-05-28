@@ -1,4 +1,4 @@
-// ResultCard.jsx
+// TextSearchBox.jsx
 import React from "react";
 import TextField from "material-ui/TextField";
 
@@ -11,6 +11,11 @@ class TextSearchBox extends React.Component {
 
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.doTextSearch = this.doTextSearch.bind(this);
+        this.focusOnInput = this.focusOnInput.bind(this);
+    }
+
+    focusOnInput() {
+        this.textInput.focus();
     }
 
     handleTextInputChange(event) {
@@ -30,7 +35,8 @@ class TextSearchBox extends React.Component {
 
     doTextSearch() {
         const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
-        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.props.sex}`);
+        const colorString = this.props.selectedColor ? encodeURIComponent(this.props.selectedColor) : '';
+        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.props.sex}&clr=${colorString}`);
     }
 
     render() {
@@ -63,6 +69,13 @@ class TextSearchBox extends React.Component {
                         borderBottom: '0px solid rgb(0, 0, 0)'
                     }}
                     autoComplete="off"
+                    onFocus={() => {
+                        this.props.showColorPicker(true);
+                    }}
+                    // onBlur={() => {
+                    //     this.props.showColorPicker(false);
+                    // }}
+                    ref={(input) => { this.textInput = input; }}
                 />
                 <div className="text-search-button" onClick={() => {this.doTextSearch()}}>
                     <div className="search-icon" />

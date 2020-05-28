@@ -1,17 +1,17 @@
 // SearchFromId.jsx
 import React from "react";
-require('../../../../css/garms.css');
-require('../../../../css/ball-atom.css');
+require('../../../css/garms.css');
+require('../../../css/ball-atom.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ResultsFromSearch from '../results/ResultsFromSearch';
-import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
+import ResultsFromSearch from '../search/results/ResultsFromSearch';
+import SearchFromImageIntro from '../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import ResultFilters from './../results/ResultFilters';
-import LoadingScreen from "../../loading/LoadingScreen";
+import ResultFilters from '../search/results/ResultFilters';
+import LoadingScreen from "../loading/LoadingScreen";
 import ReactGA from "react-ga";
 
 

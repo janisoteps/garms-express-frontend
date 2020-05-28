@@ -1,17 +1,17 @@
 // SearchFromImage.jsx
 import React from "react";
-require('../../../../css/garms.css');
-require('../../../../css/ball-atom.css');
+require('../../../css/garms.css');
+require('../../../css/ball-atom.css');
 import Dropzone from 'react-dropzone';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import ColorChoiceModal from './ColorChoiceModal';
-import ResultsFromSearch from '../results/ResultsFromSearch';
-import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
+import ColorChoiceModal from '../search/from_image/ColorChoiceModal';
+import ResultsFromSearch from '../search/results/ResultsFromSearch';
+import SearchFromImageIntro from '../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import ResultFilters from "../results/ResultFilters";
-import LoadingScreen from "../../loading/LoadingScreen";
+import ResultFilters from "../search/results/ResultFilters";
+import LoadingScreen from "../loading/LoadingScreen";
 import ReactGA from "react-ga";
 
 
