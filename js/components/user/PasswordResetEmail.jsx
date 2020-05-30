@@ -78,7 +78,7 @@ class PasswordResetEmail extends React.Component {
     render(){
         return(
             <div>
-                {this.state.isAuth === "false" && (
+                {(this.state.isAuth === "false" || this.state.isAuth === undefined) && (
                     <div
                         style={{
                             textAlign: 'center'
