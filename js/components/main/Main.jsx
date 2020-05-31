@@ -19,6 +19,7 @@ import PasswordResetEmail from "../user/PasswordResetEmail";
 import RecommendDeals from "../recommend/RecommendDeals";
 import DataProtectionPolicy from "../policy/DataProtectionPolicy";
 import TermsOfUse from "../policy/TermsOfUse";
+import TextColorSearchInput from "../search/from_text/TextColorSearchInput";
 
 // The Main component renders one of the provided
 // Routes (provided that one matches). The / route will only match
@@ -98,6 +99,17 @@ class Main extends React.Component {
                            firstLogin={this.props.firstLogin}
                            completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
                         />}
+                    />
+                    <Route path='/textcolorinput'
+                           render={(props) => <TextColorSearchInput
+                               {...props}
+                               sex={this.props.sex}
+                               isAuth={this.props.isAuth}
+                               email={this.props.email}
+                               changeSex={(sex) => {this.changeSex(sex);}}
+                               firstLogin={this.props.firstLogin}
+                               completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                           />}
                     />
                     <Route path='/wardrobe'
                            render={(props) => <Wardrobe
