@@ -60,9 +60,10 @@ class TextSearchBox extends React.Component {
                     }}
                     autoComplete="off"
                     onFocus={() => {
-                        if (this.props.colorPickerShown === false) {
-                            this.props.showColorPicker(true);
-                        }
+                        // if (this.props.colorPickerShown === false) {
+                        //     this.props.showColorPicker(true);
+                        // }
+                        this.props.history.push(`/textcolorinput`);
                     }}
                     // onBlur={() => {
                     //     this.props.showColorPicker(false);

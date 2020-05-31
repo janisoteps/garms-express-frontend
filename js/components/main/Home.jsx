@@ -28,10 +28,6 @@ class Home extends React.Component {
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.changeSex = this.changeSex.bind(this);
-        this.handleTextInputChange = this.handleTextInputChange.bind(this);
-        this.handleColorChange = this.handleColorChange.bind(this);
-        this.showColorPicker = this.showColorPicker.bind(this);
-        this.searchOptions = React.createRef();
     }
 
     componentWillMount() {
@@ -60,33 +56,6 @@ class Home extends React.Component {
                 });
             }
         }
-    }
-
-    handleColorChange = (color) => {
-        this.setState({
-            selectedColor: [color.rgb['r'], color.rgb['g'], color.rgb['b']]
-        }, () => {
-            this.searchOptions.current.focusOnTextBox();
-        })
-
-    };
-
-    showColorPicker = (isShown) => {
-        this.setState({
-            showColorPicker: isShown
-        }, () => {
-            this.searchOptions.current.focusOnTextBox();
-        })
-    };
-
-    handleTextInputChange(event) {
-        const value =  event.target.value;
-        const name = event.target.name;
-        this.setState({
-            [name]: value
-        }, () => {
-            this.searchOptions.current.focusOnTextBox();
-        });
     }
 
     showAddOutfit = (imgHash) => {
