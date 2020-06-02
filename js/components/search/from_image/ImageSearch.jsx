@@ -8,6 +8,7 @@ import ResultFilters from "../results/ResultFilters";
 import InfiniteSpinner from "../../loading/InfiniteSpinner";
 import ResultsFromSearch from "../results/ResultsFromSearch";
 import LoadingScreen from "../../loading/LoadingScreen";
+import FailedRecognitionTagPicker from "./FailedRecognitionTagPicker";
 
 
 class ImageSearch extends React.Component {
@@ -24,6 +25,8 @@ class ImageSearch extends React.Component {
             colorChoosingComplete: false,
             loading: false,
             imgCats: null,
+            failedTagRecognition: false,
+            failedRecognition: false,
             posTags: [],
             negTags: [],
             filterBrands: [],
@@ -247,9 +250,14 @@ class ImageSearch extends React.Component {
             this.setState({
                 imgCats: data.res['img_cats_ai_txt'],
                 vgg16Encoding: data.res['vgg16_encoding'],
-                imgFeaturesLoading: false
+                imgFeaturesLoading: false,
+                failedTagRecognition: data.res['img_cats_ai_txt'].length === 0
             });
-            // console.log('Got IMG features back');
+        }).catch((err) => {
+            console.error(err);
+            this.setState({
+                failedRecognition: true
+            })
         });
     }
 
@@ -718,7 +726,8 @@ class ImageSearch extends React.Component {
         cats.push(cat);
 
         this.setState({
-            imgCats: cats
+            imgCats: cats,
+            failedTagRecognition: false
         })
     }
 
@@ -784,6 +793,54 @@ class ImageSearch extends React.Component {
                         showHideTagPicker={(show) => {this.showHideTagPicker(show)}}
                         showIosNav={this.props.showIosNav}
                     />
+                )}
+                {this.state.colorChoosingComplete === true && this.state.failedTagRecognition === true && (
+                    <FailedRecognitionTagPicker
+                        imgCats={this.state.imgCats}
+                        posTags={this.state.posTags}
+                        completeCatChoosing={(cats) => {this.completeCatChoosing(cats)}}
+                        addOwnCat={(cat) => {
+                            this.addOwnCat(cat);
+                            this.showHideTagPicker(false);
+                        }}
+                        tagPickerShown={this.state.tagPickerShown}
+                        setPosTags={(tag) => {this.setPosTags(tag)}}
+                        showHideTagPicker={(show) => {this.showHideTagPicker(show)}}
+                        showIosNav={this.props.showIosNav}
+                    />
+                )}
+                {this.state.failedRecognition === true && (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            top: '50',
+                            left: '0',
+                            width: '100vw',
+                            height: 'calc(100vh - 50px)',
+                            textAlign: 'center',
+                            paddingTop: '100px',
+                            backgroundColor: '#FFFFFF'
+                        }}
+                    >
+                        <h3>Oh no, it didn't work!</h3>
+                        <p>Try another image</p>
+                        <div
+                            onClick={() => {
+                                window.location.reload();
+                            }}
+                            style={{
+                                display: 'inline-block',
+                                width: '90px',
+                                cursor: 'pointer',
+                                height: '30px',
+                                color: '#FFFFFF',
+                                backgroundColor: '#000000',
+                                borderRadius: '3px'
+                            }}
+                        >
+                            OK
+                        </div>
+                    </div>
                 )}
             </div>
         ) : (
