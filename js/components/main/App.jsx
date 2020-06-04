@@ -38,7 +38,8 @@ class App extends React.Component {
             onboardingFaves: [],
             isStandalone: null,
             newContentAvailable: false,
-            showCookiePopup: false
+            showCookiePopup: false,
+            readyToRender: false
         };
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -73,7 +74,8 @@ class App extends React.Component {
             firstVisit: cookies.get('first_visit'),
             onboardingFaves: cookies.get('onboarding_faves') ? cookies.get('onboarding_faves') : [],
             nextYear: nextYear,
-            showCookiePopup: cookies.get('show_cookies')
+            showCookiePopup: cookies.get('show_cookies'),
+            readyToRender: true
         }, () => {
             const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
             const showInstallPopupCookie = cookies.get('show_install_popup');
@@ -115,7 +117,6 @@ class App extends React.Component {
                 }
             }
             if (this.state.firstVisit === undefined) {
-                cookies.set('first_visit', true, {path: '/', expires: nextYear});
                 this.setState({
                     firstVisit: true
                 })
@@ -494,25 +495,27 @@ class App extends React.Component {
                             </div>
                         ):(
                         <div className="content-wrapper">
-                            <Main
-                                isAuth={this.state.isAuth}
-                                sex={this.state.sex}
-                                username={this.state.username}
-                                email={this.state.email}
-                                changeSex={(sex) => {this.changeSex(sex);}}
-                                higherCat={this.state.higherCat}
-                                firstLogin={this.state.firstLogin}
-                                handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
-                                completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
-                                handleLogin={(email, password) => {this.handleLogin(email, password)}}
-                                handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
-                                failedLogin={this.state.failedLogin}
-                                showIosNav={this.state.showIosNav}
-                                firstVisit={this.state.firstVisit}
-                                setOnboardingFaves={(prodList) => {this.setOnboardingFaves(prodList)}}
-                                onboardingFaves={this.state.onboardingFaves}
-                                completeFirstVisit={() => {this.completeFirstVisit()}}
-                            />
+                            {this.state.readyToRender === true && (
+                                <Main
+                                    isAuth={this.state.isAuth}
+                                    sex={this.state.sex}
+                                    username={this.state.username}
+                                    email={this.state.email}
+                                    changeSex={(sex) => {this.changeSex(sex);}}
+                                    higherCat={this.state.higherCat}
+                                    firstLogin={this.state.firstLogin}
+                                    handleHigherCat={(higherCat) => {this.handleHigherCat(higherCat);}}
+                                    completeFirstLogin={(callback) => {this.completeFirstLogin(callback);}}
+                                    handleLogin={(email, password) => {this.handleLogin(email, password)}}
+                                    handleResultLogin={(email, password, imgHash) => {this.handleResultLogin(email, password, imgHash)}}
+                                    failedLogin={this.state.failedLogin}
+                                    showIosNav={this.state.showIosNav}
+                                    firstVisit={this.state.firstVisit}
+                                    setOnboardingFaves={(prodList) => {this.setOnboardingFaves(prodList)}}
+                                    onboardingFaves={this.state.onboardingFaves}
+                                    completeFirstVisit={() => {this.completeFirstVisit()}}
+                                />
+                            )}
                         </div>
                     )}
 

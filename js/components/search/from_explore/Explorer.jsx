@@ -396,13 +396,11 @@ class Explorer extends React.Component  {
     };
 
     setMainCatsAndSearchSimilar(mainCat1, mainCat2, nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
-        // console.log('Similar image search launched, prod id: ', prod_id);
         this.setState({
             loading: true
         });
 
         let mainColor = color_1.toString().replace(/\s+/g, '');
-        // let mainColor = this.state.mainColor;
         let siam_64 = siamese_64.toString().replace(/\s+/g, '');
 
         let searchString = window.location.origin + '/api/search?nr1_cat_ai=' + this.state.mainCatSub
@@ -414,14 +412,12 @@ class Explorer extends React.Component  {
             + ']&sex=' + this.state.sex
             + '&id=' + prod_id;
 
-        // console.log('search string: ', searchString);
 
         fetch(searchString, {
             method: 'get',
         }).then(function(response) {
             return response.json();
         }).then(data => {
-            // console.log(data);
             this.setState({
                 results: data.res,
                 loading: false
@@ -438,7 +434,6 @@ class Explorer extends React.Component  {
     // Updates results state with the response
     similarImageSearch(nr1_cat_ai, nr1_cat_sc, img_cat_sc_txt, color_1, siamese_64, prod_id){
 
-        // console.log('Similar image search launched, prod id: ', prod_id);
         this.setState({
             loading: true
         });
