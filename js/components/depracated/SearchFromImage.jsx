@@ -143,7 +143,6 @@ class SearchFromImage extends React.Component  {
         };
         downloadFile(imgUrl)
             .then((blob) => {
-                // console.log(`File from URL: ${imgUrl}`);
                 this.setState({
                     fileFromUrl: {
                         imgUrl: imgUrl,
@@ -185,11 +184,9 @@ class SearchFromImage extends React.Component  {
         acceptedFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = () => {
-                // console.log('Reader loaded');
                 const fileAsBinaryString = reader.result;
                 let img = document.createElement("img");
                 img.onload = () => {
-                    // console.log('Img loaded');
                     let canvas = document.createElement('canvas');
                     let ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0);
@@ -197,7 +194,6 @@ class SearchFromImage extends React.Component  {
                     let MAX_HEIGHT = 600;
                     let width = img.width;
                     let height = img.height;
-                    // console.log('Width: ', width);
                     if (width > height) {
                         if (width > MAX_WIDTH) {
                             height *= MAX_WIDTH / width;
@@ -331,7 +327,6 @@ class SearchFromImage extends React.Component  {
     setTags(tag, type, flag){
         let posTags = this.state.posTags;
         let negTags = this.state.negTags;
-        // console.log(flag + ' ' + type + ' tag with value ' + tag);
         if (flag === 'remove') {
             if (type === 'positive') {
                 posTags = posTags.filter(function(e) { return e !== tag });
@@ -703,7 +698,6 @@ class SearchFromImage extends React.Component  {
     // -------------------------- MAIN RENDER FUNCTION ----------------------------
     render () {
         const rangeVal = this.state.rangeVal;
-        // console.log(`SearchFromImage firstLogin: ${this.state.firstLogin}`);
         let previewStyle = this.state.viewPortHeight - this.state.previewImgDims.height
         < this.state.viewPortWidth - this.state.previewImgDims.width ? {
             height: `calc( ${this.state.viewPortHeight}px - 175px )`,
@@ -797,7 +791,6 @@ class SearchFromImage extends React.Component  {
         // Nested logic: if results object is not falsy then show either product result component if state has results
         // Or show a response saying that image wasn't recognized
         if(this.state.results){
-            // console.log('ImageSearch email: ', this.state.email);
             var searchOrResults = this.state.results.length > 0 ? (
                 <div>
                     <ResultsFromSearch

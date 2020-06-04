@@ -339,7 +339,6 @@ class ProductResults extends React.Component  {
 
     render () {
         let tiles = this.props.results.map(product => {
-            // console.log('Product data passed to result list: ', product[0]);
             let productInfo = product[0];
             let img_hash = productInfo.img_hash;
             let brand = productInfo.brand;

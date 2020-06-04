@@ -33,7 +33,7 @@ class OnboardingOutfitPicker extends React.Component {
             return response.json();
         }).then(data => {
             const loadedProdIds = data.prod_suggestions.map(resDict => {
-                return resDict.prod_id
+                return resDict[0].prod_id
             });
             this.setState({
                 outfits: data.prod_suggestions,
@@ -71,7 +71,7 @@ class OnboardingOutfitPicker extends React.Component {
             return response.json();
         }).then(data => {
             const loadedProdIds = data.prod_suggestions.map(resDict => {
-                return resDict.prod_id
+                return resDict[0].prod_id
             });
             this.setState({
                 outfits: data.prod_suggestions,
@@ -167,7 +167,7 @@ class OnboardingOutfitPicker extends React.Component {
             } : {
                 textDecoration: 'none'
             };
-            const imgHash = prodSuggestion.image_hash[0];
+            const imgHash = prodSuggestion.img_hash;
             return (
                 <div
                     key={key}
@@ -186,7 +186,7 @@ class OnboardingOutfitPicker extends React.Component {
                         }}
                     >
                         <img
-                            src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
+                            src={this.updateImgProtocol(prodSuggestion.img_url)}
                             style={{
                                 cursor: 'pointer',
                                 backgroundColor: '#e9dcc9',
@@ -340,13 +340,14 @@ class OnboardingOutfitPicker extends React.Component {
                     <div
                         style={{
                             cursor: 'pointer',
-                            marginBottom: '40px'
+                            marginBottom: '100px'
                         }}
                         onClick={() => {
                             this.props.setOnboardingFaves(this.state.chosenOutfits);
                         }}
                     >
                         Skip >>
+                        <br />
                     </div>
                 </div>
             )
@@ -433,7 +434,7 @@ class OnboardingOutfitPicker extends React.Component {
                     <div
                         style={{
                             cursor: 'pointer',
-                            marginBottom: '40px'
+                            marginBottom: '100px'
                         }}
                         onClick={() => {
                             this.props.changeSex(this.props.sex);
@@ -441,6 +442,7 @@ class OnboardingOutfitPicker extends React.Component {
                         }}
                     >
                         Skip >>
+                        <br />
                     </div>
                 )}
             </div>

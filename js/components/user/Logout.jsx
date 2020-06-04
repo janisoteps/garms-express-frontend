@@ -34,7 +34,6 @@ class Logout extends React.Component {
         event.preventDefault();
         const {cookies} = this.props;
 
-        console.log('Logging out', cookies);
         this.setState({
             isAuth: false
         });
