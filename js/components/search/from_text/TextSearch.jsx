@@ -57,7 +57,8 @@ class TextSearch extends React.Component  {
             infiniteCount: 0,
             infiniteLoading: false,
             infiniteLoadingComplete: false,
-            searchSimilarInfinite: false
+            searchSimilarInfinite: false,
+            initialLoadComplete: false
         };
 
         // this.searchSimilarImages = this.searchSimilarImages.bind(this);
@@ -164,7 +165,7 @@ class TextSearch extends React.Component  {
 
         if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
             if(this.state.infiniteLoading === false) {
-                if (this.state.infiniteCount < 10) {
+                if (this.state.infiniteCount < 10 && this.state.initialLoadComplete === true) {
                     this.setState({
                         infiniteLoading: true
                     }, () => {
@@ -306,7 +307,8 @@ class TextSearch extends React.Component  {
                     results: data.res,
                     loading: false,
                     loadedProdIds: loadedProdIds,
-                    infiniteLoadingComplete: false
+                    infiniteLoadingComplete: false,
+                    initialLoadComplete: true
                 });
             }
         });
@@ -444,7 +446,8 @@ class TextSearch extends React.Component  {
         });
         if (show === false) {
             this.setState({
-                loading: true
+                loading: true,
+                infiniteCount: 0
             }, () => {
                 const searchStr = encodeURIComponent(this.state.posTags.join(' '))
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
@@ -481,7 +484,8 @@ class TextSearch extends React.Component  {
             }, () => {
                 if (showPicker === false) {
                     this.setState({
-                        loading: true
+                        loading: true,
+                        infiniteCount: 0
                     }, () => {
                         const searchStr = encodeURIComponent(this.state.posTags.join(' '))
                         const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
@@ -543,6 +547,9 @@ class TextSearch extends React.Component  {
         }
         const searchStr = encodeURIComponent(this.state.posTags.join(' '));
         const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+        this.setState({
+            infiniteCount: 0
+        });
         if (this.reactInDevMode()) {
             this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
             this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
@@ -594,7 +601,8 @@ class TextSearch extends React.Component  {
         });
         if (show === false) {
             this.setState({
-                loading: true
+                loading: true,
+                infiniteCount: 0
             }, () => {
                 const searchStr = encodeURIComponent(this.state.posTags.join(' '));
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
@@ -629,6 +637,7 @@ class TextSearch extends React.Component  {
                 this.setState({
                     posTags: currentFilterTags,
                     tagPickerShown: showPicker,
+                    infiniteCount: 0
                 }, () => {
                     if (showPicker === false) {
                         this.setState({
@@ -710,7 +719,8 @@ class TextSearch extends React.Component  {
                 value: this.state.rangeVal
             });
             this.setState({
-                loading: true
+                loading: true,
+                infiniteCount: 0
             }, () => {
                 const searchStr = window.location.search.split('search=')[1].split('&')[0];
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));

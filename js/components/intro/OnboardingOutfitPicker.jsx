@@ -349,6 +349,8 @@ class OnboardingOutfitPicker extends React.Component {
                         Skip >>
                         <br />
                     </div>
+                    <br></ br>
+                    <br></ br>
                 </div>
             )
         }
@@ -445,6 +447,8 @@ class OnboardingOutfitPicker extends React.Component {
                         <br />
                     </div>
                 )}
+                <br></ br>
+                <br></ br>
             </div>
         )
     }
