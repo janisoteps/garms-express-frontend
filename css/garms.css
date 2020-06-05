@@ -1628,6 +1628,11 @@ body{
 
 .outfit-details-desktop-nothing { grid-area: nothing; }
 
+.iphone-bottom-nav {
+    background: url('../images/iphone-bottom-nav.png') no-repeat center;
+    background-size: 100vw 80px;
+}
+
 @-webkit-keyframes arrow-movement {
     0% {
         opacity: 0;

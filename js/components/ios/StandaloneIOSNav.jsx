@@ -28,13 +28,14 @@ class StandaloneIOSNav extends React.Component {
     render () {
         return (
             <div
+                className='iphone-bottom-nav'
                 style={{
                     position: 'fixed',
                     bottom: '0',
                     left: '0',
-                    backgroundColor: '#f8f8f8',
+                    // backgroundColor: '#525253',
                     width: '100vw',
-                    height: '40px',
+                    height: '80px',
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr) 2fr',
                     gridTemplateRows: '1fr',
@@ -51,8 +52,8 @@ class StandaloneIOSNav extends React.Component {
                         <img
                             src={require('../../../images/ios-back-btn.png')}
                             style={{
-                                width: '30px',
-                                height: 'auto',
+                                width: 'auto',
+                                height: '80px',
                                 marginTop: '5px',
                                 marginLeft: '10px',
                                 display: 'inline-block'
@@ -70,8 +71,8 @@ class StandaloneIOSNav extends React.Component {
                         <img
                             src={require('../../../images/ios-fwd-btn.png')}
                             style={{
-                                width: '30px',
-                                height: 'auto',
+                                width: 'auto',
+                                height: '80px',
                                 marginTop: '5px',
                                 marginLeft: '10px',
                                 display: 'inline-block'
@@ -89,8 +90,8 @@ class StandaloneIOSNav extends React.Component {
                     <img
                         src={require('../../../images/ios-share-btn.png')}
                         style={{
-                            width: '30px',
-                            height: 'auto',
+                            width: 'auto',
+                            height: '80px',
                             marginTop: '5px',
                             display: 'inline-block'
                         }}
