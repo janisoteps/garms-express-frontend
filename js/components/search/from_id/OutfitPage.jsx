@@ -350,7 +350,7 @@ class OutfitPage extends React.Component  {
                 <div
                     style={{
                         position: 'fixed',
-                        bottom: this.props.showIosNav === true ? '40px' : 0,
+                        bottom: this.props.showIosNav === true ? '80px' : 0,
                         backgroundColor: 'white',
                         left: 0,
                         width: '100vw'
@@ -993,7 +993,8 @@ class OutfitPage extends React.Component  {
                 <div
                     style={{
                         width: '100%',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        paddingBottom: '80px'
                     }}
                 >
                     <MainProdImg />
