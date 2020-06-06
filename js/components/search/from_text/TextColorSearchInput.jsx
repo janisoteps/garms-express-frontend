@@ -9,11 +9,14 @@ class TextColorSearchInput extends React.Component {
         this.state = {
             searchString: '',
             selectedColor: null,
-            sex: this.props.sex
+            sex: this.props.sex,
+            showInput: true
         };
         this.doTextSearch = this.doTextSearch.bind(this);
         this.focusOnInput = this.focusOnInput.bind(this);
         this.textInput = React.createRef();
+        this.onEnterPress = this.onEnterPress.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
     componentDidMount() {
@@ -40,17 +43,37 @@ class TextColorSearchInput extends React.Component {
         this.textInput.focus();
     }
 
+    blurInput() {
+        this.textInput.blur();
+    }
+
+    handleBlur = (e) => {
+        e.target.blur();
+    };
+
     onEnterPress = (e) => {
         if(e.keyCode === 13 && e.shiftKey === false) {
+            this.blurInput()
             e.preventDefault();
-            this.doTextSearch();
+            setTimeout(() => {
+                this.setState({
+                    showInput: false
+                }, () => {
+
+                    this.doTextSearch();
+                });
+            }, 200);
         }
     };
 
     doTextSearch() {
-        const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
-        const colorString = this.state.selectedColor ? encodeURIComponent(this.state.selectedColor) : '';
-        this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.state.sex}&clr=${colorString}`);
+        this.setState({
+            showInput: false
+        }, () => {
+            const searchStringURI = encodeURIComponent(this.state.searchString.toLowerCase());
+            const colorString = this.state.selectedColor ? encodeURIComponent(this.state.selectedColor) : '';
+            this.props.history.push(`/textsearch?search=${searchStringURI}&sex=${this.state.sex}&clr=${colorString}`);
+        })
     }
 
     render() {
@@ -154,36 +177,48 @@ class TextColorSearchInput extends React.Component {
                     paddingTop: '70px'
                 }}
             >
-                <TextField
-                    // autoFocus="autofocus"
-                    className="text-search-input"
-                    // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
-                    value={this.state.searchString.toUpperCase()}
-                    inputStyle={{
-                        fontWeight: '900',
-                        fontSize: '1.2rem'
-                    }}
-                    floatingLabelText="What are you looking for?"
-                    floatingLabelStyle={{
-                        color: 'black',
-                        fontSize: '1.2rem',
-                        fontWeight: '400',
-                    }}
-                    name="searchString"
-                    onChange={this.handleTextInputChange.bind(this)}
-                    onKeyDown={this.onEnterPress}
-                    underlineFocusStyle={{
-                        borderBottom: '2px solid rgb(0, 0, 0)'
-                    }}
-                    underlineDisabledStyle={{
-                        borderBottom: '0px solid rgb(0, 0, 0)'
-                    }}
-                    autoComplete="off"
-                    ref={(input) => { this.textInput = input; }}
-                />
-                <div className="text-search-button" onClick={() => {this.doTextSearch()}}>
-                    <div className="search-icon" />
-                </div>
+                {this.state.showInput === true && (
+                    <div>
+                        <TextField
+                            // autoFocus="autofocus"
+                            className="text-search-input"
+                            value={this.state.searchString.toUpperCase()}
+                            inputStyle={{
+                                fontWeight: '900',
+                                fontSize: '1.2rem'
+                            }}
+                            floatingLabelText="What are you looking for?"
+                            floatingLabelStyle={{
+                                color: 'black',
+                                fontSize: '1.2rem',
+                                fontWeight: '400',
+                            }}
+                            name="searchString"
+                            onChange={this.handleTextInputChange.bind(this)}
+                            onKeyDown={this.onEnterPress}
+                            underlineFocusStyle={{
+                                borderBottom: '2px solid rgb(0, 0, 0)'
+                            }}
+                            underlineDisabledStyle={{
+                                borderBottom: '0px solid rgb(0, 0, 0)'
+                            }}
+                            autoComplete="off"
+                            ref={(input) => { this.textInput = input; }}
+                            onBlur={this.handleBlur}
+                        />
+                        <div
+                            className="text-search-button"
+                            onClick={() => {
+                                this.blurInput();
+                                setTimeout(() => {
+                                    this.doTextSearch();
+                                }, 200);
+                            }}
+                        >
+                            <div className="search-icon" />
+                        </div>
+                    </div>
+                )}
 
                 <ColorPicker />
 
