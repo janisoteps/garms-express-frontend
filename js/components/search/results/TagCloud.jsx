@@ -1,6 +1,6 @@
 // TagCloud.jsx
 import React from 'react';
-require('../../../../../css/garms.css');
+require('../../../../css/garms.css');
 import Tooltip from '@material-ui/core/Tooltip';
 import TextField from "material-ui/TextField";
 
