@@ -6,7 +6,6 @@ app.use(bodyParser.json());
 const path = require('path');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
-// const multerS3 = require('multer-s3');
 const fs = require('fs');  // Filesystem
 const emailValidator = require("email-validator");
 const sha1 = require('sha1');
@@ -502,6 +501,7 @@ app.post('/api/text_color_search', function (req, res) {
     const color = req.body.color;
     const max_price = req.body.max_price;
     const brands = req.body.brands;
+    const discount_rate = req.body.discount_rate;
 
     let options = {
         method: 'POST',
@@ -512,7 +512,8 @@ app.post('/api/text_color_search', function (req, res) {
             prev_prod_ids: prev_prod_ids,
             color: color,
             max_price: max_price,
-            brands: brands
+            brands: brands,
+            discount_rate: discount_rate
         },
         json: true
     };
@@ -536,6 +537,7 @@ app.post('/api/image_search_infinite', function (req, res) {
     const prev_prod_ids = req.body.prev_prod_ids;
     const max_price = req.body.max_price;
     const brands = req.body.brands;
+    const discount_rate = req.body.discount_rate;
 
     let options = {
         method: 'POST',
@@ -548,7 +550,8 @@ app.post('/api/image_search_infinite', function (req, res) {
             vgg16_encoding: vgg16_encoding,
             prev_prod_ids: prev_prod_ids,
             max_price: max_price,
-            brands: brands
+            brands: brands,
+            discount_rate: discount_rate
         },
         json: true
     };
@@ -618,15 +621,14 @@ app.post('/api/img_features_light', upload.single('image'), function (req, res) 
 
 // Search products based on confirmation modal input
 app.post('/api/search_from_image', function (req, res) {
-    let tags = req.body.tags;
-    let color_rgb_1 = req.body.color_rgb_1;
-    // let color_rgb_2 = req.body.color_rgb_2;
-    let no_shop = req.body.no_shop;
-    let sex = req.body.sex;
-    let encoding_rcnn = req.body.encoding_rcnn;
+    const tags = req.body.tags;
+    const color_rgb_1 = req.body.color_rgb_1;
+    const no_shop = req.body.no_shop;
+    const sex = req.body.sex;
+    const encoding_rcnn = req.body.encoding_rcnn;
     const vgg16_encoding = req.body.vgg16_encoding;
 
-    let options = {
+    const options = {
         method: 'POST',
         url: api_base_url + 'search_from_image',
         body: JSON.stringify({
@@ -640,7 +642,6 @@ app.post('/api/search_from_image', function (req, res) {
         }),
         json: true
     };
-    // console.log('Search from image, options: ', options);
 
     function handleResponse(error, response, body){
         if (!error && response.statusCode === 200) {
@@ -653,16 +654,17 @@ app.post('/api/search_from_image', function (req, res) {
 
 
 app.post('/api/search_similar', function (req, res) {
-    let img_hash = req.body.img_hash;
-    let tags_positive = req.body.tags_positive;
-    let tags_negative = req.body.tags_negative;
-    let color_1 = req.body.color_1;
-    let no_shop = req.body.no_shop;
-    let sex = req.body.sex;
-    let max_price = req.body.max_price;
-    let brands = req.body.brands;
+    const img_hash = req.body.img_hash;
+    const tags_positive = req.body.tags_positive;
+    const tags_negative = req.body.tags_negative;
+    const color_1 = req.body.color_1;
+    const no_shop = req.body.no_shop;
+    const sex = req.body.sex;
+    const max_price = req.body.max_price;
+    const brands = req.body.brands;
+    const discount_rate = req.body.discount_rate;
 
-    let options = {
+    const options = {
         method: 'POST',
         url: api_base_url + 'search_similar',
         body: JSON.stringify({
@@ -670,11 +672,11 @@ app.post('/api/search_similar', function (req, res) {
             tags_positive: tags_positive,
             tags_negative: tags_negative,
             color_1: color_1,
-            // color_2: color_2,
             sex: sex,
             no_shop: no_shop,
             max_price: max_price,
-            brands: brands
+            brands: brands,
+            discount_rate: discount_rate
         }),
         json: true
     };
@@ -700,6 +702,7 @@ app.post('/api/search_similar_infinite', function (req, res) {
     const brands = req.body.brands;
     const prev_prod_ids = req.body.prev_prod_ids;
     const initial_req = req.body.initial_req;
+    const discount_rate = req.body.discount_rate;
 
     let options = {
         method: 'POST',
@@ -714,7 +717,8 @@ app.post('/api/search_similar_infinite', function (req, res) {
             max_price: max_price,
             brands: brands,
             prev_prod_ids: prev_prod_ids,
-            initial_req: initial_req
+            initial_req: initial_req,
+            discount_rate: discount_rate
         }),
         json: true
     };

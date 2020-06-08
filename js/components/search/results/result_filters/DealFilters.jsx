@@ -1,6 +1,6 @@
 // DealFilters.jsx
 import React from 'react';
-require('../../../../css/garms.css');
+require('../../../../../css/garms.css');
 import TagCloud from './TagCloud';
 import BrandFilter from './BrandFilter';
 import ShopFilter from './ShopFilter';

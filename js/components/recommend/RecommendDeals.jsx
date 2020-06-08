@@ -8,7 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddOutfit from "../wardrobe/AddOutfit";
 import FlatButton from "material-ui/FlatButton";
 import Loyalty from "material-ui/svg-icons/action/loyalty";
-import DealFilters from "../search/results/DealFilters";
+import DealFilters from "../search/results/result_filters/DealFilters";
 import ReactGA from "react-ga";
 import InfiniteSpinner from "../loading/InfiniteSpinner";
 
@@ -534,7 +534,7 @@ class RecommendDeals extends React.Component  {
                                             label: imgHash,
                                         });
                                         // history.push(`/search-from-id?id=${imgHash}`);
-                                        history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}`)
+                                        history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}&disc=${Math.floor(this.state.discountRate * 100)}`);
                                     }}
                                 />
                             </Tooltip>

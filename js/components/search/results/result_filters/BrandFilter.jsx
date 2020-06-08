@@ -1,6 +1,6 @@
 // BrandFilter.jsx
 import React from 'react';
-require('../../../../css/garms.css');
+require('../../../../../css/garms.css');
 import TextField from 'material-ui/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 
