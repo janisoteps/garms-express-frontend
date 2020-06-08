@@ -2,7 +2,7 @@
 import React from 'react';
 require('../../../../../css/garms.css');
 import PriceFilter from './PriceFilter';
-import TagCloud from '../TagCloud';
+import TagCloud from './TagCloud';
 import ColorPicker from '../ColorPicker';
 import BrandFilter from './BrandFilter';
 import DiscountFilter from "./DiscountFilter";
