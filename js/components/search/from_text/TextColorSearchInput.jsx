@@ -138,11 +138,12 @@ class TextColorSearchInput extends React.Component {
                             height: '500px',
                             width: '100%',
                             top: '250px',
-                            zIndex: '10',
+                            zIndex: this.props.showIosNav === true ? '0' : '10',
                             left: '0',
                             textAlign: 'center',
                             paddingRight: `${padding}`,
-                            paddingLeft: `${padding}`
+                            paddingLeft: `${padding}`,
+                            marginBottom: this.props.showIosNav === true ? '85px' : '0px'
                         }}
                     >
                         <SWPicker/>

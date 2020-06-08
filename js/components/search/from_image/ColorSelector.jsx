@@ -53,7 +53,7 @@ class ColorSelector extends React.Component {
                 style={{
                     width: '100%',
                     position: 'fixed',
-                    bottom: this.props.showIosNav === true ? '40px' : '0',
+                    bottom: this.props.showIosNav === true ? '85px' : '0',
                     backgroundColor: '#FFFFFF',
                     paddingTop: '5px'
                 }}

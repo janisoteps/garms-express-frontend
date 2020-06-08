@@ -109,6 +109,7 @@ class Main extends React.Component {
                                changeSex={(sex) => {this.changeSex(sex);}}
                                firstLogin={this.props.firstLogin}
                                completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                               showIosNav={this.props.showIosNav}
                            />}
                     />
                     <Route path='/wardrobe'
@@ -139,18 +140,6 @@ class Main extends React.Component {
                                changeSex={(sex) => {this.changeSex(sex);}}
                            />}
                     />
-                    {/*<Route path='/search-from-image'*/}
-                    {/*       render={(props) => <SearchFromImage*/}
-                    {/*           {...props}*/}
-                    {/*           username={this.props.username}*/}
-                    {/*           sex={this.props.sex}*/}
-                    {/*           isAuth={this.props.isAuth}*/}
-                    {/*           email={this.props.email}*/}
-                    {/*           changeSex={(sex) => {this.changeSex(sex);}}*/}
-                    {/*           firstLogin={this.props.firstLogin}*/}
-                    {/*           completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}*/}
-                    {/*       />}*/}
-                    {/*/>*/}
                     <Route path='/image-search' render={(props) =>
                         <ImageSearch
                                {...props}
@@ -164,18 +153,6 @@ class Main extends React.Component {
                                showIosNav={this.props.showIosNav}
                            />
                     } />
-                    {/*<Route path='/search-from-id'*/}
-                    {/*       render={(props) => <SearchFromId*/}
-                    {/*           {...props}*/}
-                    {/*           username={this.props.username}*/}
-                    {/*           sex={this.props.sex}*/}
-                    {/*           isAuth={this.props.isAuth}*/}
-                    {/*           email={this.props.email}*/}
-                    {/*           changeSex={(sex) => {this.changeSex(sex);}}*/}
-                    {/*           firstLogin={this.props.firstLogin}*/}
-                    {/*           completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}*/}
-                    {/*       />}*/}
-                    {/*/>*/}
                     <Route path='/search-similar'
                            render={(props) => <SearchSimilar
                                {...props}
