@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import ColorSelector from './ColorSelector';
 import CatSelector from "./CatSelector";
 import ReactGA from "react-ga";
-import ResultFilters from "../results/ResultFilters";
+import ResultFilters from "../results/result_filters/ResultFilters";
 import InfiniteSpinner from "../../loading/InfiniteSpinner";
 import ResultsFromSearch from "../results/ResultsFromSearch";
 import LoadingScreen from "../../loading/LoadingScreen";
@@ -40,6 +40,8 @@ class ImageSearch extends React.Component {
             tagPickerShown: false,
             brandPickerShown: false,
             priceFilterShown: false,
+            discountPickerShown: false,
+            discountRate: 0,
             imgFeaturesLoading: false,
             loadingContent: null,
         };
@@ -428,7 +430,8 @@ class ImageSearch extends React.Component {
                         vgg16_encoding: this.state.vgg16Encoding,
                         brands: this.state.filterBrands,
                         prev_prod_ids: this.state.loadedProdIds,
-                        max_price: this.state.rangeVal < 500 ? this.state.rangeVal : 1000000
+                        max_price: this.state.rangeVal < 500 ? this.state.rangeVal : 1000000,
+                        discount_rate: this.state.discountRate
                     }),
                     headers: {
                         Accept: 'application/json',
@@ -438,7 +441,7 @@ class ImageSearch extends React.Component {
                     .then(data => {
                         if(this._ismounted) {
                             const loadedProdIds = data.res.map(resDict => {
-                                return resDict.prod_serial.prod_id
+                                return resDict.image_data.prod_id
                             });
                             if (loadedProdIds.length > 0) {
                                 this.setState({
@@ -591,9 +594,11 @@ class ImageSearch extends React.Component {
                 if (showPicker === false) {
                     this.setState({
                         infiniteLoadingComplete: false,
-                        infiniteLoading: false
-                    })
-                    this.searchFromImage();
+                        infiniteLoading: false,
+                        loadedProdIds: []
+                    }, () => {
+                        this.searchFromImage();
+                    });
                 }
             });
         }
@@ -632,9 +637,11 @@ class ImageSearch extends React.Component {
                     if (showPicker === false) {
                         this.setState({
                             infiniteLoadingComplete: false,
-                            infiniteLoading: false
-                        })
-                        this.searchFromImage();
+                            infiniteLoading: false,
+                            loadedProdIds: []
+                        }, () => {
+                            this.searchFromImage();
+                        });
                     }
                 });
             }
@@ -662,9 +669,11 @@ class ImageSearch extends React.Component {
                     if (showPicker === false) {
                         this.setState({
                             infiniteLoadingComplete: false,
-                            infiniteLoading: false
-                        })
-                        this.searchFromImage();
+                            infiniteLoading: false,
+                            loadedProdIds: []
+                        }, () => {
+                            this.searchFromImage();
+                        });
                     }
                 });
             }
@@ -678,9 +687,11 @@ class ImageSearch extends React.Component {
         if (show === false) {
             this.setState({
                 infiniteLoadingComplete: false,
-                infiniteLoading: false
-            })
-            this.searchFromImage();
+                infiniteLoading: false,
+                loadedProdIds: []
+            }, () => {
+                this.searchFromImage();
+            });
         }
     }
 
@@ -697,9 +708,11 @@ class ImageSearch extends React.Component {
         if (show === false) {
             this.setState({
                 infiniteLoadingComplete: false,
-                infiniteLoading: false
-            })
-            this.searchFromImage();
+                infiniteLoading: false,
+                loadedProdIds: []
+            }, () => {
+                this.searchFromImage();
+            });
         }
     }
 
@@ -715,9 +728,11 @@ class ImageSearch extends React.Component {
             });
             this.setState({
                 infiniteLoadingComplete: false,
-                infiniteLoading: false
-            })
-            this.searchFromImage();
+                infiniteLoading: false,
+                loadedProdIds: []
+            }, () => {
+                this.searchFromImage();
+            });
         }
     }
 
@@ -728,7 +743,32 @@ class ImageSearch extends React.Component {
         this.setState({
             imgCats: cats,
             failedTagRecognition: false
-        })
+        });
+    }
+
+    showDiscountPicker(show) {
+        this.setState({
+            discountPickerShown: show
+        });
+        if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'discount rate'
+            });
+            this.setState({
+                infiniteLoadingComplete: false,
+                infiniteLoading: false,
+                loadedProdIds: []
+            }, () => {
+                this.searchFromImage();
+            });
+        }
+    }
+
+    setDiscountRate(rate) {
+        this.setState({
+            discountRate: rate
+        });
     }
 
 
@@ -897,7 +937,7 @@ class ImageSearch extends React.Component {
                                 img_hash,
                                 color_1
                             ) => {
-                                this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}`);
+                                this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}&disc=${Math.floor(this.state.discountRate * 100)}`);
                             }}
                             results={this.state.results}
                             setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
@@ -966,6 +1006,10 @@ class ImageSearch extends React.Component {
                                 addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                                 showPriceFilter={(show) => {this.showPriceFilter(show)}}
                                 priceFilterShown={this.state.priceFilterShown}
+                                showDiscountPicker={(show) => {this.showDiscountPicker(show)}}
+                                discountPickerShown={this.state.discountPickerShown}
+                                setDiscountRate={(rate) => {this.setDiscountRate(rate)}}
+                                discountRate={this.state.discountRate}
                             />
                         )}
                     </div>

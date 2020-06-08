@@ -1,10 +1,11 @@
 // ResultFilters.jsx
 import React from 'react';
-require('../../../../css/garms.css');
+require('../../../../../css/garms.css');
 import PriceFilter from './PriceFilter';
 import TagCloud from './TagCloud';
-import ColorPicker from './ColorPicker';
+import ColorPicker from '../ColorPicker';
 import BrandFilter from './BrandFilter';
+import DiscountFilter from "./DiscountFilter";
 
 class ResultFilters extends React.Component {
     constructor(props) {
@@ -33,6 +34,12 @@ class ResultFilters extends React.Component {
                     brandPickerShown={this.props.brandPickerShown}
                     showBrandPicker={(show) => {this.props.showBrandPicker(show)}}
                     addBrandFilter={(brand, showPicker) => {this.props.addBrandFilter(brand, showPicker)}}
+                />
+                <DiscountFilter
+                    showDiscountPicker={(show) => {this.props.showDiscountPicker(show)}}
+                    discountPickerShown={this.props.discountPickerShown}
+                    setDiscountRate={(rate) => {this.props.setDiscountRate(rate)}}
+                    discountRate={this.props.discountRate}
                 />
                 <PriceFilter
                     range={this.props.range}

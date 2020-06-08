@@ -1,6 +1,6 @@
 // DiscountFilter.jsx
 import React from 'react';
-require('../../../../css/garms.css');
+require('../../../../../css/garms.css');
 import Tooltip from '@material-ui/core/Tooltip';
 
 class DiscountFilter extends React.Component {
@@ -9,6 +9,7 @@ class DiscountFilter extends React.Component {
         this.state = {
             discountRateInput: null,
             discountLevels: [
+                0,
                 0.2,
                 0.4,
                 0.6,
@@ -36,7 +37,15 @@ class DiscountFilter extends React.Component {
                     }}
                     key={`${discountLevel * 100}`}
                 >
-                    more than {discountLevel * 100}% off
+                    {discountLevel > 0 ? (
+                        <div>
+                            more than {discountLevel * 100}% off
+                        </div>
+                    ) : (
+                        <div>
+                            clear filter
+                        </div>
+                    )}
                 </div>
             )
         });
@@ -55,14 +64,23 @@ class DiscountFilter extends React.Component {
                             fontSize: '0.7rem',
                             marginTop: '15px',
                             backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px'
+                            boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px',
+                            marginBottom: '8px'
                         }}
                         onClick={() => {
                             this.props.showDiscountPicker(true)
                         }}
                     >
                         <div className="brand-picker-bubble-plus" />
-                        > {this.props.discountRate * 100}% OFF
+                        {this.props.discountRate > 0 ? (
+                            <div>
+                                > {this.props.discountRate * 100}% OFF
+                            </div>
+                        ) : (
+                            <div>
+                                ALL DEALS
+                            </div>
+                        )}
                     </div>
                 </Tooltip>
 

@@ -3,16 +3,14 @@ import React from "react";
 require('../../../../css/garms.css');
 require('../../../../css/ball-atom.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import ResultsFromSearch from '../results/ResultsFromSearch';
 import SearchFromImageIntro from '../../intro/SearchFromImageIntro';
-import FlatButton from 'material-ui/FlatButton';
-import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import ResultFilters from "../results/ResultFilters";
+import ResultFilters from "../results/result_filters/ResultFilters";
 import LoadingScreen from "../../loading/LoadingScreen";
 import InfiniteSpinner from "../../loading/InfiniteSpinner";
+import FallBackInput from "./FallBackInput";
 import ReactGA from 'react-ga';
 import {Route} from "react-router-dom";
 
@@ -53,6 +51,8 @@ class TextSearch extends React.Component  {
             addOutfitShown: false,
             loadingContent: null,
             priceFilterShown: false,
+            discountPickerShown: false,
+            discountRate: 0,
             loadedProdIds: [],
             infiniteCount: 0,
             infiniteLoading: false,
@@ -61,7 +61,6 @@ class TextSearch extends React.Component  {
             initialLoadComplete: false
         };
 
-        // this.searchSimilarImages = this.searchSimilarImages.bind(this);
         this.textImageSearch = this.textImageSearch.bind(this);
         this.handleTextInputChange = this.handleTextInputChange.bind(this);
         this.onEnterPress = this.onEnterPress.bind(this);
@@ -80,6 +79,7 @@ class TextSearch extends React.Component  {
         this.reactInDevMode = this.reactInDevMode.bind(this);
         this.textColorSearch = this.textColorSearch.bind(this);
         this.textSearch = this.textSearch.bind(this);
+        this.setRoute = this.setRoute.bind(this);
     }
 
     componentDidMount() {
@@ -101,6 +101,8 @@ class TextSearch extends React.Component  {
                 ? window.location.search.split('brands=')[1].split('&')[0] : null;
             const priceString = window.location.search.split('price=')[1]
                 ? window.location.search.split('price=')[1].split('&')[0] : null;
+            const discountString = window.location.search.split('disc=')[1]
+                ? window.location.search.split('disc=')[1].split('&')[0] : null;
 
             this.setState({
                 loading: true
@@ -129,11 +131,14 @@ class TextSearch extends React.Component  {
                         ? decodedSearchColorStr.split(',').map(colorStr => {return parseInt(colorStr)}) : null;
                     const decodedBrandArr = brandString ? decodeURIComponent(brandString).split(',') : [];
                     const decodedPrice = priceString ? parseInt(decodeURIComponent(priceString)) : 500;
+                    const decodedDiscountRate = discountString ? parseFloat(decodeURIComponent(discountString)) / 100 : 0;
                     this.setState({
                         posTags: parsedSearchString.split(' '),
                         selectedColor: searchColorInts ? searchColorInts : [],
                         filterBrands: decodedBrandArr,
-                        rangeVal: decodedPrice
+                        rangeVal: decodedPrice,
+                        discountRate: decodedDiscountRate,
+                        sex: sexString
                     }, () => {
                         this.textColorSearch(this.state.posTags, this.state.selectedColor, sexString);
                     });
@@ -271,7 +276,7 @@ class TextSearch extends React.Component  {
     }
 
     textColorSearch(searchWords, searchColor, sexString) {
-        const sex = this.state.sex ? this.state.sex : sexString;
+        const sex = sexString ? sexString : this.state.sex;
         const filterBrands = this.state.filterBrands;
         const maxPrice = this.state.rangeVal < 500 ? this.state.rangeVal : 1000000;
         const posTags = searchWords.length > 0 ? searchWords : this.state.posTags;
@@ -290,7 +295,8 @@ class TextSearch extends React.Component  {
                 sex: sex,
                 prev_prod_ids: this.state.loadedProdIds,
                 max_price: maxPrice,
-                brands: filterBrands
+                brands: filterBrands,
+                discount_rate: this.state.discountRate
             }),
             headers: {
                 Accept: 'application/json',
@@ -402,7 +408,8 @@ class TextSearch extends React.Component  {
                     sex: sex,
                     prev_prod_ids: this.state.loadedProdIds,
                     max_price: maxPrice,
-                    brands: filterBrands
+                    brands: filterBrands,
+                    discount_rate: this.state.discountRate
                 }),
                 headers: {
                     Accept: 'application/json',
@@ -447,15 +454,26 @@ class TextSearch extends React.Component  {
         if (show === false) {
             this.setState({
                 loading: true,
-                infiniteCount: 0
+                infiniteCount: 0,
+                loadedProdIds: []
             }, () => {
                 const searchStr = encodeURIComponent(this.state.posTags.join(' '))
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                 if (this.reactInDevMode()) {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                     this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                 } else {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                 }
             })
         }
@@ -485,15 +503,26 @@ class TextSearch extends React.Component  {
                 if (showPicker === false) {
                     this.setState({
                         loading: true,
-                        infiniteCount: 0
+                        infiniteCount: 0,
+                        loadedProdIds: []
                     }, () => {
                         const searchStr = encodeURIComponent(this.state.posTags.join(' '))
                         const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                         if (this.reactInDevMode()) {
-                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                            this.setRoute({
+                                type: 'textsearch',
+                                searchStr: searchStr,
+                                brandStr: brandStr,
+                                color: this.state.selectedColor
+                            });
                             this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                         } else {
-                            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                            this.setRoute({
+                                type: 'textsearch',
+                                searchStr: searchStr,
+                                brandStr: brandStr,
+                                color: this.state.selectedColor
+                            });
                         }
                     })
                 }
@@ -548,13 +577,24 @@ class TextSearch extends React.Component  {
         const searchStr = encodeURIComponent(this.state.posTags.join(' '));
         const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
         this.setState({
-            infiniteCount: 0
+            infiniteCount: 0,
+            loadedProdIds: []
         });
         if (this.reactInDevMode()) {
-            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+            this.setRoute({
+                type: 'textsearch',
+                searchStr: searchStr,
+                brandStr: brandStr,
+                color: this.state.selectedColor
+            });
             this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
         } else {
-            this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+            this.setRoute({
+                type: 'textsearch',
+                searchStr: searchStr,
+                brandStr: brandStr,
+                color: this.state.selectedColor
+            });
         }
     }
 
@@ -602,15 +642,26 @@ class TextSearch extends React.Component  {
         if (show === false) {
             this.setState({
                 loading: true,
-                infiniteCount: 0
+                infiniteCount: 0,
+                loadedProdIds: []
             }, () => {
                 const searchStr = encodeURIComponent(this.state.posTags.join(' '));
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                 if (this.reactInDevMode()) {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                     this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                 } else {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                 }
             });
         }
@@ -641,15 +692,26 @@ class TextSearch extends React.Component  {
                 }, () => {
                     if (showPicker === false) {
                         this.setState({
-                            loading: true
+                            loading: true,
+                            loadedProdIds: []
                         }, () => {
                             const searchStr = encodeURIComponent(currentFilterTags.join(' '));
                             const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                             if (this.reactInDevMode()) {
-                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.setRoute({
+                                    type: 'textsearch',
+                                    searchStr: searchStr,
+                                    brandStr: brandStr,
+                                    color: this.state.selectedColor
+                                });
                                 this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                             } else {
-                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.setRoute({
+                                    type: 'textsearch',
+                                    searchStr: searchStr,
+                                    brandStr: brandStr,
+                                    color: this.state.selectedColor
+                                });
                             }
                         });
                     }
@@ -678,15 +740,26 @@ class TextSearch extends React.Component  {
                 }, () => {
                     if (showPicker === false) {
                         this.setState({
-                            loading: true
+                            loading: true,
+                            loadedProdIds: []
                         }, () => {
                             const searchStr = encodeURIComponent(this.state.posTags.join(' '))
                             const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                             if (this.reactInDevMode()) {
-                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.setRoute({
+                                    type: 'textsearch',
+                                    searchStr: searchStr,
+                                    brandStr: brandStr,
+                                    color: this.state.selectedColor
+                                });
                                 this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                             } else {
-                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                                this.setRoute({
+                                    type: 'textsearch',
+                                    searchStr: searchStr,
+                                    brandStr: brandStr,
+                                    color: this.state.selectedColor
+                                });
                             }
                         });
                     }
@@ -720,17 +793,83 @@ class TextSearch extends React.Component  {
             });
             this.setState({
                 loading: true,
-                infiniteCount: 0
+                infiniteCount: 0,
+                loadedProdIds: []
             }, () => {
                 const searchStr = window.location.search.split('search=')[1].split('&')[0];
                 const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
                 if (this.reactInDevMode()) {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                     this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
                 } else {
-                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${this.state.sex}&clr=${encodeURIComponent(this.state.selectedColor)}&price=${this.state.rangeVal}&brands=${brandStr}`);
+                    this.setRoute({
+                        type: 'textsearch',
+                        searchStr: searchStr,
+                        brandStr: brandStr,
+                        color: this.state.selectedColor
+                    });
                 }
             });
+        }
+    }
+
+    showDiscountPicker(show) {
+        this.setState({
+            discountPickerShown: show
+        });
+        if (show === false) {
+            ReactGA.event({
+                category: "Deal Filter",
+                action: 'discount rate'
+            });
+            this.setState({
+                infiniteLoadingComplete: false,
+                infiniteLoading: false,
+                loading: true,
+                loadedProdIds: []
+            }, () => {
+                const searchStr = window.location.search.split('search=')[1].split('&')[0];
+                const brandStr = encodeURIComponent(this.state.filterBrands.join(','));
+                this.setRoute({
+                    type: 'textsearch',
+                    searchStr: searchStr,
+                    brandStr: brandStr,
+                    color: this.state.selectedColor
+                });
+                if (this.reactInDevMode()) {
+                    this.textColorSearch(this.state.posTags, this.state.selectedColor, this.state.sex);
+                }
+            });
+        }
+    }
+
+    setDiscountRate(rate) {
+        this.setState({
+            discountRate: rate
+        });
+    }
+
+    setRoute(opts) {
+        if (opts.type === 'textsearch') {
+            const searchStr = 'searchStr' in opts ? opts.searchStr : window.location.search.split('search=')[1].split('&')[0];
+            const brandStr = 'brandStr' in opts ? opts.brandStr : encodeURIComponent(this.state.filterBrands.join(','));
+            const sexString = 'sexString' in opts ? opts.sexString : this.state.sex;
+            const color = 'color' in opts ? encodeURIComponent(opts.color) : encodeURIComponent(this.state.selectedColor);
+            const discount = Math.floor(this.state.discountRate * 100);
+            const maxPrice = this.state.rangeVal;
+            this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&clr=${color}&price=${maxPrice}&brands=${brandStr}&disc=${discount}`);
+        }
+        if (opts.type === 'similar') {
+            const imgHash = opts.imgHash;
+            const color = encodeURIComponent(opts.color);
+            const posTags = encodeURIComponent(this.state.posTags);
+            const discount = Math.floor(this.state.discountRate * 100);
+            this.props.history.push(`/search-similar?id=${imgHash}&sex=${this.props.sex}&clr=${color}&cats=${posTags}&disc=${discount}`);
         }
     }
 
@@ -771,142 +910,6 @@ class TextSearch extends React.Component  {
             )
         };
 
-        let Suggestions = () => {
-            let key = Math.floor(Math.random() * 1000 + Math.random() * 10);
-            let moreSuggestions = this.state.moreSuggestions ? this.state.moreSuggestions.map(suggestion => {
-                let key = Math.floor(Math.random() * 1000 + Math.random() * 10);
-                return <div
-                    key={key}
-                    style={{
-                        fontSize: "1.05rem",
-                        display: "inline-block",
-                        width: "100%",
-                        cursor: "pointer",
-                        textAlign: "left",
-                        marginBottom: "5px"
-                    }}
-                    onClick={() => {
-                        this.setState({searchString: suggestion.replace(/^\s+|\s+$/g, '')});
-                        this.textImageSearch(suggestion.replace(/^\s+|\s+$/g, ''));
-                    }}
-                >{suggestion} ...</div>
-            }) : <div />;
-            return (
-                <div style={{
-                    width: "400px",
-                    maxWidth: "100vw",
-                    textAlign: "center",
-                    marginLeft: "calc(50vw - 158px)",
-                    cursor: "pointer"
-                }}>
-                    <div
-                        key={key}
-                        style={{
-                            fontSize: "1.35rem",
-                            display: "inline-block",
-                            width: "100%",
-                            cursor: "pointer",
-                            textAlign: "left",
-                            marginBottom: "5px"
-                        }}
-                        onClick={() => {
-                            this.setState({searchString: this.state.mainSuggestion.replace(/^\s+|\s+$/g, '')});
-                            this.textImageSearch(this.state.mainSuggestion);
-                        }}
-                    >
-                        {this.state.mainSuggestion} ...
-                    </div>
-                    {moreSuggestions}
-                </div>
-            )
-        };
-
-        let SearchBox = (
-                <div className="text-search-box">
-                    <div className="inner-text-search-box">
-                        <TextField
-                            autoFocus="autofocus"
-                            className="text-search-input"
-                            // hintText={this.state.searchString ? this.state.searchString : "Purple denim jeans or..."}
-                            value={this.state.searchString.toUpperCase()}
-                            inputStyle={{
-                                fontWeight: '900',
-                                fontSize: '1.2rem'
-                            }}
-                            floatingLabelText="What are you looking for?"
-                            floatingLabelStyle={{
-                                color: 'black',
-                                fontSize: '1.2rem',
-                                fontWeight: '400',
-                            }}
-                            name="searchString"
-                            onChange={this.handleTextInputChange.bind(this)}
-                            onKeyDown={this.onEnterPress}
-                            underlineFocusStyle={{
-                                borderBottom: '2px solid rgb(0, 0, 0)'
-                            }}
-                            underlineDisabledStyle={{
-                                borderBottom: '0px solid rgb(0, 0, 0)'
-                            }}
-                            autoComplete="off"
-                        />
-                        <div className="text-search-button" onClick={() => {this.textImageSearch(this.state.searchString)}}>
-                            <div className="search-icon" />
-                        </div>
-                    </div>
-                    {this.state.mainSuggestion && <Suggestions />}
-                </div>
-        );
-
-        let searchForm = this.state.sex ? (
-            <div>
-                {SearchBox}
-            </div>
-        ) : (
-            <div style={{
-                width: '300px',
-                marginLeft: 'calc(50vw - 150px)',
-                textAlign: 'center',
-                marginTop: '100px'
-            }}>
-                <FlatButton
-                    label="HER"
-                    onClick={() => {this.changeSex('women')}}
-                    icon={<Loyalty/>}
-                    style={{
-                        width: '100%'
-                    }}
-                    labelStyle={{
-                        fontSize: '1.3rem'
-                    }}
-                />
-                <FlatButton
-                    label="HIM"
-                    onClick={() => {this.changeSex('men')}}
-                    icon={<Loyalty/>}
-                    style={{
-                        width: '100%',
-                        marginTop: '30px'
-                    }}
-                    labelStyle={{
-                        fontSize: '1.3rem'
-                    }}
-                />
-                <FlatButton
-                    label="THEM"
-                    onClick={() => {this.changeSex('both')}}
-                    icon={<Loyalty/>}
-                    labelStyle={{
-                        fontSize: '1.3rem'
-                    }}
-                    style={{
-                        width: '100%',
-                        marginTop: '30px'
-                    }}
-                />
-            </div>
-        );
-
         return(
             <MuiThemeProvider>
                 <div>
@@ -922,7 +925,11 @@ class TextSearch extends React.Component  {
                                         img_hash,
                                         color_1
                                     ) => {
-                                        this.props.history.push(`/search-similar?id=${img_hash}&sex=${this.props.sex}&clr=${encodeURIComponent(color_1)}&cats=${encodeURIComponent(this.state.posTags)}`);
+                                        this.setRoute({
+                                            type: 'similar',
+                                            imgHash: img_hash,
+                                            color: color_1
+                                        })
                                     }}
                                     results={this.state.results}
                                     setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
@@ -977,23 +984,21 @@ class TextSearch extends React.Component  {
                                         setColor={(selection) => {this.setColorPosTags(selection)}}
                                         selectedColor={this.state.selectedColor}
                                         searchSimilarImages={(imgHash, color) => {
-                                            if (this.reactInDevMode()) {
-                                                this.setState({
-                                                    loading: true
-                                                });
+                                            this.setState({
+                                                loading: true
+                                            }, () => {
                                                 const sexString = window.location.search.split('sex=')[1].split('&')[0];
                                                 const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                                this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&clr=${encodeURIComponent(color)}`);
-                                                this.textColorSearch(this.state.posTags, color, sexString);
-                                            } else {
-                                                this.setState({
-                                                    loading: true
-                                                }, () => {
-                                                    const searchStr = window.location.search.split('search=')[1].split('&')[0];
-                                                    const sexString = window.location.search.split('sex=')[1].split('&')[0];
-                                                    this.props.history.push(`/textsearch?search=${searchStr}&sex=${sexString}&clr=${encodeURIComponent(color)}`);
+                                                this.setRoute({
+                                                    type: 'textsearch',
+                                                    searchStr: searchStr,
+                                                    sexString: sexString,
+                                                    color: color
                                                 });
-                                            }
+                                                if (this.reactInDevMode()) {
+                                                    this.textColorSearch(this.state.posTags, color, sexString);
+                                                }
+                                            });
                                         }}
                                         results={this.state.results}
                                         filterBrands={this.state.filterBrands}
@@ -1002,11 +1007,22 @@ class TextSearch extends React.Component  {
                                         addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
                                         showPriceFilter={(show) => {this.showPriceFilter(show)}}
                                         priceFilterShown={this.state.priceFilterShown}
+                                        showDiscountPicker={(show) => {this.showDiscountPicker(show)}}
+                                        discountPickerShown={this.state.discountPickerShown}
+                                        setDiscountRate={(rate) => {this.setDiscountRate(rate)}}
+                                        discountRate={this.state.discountRate}
                                     />
                                 )}
                             </div>
                         ) : (
-                            searchForm
+                            <FallBackInput
+                                searchString={this.state.searchString}
+                                handleTextInputChange={() => {this.handleTextInputChange()}}
+                                onEnterPress={() => {this.onEnterPress()}}
+                                textImageSearch={(searchStr) => {this.textImageSearch(searchStr)}}
+                                changeSex={(sex) => {this.changeSex(sex)}}
+                                sex={this.props.sex}
+                            />
                         )
                     }
 
@@ -1015,13 +1031,14 @@ class TextSearch extends React.Component  {
                     {
                         (this.state.results.length > 0)
                         && (this.state.firstLogin === '1')
-                        && (<SearchFromImageIntro
-                            completeFirstLogin={() => {this.props.completeFirstLogin()}}
-                        />)
+                        && (
+                            <SearchFromImageIntro
+                                completeFirstLogin={() => {this.props.completeFirstLogin()}}
+                            />
+                        )
                     }
 
                     <Spinner />
-
                 </div>
             </MuiThemeProvider>
         )

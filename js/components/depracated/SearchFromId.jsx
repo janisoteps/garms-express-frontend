@@ -10,7 +10,7 @@ import ResultsFromSearch from '../search/results/ResultsFromSearch';
 import SearchFromImageIntro from '../intro/SearchFromImageIntro';
 import FlatButton from 'material-ui/FlatButton';
 import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import ResultFilters from '../search/results/ResultFilters';
+import ResultFilters from '../search/results/result_filters/ResultFilters';
 import LoadingScreen from "../loading/LoadingScreen";
 import ReactGA from "react-ga";
 
