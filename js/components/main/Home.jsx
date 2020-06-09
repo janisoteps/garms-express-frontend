@@ -22,12 +22,15 @@ class Home extends React.Component {
             isAuth: this.props.isAuth,
             showColorPicker: false,
             selectedColor: null,
-            searchString: ''
+            searchString: '',
+            pullDownRefreshing: false,
+            resultLength: null
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.changeSex = this.changeSex.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
     }
 
     componentWillMount() {
@@ -37,6 +40,7 @@ class Home extends React.Component {
 
     componentDidMount() {
         this._ismounted = true;
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
         if (this.props.firstLogin === '1') {
             this._ismounted = false;
             window.location.pathname = '/intro'
@@ -46,6 +50,7 @@ class Home extends React.Component {
 
     componentWillUnmount() {
         this._ismounted = false;
+        window.removeEventListener('scroll', this.handleScroll);
     }
 
     componentDidUpdate(prevProps){
@@ -56,6 +61,40 @@ class Home extends React.Component {
                 });
             }
         }
+    }
+
+    setResultLength(length) {
+        this.setState({
+            resultLength: length
+        })
+    }
+
+    handleScroll() {
+        if (window.scrollY < -20) {
+            this.handleNegativeScroll();
+        }
+        if (window.scrollY < -130) {
+            if (this.state.resultLength !== null) {
+                this.refreshSite();
+            }
+        }
+        if (window.scrollY >= 0) {
+            this.setState({
+                pullDownRefreshing: false
+            });
+        }
+    }
+
+    handleNegativeScroll() {
+        if (this.state.pullDownRefreshing === false) {
+            this.setState({
+                pullDownRefreshing: true
+            });
+        }
+    }
+
+    refreshSite() {
+        window.location.reload();
     }
 
     showAddOutfit = (imgHash) => {
@@ -87,7 +126,12 @@ class Home extends React.Component {
         return (
             <MuiThemeProvider>
                 <div>
-                    <div className="search-choice">
+                    <div
+                        className="search-choice"
+                        style={{
+                            filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
+                        }}
+                    >
 
                         {this.props.isAuth !== "true" && (this.props.firstVisit === 'true' || this.props.firstVisit === true) ? (
                             <OnboardingOutfitPicker
@@ -141,6 +185,7 @@ class Home extends React.Component {
                                                     lookFilter={this.state.lookFilter}
                                                     showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
                                                     isAuth={this.props.isAuth}
+                                                    setResultLength={(ln) => {this.setResultLength(ln)}}
                                                 />
                                             </div>
                                         ) : (
@@ -154,6 +199,7 @@ class Home extends React.Component {
                                                         sex={this.props.sex}
                                                         showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
                                                         onboardingFaves={this.props.onboardingFaves}
+                                                        setResultLength={(ln) => {this.setResultLength(ln)}}
                                                     />
                                                 )}
                                             </div>

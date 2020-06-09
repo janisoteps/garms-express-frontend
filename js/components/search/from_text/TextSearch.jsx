@@ -17,7 +17,6 @@ import {Route} from "react-router-dom";
 
 //Component to search for products using text input
 class TextSearch extends React.Component  {
-
     constructor(props) {
         super(props);
 
@@ -58,7 +57,8 @@ class TextSearch extends React.Component  {
             infiniteLoading: false,
             infiniteLoadingComplete: false,
             searchSimilarInfinite: false,
-            initialLoadComplete: false
+            initialLoadComplete: false,
+            pullDownRefreshing: false
         };
 
         this.textImageSearch = this.textImageSearch.bind(this);
@@ -183,6 +183,32 @@ class TextSearch extends React.Component  {
                 }
             }
         }
+
+        if (window.scrollY < -20) {
+            this.handleNegativeScroll();
+        }
+        if (window.scrollY < -130) {
+            if (this.state.results.length > 0) {
+                this.refreshSite();
+            }
+        }
+        if (window.scrollY >= 0) {
+            this.setState({
+                pullDownRefreshing: false
+            });
+        }
+    }
+
+    handleNegativeScroll() {
+        if (this.state.pullDownRefreshing === false) {
+            this.setState({
+                pullDownRefreshing: true
+            });
+        }
+    }
+
+    refreshSite() {
+        window.location.reload();
     }
 
     //Handle text input change
@@ -912,7 +938,11 @@ class TextSearch extends React.Component  {
 
         return(
             <MuiThemeProvider>
-                <div>
+                <div
+                    style={{
+                        filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
+                    }}
+                >
                     {
                         this.state.results.length > 0 ? (
                             <div style={{width: '100%'}}>
