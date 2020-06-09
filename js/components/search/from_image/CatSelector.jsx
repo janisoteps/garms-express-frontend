@@ -35,7 +35,7 @@ class CatSelector extends React.Component {
                 style={{
                     width: '100%',
                     position: 'fixed',
-                    bottom: this.props.showIosNav === true ? '85px' : '0',
+                    bottom: this.props.showIosNav === true ? '80px' : '0',
                     backgroundColor: '#FFFFFF',
                     paddingTop: '5px'
                 }}
