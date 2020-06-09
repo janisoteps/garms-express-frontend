@@ -82,21 +82,23 @@ class ImageSearch extends React.Component {
     }
 
     handleScroll(event) {
-        const docHeight = document.body.scrollHeight;
-        const scrollDistance = window.pageYOffset + document.body.clientHeight;
+        if (this.state.results.length > 0) {
+            const docHeight = document.body.scrollHeight;
+            const scrollDistance = window.pageYOffset + document.body.clientHeight;
 
-        if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
-            if(this.state.infiniteLoading === false) {
-                if (this.state.infiniteCount < 10) {
-                    this.setState({
-                        infiniteLoading: true
-                    });
-                    this.searchFromImage();
-                } else {
-                    this.setState({
-                        infiniteLoadingComplete: true,
-                        infiniteLoading: false
-                    });
+            if (scrollDistance > (docHeight - docHeight * (0.7 ** (this.state.infiniteCount + 1)))) {
+                if(this.state.infiniteLoading === false) {
+                    if (this.state.infiniteCount < 10) {
+                        this.setState({
+                            infiniteLoading: true
+                        });
+                        this.searchFromImage();
+                    } else {
+                        this.setState({
+                            infiniteLoadingComplete: true,
+                            infiniteLoading: false
+                        });
+                    }
                 }
             }
         }
