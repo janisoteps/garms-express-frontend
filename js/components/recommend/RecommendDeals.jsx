@@ -40,7 +40,8 @@ class RecommendDeals extends React.Component  {
             infiniteLoading: false,
             infiniteLoadingComplete: false,
             discountRate: 0.4,
-            discountPickerShown: false
+            discountPickerShown: false,
+            pullDownRefreshing: false
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
@@ -110,6 +111,32 @@ class RecommendDeals extends React.Component  {
                 this.getRecommendations();
             }
         }
+
+        if (window.scrollY < -20) {
+            this.handleNegativeScroll();
+        }
+        if (window.scrollY < -130) {
+            if (this.state.outfits.length > 0) {
+                this.refreshSite();
+            }
+        }
+        if (window.scrollY >= 0) {
+            this.setState({
+                pullDownRefreshing: false
+            });
+        }
+    }
+
+    handleNegativeScroll() {
+        if (this.state.pullDownRefreshing === false) {
+            this.setState({
+                pullDownRefreshing: true
+            });
+        }
+    }
+
+    refreshSite() {
+        window.location.reload();
     }
 
     getRecommendations() {
@@ -722,7 +749,8 @@ class RecommendDeals extends React.Component  {
                 <MuiThemeProvider>
                     <div
                         style={{
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
                         }}
                     >
                         {(this.state.imgHash !== null) && (

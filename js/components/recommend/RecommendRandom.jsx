@@ -70,6 +70,8 @@ class RecommendRandom extends React.Component  {
                     this.setState({
                         outfits: data,
                         loadedProdIds: loadedProdIds
+                    }, () => {
+                        this.props.setResultLength(loadedProdIds.length);
                     });
                 }
             });
