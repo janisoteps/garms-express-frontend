@@ -44,6 +44,7 @@ class Wardrobe extends React.Component  {
         this.expandLooks = this.expandLooks.bind(this);
         this.addOutfitComplete = this.addOutfitComplete.bind(this);
         this.showAddOutfit = this.showAddOutfit.bind(this);
+        this.setResultLength = this.setResultLength.bind(this);
     }
 
     componentDidMount() {
@@ -515,12 +516,10 @@ class Wardrobe extends React.Component  {
         })
     };
 
-    updateImgProtocol(imgUrl) {
-        if (imgUrl.split('https').length > 1) {
-            return imgUrl
-        } else {
-            return imgUrl.replace('http', 'https')
-        }
+    setResultLength(length) {
+        this.setState({
+            resultLength: length
+        })
     }
 
 
@@ -871,6 +870,7 @@ class Wardrobe extends React.Component  {
                                 lookFilter={this.state.lookFilter}
                                 showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
                                 isAuth={this.props.isAuth}
+                                setResultLength={(ln) => {this.setResultLength(ln)}}
                             />
                         </div>
                     )}

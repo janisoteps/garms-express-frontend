@@ -3,8 +3,6 @@ import React from "react";
 require('../../../../css/garms.css');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
-import Loyalty from 'material-ui/svg-icons/action/loyalty';
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Route} from 'react-router-dom';
@@ -34,6 +32,7 @@ export default class RegisterFromResult extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleSwitchChange = this.handleSwitchChange.bind(this);
+        this.onEnterPress = this.onEnterPress.bind(this);
     }
 
     componentDidMount() {
@@ -106,10 +105,27 @@ export default class RegisterFromResult extends React.Component {
             [name]: value
         });
     }
+
     handleSwitchChange = event => {
         this.setState({
             [event.target.name]: event.target.checked
         });
+    };
+
+    onEnterPress = (e) => {
+        if(e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault();
+            const email = this.state.email;
+            const pwd = this.state.pwd;
+
+            ReactGA.event({
+                category: "Log In",
+                action: "User attempted log-in",
+                label: email
+            });
+
+            this.props.handleResultLogin(email, pwd, this.state.imgHash);
+        }
     };
 
     handleSubmit(event) {
@@ -441,6 +457,7 @@ export default class RegisterFromResult extends React.Component {
                             hintText="Your e-mail"
                             floatingLabelText="E-mail address:"
                             onChange={this.handleChange.bind(this)}
+                            onKeyDown={this.onEnterPress}
                             underlineFocusStyle={{
                                 borderBottom: '2px solid rgb(0, 0, 0)'
                             }}
@@ -458,6 +475,7 @@ export default class RegisterFromResult extends React.Component {
                             floatingLabelText="Password:"
                             type="password"
                             onChange={this.handleChange.bind(this)}
+                            onKeyDown={this.onEnterPress}
                             underlineFocusStyle={{
                                 borderBottom: '2px solid rgb(0, 0, 0)'
                             }}
