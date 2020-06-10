@@ -94,7 +94,9 @@ class Home extends React.Component {
     }
 
     refreshSite() {
-        window.location.reload();
+        this.props.iOSNavHide(() => {
+            window.location.reload();
+        });
     }
 
     showAddOutfit = (imgHash) => {
