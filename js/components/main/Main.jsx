@@ -98,6 +98,7 @@ class Main extends React.Component {
                            changeSex={(sex) => {this.changeSex(sex);}}
                            firstLogin={this.props.firstLogin}
                            completeFirstLogin={(callback) => {this.props.completeFirstLogin(callback)}}
+                           iOSNavHide={(callback) => {this.props.iOSNavHide(callback)}}
                         />}
                     />
                     <Route path='/textcolorinput'
@@ -138,6 +139,7 @@ class Main extends React.Component {
                                isAuth={this.props.isAuth}
                                email={this.props.email}
                                changeSex={(sex) => {this.changeSex(sex);}}
+                               iOSNavHide={(callback) => {this.props.iOSNavHide(callback)}}
                            />}
                     />
                     <Route path='/image-search' render={(props) =>
@@ -213,6 +215,7 @@ class Main extends React.Component {
                                    setOnboardingFaves={(prodList) => {this.props.setOnboardingFaves(prodList)}}
                                    onboardingFaves={this.props.onboardingFaves}
                                    completeFirstVisit={() => {this.props.completeFirstVisit()}}
+                                   iOSNavHide={(callback) => {this.props.iOSNavHide(callback)}}
                                />}
                     />
                     <Route path='/index.html'
@@ -230,6 +233,7 @@ class Main extends React.Component {
                                    setOnboardingFaves={(prodList) => {this.props.setOnboardingFaves(prodList)}}
                                    onboardingFaves={this.props.onboardingFaves}
                                    completeFirstVisit={() => {this.props.completeFirstVisit()}}
+                                   iOSNavHide={(callback) => {this.props.iOSNavHide(callback)}}
                                />}
                     />
                 </Switch>

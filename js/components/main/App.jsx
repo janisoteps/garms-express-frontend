@@ -54,6 +54,7 @@ class App extends React.Component {
         this.completeFirstVisit = this.completeFirstVisit.bind(this);
         this.registerNewContentListener = this.registerNewContentListener.bind(this);
         this.closeCookiePopup = this.closeCookiePopup.bind(this);
+        this.iOSNavHide = this.iOSNavHide.bind(this);
     }
 
     componentDidMount() {
@@ -226,6 +227,14 @@ class App extends React.Component {
             }
         }
         return false;
+    }
+
+    iOSNavHide(callback) {
+        this.setState({
+            showIosNav: false
+        }, () => {
+            callback();
+        })
     }
 
     // Updates input field state
@@ -514,6 +523,7 @@ class App extends React.Component {
                                     setOnboardingFaves={(prodList) => {this.setOnboardingFaves(prodList)}}
                                     onboardingFaves={this.state.onboardingFaves}
                                     completeFirstVisit={() => {this.completeFirstVisit()}}
+                                    iOSNavHide={(callback) => {this.iOSNavHide(callback)}}
                                 />
                             )}
                         </div>
