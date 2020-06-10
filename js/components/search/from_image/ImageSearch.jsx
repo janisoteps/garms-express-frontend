@@ -741,9 +741,12 @@ class ImageSearch extends React.Component {
     addOwnCat(cat) {
         let cats = this.state.imgCats;
         cats.push(cat);
+        let selectedCats = this.state.posTags;
+        selectedCats.push(cat);
 
         this.setState({
             imgCats: cats,
+            posTags: selectedCats,
             failedTagRecognition: false
         });
     }
