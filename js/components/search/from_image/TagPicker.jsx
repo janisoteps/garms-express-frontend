@@ -513,7 +513,7 @@ class TagPicker extends React.Component {
         let value =  event.target.value;
         let name = event.target.name;
         this.setState({
-            [name]: value.toUpperCase()
+            [name]: value
         });
     }
 
