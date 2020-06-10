@@ -30,8 +30,8 @@ class PriceFilter extends React.Component {
     onEnterPress = (e) => {
         if(e.keyCode === 13 && e.shiftKey === false) {
             e.preventDefault();
-
-            this.props.updateRange(this.state.filterValue, () => {
+            const newVal = isNaN(this.state.filterValue) ? 500 : parseInt(this.state.filterValue);
+            this.props.updateRange(newVal, () => {
                 this.props.showPriceFilter(false);
             });
         }
@@ -114,20 +114,6 @@ class PriceFilter extends React.Component {
                                     }}
                                 />
 
-                                {/*<input*/}
-                                {/*    id="range"*/}
-                                {/*    type="range"*/}
-                                {/*    value={range}*/}
-                                {/*    min="0"*/}
-                                {/*    max="500"*/}
-                                {/*    step="1"*/}
-                                {/*    onChange={this.updateRange}*/}
-                                {/*    style={{*/}
-                                {/*        position: 'relative',*/}
-                                {/*        margin: 'auto',*/}
-                                {/*        cursor: 'pointer'*/}
-                                {/*    }}*/}
-                                {/*/>*/}
                                 <div
                                     style={{
                                         width: '100%'
@@ -135,7 +121,8 @@ class PriceFilter extends React.Component {
                                 >
                                     <div
                                         onClick={() => {
-                                            this.props.updateRange(this.state.filterValue, () => {
+                                            const newVal = isNaN(this.state.filterValue) ? 500 : parseInt(this.state.filterValue);
+                                            this.props.updateRange(newVal, () => {
                                                 this.props.showPriceFilter(false);
                                             });
                                         }}
