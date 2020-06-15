@@ -174,6 +174,7 @@ class OnboardingOutfitPicker extends React.Component {
                     style={{
                         textAlign: 'center',
                         width: '100%',
+                        paddingBottom: '10px'
                     }}
                 >
                     <div

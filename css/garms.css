@@ -1,5 +1,6 @@
 body{
     background-color: #fffdf9;
+    font-family: Roboto, sans-serif;
 }
 
 .content-wrapper{
@@ -28,6 +29,7 @@ body{
     z-index: 500;
     text-align: right;
     background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: rgba(0,0,0,0.06) 0 3px 48px 8px;
 }
 
 .logo {
@@ -384,25 +386,47 @@ body{
     position: relative;
     vertical-align: top;
     font-size: 0.9rem;
+    box-shadow: rgba(0,0,0,0.04) 0 3px 24px 8px;
+    transition: all 0.3s;
+}
+
+.recommend-product-tile:hover {
+    box-shadow: rgba(0,0,0,0.16) 0 3px 24px 8px;
+    /*transform: scale(1.02);*/
+}
+
+.result-product-tile {
+    text-align: center;
+    margin: 5px;
+    width: 45vw;
+    max-width: 300px;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    font-size: 0.9rem;
+    box-shadow: rgba(0,0,0,0.04) 0 3px 24px 8px;
+    transition: all 0.3s;
+}
+
+.result-product-tile:hover {
+    box-shadow: rgba(0,0,0,0.16) 0 3px 24px 8px;
 }
 
 .profile-product-tile{
     text-align: center;
-    margin: 1vw;
+    margin: 5px;
     width: 45vw;
-    /*min-width: 300px;*/
-    max-width: 320px;
-    padding-top: 2px;
-    padding-bottom: 5px;
+    max-width: 300px;
     display: inline-block;
     position: relative;
-    font-size: 1rem;
     vertical-align: top;
+    font-size: 0.9rem;
+    box-shadow: rgba(0,0,0,0.04) 0 3px 24px 8px;
+    transition: all 0.3s;
 }
 
-.profile-product-tile a{
-    font-size: 1rem;
-    color: #5f5d92;
+.profile-product-tile:hover {
+    box-shadow: rgba(0,0,0,0.16) 0 3px 24px 8px;
 }
 
 .product-brand-profile{
@@ -462,9 +486,9 @@ body{
 .add-to-favorites-mobile{
     width: 46px;
     height: 46px;
-    background: #FFFFFF url('../images/baseline-favorite-24px.svg') center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 40px 40px;
+    background-size: 28px 28px;
     border-radius: 23px;
     position: absolute;
     right: 60px;
@@ -474,14 +498,15 @@ body{
 .add-to-favorites-wardrobe{
     width: 36px;
     height: 36px;
-    background: #FFFFFF url('../images/baseline-favorite-24px.svg') center;
+    background: #FFFFFF url('../images/baseline-favorite-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 30px 30px;
+    background-size: 21px 21px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -35px;
+    margin-top: -20px;
     right: 5px;
     cursor: pointer;
+    z-index: 10;
 }
 
 .add-to-favorites-intro{
@@ -515,7 +540,7 @@ body{
     height: 46px;
     background: #FFFFFF url('../images/shopping-cart.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 38px 38px;
+    background-size: 28px 28px;
     border-radius: 23px;
     position: absolute;
     cursor: pointer;
@@ -653,7 +678,7 @@ body{
     height: 46px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 38px 38px;
+    background-size: 28px 28px;
     border-radius: 23px;
     position: absolute;
     right: 165px;
@@ -665,12 +690,13 @@ body{
     height: 36px;
     background: #FFFFFF url('../images/baseline-search-24px.svg') no-repeat center;
     filter: invert(100%);
-    background-size: 32px 32px;
+    background-size: 24px 24px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -35px;
+    margin-top: -20px;
     right: 47px;
     cursor: pointer;
+    z-index: 10;
 }
 
 .search-similar-wardrobe{
@@ -681,7 +707,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -95px;
+    margin-top: -110px;
     right: 47px;
     cursor: pointer;
 }
@@ -1052,7 +1078,7 @@ body{
     background-size: 32px 32px;
     border-radius: 18px;
     position: absolute;
-    margin-top: -95px;
+    margin-top: -110px;
     right: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.4);
@@ -1081,7 +1107,7 @@ body{
     position: absolute;
     right: 90px;
     cursor: pointer;
-    margin-top: -95px;
+    margin-top: -110px;
     filter: invert(1);
 }
 
@@ -1610,10 +1636,12 @@ body{
 
 .onboarding-product-card{
     cursor: pointer;
+    box-shadow: rgba(0,0,0,0.04) 0 3px 24px 8px;
+    transition: all 0.3s;
 }
 
 .onboarding-product-card:hover {
-    box-shadow: rgb(200, 0, 0) 0px 0px 5px;
+    box-shadow: rgba(200, 0, 0, 0.08) 0 3px 24px 8px;
 }
 
 .image-search-continue:hover {

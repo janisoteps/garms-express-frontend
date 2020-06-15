@@ -1,16 +1,13 @@
-// RecommendCard.jsx
+// DealCard.jsx
 import React from "react";
 import {Route} from "react-router-dom";
 import ReactGA from "react-ga";
 import Tooltip from "@material-ui/core/Tooltip";
 require('../../../css/garms.css');
 
-class RecommendCard extends React.Component {
+class DealCard extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
         this.updateImgProtocol = this.updateImgProtocol.bind(this);
     }
 
@@ -23,26 +20,31 @@ class RecommendCard extends React.Component {
     }
 
     render() {
-        const prodSuggestion = this.props.prodData;
+        const prodSuggestion = this.props.prodSuggestion;
+        const imgHash = prodSuggestion.image_hash[0];
         const key = prodSuggestion.prod_id;
         const priceStyle = prodSuggestion.sale ? {
             textDecoration: 'line-through',
-            fontWeight: 'bold',
             display: 'inline-block'
         } : {
-            textDecoration: 'none',
-            fontWeight: 'bold',
+            textDecoration: 'none'
         };
-        const imgHash = prodSuggestion.image_hash[0];
 
         return (
             <div
                 className="recommend-product-tile"
                 key={key}
             >
-                {this.props.lookName !== 'all' && (<div>
-                    Recommended in {this.props.lookName.toUpperCase()}
-                </div>)}
+                {(prodSuggestion.sale) && (
+                    <div style={{
+                        color: '#d6181e',
+                        display: 'inline-block',
+                        marginLeft: '5px',
+                        fontSize: '1.2rem'
+                    }}>
+                        <b>-{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%</b>
+                    </div>
+                )}
 
                 <Route render={({history}) => (
                     <div
@@ -66,11 +68,11 @@ class RecommendCard extends React.Component {
                             }}
                             onClick={() => {
                                 ReactGA.event({
-                                    category: "Recommend From Tags",
+                                    category: "Deal Recommender Action",
                                     action: 'open outfit',
-                                    label: prodSuggestion.prod_id
+                                    label: prodSuggestion.prod_id,
                                 });
-                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`)
+                                history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`);
                             }}
                         />
                     </div>
@@ -80,9 +82,9 @@ class RecommendCard extends React.Component {
                     <Tooltip title="Add To Favorites" >
                         <div className="add-to-favorites-wardrobe" onClick={() => {
                             ReactGA.event({
-                                category: this.props.gaCat,
+                                category: "Recommend Deals",
                                 action: 'add outfit',
-                                label: imgHash
+                                label: imgHash,
                             });
                             this.props.showAddOutfit(imgHash);
                         }} />
@@ -94,7 +96,7 @@ class RecommendCard extends React.Component {
                                 className="add-to-favorites-wardrobe"
                                 onClick={() => {
                                     ReactGA.event({
-                                        category: this.props.gaCat,
+                                        category: "Recommend Deals",
                                         action: 'add outfit',
                                         label: imgHash
                                     });
@@ -111,12 +113,11 @@ class RecommendCard extends React.Component {
                             className="search-similar-recommend"
                             onClick={() => {
                                 ReactGA.event({
-                                    category: "Recommend From Tags",
+                                    category: "Deal Recommender Action",
                                     action: 'search similar',
-                                    label: imgHash
+                                    label: imgHash,
                                 });
-                                // history.push(`/search-from-id?id=${imgHash}`);
-                                history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}`)
+                                history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}&disc=${Math.floor(this.props.discountRate * 100)}`);
                             }}
                         />
                     </Tooltip>
@@ -182,4 +183,4 @@ class RecommendCard extends React.Component {
     }
 }
 
-export default RecommendCard;
+export default DealCard;

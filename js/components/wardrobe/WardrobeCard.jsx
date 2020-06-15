@@ -33,7 +33,10 @@ class WardrobeCard extends React.Component {
         };
 
         return (
-            <Paper zDepth={1} className="profile-product-tile" key={key}>
+            <div
+                className="profile-product-tile"
+                key={key}
+            >
                 <div
                     className="product-name"
                     style={{
@@ -47,55 +50,96 @@ class WardrobeCard extends React.Component {
                 </div>
 
                 <Route render={({history}) => (
-                    <img
-                        className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
-                        style={{
-                            marginBottom: '10px',
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => {
-                            history.push(`/outfit-page?id=${outfitDict.prod_id}&sex=${this.props.sex}`)
-                        }}
-                    />
-                )}/>
-
-                <Route render={({history}) => (
                     <div
-                        className="product-name"
                         style={{
-                            marginTop: '3px',
-                            fontSize: '0.8rem',
-                            lineHeight: '1',
-                            maxHeight: '36px',
+                            width: '100%',
+                            paddingBottom: '130%',
+                            position: 'relative',
                             overflowY: 'hidden'
                         }}
-                        onClick={() => {
-                            history.push(`/outfit-page?id=${outfitDict.prod_id}`)
-                        }}
                     >
-                        <b>{outfitDict.info.brand}</b>
-                        <p
+                        <img
+                            className="product-image" src={this.updateImgProtocol(outfitDict.info.imgUrl)}
                             style={{
-                                marginBottom: '3px'
+                                cursor: 'pointer',
+                                backgroundColor: '#e9dcc9',
+                                position: 'absolute',
+                                top: '0',
+                                left: '0',
+                                width: '100%',
+                                height: 'auto'
                             }}
-                        >{outfitDict.info.name}</p>
+                            onClick={() => {
+                                history.push(`/outfit-page?id=${outfitDict.prod_id}&sex=${this.props.sex}`)
+                            }}
+                        />
                     </div>
-                )}
-                />
-                <div style={priceStyle}>£{outfitDict.info.price}</div>
-                {(outfitDict.info.sale) && (
+
+                )}/>
+
+                <div
+                    style={{
+                        height: '90px',
+                        position: 'relative'
+                    }}
+                >
                     <div
                         style={{
-                            color: '#d6181e',
-                            display: 'inline-block',
-                            marginLeft: '5px',
-                            fontSize: '1rem',
-                            lineHeight: '1'
+                            margin: '0',
+                            position: 'absolute',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '100%',
+                            textAlign: 'center'
                         }}
                     >
-                        £{outfitDict.info.salePrice}
+                        <div
+                            className="product-name"
+                            style={{
+                                marginRight: '1px',
+                                marginLeft: '1px',
+                                fontSize: '0.8rem',
+                                lineHeight: '1'
+                            }}
+                            onClick={() => {
+                                history.push(`/outfit-page?id=${outfitDict.prod_id}`)
+                            }}
+                        >
+                            <b
+                                style={{
+                                    fontWeight: 'normal',
+                                    fontSize: '1.1rem'
+                                }}
+                            >
+                                {outfitDict.info.brand}
+                            </b>
+                            <p
+                                style={{
+                                    marginBottom: '1px',
+                                    marginTop: '5px'
+                                }}
+                            >{outfitDict.info.name}</p>
+                        </div>
+                        <div style={priceStyle}>
+                            £{outfitDict.info.price}
+                        </div>
+                        {(outfitDict.info.sale) && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block',
+                                marginLeft: '5px',
+                                fontWeight: 'bold'
+                            }}>
+                                £{outfitDict.info.salePrice}
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
+
+
+
+
+
 
                 <Route render={({history}) => (
                     <Tooltip title="Search Similar Items" >
@@ -133,7 +177,7 @@ class WardrobeCard extends React.Component {
                         />
                     </a>
                 </Tooltip>
-            </Paper>
+            </div>
         )
     }
 }

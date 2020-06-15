@@ -113,7 +113,7 @@ class ResultCard extends React.Component {
                         <div
                             style={{
                                 width: '100%',
-                                paddingBottom: '125%',
+                                paddingBottom: '130%',
                                 position: 'relative',
                                 overflowY: 'hidden'
                             }}
@@ -240,7 +240,7 @@ class ResultCard extends React.Component {
                 backgroundImage: pickerBgUrl,
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
-                backgroundSize: '36px 36px',
+                backgroundSize: '28px 28px',
                 borderRadius: '23px',
                 position: 'absolute',
                 right: '113px',
@@ -450,87 +450,116 @@ class ResultCard extends React.Component {
             )
         };
 
+        const priceStyle = sale ? {
+            textDecoration: 'line-through',
+            fontWeight: 'bold',
+            display: 'inline-block'
+        } : {
+            textDecoration: 'none',
+            fontWeight: 'bold',
+        };
+
         return (
-            <MuiThemeProvider>
-                <Paper
-                    zDepth={1}
-                    key={key}
+            <div
+                key={key}
+                style={{
+                    textAlign: 'center',
+                    margin: this.state.device === 'mobile' ? '3px' : '6px',
+                    width: '46vw',
+                    maxWidth: '350px',
+                    paddingBottom: '2px',
+                    display: 'inline-block',
+                    position: 'relative',
+                    verticalAlign: 'top',
+                    fontSize: '0.9rem'
+                }}
+                className="result-product-tile"
+            >
+                <div
                     style={{
-                        textAlign: 'center',
-                        margin: this.state.device === 'mobile' ? '3px' : '6px',
-                        width: '46vw',
-                        maxWidth: '350px',
-                        paddingBottom: '2px',
                         display: 'inline-block',
                         position: 'relative',
-                        verticalAlign: 'top',
-                        fontSize: '0.9rem'
+                        width: '100%'
+                    }}
+                >
+                    <ImageCarousel />
+                    {(this.state.showExplore || this.state.device === 'desktop') && (
+                        <ExploreOptions />
+                    )}
+                    {this.state.device === 'mobile' && (
+                        <Tooltip title="Explore Options" >
+                            <div
+                                className="explore-options"
+                                id={prod_hash}
+                                onClick={() => {
+                                    this.setState({
+                                        showExplore: true
+                                    })
+                                }}
+                            />
+                        </Tooltip>
+                    )}
+                </div>
+                {this.state.showTagList && (
+                    <CardTagList />
+                )}
+
+                <div
+                    style={{
+                        height: '90px',
+                        position: 'relative'
                     }}
                 >
                     <div
                         style={{
-                            display: 'inline-block',
-                            position: 'relative',
-                            width: '100%'
+                            margin: '0',
+                            position: 'absolute',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '100%',
+                            textAlign: 'center'
                         }}
                     >
-                        <ImageCarousel />
-                        {(this.state.showExplore || this.state.device === 'desktop') && (
-                            <ExploreOptions />
-                        )}
-                        {this.state.device === 'mobile' && (
-                            <Tooltip title="Explore Options" >
-                                <div
-                                    className="explore-options"
-                                    id={prod_hash}
-                                    onClick={() => {
-                                        this.setState({
-                                            showExplore: true
-                                        })
-                                    }}
-                                />
-                            </Tooltip>
-                        )}
-                    </div>
-                    {this.state.showTagList && (
-                        <CardTagList />
-                    )}
-
-                    <div
-                        className="product-name"
-                        style={{
-                            fontSize: '0.8rem',
-                            lineHeight: '1',
-                            marginTop: '2px'
-                        }}
-                    >
-                        <b
-                            onClick={() => {
-                                ReactGA.event({
-                                    category: "Result Card Action",
-                                    action: 'set brand',
-                                    label: brand
-                                });
-                                this.props.addBrandFilter(brand, false);
-                            }}
-                        >
-                            {brand}
-                        </b>
-                        <p
+                        <div
+                            className="product-name"
                             style={{
-                                marginBottom: '1px',
-                                marginTop: '1px'
+                                marginRight: '1px',
+                                marginLeft: '1px',
+                                fontSize: '0.8rem',
+                                lineHeight: '1'
                             }}
                         >
-                            {name}
-                        </p>
+                            <b
+                                style={{
+                                    fontWeight: 'normal',
+                                    fontSize: '1.1rem'
+                                }}
+                            >
+                                {brand}
+                            </b>
+                            <p
+                                style={{
+                                    marginBottom: '1px',
+                                    marginTop: '5px'
+                                }}
+                            >{name}</p>
+                        </div>
+                        <div style={priceStyle}>
+                            £{price}
+                        </div>
+                        {(sale) && (
+                            <div style={{
+                                color: '#d6181e',
+                                display: 'inline-block',
+                                marginLeft: '5px',
+                                fontWeight: 'bold'
+                            }}>
+                                £{saleprice}
+                            </div>
+                        )}
                     </div>
-                    <div className={sale ? 'product-price-sale' : 'product-price'}>
-                        {sale ? `${currency}${saleprice}, was ${currency}${price}` : `${currency}${price}`}
-                    </div>
-
-                </Paper>
-            </ MuiThemeProvider>
+                </div>
+            </div>
         )
     }
 }
