@@ -50,8 +50,8 @@
   "baseline_keyboard_arrow_left_black_48dp.png": "5dcf597dd1ac44f16b96ed62cbbd1124.png",
   "hanger_small.png": "147035719892507bc312bd616f49b184.png",
   "garms_logo.png": "9d2243d089dda8c786fa099b0b323e98.png",
-  "apple-touch-icon.png": "apple-touch-icon.png",
   ".DS_Store": ".DS_Store",
+  "manifest.json": "manifest.json",
   "logo.png": "logo.png",
-  "manifest.json": "manifest.json"
+  "apple-touch-icon.png": "apple-touch-icon.png"
 }

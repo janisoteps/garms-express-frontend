@@ -939,38 +939,44 @@ class TextSearch extends React.Component  {
         };
 
         return(
-            <MuiThemeProvider>
-                <div
-                    style={{
-                        filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
-                    }}
-                >
+            <div>
+                <div>
                     {
                         this.state.results.length > 0 ? (
-                            <div style={{width: '100%'}}>
-                                <ResultsFromSearch
-                                    sex={this.state.sex}
-                                    isAuth={this.state.isAuth}
-                                    mainCat={this.state.mainCat}
-                                    email={this.state.email}
-                                    searchSimilarImages={(
-                                        img_hash,
-                                        color_1
-                                    ) => {
-                                        this.setRoute({
-                                            type: 'similar',
-                                            imgHash: img_hash,
-                                            color: color_1
-                                        })
+                            <div
+                                style={{
+                                    width: '100%',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
                                     }}
-                                    results={this.state.results}
-                                    setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                                    setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
-                                    selectedColor={this.state.selectedColor}
-                                    firstLogin={this.props.firstLogin}
-                                    changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
-                                    addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
-                                />
+                                >
+                                    <ResultsFromSearch
+                                        sex={this.state.sex}
+                                        isAuth={this.state.isAuth}
+                                        mainCat={this.state.mainCat}
+                                        email={this.state.email}
+                                        searchSimilarImages={(
+                                            img_hash,
+                                            color_1
+                                        ) => {
+                                            this.setRoute({
+                                                type: 'similar',
+                                                imgHash: img_hash,
+                                                color: color_1
+                                            })
+                                        }}
+                                        results={this.state.results}
+                                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                                        setColorPosTags={(selection) => {this.setColorPosTags(selection)}}
+                                        selectedColor={this.state.selectedColor}
+                                        firstLogin={this.props.firstLogin}
+                                        changeOutfitShown={(isShown) => {this.changeOutfitShown(isShown)}}
+                                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                                    />
+                                </div>
 
                                 {this.state.infiniteLoading && !this.state.infiniteLoadingComplete && (
                                     <div
@@ -1047,14 +1053,18 @@ class TextSearch extends React.Component  {
                                 )}
                             </div>
                         ) : (
-                            <FallBackInput
-                                searchString={this.state.searchString}
-                                handleTextInputChange={() => {this.handleTextInputChange()}}
-                                onEnterPress={() => {this.onEnterPress()}}
-                                textImageSearch={(searchStr) => {this.textImageSearch(searchStr)}}
-                                changeSex={(sex) => {this.changeSex(sex)}}
-                                sex={this.props.sex}
-                            />
+                            <div>
+                                {this.state.loading !== true && (
+                                    <FallBackInput
+                                        searchString={this.state.searchString}
+                                        handleTextInputChange={() => {this.handleTextInputChange()}}
+                                        onEnterPress={() => {this.onEnterPress()}}
+                                        textImageSearch={(searchStr) => {this.textImageSearch(searchStr)}}
+                                        changeSex={(sex) => {this.changeSex(sex)}}
+                                        sex={this.props.sex}
+                                    />
+                                )}
+                            </div>
                         )
                     }
 
@@ -1072,7 +1082,7 @@ class TextSearch extends React.Component  {
 
                     <Spinner />
                 </div>
-            </MuiThemeProvider>
+            </div>
         )
     }
 }

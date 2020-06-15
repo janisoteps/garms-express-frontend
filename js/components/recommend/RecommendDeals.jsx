@@ -11,6 +11,7 @@ import Loyalty from "material-ui/svg-icons/action/loyalty";
 import DealFilters from "../search/results/result_filters/DealFilters";
 import ReactGA from "react-ga";
 import InfiniteSpinner from "../loading/InfiniteSpinner";
+import DealCard from "./DealCard";
 
 
 class RecommendDeals extends React.Component  {
@@ -45,7 +46,6 @@ class RecommendDeals extends React.Component  {
         };
 
         this.showAddOutfit = this.showAddOutfit.bind(this);
-        this.updateImgProtocol = this.updateImgProtocol.bind(this);
         this.setTags = this.setTags.bind(this);
         this.addTagFilter = this.addTagFilter.bind(this);
         this.showTagPicker = this.showTagPicker.bind(this);
@@ -182,14 +182,6 @@ class RecommendDeals extends React.Component  {
             imgHash: imgHash
         })
     };
-
-    updateImgProtocol(imgUrl) {
-        if (imgUrl.split('https').length > 1) {
-            return imgUrl
-        } else {
-            return imgUrl.replace('http', 'https')
-        }
-    }
 
     changeSex(sex){
         this.props.changeSex(sex);
@@ -482,135 +474,15 @@ class RecommendDeals extends React.Component  {
     // ===========================================  MAIN RENDER FUNCTION  ==============================================
     render() {
         const outfitTiles = this.state.outfits.map(prodSuggestion => {
-            const key = prodSuggestion.prod_id;
-            const priceStyle = prodSuggestion.sale ? {
-                textDecoration: 'line-through',
-                display: 'inline-block'
-            } : {
-                textDecoration: 'none'
-            };
             if (prodSuggestion.image_hash) {
-                const imgHash = prodSuggestion.image_hash[0];
-
                 return (
-                    <Paper zDepth={1} className="recommend-product-tile" key={key}>
-                        {(prodSuggestion.sale) && (
-                            <div style={{
-                                color: '#d6181e',
-                                display: 'inline-block',
-                                marginLeft: '5px',
-                                fontSize: '1.2rem'
-                            }}>
-                                <b>-{Math.round((prodSuggestion.price - prodSuggestion.saleprice) / prodSuggestion.price * 100)}%</b>
-                            </div>
-                        )}
-
-                        <Route render={({history}) => (
-                            <img
-                                className="product-image" src={this.updateImgProtocol(prodSuggestion.image_urls[0])}
-                                style={{
-                                    marginBottom: '20px',
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    ReactGA.event({
-                                        category: "Deal Recommender Action",
-                                        action: 'open outfit',
-                                        label: prodSuggestion.prod_id,
-                                    });
-                                    history.push(`/outfit-page?id=${prodSuggestion.prod_id}&sex=${prodSuggestion.sex}`);
-                                }}
-                            />
-                        )}/>
-
-                        {(this.props.isAuth === "true") ? (
-                            <Tooltip title="Add To Favorites" >
-                                <div className="add-to-favorites-wardrobe" onClick={() => {
-                                    ReactGA.event({
-                                        category: "Recommend Deals",
-                                        action: 'add outfit',
-                                        label: imgHash,
-                                    });
-                                    this.showAddOutfit(imgHash);
-                                }} />
-                            </Tooltip>
-                        ) : (
-                            <Route render={({history}) => (
-                                <Tooltip title="Add To Favorites" >
-                                    <div
-                                        className="add-to-favorites-wardrobe"
-                                        onClick={() => {
-                                            ReactGA.event({
-                                                category: "Recommend Deals",
-                                                action: 'add outfit',
-                                                label: imgHash
-                                            });
-                                            history.push(`/register-from-result?id=${imgHash}`);
-                                        }}
-                                    />
-                                </Tooltip>
-                            )}/>
-                        )}
-
-                        <Route render={({history}) => (
-                            <Tooltip title="Search Similar Items" >
-                                <div
-                                    className="search-similar-recommend"
-                                    onClick={() => {
-                                        ReactGA.event({
-                                            category: "Deal Recommender Action",
-                                            action: 'search similar',
-                                            label: imgHash,
-                                        });
-                                        // history.push(`/search-from-id?id=${imgHash}`);
-                                        history.push(`search-similar?id=${imgHash}&sex=${prodSuggestion.sex}&disc=${Math.floor(this.state.discountRate * 100)}`);
-                                    }}
-                                />
-                            </Tooltip>
-                        )}/>
-
-                        <div
-                            style={{
-                                marginRight: '1px',
-                                marginLeft: '1px',
-                                fontSize: '0.8rem',
-                                lineHeight: '1'
-                            }}
-                        >
-                            <b
-                                onClick={() => {
-                                    ReactGA.event({
-                                        category: "Result Card Action",
-                                        action: 'set brand',
-                                        label: prodSuggestion.brand
-                                    });
-                                    this.addBrandFilter(prodSuggestion.brand, false);
-                                }}
-                            >
-                                {prodSuggestion.brand}
-                            </b>
-                            <p
-                                style={{
-                                    marginBottom: '1px',
-                                    marginTop: '1px'
-                                }}
-                            >
-                                {prodSuggestion.name}
-                            </p>
-                        </div>
-                        <div style={priceStyle}>
-                            £{prodSuggestion.price}
-                        </div>
-                        {(prodSuggestion.sale) && (
-                            <div style={{
-                                color: '#d6181e',
-                                display: 'inline-block',
-                                marginLeft: '5px'
-                            }}>
-                                £{prodSuggestion.saleprice}
-                            </div>
-                        )}
-                    </Paper>
+                    <DealCard
+                        key={prodSuggestion.prod_id}
+                        prodSuggestion={prodSuggestion}
+                        addBrandFilter={(brand, show) => {this.addBrandFilter(brand, show)}}
+                        discountRate={this.state.discountRate}
+                        showAddOutfit={(imgHash) => {this.showAddOutfit(imgHash)}}
+                    />
                 )
             }
         });
@@ -748,96 +620,100 @@ class RecommendDeals extends React.Component  {
 
         return (
             <div>
-                <MuiThemeProvider>
+                <div
+                    style={{
+                        textAlign: 'center'
+                    }}
+                >
+                    {(this.state.imgHash !== null) && (
+                        <div
+                            style={{
+                                width: '100vw',
+                                backgroundColor: 'white',
+                                height: 'calc(100vh)',
+                                top: '0px',
+                                position: 'relative'
+                            }}
+                        >
+                            <AddOutfit
+                                sex={this.state.sex}
+                                imgHash={this.state.imgHash}
+                                email={this.props.email}
+                                addOutfitComplete={() => {this.addOutfitComplete()}}
+                            />
+                        </div>
+                    )}
+
                     <div
                         style={{
-                            textAlign: 'center',
                             filter: `opacity(${this.state.pullDownRefreshing === false ? 1 : 0.2})`
                         }}
                     >
-                        {(this.state.imgHash !== null) && (
-                            <div
-                                style={{
-                                    width: '100vw',
-                                    backgroundColor: 'white',
-                                    height: 'calc(100vh)',
-                                    top: '0px',
-                                    position: 'relative'
-                                }}
-                            >
-                                <AddOutfit
-                                    sex={this.state.sex}
-                                    imgHash={this.state.imgHash}
-                                    email={this.props.email}
-                                    addOutfitComplete={() => {this.addOutfitComplete()}}
-                                />
-                            </div>
-                        )}
-
                         {tilesOrLoading}
-                        <DealFilters
-                            loading={this.state.loading}
-                            posTags={this.state.posTags}
-                            negTags={this.state.negTags}
-                            setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
-                            addTagFilter={(posTag, negTag, showPicker) => {this.addTagFilter(posTag, negTag, showPicker)}}
-                            showTagPicker={(show) => {this.showTagPicker(show)}}
-                            tagPickerShown={this.state.tagPickerShown}
-                            searchSimilarImages={(imgHash, color1) => {
-                                this.searchSimilarImages(imgHash, color1)
-                            }}
-                            results={this.state.outfits}
-                            filterBrands={this.state.filterBrands}
-                            brandPickerShown={this.state.brandPickerShown}
-                            showBrandPicker={(show) => {this.showBrandPicker(show)}}
-                            addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
-                            filterShops={this.state.filterShops}
-                            shopPickerShown={this.state.shopPickerShown}
-                            showShopPicker={(show) => {this.showShopPicker(show)}}
-                            addShopFilter={(shop, showPicker) => {this.addShopFilter(shop, showPicker)}}
-                            discountRate={this.state.discountRate}
-                            showDiscountPicker={(show) => {this.showDiscountPicker(show)}}
-                            discountPickerShown={this.state.discountPickerShown}
-                            setDiscountRate={(rate) => {this.setDiscountRate(rate)}}
-                        />
-                        {this.state.changeSex && (
-                            <ChangeSex/>
-                        )}
-
-                        {this.state.infiniteLoading
-                        && !this.state.infiniteLoadingComplete
-                        && this.state.outfits.length > 0
-                        && (
-                            <div
-                                style={{
-                                    marginBottom: '100px',
-                                    marginTop: '100px',
-                                    paddingBottom: '50px'
-                                }}
-                            >
-                                <br />
-                                <InfiniteSpinner />
-                                <br />
-                            </div>
-                        )}
-                        {this.state.infiniteLoadingComplete && (
-                            <div
-                                style={{
-                                    width: '100%',
-                                    textAlign: 'center'
-                                }}
-                            >
-                                <br />
-                                <br />
-                                <div className="infinite-spinner-done">
-
-                                </div><h4>All Results Loaded</h4>
-                                <br />
-                                <br />
-                            </div>
-                        )}
                     </div>
-                </MuiThemeProvider>
+
+                    <DealFilters
+                        loading={this.state.loading}
+                        posTags={this.state.posTags}
+                        negTags={this.state.negTags}
+                        setTags={(tag, type, flag) => {this.setTags(tag, type, flag)}}
+                        addTagFilter={(posTag, negTag, showPicker) => {this.addTagFilter(posTag, negTag, showPicker)}}
+                        showTagPicker={(show) => {this.showTagPicker(show)}}
+                        tagPickerShown={this.state.tagPickerShown}
+                        searchSimilarImages={(imgHash, color1) => {
+                            this.searchSimilarImages(imgHash, color1)
+                        }}
+                        results={this.state.outfits}
+                        filterBrands={this.state.filterBrands}
+                        brandPickerShown={this.state.brandPickerShown}
+                        showBrandPicker={(show) => {this.showBrandPicker(show)}}
+                        addBrandFilter={(brand, showPicker) => {this.addBrandFilter(brand, showPicker)}}
+                        filterShops={this.state.filterShops}
+                        shopPickerShown={this.state.shopPickerShown}
+                        showShopPicker={(show) => {this.showShopPicker(show)}}
+                        addShopFilter={(shop, showPicker) => {this.addShopFilter(shop, showPicker)}}
+                        discountRate={this.state.discountRate}
+                        showDiscountPicker={(show) => {this.showDiscountPicker(show)}}
+                        discountPickerShown={this.state.discountPickerShown}
+                        setDiscountRate={(rate) => {this.setDiscountRate(rate)}}
+                    />
+                    {this.state.changeSex && (
+                        <ChangeSex/>
+                    )}
+
+                    {this.state.infiniteLoading
+                    && !this.state.infiniteLoadingComplete
+                    && this.state.outfits.length > 0
+                    && (
+                        <div
+                            style={{
+                                marginBottom: '100px',
+                                marginTop: '100px',
+                                paddingBottom: '50px'
+                            }}
+                        >
+                            <br />
+                            <InfiniteSpinner />
+                            <br />
+                        </div>
+                    )}
+                    {this.state.infiniteLoadingComplete && (
+                        <div
+                            style={{
+                                width: '100%',
+                                textAlign: 'center'
+                            }}
+                        >
+                            <br />
+                            <br />
+                            <div className="infinite-spinner-done">
+
+                            </div><h4>All Results Loaded</h4>
+                            <br />
+                            <br />
+                        </div>
+                    )}
+                </div>
             </div>
         )
     }
