@@ -136,11 +136,6 @@ class WardrobeCard extends React.Component {
                     </div>
                 </div>
 
-
-
-
-
-
                 <Route render={({history}) => (
                     <Tooltip title="Search Similar Items" >
                         <div
