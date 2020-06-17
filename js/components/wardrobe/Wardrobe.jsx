@@ -29,7 +29,9 @@ class Wardrobe extends React.Component  {
             showingLooks: true,
             noLooks: false,
             imgHash: null,
-            showRenameModal: false
+            showRenameModal: false,
+            showRemoveOutfitModal: false,
+            removeOutfitData: null
         };
 
         this.removeLook = this.removeLook.bind(this);
@@ -359,61 +361,76 @@ class Wardrobe extends React.Component  {
     };
 
     removeOutfit = (lookName, prodId, outfitDate) => {
-        ReactGA.event({
-            category: "Wardrobe",
-            action: 'remove outfit',
-            label: prodId,
-        });
-        let email = this.state.email;
-        fetch(`${window.location.origin}/api/remove_outfit`, {
-            method: 'post',
-            body: JSON.stringify({email: email, look_name: lookName, prod_id: prodId, outfit_date: outfitDate}),
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(function(response) { return response.json(); })
-            .then(data => {
-
-                const looksArr = data.looks.sort(function(a, b){
-                    if(a.look_name < b.look_name) { return -1; }
-                    if(a.look_name > b.look_name) { return 1; }
-                    return 0;
-                });
-                const outfitArr = data.wardrobe.reverse();
-                const prodHashes = outfitArr.map(outfitDict => {
-                    return outfitDict.prod_id
-                });
-
-                this.getProducts(prodHashes, prodData => {
-                    const prodHashInfoDict = {};
-                    prodData.forEach(prodDict => {
-                        prodHashInfoDict[prodDict[0]['prod_id']] = {
-                            imgUrl: prodDict[0]['image_urls'][0],
-                            brand: prodDict[0]['brand'],
-                            price: prodDict[0]['price'],
-                            currency: prodDict[0]['currency'],
-                            name: prodDict[0]['name'],
-                            url: prodDict[0]['prod_url'],
-                            sale: prodDict[0]['sale'],
-                            salePrice: prodDict[0]['saleprice'],
-                            shop: prodDict[0]['shop'],
-                            imgHash: prodDict[0]['image_hash'][0]
-                        };
-                    });
-
-                    const outfitImgArr = outfitArr.map(outfitDict => {
-                        let resultOutfitDict = outfitDict;
-                        resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
-                        return resultOutfitDict
-                    });
-
-                    this.setState({
-                        outfits: outfitImgArr,
-                        looks: looksArr
-                    });
-                });
+        if (this.state.removeOutfitData === null) {
+            this.setState({
+                showRemoveOutfitModal: true,
+                removeOutfitData: {
+                    lookName: lookName,
+                    prodId: prodId,
+                    outfitDate: outfitDate
+                }
             });
+        } else {
+            ReactGA.event({
+                category: "Wardrobe",
+                action: 'remove outfit',
+                label: prodId,
+            });
+            this.setState({
+                showRemoveOutfitModal: false,
+                removeOutfitData: null
+            });
+            let email = this.state.email;
+            fetch(`${window.location.origin}/api/remove_outfit`, {
+                method: 'post',
+                body: JSON.stringify({email: email, look_name: lookName, prod_id: prodId, outfit_date: outfitDate}),
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(function(response) { return response.json(); })
+                .then(data => {
+
+                    const looksArr = data.looks.sort(function(a, b){
+                        if(a.look_name < b.look_name) { return -1; }
+                        if(a.look_name > b.look_name) { return 1; }
+                        return 0;
+                    });
+                    const outfitArr = data.wardrobe.reverse();
+                    const prodHashes = outfitArr.map(outfitDict => {
+                        return outfitDict.prod_id
+                    });
+
+                    this.getProducts(prodHashes, prodData => {
+                        const prodHashInfoDict = {};
+                        prodData.forEach(prodDict => {
+                            prodHashInfoDict[prodDict[0]['prod_id']] = {
+                                imgUrl: prodDict[0]['image_urls'][0],
+                                brand: prodDict[0]['brand'],
+                                price: prodDict[0]['price'],
+                                currency: prodDict[0]['currency'],
+                                name: prodDict[0]['name'],
+                                url: prodDict[0]['prod_url'],
+                                sale: prodDict[0]['sale'],
+                                salePrice: prodDict[0]['saleprice'],
+                                shop: prodDict[0]['shop'],
+                                imgHash: prodDict[0]['image_hash'][0]
+                            };
+                        });
+
+                        const outfitImgArr = outfitArr.map(outfitDict => {
+                            let resultOutfitDict = outfitDict;
+                            resultOutfitDict['info'] = prodHashInfoDict[outfitDict.prod_id];
+                            return resultOutfitDict
+                        });
+
+                        this.setState({
+                            outfits: outfitImgArr,
+                            looks: looksArr
+                        });
+                    });
+                });
+        }
     };
 
     getProducts = (prodHashes, callback) => {
@@ -781,6 +798,52 @@ class Wardrobe extends React.Component  {
             )
         };
 
+        const RemoveOutfitModal = () => {
+            if (this.state.showRemoveOutfitModal === true) {
+                return (
+                    <div
+                        style={{
+                            position: 'fixed',
+                            boxShadow: 'rgba(0, 0, 0, 0.6) 0px 3px 64px 8px',
+                            width: '300px',
+                            left: 'calc(50vw - 150px)',
+                            top: '100px',
+                            backgroundColor: '#FFFFFF',
+                            height: '200px',
+                            paddingTop: '40px'
+                        }}
+                    >
+                        Remove outfit from {this.state.removeOutfitData.lookName}?
+                        <br />
+                        <div
+                            style={{
+                                color: 'black',
+                                backgroundColor: 'white',
+                                borderRadius: '4px',
+                                borderWidth: '2px',
+                                borderColor: 'black',
+                                borderStyle: 'solid',
+                                marginTop: '45px',
+                                paddingLeft: '5px',
+                                paddingRight: '5px',
+                                cursor: 'pointer',
+                                marginBottom: '10px',
+                                marginRight: '60px',
+                                marginLeft: '60px'
+                            }}
+                            onClick={() => {
+                                this.removeOutfit(
+                                    this.state.removeOutfitData.lookName,
+                                    this.state.removeOutfitData.prodId,
+                                    this.state.removeOutfitData.outfitDate
+                                )
+                            }}
+                        >Remove</div>
+                    </div>
+                )
+            }
+        }
+
         // #################### MAIN RENDER RETURN #######################
         return (
             <MuiThemeProvider>
@@ -912,6 +975,10 @@ class Wardrobe extends React.Component  {
                         )}
                         {this.state.showRenameModal === true && (
                             <RenameLookModal />
+                        )}
+
+                        {this.state.showRemoveOutfitModal === true && (
+                            <RemoveOutfitModal />
                         )}
                     </div>
                 </div>
